@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>BlinkGTK</title>
+<meta name="description" content="BlinkGTK — a Chromium/Blink-based WebView engine for GTK4.">
+<style>
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.7;
+    color: #1f2933;
+    background: #f7f9fb;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e9ec; background: #11161b; }
+    a { color: #6ea8ff; }
+    .card { background: #1a2027 !important; border-color: #2a323b !important; }
+    .muted { color: #9aa4ad !important; }
+  }
+  .wrap { max-width: 720px; margin: 0 auto; padding: 8vh 24px 12vh; }
+  header h1 {
+    font-size: clamp(2.4rem, 8vw, 4rem);
+    margin: 0 0 .2em;
+    letter-spacing: -0.02em;
+  }
+  .tagline { font-size: 1.15rem; margin: 0 0 2.5em; }
+  .tagline .ja { display: block; }
+  .tagline .en { display: block; color: #5b6770; font-size: .95rem; margin-top: .3em; }
+  .card {
+    background: #ffffff;
+    border: 1px solid #e1e6ea;
+    border-radius: 12px;
+    padding: 20px 24px;
+    margin: 1.2em 0;
+  }
+  .card h2 { font-size: 1.05rem; margin: 0 0 .4em; }
+  .card p { margin: .3em 0; }
+  a { color: #1a5fb4; text-decoration: none; }
+  a:hover { text-decoration: underline; }
+  .muted { color: #6b7680; font-size: .85rem; }
+  footer { margin-top: 4em; font-size: .8rem; color: #8a949d; }
+</style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <h1>BlinkGTK</h1>
+      <p class="tagline">
+        <span class="ja">GTK4 のための Chromium / Blink ベース WebView エンジン。</span>
+        <span class="en">A Chromium / Blink-based WebView engine for GTK4.</span>
+      </p>
+    </header>
+
+    <main>
+      <div class="card">
+        <h2>準備中 / Coming soon</h2>
+        <p class="ja">このサイトは現在準備中です。プロジェクトの概要・ドキュメント・配布物を順次公開していきます。</p>
+        <p class="en muted">This site is under construction. Project overview, documentation, and downloads will be published here.</p>
+      </div>
+
+      <div class="card">
+        <h2>関連 / Related</h2>
+        <p class="ja">W3C コミュニティグループ「Embedded Web Engines &amp; Native Web Runtimes」と連携しています。</p>
+        <p class="en muted">Associated with the W3C Community Group &ldquo;Embedded Web Engines &amp; Native Web Runtimes&rdquo;.</p>
+      </div>
+    </main>
+
+    <footer>
+      <p>FUSEe Project ／ BlinkGTK Project</p>
+    </footer>
+  </div>
+</body>
+</html>
