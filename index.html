@@ -4,14 +4,14 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BlinkGTK</title>
-<meta name="description" content="BlinkGTK — a Chromium/Blink-based WebView engine for GTK4.">
+<meta name="description" content="BlinkGTK — a Chromium/Blink-based WebView engine for GTK4. GTK4 のための Chromium/Blink ベース WebView エンジン。">
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
   body {
     margin: 0;
     font-family: system-ui, -apple-system, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
-    line-height: 1.7;
+    line-height: 1.85;
     color: #1f2933;
     background: #f7f9fb;
   }
@@ -20,8 +20,9 @@
     a { color: #6ea8ff; }
     .card { background: #1a2027 !important; border-color: #2a323b !important; }
     .muted { color: #9aa4ad !important; }
+    .lang-label { color: #9aa4ad !important; border-color: #2a323b !important; }
   }
-  .wrap { max-width: 720px; margin: 0 auto; padding: 8vh 24px 12vh; }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 8vh 24px 12vh; }
   header h1 {
     font-size: clamp(2.4rem, 8vw, 4rem);
     margin: 0 0 .2em;
@@ -34,14 +35,25 @@
     background: #ffffff;
     border: 1px solid #e1e6ea;
     border-radius: 12px;
-    padding: 20px 24px;
+    padding: 22px 26px;
     margin: 1.2em 0;
   }
-  .card h2 { font-size: 1.05rem; margin: 0 0 .4em; }
-  .card p { margin: .3em 0; }
+  .lang-label {
+    display: inline-block;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #6b7680;
+    border: 1px solid #e1e6ea;
+    border-radius: 999px;
+    padding: 1px 10px;
+    margin-bottom: .8em;
+  }
+  .card p { margin: 0 0 .9em; }
+  .card p:last-child { margin-bottom: 0; }
   a { color: #1a5fb4; text-decoration: none; }
   a:hover { text-decoration: underline; }
-  .muted { color: #6b7680; font-size: .85rem; }
+  .muted { color: #6b7680; font-size: .9rem; }
   footer { margin-top: 4em; font-size: .8rem; color: #8a949d; }
 </style>
 </head>
@@ -56,16 +68,22 @@
     </header>
 
     <main>
-      <div class="card">
-        <h2>準備中 / Coming soon</h2>
-        <p class="ja">このサイトは現在準備中です。プロジェクトの概要・ドキュメント・配布物を順次公開していきます。</p>
-        <p class="en muted">This site is under construction. Project overview, documentation, and downloads will be published here.</p>
+      <div class="card" lang="ja">
+        <span class="lang-label">日本語</span>
+        <p>BlinkGTK は、Google Chrome と同じ Chromium / Blink レンダリングエンジンを、GTK4 アプリケーションへネイティブに組み込むための WebView エンジンです。Electron のようにブラウザ全体を同梱するのではなく、最新の Web エンジンそのものを一つの GTK ウィジェットとして扱えます。Wayland に対応し、自己描画方式で、上流の Chromium に追従して更新されます。</p>
+        <p>これにより、Linux のネイティブアプリの中で、現代的な HTML・CSS・JavaScript・メディア再生・複雑な文字組みを、本物のブラウザと同じ品質で動かせます。縦書きや禁則処理を含む日本語組版、音声と読み上げ箇所を同期させる EPUB 3 Media Overlays、DAISY 形式のアクセシブルな読書体験など、要求の厳しい用途にも応えます。</p>
+        <p>BlinkGTK は、電子出版とアクセシビリティのための参照実装 FUSEe-SMIL を支える基盤として生まれました。Web 技術をアプリへ「埋め込む」体験を一級市民にすることを目指し、W3C コミュニティグループ Embedded Web Engines &amp; Native Web Runtimes とも連携しながら、オープンに開発を進めています。</p>
+      </div>
+
+      <div class="card" lang="en">
+        <span class="lang-label">English</span>
+        <p>BlinkGTK is a WebView engine that embeds the same Chromium / Blink rendering engine found in Google Chrome directly into GTK4 applications. Instead of bundling an entire browser the way Electron does, it lets you treat a modern web engine as a single GTK widget. It is Wayland-native, self-rendering, and stays current with upstream Chromium.</p>
+        <p>This means native Linux apps can run modern HTML, CSS, JavaScript, media playback, and complex typography at the same quality as a real browser. It is built for demanding use cases: Japanese vertical writing with line-breaking rules, EPUB 3 Media Overlays that synchronize audio with highlighted text, and accessible DAISY reading experiences.</p>
+        <p>BlinkGTK began as the foundation for FUSEe-SMIL, a reference implementation for digital publishing and accessibility. Our goal is to make embedding the web a first-class experience — developed in the open, in coordination with the W3C Embedded Web Engines &amp; Native Web Runtimes Community Group.</p>
       </div>
 
       <div class="card">
-        <h2>関連 / Related</h2>
-        <p class="ja">W3C コミュニティグループ「Embedded Web Engines &amp; Native Web Runtimes」と連携しています。</p>
-        <p class="en muted">Associated with the W3C Community Group &ldquo;Embedded Web Engines &amp; Native Web Runtimes&rdquo;.</p>
+        <p class="muted">準備中：ドキュメント・配布物を順次公開していきます。 ／ Under construction: documentation and downloads will be published here.</p>
       </div>
     </main>
 
