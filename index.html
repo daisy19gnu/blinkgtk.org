@@ -17,7 +17,9 @@
   }
   @media (prefers-color-scheme: dark) {
     body { color: #e6e9ec; background: #11161b; }
-    a { color: #6ea8ff; }
+    /* dark: #ff9f43 = カード背景 #1a2027 上で 8.04:1 */
+    a { color: #ff9f43; }
+    a:hover { color: #ffc078; }
     .card { background: #1a2027 !important; border-color: #2a323b !important; }
     .muted { color: #9aa4ad !important; }
     .lang-label { color: #9aa4ad !important; border-color: #2a323b !important; }
@@ -51,8 +53,10 @@
   }
   .card p { margin: 0 0 .9em; }
   .card p:last-child { margin-bottom: 0; }
-  a { color: #1a5fb4; text-decoration: none; }
-  a:hover { text-decoration: underline; }
+  /* リンクは下線なしのオレンジ (2026-07-26)。light は #c2410c で白背景 5.18:1 /
+     body 背景 4.91:1 = WCAG AA 合格。hover は下線を使わず色変化で示す。 */
+  a { color: #c2410c; text-decoration: none; }
+  a:hover { color: #9a3412; }
   .muted { color: #6b7680; font-size: .9rem; }
   footer { margin-top: 4em; font-size: .8rem; color: #8a949d; }
   .dl-list { margin: .2em 0 .7em; padding-left: 1.3em; }
