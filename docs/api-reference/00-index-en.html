@@ -1,0 +1,171 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK API Reference Manual (Table of Contents) — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK API Reference Manual (Table of Contents) —
+BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-api-reference-manual-table-of-contents">BlinkGTK API
+Reference Manual (Table of Contents)</h1>
+<p><strong>Author</strong>: BlinkGTK Project <strong>Target</strong>:
+BlinkGTK API version 0.1 (product v1.1 series) / Chromium 150
+baseline</p>
+<p>API reference for embedding BlinkGTK into GTK4 applications. This
+manual is organized as per-chapter files
+(<code>NN-&lt;slug&gt;-ja.md</code> / <code>-en.md</code>). The Japanese
+version is canonical; the English version follows it.</p>
+<blockquote>
+<p>The <code>0.1</code> in paths and package names is the <strong>API
+version</strong> (like GTK4's <code>gtk-4.0</code>), independent of the
+product version (v1.1.0 etc.); it changes only on incompatible API
+revisions.</p>
+</blockquote>
+<h2 id="chapters">Chapters</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>Chapter</th>
+<th>File</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>Overview and lifecycle</td>
+<td><code>01-overview-lifecycle-en.md</code></td>
+<td>planned</td>
+</tr>
+<tr>
+<td>2</td>
+<td>Creating and embedding the widget</td>
+<td><code>02-widget-embedding-en.md</code></td>
+<td>planned</td>
+</tr>
+<tr>
+<td>3</td>
+<td>Navigation</td>
+<td><code>03-navigation-en.md</code></td>
+<td>base: <code>navigation-api-*.md</code></td>
+</tr>
+<tr>
+<td>4</td>
+<td>Settings</td>
+<td><code>04-settings-en.md</code></td>
+<td>base: <code>settings-api-*.md</code></td>
+</tr>
+<tr>
+<td>5</td>
+<td>Signals (GObject)</td>
+<td><code>05-signals-en.md</code></td>
+<td>base: <code>signals-api-*.md</code></td>
+</tr>
+<tr>
+<td>6</td>
+<td>JavaScript integration</td>
+<td><code>06-javascript-en.md</code></td>
+<td>planned</td>
+</tr>
+<tr>
+<td>7</td>
+<td>Accessibility</td>
+<td><code>07-accessibility-en.md</code></td>
+<td>🔴 <strong>Not implemented; docs moved aside</strong> (<a
+href="../../archived/unimplemented-api/accessibility/README-ja.md">why</a>).
+To be drafted after implementation</td>
+</tr>
+<tr>
+<td>8</td>
+<td>Rendering and screenshots</td>
+<td><code>08-rendering-en.md</code></td>
+<td>planned</td>
+</tr>
+<tr>
+<td>9</td>
+<td>Environment variables</td>
+<td><a
+href="./environment-variables-en.md"><code>environment-variables-en.md</code></a></td>
+<td><strong>final (canonical)</strong></td>
+</tr>
+<tr>
+<td>10</td>
+<td>Error handling and diagnostics</td>
+<td><code>10-errors-en.md</code></td>
+<td>planned</td>
+</tr>
+<tr>
+<td>11</td>
+<td>Complete C API listing</td>
+<td><a
+href="./c-api-reference-en.md"><code>c-api-reference-en.md</code></a></td>
+<td>base</td>
+</tr>
+<tr>
+<td>12</td>
+<td>GObject Introspection / language bindings</td>
+<td><code>12-gobject-introspection-en.md</code></td>
+<td>planned (PyGObject / GJS / Vala)</td>
+</tr>
+<tr>
+<td>13</td>
+<td>Versioning and compatibility</td>
+<td><code>13-versioning-en.md</code></td>
+<td>planned (SONAME / API version / stability)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="authoring">Authoring</h2>
+<ul>
+<li><strong>Draft (Japanese)</strong>: written from the consumer
+(embedding) perspective.</li>
+<li><strong>Review + English translation</strong>: BlinkGTK Project
+handles internal-spec review (semantics, env meanings, deprecations) and
+the English version.</li>
+<li>Per-chapter small PRs. Naming: <code>NN-&lt;slug&gt;-ja.md</code> /
+<code>NN-&lt;slug&gt;-en.md</code>.</li>
+</ul>
+<h2 id="existing-documents">Existing documents</h2>
+<p>Existing <code>*-ja.md</code> files (navigation / settings / signals
+/ c-api-reference / blink-web-view) serve as the base for their chapters
+and will be consolidated/revised. After migration, old files are
+replaced with references to the new chapters or merged in.</p>
+<h2 id="see-also">See also</h2>
+<ul>
+<li>Installation and dependencies: bundled <code>INSTALL.md</code> and
+the blinkgtk-dist repository.</li>
+<li>Chapter 9 (environment variables) splits env into three tiers:
+publicly supported / escape hatches / internal diagnostics.
+Internal-diagnostic env vars are unsupported.</li>
+</ul>
+</body>
+</html>
+</div></div>

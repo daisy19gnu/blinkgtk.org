@@ -1,0 +1,240 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Environment Variables Reference (Canonical Supported List) — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK Environment Variables Reference (Canonical
+Supported List) — BlinkGTK</h1>
+</header>
+<h1
+id="blinkgtk-environment-variables-reference-canonical-supported-list">BlinkGTK
+Environment Variables Reference (Canonical Supported List)</h1>
+<p><strong>Author</strong>: BlinkGTK Project <strong>Last
+updated</strong>: 2026-07-21 (Chromium 150 baseline; canonical source
+for Chapter 9 of the API Reference Manual, #121)</p>
+<p>Environment variables interpreted by BlinkGTK are defined in three
+tiers. <strong>Embedders may only depend on tier 1 (publicly
+supported).</strong></p>
+<ul>
+<li><strong>Publicly supported</strong> — Stable API. Backward
+compatibility is maintained; changes are announced in release
+notes.</li>
+<li><strong>Escape hatches</strong> — Troubleshooting switches that
+disable fixes/mechanisms which are ON by default. <strong>Do not set
+these in normal operation.</strong> Use them only to isolate problems,
+never as permanent configuration (they may be removed in future releases
+after notice).</li>
+<li><strong>Internal diagnostics</strong> — For development and
+investigation. <strong>Unsupported and unwarranted</strong>; may change
+or disappear without notice. Embedders must not depend on them.</li>
+</ul>
+<hr />
+<h2 id="1-publicly-supported-variables">1. Publicly Supported
+Variables</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_GPU_MODE</code></td>
+<td><code>software</code> / <code>egl</code> /
+<code>swiftshader</code></td>
+<td><code>software</code></td>
+<td>Rendering mode selection. <code>software</code> is recommended and
+default. <code>egl</code> is the GPU path (experimental);
+<code>swiftshader</code> is equivalent to software</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_HEADLESS</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td>Headless operation (no real display; for CI). Controls
+<code>--headless</code></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NO_SANDBOX</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td>Disables the Chromium sandbox. For environments (e.g. containers)
+where the sandbox is unavailable</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EXTRA_SCHEMES</code></td>
+<td>comma-separated scheme names</td>
+<td>unset</td>
+<td>Registers additional custom URL schemes as standard schemes (e.g.
+<code>ebook</code>). Used with the custom scheme loader</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SCROLL_SPEED</code></td>
+<td>number (multiplier)</td>
+<td><code>1.0</code></td>
+<td>Wheel scroll speed multiplier</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DMABUF_PATH</code></td>
+<td>path</td>
+<td>unset</td>
+<td>dmabuf device path for egl mode</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_PNG_DIR</code></td>
+<td>directory path</td>
+<td>unset</td>
+<td>Destination for frame PNG dumps (verification use; only saved when
+set)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_PNG_MAX</code></td>
+<td>integer</td>
+<td>implementation default</td>
+<td>Maximum number of frame PNGs to save</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-escape-hatches-leave-at-defaults">2. Escape Hatches (leave at
+defaults)</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Effect when set (e.g. =0)</th>
+<th>Related</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_PUMP_LEGACY=1</code></td>
+<td>Disables the fd-watcher pump, reverting to the legacy g_idle pump
+(idle CPU increases)</td>
+<td>#115</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PUMP_RESCUE=0</code></td>
+<td>Disables the pump wakeup guarantee (100 ms heartbeat)</td>
+<td>#120</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
+<td>Disables the capture damage gate (frame-copy suppression while
+idle)</td>
+<td>#115</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FORCE_SINGLE_THREADED=1</code></td>
+<td>Reverts the renderer to single-threaded compositing (risk of
+rendering stalls)</td>
+<td>CP-1065</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_INVAL_FALLBACK=0</code></td>
+<td>Disables the invalidation fallback (fix for persistent-blank)</td>
+<td>#120 fixG</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
+<td>Disables activation re-damage (fix for persistent-blank)</td>
+<td>#120 fixF</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_CKB_REDRAW=0</code></td>
+<td>Disables checkerboard re-damage (safety net)</td>
+<td>#120 fixE</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
+<td>Opts in to fractional scaling in egl mode (experimental)</td>
+<td>#117</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_RESIZE_BRIDGE=0</code></td>
+<td>Disables the egl resize bridge</td>
+<td>CP-1092</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-internal-diagnostics-unsupported">3. Internal Diagnostics
+(unsupported)</h2>
+<p>The following are internal variables for development and
+investigation. <strong>Listed for completeness only; their
+specifications are not published.</strong> Unwarranted and removable
+without notice.</p>
+<p><code>BLINKGTK_120_CC_DIAG</code> /
+<code>BLINKGTK_120_DISP_DIAG</code> /
+<code>BLINKGTK_120_CLIP_DIAG</code> / <code>BLINKGTK_120_DIAG</code> /
+<code>BLINKGTK_120_PAINT_KICK</code> / <code>BLINKGTK_120_FI_ROW1</code>
+(fault injection; verification only) / <code>BLINKGTK_VBREAK_P0</code> /
+<code>BLINKGTK_TOC_P0</code> / <code>BLINKGTK_LAYOUT_DEBUG</code> /
+<code>BLINKGTK_RUBY_RESERVE_EM</code> / <code>BLINKGTK_EGL_DIAG</code> /
+<code>BLINKGTK_EGL_MANUAL_VIEWPORT</code> /
+<code>BLINKGTK_EGL_BRIDGE_SETTLE_MS</code> /
+<code>BLINKGTK_EGL_GTK4_NATIVE</code> /
+<code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
+<code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
+<code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
+<code>BLINKGTK_USE_EGL_WIDGET</code> /
+<code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
+<code>BLINKGTK_120_TYPEB_FIX</code> /
+<code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
+<code>BLINKGTK_HARNESS_AUDIT</code> /
+<code>BLINKGTK_AURA_SHOW_IMMEDIATE</code></p>
+<h2 id="4-deprecated">4. Deprecated</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_ENABLE_THREADED_COMPOSITING</code></td>
+<td>Deprecated (threaded compositing is now ON by default; the old name
+has no effect)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="see-also">See also</h2>
+<ul>
+<li><code>c-api-reference-en.md</code> §BLINKGTK_GPU_MODE (to be
+consolidated into this reference)</li>
+<li>This file is the canonical source for Chapter 9 of the API Reference
+Manual (#121)</li>
+</ul>
+</body>
+</html>
+</div></div>

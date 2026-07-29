@@ -1,0 +1,537 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Settings API Tutorial (C Language) — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK Settings API Tutorial (C Language) —
+BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-settings-api-tutorial-c-language">BlinkGTK Settings API
+Tutorial (C Language)</h1>
+<p><strong>Target Audience</strong>: C Programmers, GTK4 Beginners to
+Intermediate <strong>Last Updated</strong>: 2026-01-01
+<strong>Language</strong>: English | <a
+href="./settings-tutorial-c-ja.md">日本語</a></p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#basic-usage">Basic Usage</a></li>
+<li><a href="#javascript-control">JavaScript Control</a></li>
+<li><a href="#user-agent-modification">User-Agent Modification</a></li>
+<li><a href="#image-loading-control">Image Loading Control</a></li>
+<li><a href="#local-storage-control">Local Storage Control</a></li>
+<li><a href="#practical-examples">Practical Examples</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ol>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>The BlinkGTK Settings API allows you to customize browser behavior in
+detail.</p>
+<h3 id="prerequisites">Prerequisites</h3>
+<ul>
+<li>GTK4 installed</li>
+<li>BlinkGTK installed</li>
+<li>Basic C language knowledge</li>
+</ul>
+<h3 id="development-environment-setup">Development Environment
+Setup</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Install required packages (Fedora/RHEL)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4-devel</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Build BlinkGTK (see separate documentation)</span></span></code></pre></div>
+<hr />
+<h2 id="basic-usage">Basic Usage</h2>
+<h3 id="minimal-program">Minimal Program</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Create window</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="st">&quot;BlinkGTK Settings Example&quot;</span><span class="op">);</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Create WebView</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Load URL</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Show window</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Initialize BlinkGTK</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>        g_critical<span class="op">(</span><span class="st">&quot;Failed to initialize BlinkGTK&quot;</span><span class="op">);</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Create application</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    GtkApplication<span class="op">*</span> app <span class="op">=</span> gtk_application_new<span class="op">(</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;org.example.blinkgtk&quot;</span><span class="op">,</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>        G_APPLICATION_DEFAULT_FLAGS<span class="op">);</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>app<span class="op">,</span> <span class="st">&quot;activate&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_activate<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ⚠️ g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
+<span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb2-41"><a href="#cb2-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-42"><a href="#cb2-42" aria-hidden="true" tabindex="-1"></a>    g_object_unref<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb2-43"><a href="#cb2-43" aria-hidden="true" tabindex="-1"></a>    blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb2-44"><a href="#cb2-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-45"><a href="#cb2-45" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
+<span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="compilation">Compilation</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> example example.c <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">`</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> gtk4<span class="kw">`</span> <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="at">-lblinkgtk</span></span></code></pre></div>
+<hr />
+<h2 id="javascript-control">JavaScript Control</h2>
+<h3 id="disabling-javascript">Disabling JavaScript</h3>
+<p>For security-critical cases or when JavaScript is not needed:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="st">&quot;JavaScript Disabled&quot;</span><span class="op">);</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Disable JavaScript</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="javascript-toggle">JavaScript Toggle</h3>
+<p>Control JavaScript with toggle button:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_js_toggle<span class="op">(</span>GtkToggleButton<span class="op">*</span> button<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> GTK_WIDGET<span class="op">(</span>user_data<span class="op">);</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    gboolean active <span class="op">=</span> gtk_toggle_button_get_active<span class="op">(</span>button<span class="op">);</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> active<span class="op">);</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>active<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>        g_print<span class="op">(</span><span class="st">&quot;JavaScript enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>        g_print<span class="op">(</span><span class="st">&quot;JavaScript disabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Reload page to apply settings</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    blink_web_view_reload<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> box <span class="op">=</span> gtk_box_new<span class="op">(</span>GTK_ORIENTATION_VERTICAL<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> toolbar <span class="op">=</span> gtk_box_new<span class="op">(</span>GTK_ORIENTATION_HORIZONTAL<span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">// JavaScript toggle button</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> js_toggle <span class="op">=</span> gtk_toggle_button_new_with_label<span class="op">(</span><span class="st">&quot;Enable JavaScript&quot;</span><span class="op">);</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>    gtk_toggle_button_set_active<span class="op">(</span>GTK_TOGGLE_BUTTON<span class="op">(</span>js_toggle<span class="op">),</span> TRUE<span class="op">);</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>js_toggle<span class="op">,</span> <span class="st">&quot;toggled&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_js_toggle<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>    gtk_box_append<span class="op">(</span>GTK_BOX<span class="op">(</span>toolbar<span class="op">),</span> js_toggle<span class="op">);</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>    gtk_box_append<span class="op">(</span>GTK_BOX<span class="op">(</span>box<span class="op">),</span> toolbar<span class="op">);</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>    gtk_box_append<span class="op">(</span>GTK_BOX<span class="op">(</span>box<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_vexpand<span class="op">(</span>web_view<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> box<span class="op">);</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb5-36"><a href="#cb5-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="user-agent-modification">User-Agent Modification</h2>
+<h3 id="custom-user-agent">Custom User-Agent</h3>
+<p>Set custom browser identifier:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Set custom User-Agent</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0 (Linux; BlinkGTK)&quot;</span><span class="op">);</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// User-Agent test site</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://httpbin.org/user-agent&quot;</span><span class="op">);</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="mobile-user-agent">Mobile User-Agent</h3>
+<p>Emulate mobile device:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Android Chrome User-Agent</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Mozilla/5.0 (Linux; Android 10; Pixel 4) &quot;</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;AppleWebKit/537.36 (KHTML, like Gecko) &quot;</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Chrome/143.0.0.0 Mobile Safari/537.36&quot;</span><span class="op">;</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://www.google.com&quot;</span><span class="op">);</span></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="getting-user-agent">Getting User-Agent</h3>
+<p>Check current User-Agent:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> print_user_agent<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> user_agent <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Current User-Agent: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> user_agent<span class="op">);</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>user_agent<span class="op">);</span>  <span class="co">// Important: Free memory</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="image-loading-control">Image Loading Control</h2>
+<h3 id="disabling-image-loading">Disabling Image Loading</h3>
+<p>Show text only to reduce data usage:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Disable image loading</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="image-loading-toggle">Image Loading Toggle</h3>
+<p>Let users toggle image display:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_images_toggle<span class="op">(</span>GtkToggleButton<span class="op">*</span> button<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> GTK_WIDGET<span class="op">(</span>user_data<span class="op">);</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>    gboolean active <span class="op">=</span> gtk_toggle_button_get_active<span class="op">(</span>button<span class="op">);</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> active<span class="op">);</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>active<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        g_print<span class="op">(</span><span class="st">&quot;Images enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>        g_print<span class="op">(</span><span class="st">&quot;Images disabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Reload to apply</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>    blink_web_view_reload<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="local-storage-control">Local Storage Control</h2>
+<h3 id="disabling-localstorage">Disabling LocalStorage</h3>
+<p>Privacy protection mode:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Disable LocalStorage</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="practical-examples">Practical Examples</h2>
+<h3 id="example-1-data-saver-mode">Example 1: Data Saver Mode</h3>
+<p>Bandwidth-saving browser:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> enable_data_saver_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Disable JavaScript</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Disable image loading</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Data saver mode enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="st">&quot;Data Saver Browser&quot;</span><span class="op">);</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    enable_data_saver_mode<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="example-2-privacy-browser">Example 2: Privacy Browser</h3>
+<p>Maximum security settings:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> enable_privacy_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Disable JavaScript</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Disable LocalStorage</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Disable image loading</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Privacy mode enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="st">&quot;Privacy Browser&quot;</span><span class="op">);</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    enable_privacy_mode<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="example-3-browser-with-settings-panel">Example 3: Browser with
+Settings Panel</h3>
+<p>Complete example with toolbar:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view<span class="op">;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> js_toggle<span class="op">;</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> images_toggle<span class="op">;</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> storage_toggle<span class="op">;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> AppWidgets<span class="op">;</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_js_toggle<span class="op">(</span>GtkToggleButton<span class="op">*</span> button<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    AppWidgets<span class="op">*</span> widgets <span class="op">=</span> <span class="op">(</span>AppWidgets<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    gboolean active <span class="op">=</span> gtk_toggle_button_get_active<span class="op">(</span>button<span class="op">);</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>widgets<span class="op">-&gt;</span>web_view<span class="op">),</span> active<span class="op">);</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>    blink_web_view_reload<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>widgets<span class="op">-&gt;</span>web_view<span class="op">));</span></span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb14-17"><a href="#cb14-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-18"><a href="#cb14-18" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_images_toggle<span class="op">(</span>GtkToggleButton<span class="op">*</span> button<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb14-19"><a href="#cb14-19" aria-hidden="true" tabindex="-1"></a>    AppWidgets<span class="op">*</span> widgets <span class="op">=</span> <span class="op">(</span>AppWidgets<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb14-20"><a href="#cb14-20" aria-hidden="true" tabindex="-1"></a>    gboolean active <span class="op">=</span> gtk_toggle_button_get_active<span class="op">(</span>button<span class="op">);</span></span>
+<span id="cb14-21"><a href="#cb14-21" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>widgets<span class="op">-&gt;</span>web_view<span class="op">),</span> active<span class="op">);</span></span>
+<span id="cb14-22"><a href="#cb14-22" aria-hidden="true" tabindex="-1"></a>    blink_web_view_reload<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>widgets<span class="op">-&gt;</span>web_view<span class="op">));</span></span>
+<span id="cb14-23"><a href="#cb14-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb14-24"><a href="#cb14-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-25"><a href="#cb14-25" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_storage_toggle<span class="op">(</span>GtkToggleButton<span class="op">*</span> button<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb14-26"><a href="#cb14-26" aria-hidden="true" tabindex="-1"></a>    AppWidgets<span class="op">*</span> widgets <span class="op">=</span> <span class="op">(</span>AppWidgets<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb14-27"><a href="#cb14-27" aria-hidden="true" tabindex="-1"></a>    gboolean active <span class="op">=</span> gtk_toggle_button_get_active<span class="op">(</span>button<span class="op">);</span></span>
+<span id="cb14-28"><a href="#cb14-28" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>widgets<span class="op">-&gt;</span>web_view<span class="op">),</span> active<span class="op">);</span></span>
+<span id="cb14-29"><a href="#cb14-29" aria-hidden="true" tabindex="-1"></a>    blink_web_view_reload<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>widgets<span class="op">-&gt;</span>web_view<span class="op">));</span></span>
+<span id="cb14-30"><a href="#cb14-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb14-31"><a href="#cb14-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-32"><a href="#cb14-32" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication<span class="op">*</span> app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb14-33"><a href="#cb14-33" aria-hidden="true" tabindex="-1"></a>    AppWidgets<span class="op">*</span> widgets <span class="op">=</span> g_new0<span class="op">(</span>AppWidgets<span class="op">,</span> <span class="dv">1</span><span class="op">);</span></span>
+<span id="cb14-34"><a href="#cb14-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-35"><a href="#cb14-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Window</span></span>
+<span id="cb14-36"><a href="#cb14-36" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb14-37"><a href="#cb14-37" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="st">&quot;BlinkGTK Settings Demo&quot;</span><span class="op">);</span></span>
+<span id="cb14-38"><a href="#cb14-38" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb14-39"><a href="#cb14-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-40"><a href="#cb14-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Layout</span></span>
+<span id="cb14-41"><a href="#cb14-41" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> box <span class="op">=</span> gtk_box_new<span class="op">(</span>GTK_ORIENTATION_VERTICAL<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb14-42"><a href="#cb14-42" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> toolbar <span class="op">=</span> gtk_box_new<span class="op">(</span>GTK_ORIENTATION_HORIZONTAL<span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
+<span id="cb14-43"><a href="#cb14-43" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_margin_start<span class="op">(</span>toolbar<span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
+<span id="cb14-44"><a href="#cb14-44" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_margin_end<span class="op">(</span>toolbar<span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
+<span id="cb14-45"><a href="#cb14-45" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_margin_top<span class="op">(</span>toolbar<span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
+<span id="cb14-46"><a href="#cb14-46" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_margin_bottom<span class="op">(</span>toolbar<span class="op">,</span> <span class="dv">6</span><span class="op">);</span></span>
+<span id="cb14-47"><a href="#cb14-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-48"><a href="#cb14-48" aria-hidden="true" tabindex="-1"></a>    <span class="co">// WebView</span></span>
+<span id="cb14-49"><a href="#cb14-49" aria-hidden="true" tabindex="-1"></a>    widgets<span class="op">-&gt;</span>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb14-50"><a href="#cb14-50" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_vexpand<span class="op">(</span>widgets<span class="op">-&gt;</span>web_view<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb14-51"><a href="#cb14-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-52"><a href="#cb14-52" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Toggle buttons</span></span>
+<span id="cb14-53"><a href="#cb14-53" aria-hidden="true" tabindex="-1"></a>    widgets<span class="op">-&gt;</span>js_toggle <span class="op">=</span> gtk_toggle_button_new_with_label<span class="op">(</span><span class="st">&quot;JavaScript&quot;</span><span class="op">);</span></span>
+<span id="cb14-54"><a href="#cb14-54" aria-hidden="true" tabindex="-1"></a>    gtk_toggle_button_set_active<span class="op">(</span>GTK_TOGGLE_BUTTON<span class="op">(</span>widgets<span class="op">-&gt;</span>js_toggle<span class="op">),</span> TRUE<span class="op">);</span></span>
+<span id="cb14-55"><a href="#cb14-55" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>widgets<span class="op">-&gt;</span>js_toggle<span class="op">,</span> <span class="st">&quot;toggled&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_js_toggle<span class="op">),</span> widgets<span class="op">);</span></span>
+<span id="cb14-56"><a href="#cb14-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-57"><a href="#cb14-57" aria-hidden="true" tabindex="-1"></a>    widgets<span class="op">-&gt;</span>images_toggle <span class="op">=</span> gtk_toggle_button_new_with_label<span class="op">(</span><span class="st">&quot;Images&quot;</span><span class="op">);</span></span>
+<span id="cb14-58"><a href="#cb14-58" aria-hidden="true" tabindex="-1"></a>    gtk_toggle_button_set_active<span class="op">(</span>GTK_TOGGLE_BUTTON<span class="op">(</span>widgets<span class="op">-&gt;</span>images_toggle<span class="op">),</span> TRUE<span class="op">);</span></span>
+<span id="cb14-59"><a href="#cb14-59" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>widgets<span class="op">-&gt;</span>images_toggle<span class="op">,</span> <span class="st">&quot;toggled&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_images_toggle<span class="op">),</span> widgets<span class="op">);</span></span>
+<span id="cb14-60"><a href="#cb14-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-61"><a href="#cb14-61" aria-hidden="true" tabindex="-1"></a>    widgets<span class="op">-&gt;</span>storage_toggle <span class="op">=</span> gtk_toggle_button_new_with_label<span class="op">(</span><span class="st">&quot;LocalStorage&quot;</span><span class="op">);</span></span>
+<span id="cb14-62"><a href="#cb14-62" aria-hidden="true" tabindex="-1"></a>    gtk_toggle_button_set_active<span class="op">(</span>GTK_TOGGLE_BUTTON<span class="op">(</span>widgets<span class="op">-&gt;</span>storage_toggle<span class="op">),</span> TRUE<span class="op">);</span></span>
+<span id="cb14-63"><a href="#cb14-63" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>widgets<span class="op">-&gt;</span>storage_toggle<span class="op">,</span> <span class="st">&quot;toggled&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_storage_toggle<span class="op">),</span> widgets<span class="op">);</span></span>
+<span id="cb14-64"><a href="#cb14-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-65"><a href="#cb14-65" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Build toolbar</span></span>
+<span id="cb14-66"><a href="#cb14-66" aria-hidden="true" tabindex="-1"></a>    gtk_box_append<span class="op">(</span>GTK_BOX<span class="op">(</span>toolbar<span class="op">),</span> widgets<span class="op">-&gt;</span>js_toggle<span class="op">);</span></span>
+<span id="cb14-67"><a href="#cb14-67" aria-hidden="true" tabindex="-1"></a>    gtk_box_append<span class="op">(</span>GTK_BOX<span class="op">(</span>toolbar<span class="op">),</span> widgets<span class="op">-&gt;</span>images_toggle<span class="op">);</span></span>
+<span id="cb14-68"><a href="#cb14-68" aria-hidden="true" tabindex="-1"></a>    gtk_box_append<span class="op">(</span>GTK_BOX<span class="op">(</span>toolbar<span class="op">),</span> widgets<span class="op">-&gt;</span>storage_toggle<span class="op">);</span></span>
+<span id="cb14-69"><a href="#cb14-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-70"><a href="#cb14-70" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Build layout</span></span>
+<span id="cb14-71"><a href="#cb14-71" aria-hidden="true" tabindex="-1"></a>    gtk_box_append<span class="op">(</span>GTK_BOX<span class="op">(</span>box<span class="op">),</span> toolbar<span class="op">);</span></span>
+<span id="cb14-72"><a href="#cb14-72" aria-hidden="true" tabindex="-1"></a>    gtk_box_append<span class="op">(</span>GTK_BOX<span class="op">(</span>box<span class="op">),</span> widgets<span class="op">-&gt;</span>web_view<span class="op">);</span></span>
+<span id="cb14-73"><a href="#cb14-73" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-74"><a href="#cb14-74" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> box<span class="op">);</span></span>
+<span id="cb14-75"><a href="#cb14-75" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>widgets<span class="op">-&gt;</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb14-76"><a href="#cb14-76" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb14-77"><a href="#cb14-77" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb14-78"><a href="#cb14-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-79"><a href="#cb14-79" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb14-80"><a href="#cb14-80" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb14-81"><a href="#cb14-81" aria-hidden="true" tabindex="-1"></a>        g_critical<span class="op">(</span><span class="st">&quot;Failed to initialize BlinkGTK&quot;</span><span class="op">);</span></span>
+<span id="cb14-82"><a href="#cb14-82" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb14-83"><a href="#cb14-83" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb14-84"><a href="#cb14-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-85"><a href="#cb14-85" aria-hidden="true" tabindex="-1"></a>    GtkApplication<span class="op">*</span> app <span class="op">=</span> gtk_application_new<span class="op">(</span></span>
+<span id="cb14-86"><a href="#cb14-86" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;org.example.settings-demo&quot;</span><span class="op">,</span></span>
+<span id="cb14-87"><a href="#cb14-87" aria-hidden="true" tabindex="-1"></a>        G_APPLICATION_DEFAULT_FLAGS<span class="op">);</span></span>
+<span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>app<span class="op">,</span> <span class="st">&quot;activate&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_activate<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ⚠️ g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
+<span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
+<span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb14-97"><a href="#cb14-97" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-98"><a href="#cb14-98" aria-hidden="true" tabindex="-1"></a>    g_object_unref<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb14-99"><a href="#cb14-99" aria-hidden="true" tabindex="-1"></a>    blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb14-100"><a href="#cb14-100" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-101"><a href="#cb14-101" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
+<span id="cb14-102"><a href="#cb14-102" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="settings-not-applied">Settings Not Applied</h3>
+<p><strong>Problem</strong>: Called Settings API but changes not
+reflected</p>
+<p><strong>Solution</strong>: Reload the page</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_reload<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span>  <span class="co">// Reload to apply</span></span></code></pre></div>
+<h3 id="memory-leak">Memory Leak</h3>
+<p><strong>Problem</strong>: Memory leak with
+<code>blink_web_view_get_user_agent()</code></p>
+<p><strong>Solution</strong>: Always free memory with
+<code>g_free()</code></p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> user_agent <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>g_print<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> user_agent<span class="op">);</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>user_agent<span class="op">);</span>  <span class="co">// Don&#39;t forget this!</span></span></code></pre></div>
+<h3 id="compilation-error">Compilation Error</h3>
+<p><strong>Problem</strong>: <code>blink_gtk.h</code> not found</p>
+<p><strong>Solution</strong>: Use pkg-config</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> example.c <span class="kw">`</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> gtk4<span class="kw">`</span> <span class="at">-lblinkgtk</span></span></code></pre></div>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>With Settings API, you can:</p>
+<ul>
+<li>✅ Control JavaScript for improved security</li>
+<li>✅ Modify User-Agent for easier testing</li>
+<li>✅ Control image loading to reduce data usage</li>
+<li>✅ Control LocalStorage for privacy protection</li>
+</ul>
+<h3 id="next-steps">Next Steps</h3>
+<ul>
+<li><a href="../api-reference/settings-api-ja.md">Settings API
+Reference</a> - Detailed function reference</li>
+<li><a href="./settings-tutorial-py-en.md">Python Tutorial</a> - Python
+version</li>
+<li><a href="../migration/webkitgtk-to-blinkgtk-ja.md">WebKitGTK
+Migration Guide</a> - Migration guide</li>
+</ul>
+<hr />
+<p><strong>License</strong>: BSD-3-Clause <strong>Project</strong>:
+BlinkGTK <strong>Support</strong>: <a
+href="https://blinkgtk.org/">https://blinkgtk.org/</a></p>
+</body>
+</html>
+</div></div>

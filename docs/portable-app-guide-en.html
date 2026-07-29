@@ -1,0 +1,425 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Portable Application Guide — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK Portable Application Guide — BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-portable-application-guide">BlinkGTK Portable
+Application Guide</h1>
+<p><strong>Author</strong>: BlinkGTK Project <strong>Last
+updated</strong>: 2026-07-03 <strong>Audience</strong>: Developers who
+want to build a self-contained (portable) application from the BlinkGTK
+binary distribution that runs from a single directory</p>
+<hr />
+<h2 id="1-what-is-a-portable-build">1. What is a portable build?</h2>
+<p>A portable BlinkGTK application bundles your application executable
+together with the complete BlinkGTK / Chromium runtime in a single
+directory, so that it <strong>runs by simply copying the directory — no
+system installation (RPM/DEB) required</strong>. It relies on
+<code>$ORIGIN</code>-relative RPATH (paths resolved relative to the
+executable itself), so the directory keeps working wherever it is
+moved.</p>
+<p>However, "self-contained" has a well-defined boundary: <strong>only
+the BlinkGTK and Chromium runtimes are bundled</strong>. GTK4, glibc,
+GPU drivers and similar components come from the host system. If you do
+not understand this boundary, you will run into "I copied it but it does
+not start" situations. Chapter 2 explains the constraints in detail.</p>
+<h2 id="2-runtime-environment-and-constraints-important">2. Runtime
+environment and constraints (important)</h2>
+<p>A portable build does <em>not</em> run everywhere. Check the
+following constraints carefully.</p>
+<h3 id="21-cpu-architecture">2.1 CPU architecture</h3>
+<ul>
+<li><strong>x86_64 (amd64) only.</strong> It will not run on ARM64 or
+other architectures (no binary compatibility).</li>
+</ul>
+<h3 id="22-glibc-version-the-most-important-lower-bound">2.2 glibc
+version (the most important lower bound)</h3>
+<ul>
+<li>BlinkGTK binaries are not statically linked; they <strong>depend on
+the glibc of the build environment</strong>. On systems with an older
+glibc, startup fails with <code>GLIBC_x.xx not found</code>.</li>
+<li>Rule of thumb: use a distribution of the same generation as the
+build environment (Fedora 44 era) or newer. Older long-term-support
+distributions from several years ago are likely to fail.</li>
+<li>How to check:
+<pre><code>ldd --version          # host glibc version
+ldd ./libblinkgtk-0.1.so.0.0.0 | grep &quot;not found&quot;   # list missing dependencies</code></pre>
+If even one <code>not found</code> line appears, the host cannot run
+this build.</li>
+</ul>
+<h3 id="23-gtk4-comes-from-the-host-system-not-bundled">2.3 GTK4 comes
+from the host system (not bundled)</h3>
+<ul>
+<li>BlinkGTK is built against the <strong>system GTK4</strong>. The
+portable bundle does not include GTK4; the host must provide GTK4 (4.6
+or later; validated against the 4.22 generation).</li>
+<li>GTK themes, icons and input methods (ibus/fcitx) also follow the
+host configuration. If the host has no Japanese IME, the portable app
+cannot accept Japanese input either.</li>
+<li>How to check: <code>pkg-config --modversion gtk4</code>, or query
+your distribution's package manager.</li>
+</ul>
+<h3 id="24-wayland-only-does-not-run-on-x11">2.4 Wayland only (does not
+run on X11)</h3>
+<ul>
+<li>BlinkGTK is <strong>Wayland-only</strong> (it forces
+<code>--ozone-platform=wayland</code> internally). It does not work in
+X11 sessions.</li>
+<li>A <strong>running Wayland compositor session</strong> is required
+(primarily validated on GNOME/Mutter; other compositors have less
+coverage).</li>
+<li>Check your session type with <code>echo $XDG_SESSION_TYPE</code> (it
+must print <code>wayland</code>).</li>
+<li>On SSH targets or headless servers it will not start as-is (a nested
+environment such as weston headless is required).</li>
+</ul>
+<h3 id="25-gpu--rendering-paths">2.5 GPU / rendering paths</h3>
+<ul>
+<li><strong>software path</strong> (default): works without a GPU.
+Always verify with the software path first.</li>
+<li><strong>EGL (GPU) path</strong>: requires Mesa and a dmabuf-capable
+GPU (validated with Intel/AMD Mesa). It may be unavailable depending on
+GPU and driver configuration.</li>
+<li>On HiDPI (scale 2, etc.) environments, additional scale settings may
+be required to avoid rendering scale mismatches (follow the notes in the
+bundled launch script/configuration).</li>
+</ul>
+<h3 id="26-chromium-sandbox-and-kernel-settings">2.6 Chromium sandbox
+and kernel settings</h3>
+<ul>
+<li>The Chromium sandbox relies on <strong>unprivileged user
+namespaces</strong>. On systems where this is disabled (some hardened
+setups, containers), renderer startup can fail.</li>
+<li>If the app does not start inside a container or restricted
+environment, check this first. Launching with <code>--no-sandbox</code>
+works but <strong>forfeits security protection; never use it to display
+untrusted content</strong>.</li>
+</ul>
+<h3 id="27-filesystem-requirements">2.7 Filesystem requirements</h3>
+<ul>
+<li><strong>Cannot execute from noexec mounts.</strong> If your USB
+drive or <code>/tmp</code> is mounted noexec, extract to a location
+where execution is permitted.</li>
+<li>Extract onto a filesystem that <strong>preserves symbolic
+links</strong> (ext4/xfs/btrfs). On FAT/exFAT/NTFS, SONAME symlinks are
+lost or materialized as copies, causing startup failures or doubled
+size.</li>
+<li>Distribute archives as <strong>tar.gz</strong> (preserves executable
+bits and symlinks). zip is not acceptable because it loses
+attributes.</li>
+<li>Avoid spaces and non-ASCII characters in the extraction path.</li>
+</ul>
+<h3 id="28-resources">2.8 Resources</h3>
+<ul>
+<li>Disk: about 650 MB or more after extraction.</li>
+<li>Memory: expect several hundred MB or more across the process group
+(browser + renderer + GPU).</li>
+</ul>
+<h3 id="29-fonts">2.9 Fonts</h3>
+<ul>
+<li>Text rendering depends on the host fontconfig and fonts. Japanese
+text requires Japanese fonts on the host (Harano Aji, Noto CJK,
+etc.).</li>
+</ul>
+<h3 id="210-constraint-checklist">2.10 Constraint checklist</h3>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>Requirement</th>
+<th>Check command</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>x86_64</td>
+<td><code>uname -m</code></td>
+</tr>
+<tr>
+<td>glibc</td>
+<td>build-era or newer</td>
+<td><code>ldd --version</code> /
+<code>ldd ... | grep "not found"</code></td>
+</tr>
+<tr>
+<td>GTK4</td>
+<td>4.6+ (system)</td>
+<td><code>pkg-config --modversion gtk4</code></td>
+</tr>
+<tr>
+<td>Session</td>
+<td>Wayland</td>
+<td><code>echo $XDG_SESSION_TYPE</code></td>
+</tr>
+<tr>
+<td>GPU (EGL)</td>
+<td>Mesa + dmabuf</td>
+<td>isolate with software path</td>
+</tr>
+<tr>
+<td>user namespaces</td>
+<td>enabled</td>
+<td>check on sandbox startup failure</td>
+</tr>
+<tr>
+<td>Filesystem</td>
+<td>ext4 etc. + exec allowed</td>
+<td><code>mount | grep noexec</code></td>
+</tr>
+<tr>
+<td>Japanese fonts</td>
+<td>required on host</td>
+<td><code>fc-list | grep -i mincho</code> etc.</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-portable-application-layout">3. Portable application
+layout</h2>
+<p>Recommended layout (single self-contained directory):</p>
+<pre><code>myapp-portable/
+├── myapp                    # your application executable (RPATH=$ORIGIN/lib)
+├── run.sh                   # launch script (optional, for environment variables)
+├── lib/
+│   ├── libblinkgtk-0.1.so.0.0.0
+│   ├── libblinkgtk-0.1.so.0     -&gt; libblinkgtk-0.1.so.0.0.0
+│   └── chromium/            # complete Chromium runtime (from the binary distribution)
+│       ├── *.so             # shared libraries
+│       ├── icudtl.dat / snapshot_blob.bin / v8_context_snapshot.bin
+│       ├── content_shell.pak
+│       └── locales/ja.pak, en-US.pak
+├── share/
+│   └── myapp/               # your application resources
+└── THIRD_PARTY_NOTICES.html # mandatory (Chapter 6)</code></pre>
+<p>The runtime set is obtained by copying
+<code>usr/lib64/blinkgtk-0.1/</code> from the binary distribution
+(runtime tarball) into <code>lib/</code> as-is. <strong>Do not
+cherry-pick files</strong> — every Chromium runtime .so,
+<code>.pak</code>, <code>.dat</code>, <code>.bin</code>, and
+<code>locales/</code> file is required at startup (missing files are the
+classic cause of startup crashes).</p>
+<h2 id="4-building">4. Building</h2>
+<h3 id="41-mandatory-link-requirements">4.1 Mandatory link
+requirements</h3>
+<p>Build your application with pkg-config. <strong>Linking the
+PartitionAlloc allocator shim directly is mandatory</strong> (pkg-config
+includes it automatically). Without the shim, page loads fail and you
+get a black screen.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> myapp myapp.c <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1 gtk4<span class="va">)</span></span></code></pre></div>
+<p>If you link manually without pkg-config, you must add
+<code>-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</code>
+in addition to <code>-lblinkgtk-0.1</code>.</p>
+<h3 id="42-setting-rpath-the-core-of-portability">4.2 Setting RPATH (the
+core of portability)</h3>
+<p>Give the executable an <code>$ORIGIN</code>-relative RPATH:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> myapp myapp.c <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> blinkgtk-0.1 gtk4<span class="va">)</span> <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">-Wl,-rpath,</span><span class="st">&#39;$ORIGIN/lib&#39;</span> <span class="at">-Wl,-rpath,</span><span class="st">&#39;$ORIGIN/lib/chromium&#39;</span> <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--libs</span> blinkgtk-0.1 gtk4<span class="va">)</span></span></code></pre></div>
+<ul>
+<li><code>$ORIGIN</code> means "the directory containing the executable
+itself" and keeps resolving after the directory is moved.</li>
+<li>Use single quotes so the shell does not expand
+<code>$ORIGIN</code>.</li>
+</ul>
+<p>As an alternative to RPATH, a launch script can set
+<code>LD_LIBRARY_PATH</code>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co"># run.sh — place directly under myapp-portable/</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="va">HERE</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">dirname</span> <span class="st">&quot;</span><span class="va">$0</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span> <span class="kw">&amp;&amp;</span> <span class="bu">pwd</span><span class="va">)</span><span class="st">&quot;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$HERE</span><span class="st">/lib:</span><span class="va">$HERE</span><span class="st">/lib/chromium</span><span class="va">${LD_LIBRARY_PATH</span><span class="op">:+</span>:<span class="va">$LD_LIBRARY_PATH}</span><span class="st">&quot;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span> <span class="st">&quot;</span><span class="va">$HERE</span><span class="st">/myapp&quot;</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span></code></pre></div>
+<h3 id="43-verification">4.3 Verification</h3>
+<p>Always verify before distributing:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 1. Dependency completeness (zero &quot;not found&quot; lines)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ldd</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;not found&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. The shim is a direct NEEDED entry</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. V8 snapshot consistency (normally consistent when taken from one distribution)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    Never mix libv8.so / snapshot_blob.bin / v8_context_snapshot.bin from</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    different distribution versions in lib/chromium/ (causes startup crashes)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Launch test on a real Wayland session</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span></span></code></pre></div>
+<h2 id="5-distribution">5. Distribution</h2>
+<ul>
+<li><strong>Package as tar.gz</strong> (preserves symlinks and
+executable bits):
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> czf myapp-portable-1.0-linux-x86_64.tar.gz myapp-portable/</span></code></pre></div></li>
+<li>Always document the runtime requirements from Chapter 2 (especially
+glibc generation / GTK4 / Wayland-only) in your README for end
+users.</li>
+</ul>
+<h2 id="6-license-obligations-mandatory">6. License obligations
+(mandatory)</h2>
+<p>When you redistribute the BlinkGTK / Chromium runtime, the following
+are required:</p>
+<ol type="1">
+<li><strong>Bundle THIRD_PARTY_NOTICES.html</strong> — the aggregated
+license attributions included in the binary distribution. Bundle it in
+your portable app as-is (required by the license terms of the hundreds
+of third-party components contained in Chromium).</li>
+<li><strong>About FFmpeg (LGPL)</strong> — the bundled
+<code>libffmpeg.so</code> is LGPL v2.1+. It is shipped as an independent
+shared library; keep it replaceable by users (do not statically link,
+remove or rename it).</li>
+<li>Also bundle the BlinkGTK LICENSE file.</li>
+</ol>
+<h2 id="7-troubleshooting-portable-specific">7. Troubleshooting
+(portable-specific)</h2>
+<table>
+<thead>
+<tr>
+<th>Symptom</th>
+<th>Likely cause</th>
+<th>Action</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>GLIBC_x.xx not found</code></td>
+<td>host glibc too old</td>
+<td>update host or use a same-generation environment (§2.2)</td>
+</tr>
+<tr>
+<td>Crash right after startup (SIGTRAP)</td>
+<td>mixed V8 snapshots / shim not linked</td>
+<td>check items 2 and 3 in §4.3</td>
+</tr>
+<tr>
+<td>No window appears</td>
+<td>X11 session / no compositor</td>
+<td>check <code>$XDG_SESSION_TYPE</code> (§2.4)</td>
+</tr>
+<tr>
+<td>Page stays black</td>
+<td>shim not linked</td>
+<td>verify with <code>readelf -d</code> (§4.1)</td>
+</tr>
+<tr>
+<td><code>Permission denied</code></td>
+<td>noexec mount / lost exec bits</td>
+<td>§2.7 (re-extract from tar.gz)</td>
+</tr>
+<tr>
+<td>Starts but shows tofu/garbled text</td>
+<td>no Japanese fonts on host</td>
+<td>§2.9</td>
+</tr>
+<tr>
+<td>Renderer fails to start</td>
+<td>user namespaces disabled</td>
+<td>§2.6</td>
+</tr>
+</tbody>
+</table>
+<h2 id="8-related-documents">8. Related documents</h2>
+<ul>
+<li>Consumer application integration guide
+(<code>consumer-integration-guide-en.md</code>) — API, signals,
+lifecycle</li>
+<li>Installation guide (<code>installation/INSTALLATION-en.md</code>) —
+system installation via RPM/DEB</li>
+<li>QUICKSTART — minimal smoke-test procedure</li>
+</ul>
+</body>
+</html>
+</div></div>

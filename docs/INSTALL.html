@@ -1,0 +1,262 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK インストールガイド — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK インストールガイド — BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-インストールガイド">BlinkGTK インストールガイド</h1>
+<p><strong>作成者</strong>: BlinkGTK Project</p>
+<p>各パッケージは <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/releases">Releases</a>
+からダウンロードしてください。内容物は <a
+href="./manifests/"><code>manifests/</code></a> を参照。</p>
+<blockquote>
+<p><strong>注</strong>: パス中の
+<code>0.1</code>(<code>blinkgtk-0.1</code> 等)は <strong>API
+バージョン</strong>です(GTK4 の <code>gtk-4.0</code>
+と同じ規約)。製品バージョン(v1.1.0 等)とは独立で、互換性のない API
+変更時にのみ変わります。</p>
+</blockquote>
+<h2 id="0-システム要件">0. システム要件</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>要件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>アーキテクチャ</td>
+<td>x86_64 (amd64)</td>
+</tr>
+<tr>
+<td>glibc</td>
+<td><strong>2.43 以上</strong>(Fedora 44 / Ubuntu 25.10 相当以降)</td>
+</tr>
+<tr>
+<td>ディスプレイ</td>
+<td><strong>Wayland セッション必須</strong>(X11
+のみの環境では動作しません)</td>
+</tr>
+<tr>
+<td>GTK</td>
+<td>GTK4(4.6 以上、4.22 で検証)</td>
+</tr>
+<tr>
+<td>GPU</td>
+<td>不要(既定は software レンダリング。EGL モードは実験的)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-rpmfedora-44--x86_64">1. RPM(Fedora 44 / x86_64)</h2>
+<p>依存パッケージは <strong>dnf が自動解決</strong>します。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime(実行に必須)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.1.0-build4.fc44.x86_64.rpm</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># アプリを開発する場合(ヘッダ + pkg-config)</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.1.0-build4.fc44.x86_64.rpm</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Python (PyGObject) / GJS から使う場合</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-gir-1.1.0-build4.fc44.x86_64.rpm</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># マニュアル(日英)</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-doc-1.1.0-build4.fc44.noarch.rpm</span></code></pre></div>
+<p>RPM は GPG
+署名済みです。署名検証を行う場合は公開鍵をインポートしてください。</p>
+<h2 id="2-debdebian--ubuntu--amd64">2. DEB(Debian / Ubuntu / amd64)</h2>
+<p>依存パッケージは <strong>apt が自動解決</strong>します(glibc 2.43
+以上のリリースが必要です)。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.1.0-build4_amd64.deb      <span class="co"># runtime</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.1.0-build4_amd64.deb    <span class="co"># 開発用</span></span></code></pre></div>
+<h2 id="3-tarballその他の-linux--glibc--x86_64">3. tarball(その他の
+Linux / glibc / x86_64)</h2>
+<p><code>.tar.gz</code> と <code>.tar.bz2</code>
+は同一内容です。<strong>tarball
+はパッケージマネージャを通らないため、依存ライブラリを自分で揃える必要があります</strong>。</p>
+<h3 id="3-1-依存パッケージの導入先に実行">3-1.
+依存パッケージの導入(先に実行)</h3>
+<p>BlinkGTK は Chromium
+ランタイムを同梱しますが、システム側のライブラリ(GTK4・NSS・音声・印刷・メディア等)に依存します。主要ディストリビューションでは次の
+1 コマンドでトップレベル依存が揃います(残りは連鎖導入されます):</p>
+<p><strong>Fedora(44 以降)</strong>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4 nss alsa-lib cups-libs dbus-libs at-spi2-core at-spi2-atk <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  libdrm mesa-libgbm mesa-libEGL libxkbcommon wayland-utils libseccomp <span class="dt">\</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  gstreamer1 gstreamer1-plugins-base openssl-libs sqlite-libs libcurl</span></code></pre></div>
+<p><strong>Debian / Ubuntu(glibc 2.43 以上のリリース)</strong>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-1 libnss3 libasound2t64 libcups2t64 libdbus-1-3 <span class="dt">\</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  libatk-bridge2.0-0t64 libatspi2.0-0t64 libdrm2 libgbm1 libegl1 <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  libxkbcommon0 libseccomp2 libgstreamer1.0-0 gstreamer1.0-plugins-base <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  libssl3t64 libsqlite3-0</span></code></pre></div>
+<p>(パッケージ名はリリースにより多少異なります。<code>t64</code>
+接尾辞は Ubuntu 24.04 以降の表記です)</p>
+<blockquote>
+<p><strong>アップグレード時 / When upgrading</strong>: 旧 tarball
+を非ルート prefix (例 <code>~/blinkgtk</code>)
+に展開していた場合は旧版ディレクトリを削除してから展開してください。RPM/DEB
+は自動置換されます。 / If you extracted a previous tarball to a non-root
+prefix, remove the old directory first. RPM/DEB replace
+automatically.</p>
+</blockquote>
+<h3 id="3-2-展開">3-2. 展開</h3>
+<p>FHS 構成(<code>usr/</code>,
+<code>etc/</code>)なのでルートに展開します:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar <span class="at">-C</span> / <span class="at">-xzf</span> blinkgtk-1.1.0-build4-linux-x86_64.tar.gz</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig</span></code></pre></div>
+<p>システムを汚したくない場合は任意の prefix に展開し、実行時に
+<code>LD_LIBRARY_PATH</code> を通してください:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/blinkgtk <span class="kw">&amp;&amp;</span> <span class="fu">tar</span> <span class="at">-C</span> ~/blinkgtk <span class="at">-xzf</span> blinkgtk-1.1.0-build4-linux-x86_64.tar.gz</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>~/blinkgtk/usr/lib64/blinkgtk-0.1:~/blinkgtk/usr/lib64/blinkgtk-0.1/chromium</span></code></pre></div>
+<h3 id="3-3-依存の不足を機械的に確認推奨">3-3.
+依存の不足を機械的に確認(推奨)</h3>
+<p>ディストリビューションごとのパッケージ名差異に依らず、<strong>実際に何が足りないか</strong>を次のコマンドで確認できます。出力が空なら依存は揃っています:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">PREFIX</span><span class="op">=</span>/            <span class="co"># ~/blinkgtk に展開した場合はそのパス</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ldd</span> <span class="va">$PREFIX</span>/usr/lib64/blinkgtk-0.1/chromium/libcontent.so <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$PREFIX</span>/usr/lib64/blinkgtk-0.1/libblinkgtk-0.1.so.0.0.0 <span class="dv">2</span><span class="op">&gt;</span>/dev/null <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;not found&quot;</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span></span></code></pre></div>
+<p><code>not found</code>
+が出た場合は、そのライブラリ名でディストリビューションのパッケージを検索して導入してください(例:
+Fedora <code>dnf provides '*/libasound.so.2'</code> / Debian
+<code>apt-file search libasound.so.2</code>)。</p>
+<h2 id="4-検証">4. 検証</h2>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sha256sum</span> <span class="at">-c</span> SHA256SUMS <span class="at">--ignore-missing</span></span></code></pre></div>
+<h2 id="5-動作確認">5. 動作確認</h2>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk                  <span class="co"># ライブラリ登録確認 (ルート展開時)</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1         <span class="co"># devel 導入時</span></span></code></pre></div>
+<h2 id="6-トラブルシューティング">6. トラブルシューティング</h2>
+<table>
+<thead>
+<tr>
+<th>症状</th>
+<th>原因と対処</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>error while loading shared libraries: ...: cannot open shared object file</code></td>
+<td>依存不足。§3-3 の確認コマンドで特定し、該当パッケージを導入</td>
+</tr>
+<tr>
+<td><code>GLIBC_2.43 not found</code></td>
+<td>glibc が古いディストリビューションです。§0
+の要件を満たすリリースをご利用ください</td>
+</tr>
+<tr>
+<td>起動直後に sandbox 関連のエラーで落ちる(コンテナ等)</td>
+<td>環境が Chromium sandbox
+に対応していません。<code>BLINKGTK_NO_SANDBOX=1</code>
+を設定して起動</td>
+</tr>
+<tr>
+<td>ウィンドウが出ない /
+<code>Failed to connect to Wayland display</code></td>
+<td>Wayland セッションで実行してください(X11
+セッションは非対応)。<code>echo $WAYLAND_DISPLAY</code> で確認</td>
+</tr>
+<tr>
+<td>音が出ない / 動画が再生されない</td>
+<td>GStreamer
+プラグイン不足。<code>gstreamer1-plugins-good</code>(Fedora)/
+<code>gstreamer1.0-plugins-good</code>(Debian)を追加</td>
+</tr>
+</tbody>
+</table>
+<p>アプリのビルド方法・API は runtime
+同梱のドキュメント(<code>/usr/share/doc/blinkgtk-0.1/</code> — 名称は
+API バージョン)を参照してください。</p>
+</body>
+</html>
+</div></div>

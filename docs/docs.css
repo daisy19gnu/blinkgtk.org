@@ -1,0 +1,74 @@
+  :root { color-scheme: light dark; }
+  * { box-sizing: border-box; }
+  body {
+    margin: 0;
+    font-family: system-ui, -apple-system, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
+    line-height: 1.85;
+    color: #1f2933;
+    background: #f7f9fb;
+  }
+  @media (prefers-color-scheme: dark) {
+    body { color: #e6e9ec; background: #11161b; }
+    /* dark: #ffc078 = カード背景 #1a2027 上で 10.21:1 */
+    a { color: #ffc078; }
+    a:hover { color: #ffdcbb; }
+    .card { background: #1a2027 !important; border-color: #2a323b !important; }
+    .muted { color: #9aa4ad !important; }
+    .lang-label { color: #9aa4ad !important; border-color: #2a323b !important; }
+  }
+  .wrap { max-width: 760px; margin: 0 auto; padding: 8vh 24px 12vh; }
+  header h1 {
+    font-size: clamp(2.4rem, 8vw, 4rem);
+    margin: 0 0 .2em;
+    letter-spacing: -0.02em;
+  }
+  .tagline { font-size: 1.15rem; margin: 0 0 2.5em; }
+  .tagline .ja { display: block; }
+  .tagline .en { display: block; color: #5b6770; font-size: .95rem; margin-top: .3em; }
+  .card {
+    background: #ffffff;
+    border: 1px solid #e1e6ea;
+    border-radius: 12px;
+    padding: 22px 26px;
+    margin: 1.2em 0;
+  }
+  .lang-label {
+    display: inline-block;
+    font-size: .72rem;
+    letter-spacing: .08em;
+    text-transform: uppercase;
+    color: #6b7680;
+    border: 1px solid #e1e6ea;
+    border-radius: 999px;
+    padding: 1px 10px;
+    margin-bottom: .8em;
+  }
+  .card p { margin: 0 0 .9em; }
+  .card p:last-child { margin-bottom: 0; }
+  /* リンクは下線なしのオレンジ (2026-07-26)。light は #e8590c で白背景 3.58:1 /
+     body 背景 3.39:1。発色を優先し AA(4.5:1) 非達成を許容 (3:1 以上)。hover は下線を使わず色変化で示す。 */
+  a { color: #e8590c; text-decoration: none; }
+  a:hover { color: #c2410c; }
+  .muted { color: #6b7680; font-size: .9rem; }
+  footer { margin-top: 4em; font-size: .8rem; color: #8a949d; }
+  .dl-list { margin: .2em 0 .7em; padding-left: 1.3em; }
+  .dl-list li { margin: .18em 0; }
+  table.compat { border-collapse: collapse; width: 100%; font-size: .84rem; margin: .3em 0 .2em; }
+  table.compat th, table.compat td { border: 1px solid rgba(128,128,128,.32); padding: 4px 9px; text-align: left; }
+  table.compat th { font-weight: 600; }
+  .compat-wrap { overflow-x: auto; margin-bottom: .3em; }
+  .card p.sec { margin-top: 1.6em; }
+  .wrap { max-width: 900px; }
+  .doc h1 { font-size: 1.6em; margin-top: 0; }
+  .doc h2 { margin-top: 2em; border-bottom: 1px solid rgba(128,128,128,.25); padding-bottom: .2em; }
+  .doc h3 { margin-top: 1.5em; }
+  .doc pre { background: rgba(128,128,128,.10); padding: 1em; overflow-x: auto; border-radius: 6px; }
+  .doc code { background: rgba(128,128,128,.14); padding: .1em .35em; border-radius: 3px; }
+  .doc pre code { background: none; padding: 0; }
+  .doc table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
+  .doc th, .doc td { border: 1px solid rgba(128,128,128,.3); padding: .45em .7em; text-align: left; }
+  .doc blockquote { border-left: 3px solid rgba(128,128,128,.4); margin-left: 0; padding-left: 1em; }
+  .navbar { margin-bottom: 2em; font-size: .95em; }
+  .doclist { list-style: none; padding-left: 0; }
+  .doclist li { margin: .35em 0; }
+  .doclist .lang { font-size: .85em; opacity: .75; }

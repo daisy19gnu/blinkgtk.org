@@ -1,0 +1,1220 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK GObject Signals API Reference — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK GObject Signals API Reference — BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-gobject-signals-api-reference">BlinkGTK GObject Signals
+API Reference</h1>
+<p><strong>Last updated</strong>: 2026-01-01 <strong>Target
+version</strong>: BlinkGTK v0.9.28-dev and later <strong>Phase</strong>:
+Phase 5 (Performance Optimization &amp; User API)</p>
+<hr />
+<h2 id="table-of-contents">Table of Contents</h2>
+<ol type="1">
+<li><a href="#overview">Overview</a></li>
+<li><a href="#signal-list">Signal List</a></li>
+<li><a href="#load-events">Load Events</a>
+<ul>
+<li><a href="#load-changed">load-changed</a></li>
+<li><a href="#load-failed">load-failed</a></li>
+</ul></li>
+<li><a href="#navigation-events">Navigation Events</a>
+<ul>
+<li><a href="#title-changed">title-changed</a></li>
+<li><a href="#uri-changed">uri-changed</a></li>
+</ul></li>
+<li><a href="#practical-patterns">Practical Patterns</a></li>
+<li><a href="#webkitgtk-compatibility">WebKitGTK Compatibility</a></li>
+<li><a href="#troubleshooting">Troubleshooting</a></li>
+</ol>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>BlinkGTK uses the <strong>GObject signal system</strong> to notify
+about page load state and navigation events.</p>
+<h3 id="what-are-gobject-signals">What Are GObject Signals</h3>
+<p>GObject signals are at the core of GTK/GLib event-driven
+programming:</p>
+<ul>
+<li><strong>Type-safe</strong>: Type checking at compile time</li>
+<li><strong>Flexible connection</strong>: Multiple handlers can be
+connected to the same signal</li>
+<li><strong>Automatic disconnection</strong>: Signals are automatically
+disconnected when the object is destroyed</li>
+</ul>
+<h3 id="blinkgtks-signal-architecture">BlinkGTK's Signal
+Architecture</h3>
+<pre><code>Chromium/Blink Engine
+         ↓
+  WebContentsObserver
+         ↓
+   BlinkWebView (C++)
+         ↓
+  GObject Signal System
+         ↓
+   User Application (C/Python/Rust)</code></pre>
+<h3 id="basic-usage">Basic Usage</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> event_name <span class="op">=</span> <span class="st">&quot;&quot;</span><span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_STARTED<span class="op">:</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>            event_name <span class="op">=</span> <span class="st">&quot;STARTED&quot;</span><span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_REDIRECTED<span class="op">:</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>            event_name <span class="op">=</span> <span class="st">&quot;REDIRECTED&quot;</span><span class="op">;</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_COMMITTED<span class="op">:</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>            event_name <span class="op">=</span> <span class="st">&quot;COMMITTED&quot;</span><span class="op">;</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_FINISHED<span class="op">:</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>            event_name <span class="op">=</span> <span class="st">&quot;FINISHED&quot;</span><span class="op">;</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Load event: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> event_name<span class="op">);</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a>    gtk_init<span class="op">();</span>  <span class="co">/* GTK4 は引数なし */</span></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span>  <span class="co">/* GTK4 は引数なし */</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Connect signal</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... (GTK main loop, etc.)</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="signal-list">Signal List</h2>
+<table>
+<thead>
+<tr>
+<th>Signal name</th>
+<th>Parameters</th>
+<th>Emission timing</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load-changed</code></td>
+<td>BlinkLoadEvent</td>
+<td>Load state change</td>
+<td>Progress display, UI update</td>
+</tr>
+<tr>
+<td><code>load-failed</code></td>
+<td>URL, error_code</td>
+<td>Load failure</td>
+<td>Error handling</td>
+</tr>
+<tr>
+<td><code>title-changed</code></td>
+<td>title</td>
+<td>Title change</td>
+<td>Window title update</td>
+</tr>
+<tr>
+<td><code>uri-changed</code></td>
+<td>uri</td>
+<td>URI change</td>
+<td>Address bar update</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="load-events">Load Events</h2>
+<h3 id="load-changed">load-changed</h3>
+<p><strong>Overview</strong>: Emitted when the page load state
+changes.</p>
+<h4 id="signature">Signature</h4>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> user_function<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                   BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                   gpointer user_data<span class="op">);</span></span></code></pre></div>
+<h4 id="parameters">Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web_view</code></td>
+<td><code>GtkWidget*</code></td>
+<td>The WebView widget</td>
+</tr>
+<tr>
+<td><code>load_event</code></td>
+<td><code>BlinkLoadEvent</code></td>
+<td>The kind of load event</td>
+</tr>
+<tr>
+<td><code>user_data</code></td>
+<td><code>gpointer</code></td>
+<td>User data</td>
+</tr>
+</tbody>
+</table>
+<h4 id="values-of-blinkloadevent">Values of BlinkLoadEvent</h4>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    BLINK_LOAD_STARTED<span class="op">,</span>      <span class="co">// Navigation started</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    BLINK_LOAD_REDIRECTED<span class="op">,</span>   <span class="co">// Redirect occurred</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    BLINK_LOAD_COMMITTED<span class="op">,</span>    <span class="co">// Response received, DOM construction started</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    BLINK_LOAD_FINISHED      <span class="co">// Page load complete</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkLoadEvent<span class="op">;</span></span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>Meaning</th>
+<th>Emission timing</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINK_LOAD_STARTED</code></td>
+<td>Load started</td>
+<td>Immediately after <code>blink_web_view_load_uri()</code></td>
+</tr>
+<tr>
+<td><code>BLINK_LOAD_REDIRECTED</code></td>
+<td>Redirect</td>
+<td>When an HTTP redirect occurs</td>
+</tr>
+<tr>
+<td><code>BLINK_LOAD_COMMITTED</code></td>
+<td>Committed</td>
+<td>After the response headers are received</td>
+</tr>
+<tr>
+<td><code>BLINK_LOAD_FINISHED</code></td>
+<td>Finished</td>
+<td>DOMContentLoaded + resource loading complete</td>
+</tr>
+</tbody>
+</table>
+<h4 id="example-1-displaying-a-progress-bar">Example 1: Displaying a
+Progress Bar</h4>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> progress_bar<span class="op">;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> status_label<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> AppData<span class="op">;</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    AppData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>AppData<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_STARTED<span class="op">:</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>data<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.0</span><span class="op">);</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>data<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;Loading...&quot;</span><span class="op">);</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a>            gtk_widget_show<span class="op">(</span>data<span class="op">-&gt;</span>progress_bar<span class="op">);</span></span>
+<span id="cb5-16"><a href="#cb5-16" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb5-17"><a href="#cb5-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-18"><a href="#cb5-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_REDIRECTED<span class="op">:</span></span>
+<span id="cb5-19"><a href="#cb5-19" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>data<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.3</span><span class="op">);</span></span>
+<span id="cb5-20"><a href="#cb5-20" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>data<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;Redirecting...&quot;</span><span class="op">);</span></span>
+<span id="cb5-21"><a href="#cb5-21" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb5-22"><a href="#cb5-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-23"><a href="#cb5-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_COMMITTED<span class="op">:</span></span>
+<span id="cb5-24"><a href="#cb5-24" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>data<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.6</span><span class="op">);</span></span>
+<span id="cb5-25"><a href="#cb5-25" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>data<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;Rendering...&quot;</span><span class="op">);</span></span>
+<span id="cb5-26"><a href="#cb5-26" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb5-27"><a href="#cb5-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-28"><a href="#cb5-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_FINISHED<span class="op">:</span></span>
+<span id="cb5-29"><a href="#cb5-29" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>data<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb5-30"><a href="#cb5-30" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>data<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;Done&quot;</span><span class="op">);</span></span>
+<span id="cb5-31"><a href="#cb5-31" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Hide the progress bar after 1 second</span></span>
+<span id="cb5-32"><a href="#cb5-32" aria-hidden="true" tabindex="-1"></a>            g_timeout_add<span class="op">(</span><span class="dv">1000</span><span class="op">,</span> <span class="op">(</span>GSourceFunc<span class="op">)</span>gtk_widget_hide<span class="op">,</span> data<span class="op">-&gt;</span>progress_bar<span class="op">);</span></span>
+<span id="cb5-33"><a href="#cb5-33" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb5-34"><a href="#cb5-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-35"><a href="#cb5-35" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="example-2-enablingdisabling-navigation-buttons">Example 2:
+Enabling/Disabling Navigation Buttons</h4>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>load_event <span class="op">!=</span> BLINK_LOAD_FINISHED<span class="op">)</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Update the back/forward button states after the load completes</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    gboolean can_go_back <span class="op">=</span> blink_web_view_can_go_back<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    gboolean can_go_forward <span class="op">=</span> blink_web_view_can_go_forward<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_sensitive<span class="op">(</span>back_button<span class="op">,</span> can_go_back<span class="op">);</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_sensitive<span class="op">(</span>forward_button<span class="op">,</span> can_go_forward<span class="op">);</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="webkitgtk-compatibility">WebKitGTK Compatibility</h4>
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>WebKitGTK</th>
+<th>Compatibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load-changed</code></td>
+<td><code>load-changed</code></td>
+<td>✅ Fully compatible</td>
+</tr>
+<tr>
+<td><code>BLINK_LOAD_STARTED</code></td>
+<td><code>WEBKIT_LOAD_STARTED</code></td>
+<td>✅ Equivalent</td>
+</tr>
+<tr>
+<td><code>BLINK_LOAD_REDIRECTED</code></td>
+<td><code>WEBKIT_LOAD_REDIRECTED</code></td>
+<td>✅ Equivalent</td>
+</tr>
+<tr>
+<td><code>BLINK_LOAD_COMMITTED</code></td>
+<td><code>WEBKIT_LOAD_COMMITTED</code></td>
+<td>✅ Equivalent</td>
+</tr>
+<tr>
+<td><code>BLINK_LOAD_FINISHED</code></td>
+<td><code>WEBKIT_LOAD_FINISHED</code></td>
+<td>✅ Equivalent</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h3 id="load-failed">load-failed</h3>
+<p><strong>Overview</strong>: Emitted when the page load fails.</p>
+<h4 id="signature-1">Signature</h4>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> user_function<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                   gpointer user_data<span class="op">);</span></span></code></pre></div>
+<h4 id="parameters-1">Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web_view</code></td>
+<td><code>GtkWidget*</code></td>
+<td>The WebView widget</td>
+</tr>
+<tr>
+<td><code>failing_url</code></td>
+<td><code>const char*</code></td>
+<td>The URL that failed</td>
+</tr>
+<tr>
+<td><code>error_code</code></td>
+<td><code>int</code></td>
+<td>Chromium error code (negative value)</td>
+</tr>
+<tr>
+<td><code>user_data</code></td>
+<td><code>gpointer</code></td>
+<td>User data</td>
+</tr>
+</tbody>
+</table>
+<h4 id="main-error-codes">Main Error Codes</h4>
+<table>
+<thead>
+<tr>
+<th>Error code</th>
+<th>Constant name (reference)</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>-2</td>
+<td><code>net::ERR_FAILED</code></td>
+<td>General error</td>
+</tr>
+<tr>
+<td>-3</td>
+<td><code>net::ERR_ABORTED</code></td>
+<td>Load aborted</td>
+</tr>
+<tr>
+<td>-7</td>
+<td><code>net::ERR_TIMED_OUT</code></td>
+<td>Timeout</td>
+</tr>
+<tr>
+<td>-21</td>
+<td><code>net::ERR_NETWORK_CHANGED</code></td>
+<td>Network changed</td>
+</tr>
+<tr>
+<td>-105</td>
+<td><code>net::ERR_NAME_NOT_RESOLVED</code></td>
+<td>DNS resolution failed</td>
+</tr>
+<tr>
+<td>-106</td>
+<td><code>net::ERR_INTERNET_DISCONNECTED</code></td>
+<td>Internet not connected</td>
+</tr>
+<tr>
+<td>-324</td>
+<td><code>net::ERR_EMPTY_RESPONSE</code></td>
+<td>Empty response</td>
+</tr>
+</tbody>
+</table>
+<p>For the full list, see <a
+href="https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h">Chromium
+net_error_list.h</a>.</p>
+<h4 id="example-1-displaying-an-error-message">Example 1: Displaying an
+Error Message</h4>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> error_message <span class="op">=</span> <span class="st">&quot;Unknown error&quot;</span><span class="op">;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Message based on the error code</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>error_code<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> <span class="op">-</span><span class="dv">2</span><span class="op">:</span></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a>            error_message <span class="op">=</span> <span class="st">&quot;Failed to load the page&quot;</span><span class="op">;</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> <span class="op">-</span><span class="dv">3</span><span class="op">:</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>            error_message <span class="op">=</span> <span class="st">&quot;Load was aborted&quot;</span><span class="op">;</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> <span class="op">-</span><span class="dv">7</span><span class="op">:</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            error_message <span class="op">=</span> <span class="st">&quot;The connection timed out&quot;</span><span class="op">;</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> <span class="op">-</span><span class="dv">105</span><span class="op">:</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>            error_message <span class="op">=</span> <span class="st">&quot;The server could not be found&quot;</span><span class="op">;</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> <span class="op">-</span><span class="dv">106</span><span class="op">:</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>            error_message <span class="op">=</span> <span class="st">&quot;Not connected to the Internet&quot;</span><span class="op">;</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Show an error dialog</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> dialog <span class="op">=</span> gtk_message_dialog_new<span class="op">(</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>        GTK_WINDOW<span class="op">(</span>gtk_widget_get_root<span class="op">(</span>web_view<span class="op">)),</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        GTK_DIALOG_MODAL<span class="op">,</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        GTK_MESSAGE_ERROR<span class="op">,</span></span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>        GTK_BUTTONS_OK<span class="op">,</span></span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Load error&quot;</span></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    gtk_message_dialog_format_secondary_text<span class="op">(</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        GTK_MESSAGE_DIALOG<span class="op">(</span>dialog<span class="op">),</span></span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;</span><span class="sc">%s\n\n</span><span class="st">URL: </span><span class="sc">%s\n</span><span class="st">Error code: </span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        error_message<span class="op">,</span> failing_url<span class="op">,</span> error_code</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>dialog<span class="op">,</span> <span class="st">&quot;response&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>gtk_window_destroy<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb8-41"><a href="#cb8-41" aria-hidden="true" tabindex="-1"></a>    gtk_widget_show<span class="op">(</span>dialog<span class="op">);</span></span>
+<span id="cb8-42"><a href="#cb8-42" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="example-2-displaying-a-custom-error-page">Example 2: Displaying
+a Custom Error Page</h4>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// HTML for the custom error page</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> error_html <span class="op">=</span> g_strdup_printf<span class="op">(</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;!DOCTYPE html&gt;&quot;</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;html&gt;&quot;</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;head&gt;&quot;</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;meta charset=&#39;UTF-8&#39;&gt;&quot;</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;title&gt;Unable to load page&lt;/title&gt;&quot;</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;style&gt;&quot;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;    body { font-family: sans-serif; text-align: center; padding: 50px; }&quot;</span></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;    h1 { color: #d32f2f; }&quot;</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;    .error-code { color: #666; font-family: monospace; }&quot;</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;    .retry-button { padding: 10px 20px; font-size: 16px; }&quot;</span></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;/style&gt;&quot;</span></span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/head&gt;&quot;</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;body&gt;&quot;</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;h1&gt;Unable to load page&lt;/h1&gt;&quot;</span></span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;p&gt;Failed to load the following URL:&lt;/p&gt;&quot;</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;p class=&#39;error-code&#39;&gt;</span><span class="sc">%s</span><span class="st">&lt;/p&gt;&quot;</span></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;p&gt;Error code: &lt;span class=&#39;error-code&#39;&gt;</span><span class="sc">%d</span><span class="st">&lt;/span&gt;&lt;/p&gt;&quot;</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;button class=&#39;retry-button&#39; onclick=&#39;location.href=</span><span class="sc">\&quot;%s\&quot;</span><span class="st">&#39;&gt;Retry&lt;/button&gt;&quot;</span></span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/body&gt;&quot;</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/html&gt;&quot;</span><span class="op">,</span></span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        failing_url<span class="op">,</span> error_code<span class="op">,</span> failing_url</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Display the error page</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> error_html<span class="op">,</span> <span class="st">&quot;about:error&quot;</span><span class="op">);</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>error_html<span class="op">);</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="webkitgtk-compatibility-1">WebKitGTK Compatibility</h4>
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>WebKitGTK</th>
+<th>Compatibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load-failed</code></td>
+<td><code>load-failed</code></td>
+<td>✅ Compatible</td>
+</tr>
+<tr>
+<td><code>error_code</code> (int)</td>
+<td><code>error</code> (GError*)</td>
+<td>⚠️ Different format</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note</strong>: WebKitGTK uses a <code>GError*</code>
+structure, whereas BlinkGTK uses an <code>int</code> error code. The
+error code values correspond to Chromium's <code>net::Error</code>.</p>
+<hr />
+<h2 id="navigation-events">Navigation Events</h2>
+<h3 id="title-changed">title-changed</h3>
+<p><strong>Overview</strong>: Emitted when the page title changes.</p>
+<h4 id="signature-2">Signature</h4>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> user_function<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                   gpointer user_data<span class="op">);</span></span></code></pre></div>
+<h4 id="parameters-2">Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web_view</code></td>
+<td><code>GtkWidget*</code></td>
+<td>The WebView widget</td>
+</tr>
+<tr>
+<td><code>title</code></td>
+<td><code>const char*</code></td>
+<td>The new page title (UTF-8)</td>
+</tr>
+<tr>
+<td><code>user_data</code></td>
+<td><code>gpointer</code></td>
+<td>User data</td>
+</tr>
+</tbody>
+</table>
+<h4 id="emission-timing">Emission Timing</h4>
+<ul>
+<li>When page loading completes (the content of the
+<code>&lt;title&gt;</code> tag)</li>
+<li>When <code>document.title</code> is changed via JavaScript</li>
+<li>When a page transition occurs in an SPA</li>
+</ul>
+<h4 id="example-1-updating-the-window-title">Example 1: Updating the
+Window Title</h4>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    GtkWindow<span class="op">*</span> window <span class="op">=</span> GTK_WINDOW<span class="op">(</span>user_data<span class="op">);</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// &quot;Title - App name&quot; format</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> window_title <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> - MyBrowser&quot;</span><span class="op">,</span> title<span class="op">);</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>window<span class="op">,</span> window_title<span class="op">);</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>window_title<span class="op">);</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a><span class="co">// Connect the signal (pass window as user_data)</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> window<span class="op">);</span></span></code></pre></div>
+<h4 id="example-2-updating-a-tab-title">Example 2: Updating a Tab
+Title</h4>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> tab_label<span class="op">;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view<span class="op">;</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> TabData<span class="op">;</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    TabData<span class="op">*</span> tab <span class="op">=</span> <span class="op">(</span>TabData<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Truncate the title if it is too long</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> display_title<span class="op">;</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>strlen<span class="op">(</span>title<span class="op">)</span> <span class="op">&gt;</span> <span class="dv">30</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        display_title <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%.27s</span><span class="st">...&quot;</span><span class="op">,</span> title<span class="op">);</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        display_title <span class="op">=</span> g_strdup<span class="op">(</span>title<span class="op">);</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>    gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>tab<span class="op">-&gt;</span>tab_label<span class="op">),</span> display_title<span class="op">);</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>display_title<span class="op">);</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="webkitgtk-compatibility-2">WebKitGTK Compatibility</h4>
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>WebKitGTK</th>
+<th>Compatibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>title-changed</code></td>
+<td><code>notify::title</code></td>
+<td>⚠️ Different</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note</strong>: WebKitGTK uses the <code>notify::title</code>
+property change notification, whereas BlinkGTK provides a dedicated
+<code>title-changed</code> signal.</p>
+<p><strong>Migration example</strong>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;notify::title&quot;</span><span class="op">,</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_notify_title<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<hr />
+<h3 id="uri-changed">uri-changed</h3>
+<p><strong>Overview</strong>: Emitted when the page URI changes.</p>
+<h4 id="signature-3">Signature</h4>
+<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> user_function<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                   gpointer user_data<span class="op">);</span></span></code></pre></div>
+<h4 id="parameters-3">Parameters</h4>
+<table>
+<thead>
+<tr>
+<th>Parameter</th>
+<th>Type</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>web_view</code></td>
+<td><code>GtkWidget*</code></td>
+<td>The WebView widget</td>
+</tr>
+<tr>
+<td><code>uri</code></td>
+<td><code>const char*</code></td>
+<td>The new URI (UTF-8)</td>
+</tr>
+<tr>
+<td><code>user_data</code></td>
+<td><code>gpointer</code></td>
+<td>User data</td>
+</tr>
+</tbody>
+</table>
+<h4 id="emission-timing-1">Emission Timing</h4>
+<ul>
+<li>When URL loading starts via
+<code>blink_web_view_load_uri()</code></li>
+<li>When navigating via <code>blink_web_view_go_back()</code> /
+<code>go_forward()</code></li>
+<li>When an in-page link is clicked</li>
+<li>When <code>location.href</code> is changed via JavaScript</li>
+<li>When the History API is used in an SPA</li>
+</ul>
+<h4 id="example-1-updating-the-address-bar">Example 1: Updating the
+Address Bar</h4>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_uri_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    GtkEntry<span class="op">*</span> url_entry <span class="op">=</span> GTK_ENTRY<span class="op">(</span>user_data<span class="op">);</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Show the URI in the address bar</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    gtk_editable_set_text<span class="op">(</span>GTK_EDITABLE<span class="op">(</span>url_entry<span class="op">),</span> uri<span class="op">);</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="co">// Connect the signal (pass url_entry as user_data)</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> url_entry<span class="op">);</span></span></code></pre></div>
+<h4 id="example-2-history-management">Example 2: History Management</h4>
+<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>    GList<span class="op">*</span> history<span class="op">;</span>      <span class="co">// History list</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> current_index<span class="op">;</span>   <span class="co">// Current position</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> HistoryManager<span class="op">;</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_uri_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    HistoryManager<span class="op">*</span> history <span class="op">=</span> <span class="op">(</span>HistoryManager<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Remove history entries after the current position (new branch)</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>    <span class="cf">while</span> <span class="op">(</span>history<span class="op">-&gt;</span>current_index <span class="op">&lt;</span> g_list_length<span class="op">(</span>history<span class="op">-&gt;</span>history<span class="op">)</span> <span class="op">-</span> <span class="dv">1</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>        GList<span class="op">*</span> last <span class="op">=</span> g_list_last<span class="op">(</span>history<span class="op">-&gt;</span>history<span class="op">);</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>        g_free<span class="op">(</span>last<span class="op">-&gt;</span>data<span class="op">);</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        history<span class="op">-&gt;</span>history <span class="op">=</span> g_list_delete_link<span class="op">(</span>history<span class="op">-&gt;</span>history<span class="op">,</span> last<span class="op">);</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Append the new URI to the history</span></span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>    history<span class="op">-&gt;</span>history <span class="op">=</span> g_list_append<span class="op">(</span>history<span class="op">-&gt;</span>history<span class="op">,</span> g_strdup<span class="op">(</span>uri<span class="op">));</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>    history<span class="op">-&gt;</span>current_index <span class="op">=</span> g_list_length<span class="op">(</span>history<span class="op">-&gt;</span>history<span class="op">)</span> <span class="op">-</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;History: </span><span class="sc">%d</span><span class="st"> items, current=</span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>            g_list_length<span class="op">(</span>history<span class="op">-&gt;</span>history<span class="op">),</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>            history<span class="op">-&gt;</span>current_index<span class="op">);</span></span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="example-3-displaying-a-secure-page-indicator">Example 3:
+Displaying a Secure Page Indicator</h4>
+<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_uri_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    GtkImage<span class="op">*</span> security_icon <span class="op">=</span> GTK_IMAGE<span class="op">(</span>user_data<span class="op">);</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Check whether the page is served over HTTPS</span></span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_str_has_prefix<span class="op">(</span>uri<span class="op">,</span> <span class="st">&quot;https://&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        gtk_image_set_from_icon_name<span class="op">(</span>security_icon<span class="op">,</span> <span class="st">&quot;dialog-password&quot;</span><span class="op">);</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>        gtk_widget_set_tooltip_text<span class="op">(</span>GTK_WIDGET<span class="op">(</span>security_icon<span class="op">),</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;This page is secure&quot;</span><span class="op">);</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        gtk_image_set_from_icon_name<span class="op">(</span>security_icon<span class="op">,</span> <span class="st">&quot;dialog-warning&quot;</span><span class="op">);</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>        gtk_widget_set_tooltip_text<span class="op">(</span>GTK_WIDGET<span class="op">(</span>security_icon<span class="op">),</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;This page is not secure&quot;</span><span class="op">);</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h4 id="webkitgtk-compatibility-3">WebKitGTK Compatibility</h4>
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>WebKitGTK</th>
+<th>Compatibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>uri-changed</code></td>
+<td><code>notify::uri</code></td>
+<td>⚠️ Different</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note</strong>: WebKitGTK uses the <code>notify::uri</code>
+property change notification, whereas BlinkGTK provides a dedicated
+<code>uri-changed</code> signal.</p>
+<hr />
+<h2 id="practical-patterns">Practical Patterns</h2>
+<h3 id="pattern-1-complete-browser-ui-update">Pattern 1: Complete
+Browser UI Update</h3>
+<p>An implementation example of a complete browser UI that combines
+multiple signals.</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window<span class="op">;</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> url_entry<span class="op">;</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> back_button<span class="op">;</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> forward_button<span class="op">;</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> reload_button<span class="op">;</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> stop_button<span class="op">;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> progress_bar<span class="op">;</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> status_label<span class="op">;</span></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> security_icon<span class="op">;</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view<span class="op">;</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BrowserUI<span class="op">;</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-changed: update the UI based on load state */</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_STARTED<span class="op">:</span></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.0</span><span class="op">);</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;Loading...&quot;</span><span class="op">);</span></span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_COMMITTED<span class="op">:</span></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.5</span><span class="op">);</span></span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_FINISHED<span class="op">:</span> <span class="op">{</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;Done&quot;</span><span class="op">);</span></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>            <span class="co">// Update the navigation button states</span></span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>            gboolean can_go_back <span class="op">=</span> blink_web_view_can_go_back<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>            gboolean can_go_forward <span class="op">=</span> blink_web_view_can_go_forward<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_sensitive<span class="op">(</span>ui<span class="op">-&gt;</span>back_button<span class="op">,</span> can_go_back<span class="op">);</span></span>
+<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_sensitive<span class="op">(</span>ui<span class="op">-&gt;</span>forward_button<span class="op">,</span> can_go_forward<span class="op">);</span></span>
+<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-failed: show the error */</span></span>
+<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
+<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> message <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;Load error (code: </span><span class="sc">%d</span><span class="st">)&quot;</span><span class="op">,</span> error_code<span class="op">);</span></span>
+<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>    gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> message<span class="op">);</span></span>
+<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>message<span class="op">);</span></span>
+<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a><span class="co">/* title-changed: update the window title */</span></span>
+<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb18-71"><a href="#cb18-71" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb18-72"><a href="#cb18-72" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb18-73"><a href="#cb18-73" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb18-74"><a href="#cb18-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-75"><a href="#cb18-75" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> window_title <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> - MyBrowser&quot;</span><span class="op">,</span> title<span class="op">);</span></span>
+<span id="cb18-76"><a href="#cb18-76" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>ui<span class="op">-&gt;</span>window<span class="op">),</span> window_title<span class="op">);</span></span>
+<span id="cb18-77"><a href="#cb18-77" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>window_title<span class="op">);</span></span>
+<span id="cb18-78"><a href="#cb18-78" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb18-79"><a href="#cb18-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-80"><a href="#cb18-80" aria-hidden="true" tabindex="-1"></a><span class="co">/* uri-changed: update the address bar and security icon */</span></span>
+<span id="cb18-81"><a href="#cb18-81" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_uri_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb18-82"><a href="#cb18-82" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb18-83"><a href="#cb18-83" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb18-84"><a href="#cb18-84" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb18-85"><a href="#cb18-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-86"><a href="#cb18-86" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Update the address bar</span></span>
+<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a>    gtk_editable_set_text<span class="op">(</span>GTK_EDITABLE<span class="op">(</span>ui<span class="op">-&gt;</span>url_entry<span class="op">),</span> uri<span class="op">);</span></span>
+<span id="cb18-88"><a href="#cb18-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-89"><a href="#cb18-89" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Update the security icon</span></span>
+<span id="cb18-90"><a href="#cb18-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_str_has_prefix<span class="op">(</span>uri<span class="op">,</span> <span class="st">&quot;https://&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb18-91"><a href="#cb18-91" aria-hidden="true" tabindex="-1"></a>        gtk_image_set_from_icon_name<span class="op">(</span>GTK_IMAGE<span class="op">(</span>ui<span class="op">-&gt;</span>security_icon<span class="op">),</span></span>
+<span id="cb18-92"><a href="#cb18-92" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;dialog-password&quot;</span><span class="op">);</span></span>
+<span id="cb18-93"><a href="#cb18-93" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb18-94"><a href="#cb18-94" aria-hidden="true" tabindex="-1"></a>        gtk_image_set_from_icon_name<span class="op">(</span>GTK_IMAGE<span class="op">(</span>ui<span class="op">-&gt;</span>security_icon<span class="op">),</span></span>
+<span id="cb18-95"><a href="#cb18-95" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;dialog-warning&quot;</span><span class="op">);</span></span>
+<span id="cb18-96"><a href="#cb18-96" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb18-97"><a href="#cb18-97" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb18-98"><a href="#cb18-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-99"><a href="#cb18-99" aria-hidden="true" tabindex="-1"></a><span class="co">/* Connect the signals */</span></span>
+<span id="cb18-100"><a href="#cb18-100" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> setup_signals<span class="op">(</span>BrowserUI<span class="op">*</span> ui<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb18-101"><a href="#cb18-101" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb18-102"><a href="#cb18-102" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb18-103"><a href="#cb18-103" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;load-failed&quot;</span><span class="op">,</span></span>
+<span id="cb18-104"><a href="#cb18-104" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_load_failed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb18-105"><a href="#cb18-105" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
+<span id="cb18-106"><a href="#cb18-106" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb18-107"><a href="#cb18-107" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span></span>
+<span id="cb18-108"><a href="#cb18-108" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb18-109"><a href="#cb18-109" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="pattern-2-blockingunblocking-signals">Pattern 2:
+Blocking/Unblocking Signals</h3>
+<p>An example of how to temporarily disable a signal.</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> load_url_without_history<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                                     gpointer handler_id<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Temporarily block the uri-changed signal</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    g_signal_handler_block<span class="op">(</span>web_view<span class="op">,</span> GPOINTER_TO_UINT<span class="op">(</span>handler_id<span class="op">));</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Load the URL</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> url<span class="op">);</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Unblock the signal</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    g_signal_handler_unblock<span class="op">(</span>web_view<span class="op">,</span> GPOINTER_TO_UINT<span class="op">(</span>handler_id<span class="op">));</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* Usage example */</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>gulong handler_id <span class="op">=</span> g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                                     G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">// Load a URL without recording it in the history</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>load_url_without_history<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">,</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>                         GUINT_TO_POINTER<span class="op">(</span>handler_id<span class="op">));</span></span></code></pre></div>
+<h3 id="pattern-3-disconnecting-signal-handlers">Pattern 3:
+Disconnecting Signal Handlers</h3>
+<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    gulong load_changed_id<span class="op">;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    gulong load_failed_id<span class="op">;</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    gulong title_changed_id<span class="op">;</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    gulong uri_changed_id<span class="op">;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> SignalHandlers<span class="op">;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> disconnect_all_signals<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                                   SignalHandlers<span class="op">*</span> handlers<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>load_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>load_changed_id<span class="op">);</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>load_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>load_failed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>load_failed_id<span class="op">);</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>load_failed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>title_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>title_changed_id<span class="op">);</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>title_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>uri_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>uri_changed_id<span class="op">);</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>uri_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="webkitgtk-compatibility-4">WebKitGTK Compatibility</h2>
+<h3 id="signal-correspondence-table">Signal Correspondence Table</h3>
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>WebKitGTK</th>
+<th>Compatibility</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load-changed</code></td>
+<td><code>load-changed</code></td>
+<td>✅ Full</td>
+<td>Event values are also the same</td>
+</tr>
+<tr>
+<td><code>load-failed</code></td>
+<td><code>load-failed</code></td>
+<td>⚠️ Partial</td>
+<td>Error format differs</td>
+</tr>
+<tr>
+<td><code>title-changed</code></td>
+<td><code>notify::title</code></td>
+<td>⚠️ Different</td>
+<td>WebKit uses property notification</td>
+</tr>
+<tr>
+<td><code>uri-changed</code></td>
+<td><code>notify::uri</code></td>
+<td>⚠️ Different</td>
+<td>WebKit uses property notification</td>
+</tr>
+</tbody>
+</table>
+<h3 id="migration-guide">Migration Guide</h3>
+<h4 id="load-changed-1">load-changed</h4>
+<div class="sourceCode" id="cb21"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                           WebKitLoadEvent load_event<span class="op">,</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_STARTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_COMMITTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_FINISHED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>                           BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_STARTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_COMMITTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_FINISHED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<p><strong>Change</strong>: Only the type name and enum value prefix
+(<code>WEBKIT_</code> → <code>BLINK_</code>)</p>
+<h4 id="load-failed-1">load-failed</h4>
+<div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_load_failed<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                               WebKitLoadEvent load_event<span class="op">,</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                               GError<span class="op">*</span> error<span class="op">,</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                               gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Error: </span><span class="sc">%s</span><span class="st"> (code=</span><span class="sc">%d</span><span class="st">, domain=</span><span class="sc">%d</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>            error<span class="op">-&gt;</span>message<span class="op">,</span> error<span class="op">-&gt;</span>code<span class="op">,</span> error<span class="op">-&gt;</span>domain<span class="op">);</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> FALSE<span class="op">;</span>  <span class="co">// Show the default error page</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Error code: </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">);</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Changes</strong>:</p>
+<ul>
+<li>WebKitGTK uses <code>GError*</code>, BlinkGTK uses
+<code>int</code></li>
+<li>WebKitGTK returns a <code>gboolean</code>, BlinkGTK returns
+<code>void</code></li>
+</ul>
+<h4 id="title-changed--uri-changed">title-changed / uri-changed</h4>
+<div class="sourceCode" id="cb23"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_notify_title<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                           GParamSpec<span class="op">*</span> pspec<span class="op">,</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title <span class="op">=</span> webkit_web_view_get_title<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ... */</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;notify::title&quot;</span><span class="op">,</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_notify_title<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ... */</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<p><strong>Changes</strong>:</p>
+<ul>
+<li>Signal name: <code>notify::title</code> →
+<code>title-changed</code></li>
+<li>The title is passed directly as an argument (no getter function
+needed)</li>
+</ul>
+<hr />
+<h2 id="troubleshooting">Troubleshooting</h2>
+<h3 id="signal-does-not-fire">Signal Does Not Fire</h3>
+<p><strong>Symptom</strong>: The signal handler is not called</p>
+<p><strong>Causes and remedies</strong>:</p>
+<ol type="1">
+<li><p><strong>Typo in the signal name</strong></p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load_changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// underscore</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// hyphen</span></span></code></pre></div></li>
+<li><p><strong>Connecting before the WebView is created</strong></p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span></code></pre></div></li>
+<li><p><strong>The GTK main loop is not running</strong></p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ The signal will not fire (no main loop)</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Signals fire once the main loop is running</span></span></code></pre></div></li>
+</ol>
+<h3 id="crash-in-a-signal-handler">Crash in a Signal Handler</h3>
+<p><strong>Symptom</strong>: Segmentation fault inside a signal
+handler</p>
+<p><strong>Causes and remedies</strong>:</p>
+<ol type="1">
+<li><p><strong>user_data is NULL</strong></p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    MyData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>MyData<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span>  <span class="co">// ❌ Crashes if user_data is NULL</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Remedy: NULL check</span></span>
+<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    MyData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>MyData<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span></span>
+<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
+<li><p><strong>String lifetime</strong></p>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> saved_title <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    saved_title <span class="op">=</span> title<span class="op">;</span>  <span class="co">// ❌ title is a temporary pointer</span></span>
+<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Remedy: copy the string</span></span>
+<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>saved_title<span class="op">);</span></span>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>saved_title <span class="op">=</span> g_strdup<span class="op">(</span>title<span class="op">);</span>  <span class="co">// ✅ Store a copy</span></span></code></pre></div></li>
+</ol>
+<h3 id="memory-leaks">Memory Leaks</h3>
+<p><strong>Symptom</strong>: Memory usage keeps increasing</p>
+<p><strong>Causes and remedies</strong>:</p>
+<ol type="1">
+<li><p><strong>Signal handler is not disconnected</strong></p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Save the handler ID</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>gulong handler_id <span class="op">=</span> g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Disconnect before destroying the WebView</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handler_id<span class="op">);</span></span></code></pre></div></li>
+<li><p><strong>String leak</strong></p>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ↑ This function returns a g_strdup()&#39;d string</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Memory leak</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Free it after use</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>g_print<span class="op">(</span><span class="st">&quot;UA: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> ua<span class="op">);</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>ua<span class="op">);</span></span></code></pre></div></li>
+</ol>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>BlinkGTK's GObject signal system offers a high degree of
+compatibility with WebKitGTK while making use of the powerful event
+system of Chromium/Blink.</p>
+<h3 id="key-features">Key Features</h3>
+<ul>
+<li>✅ <strong>WebKitGTK compatible</strong>: The
+<code>load-changed</code> signal is fully compatible</li>
+<li>✅ <strong>Type-safe</strong>: GObject signal type checking</li>
+<li>✅ <strong>Flexible</strong>: Supports multiple handlers, and
+block/unblock</li>
+<li>✅ <strong>Practical</strong>: Ideal for progress display, error
+handling, and UI updates</li>
+</ul>
+<h3 id="next-steps">Next Steps</h3>
+<ul>
+<li><a href="navigation-api-en.md">Navigation API Reference</a> -
+Navigation functions</li>
+<li><a href="../tutorials/events-tutorial-c-en.md">Event Handling
+Tutorial</a> - Practical patterns</li>
+<li><a href="settings-api-en.md">Settings API Reference</a> -
+Settings-related API</li>
+</ul>
+<hr />
+<p><strong>Author</strong>: BlinkGTK Project <strong>License</strong>:
+BSD 3-Clause <strong>Feedback</strong>: <a
+href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
+</body>
+</html>
+</div></div>

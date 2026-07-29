@@ -1,0 +1,224 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 環境変数リファレンス(公開サポート正リスト) — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK 環境変数リファレンス(公開サポート正リスト) —
+BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-環境変数リファレンス公開サポート正リスト">BlinkGTK
+環境変数リファレンス(公開サポート正リスト)</h1>
+<p><strong>作成者</strong>: BlinkGTK Project <strong>最終更新</strong>:
+2026-07-21(Chromium 150 baseline、#121 API リファレンス第 9
+章の正本)</p>
+<p>BlinkGTK が解釈する環境変数を 3 区分で定義します。<strong>embedder
+が依存してよいのは第 1 区分(公開サポート)のみ</strong>です。</p>
+<ul>
+<li><strong>公開サポート</strong> — 安定
+API。後方互換を維持し、変更時はリリースノートで告知します。</li>
+<li><strong>エスケープハッチ</strong> — 既定 ON
+の修正・機構を無効化するトラブルシュート用スイッチ。通常運用では<strong>設定しないでください</strong>。問題の切り分けにのみ使用し、恒久設定にしないこと(将来のリリースで予告のうえ削除されることがあります)。</li>
+<li><strong>内部診断</strong> —
+開発・調査用。<strong>無保証・サポート対象外</strong>で、予告なく変更・削除されます。embedder
+が依存してはいけません。</li>
+</ul>
+<hr />
+<h2 id="1-公開サポート環境変数">1. 公開サポート環境変数</h2>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>値</th>
+<th>既定</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_GPU_MODE</code></td>
+<td><code>software</code> / <code>egl</code> /
+<code>swiftshader</code></td>
+<td><code>software</code></td>
+<td>描画モードの選択。<code>software</code>
+が推奨・既定。<code>egl</code> は GPU
+経路(実験的)、<code>swiftshader</code> は software 相当</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_HEADLESS</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td>headless 動作(実ディスプレイなし・CI 向け)。<code>--headless</code>
+付与を制御</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NO_SANDBOX</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td>Chromium sandbox を無効化。コンテナ等 sandbox 非対応環境向け</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EXTRA_SCHEMES</code></td>
+<td>カンマ区切り scheme 名</td>
+<td>未設定</td>
+<td>追加のカスタム URL scheme を standard scheme として登録(例:
+<code>ebook</code>)。custom scheme loader と併用</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SCROLL_SPEED</code></td>
+<td>数値(倍率)</td>
+<td><code>1.0</code></td>
+<td>ホイールスクロール速度の倍率</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DMABUF_PATH</code></td>
+<td>パス</td>
+<td>未設定</td>
+<td>egl モードの dmabuf デバイスパス指定</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_PNG_DIR</code></td>
+<td>ディレクトリパス</td>
+<td>未設定</td>
+<td>フレーム PNG の保存先(検証用途。設定時のみ保存)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_PNG_MAX</code></td>
+<td>整数</td>
+<td>実装既定</td>
+<td>保存するフレーム PNG の最大枚数</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-エスケープハッチ既定のまま推奨">2.
+エスケープハッチ(既定のまま推奨)</h2>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>効果(=0 等を設定した場合)</th>
+<th>関連</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_PUMP_LEGACY=1</code></td>
+<td>fd-watcher pump を無効化し旧 g_idle pump へ(idle CPU
+が増加します)</td>
+<td>#115</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PUMP_RESCUE=0</code></td>
+<td>pump 起床保証(100ms heartbeat)を無効化</td>
+<td>#120</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
+<td>capture damage gate(idle 時のフレームコピー抑制)を無効化</td>
+<td>#115</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FORCE_SINGLE_THREADED=1</code></td>
+<td>renderer を単一スレッド compositing に戻す(描画停止リスクあり)</td>
+<td>CP-1065</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_INVAL_FALLBACK=0</code></td>
+<td>invalidation フォールバック(白紙固定の修正)を無効化</td>
+<td>#120 fixG</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
+<td>activation 再 damage(白紙固定の修正)を無効化</td>
+<td>#120 fixF</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_CKB_REDRAW=0</code></td>
+<td>checkerboard 再 damage(安全網)を無効化</td>
+<td>#120 fixE</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
+<td>egl モードの分数スケーリングを opt-in(実験的)</td>
+<td>#117</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_RESIZE_BRIDGE=0</code></td>
+<td>egl resize ブリッジを無効化</td>
+<td>CP-1092</td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-内部診断サポート対象外">3. 内部診断(サポート対象外)</h2>
+<p>以下は開発・調査用の内部変数です。<strong>一覧のみ掲載し、詳細仕様は公開しません</strong>。無保証・予告なく削除されます。</p>
+<p><code>BLINKGTK_120_CC_DIAG</code> /
+<code>BLINKGTK_120_DISP_DIAG</code> /
+<code>BLINKGTK_120_CLIP_DIAG</code> / <code>BLINKGTK_120_DIAG</code> /
+<code>BLINKGTK_120_PAINT_KICK</code> /
+<code>BLINKGTK_120_FI_ROW1</code>(fault injection・検証専用)/
+<code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
+<code>BLINKGTK_LAYOUT_DEBUG</code> /
+<code>BLINKGTK_RUBY_RESERVE_EM</code> / <code>BLINKGTK_EGL_DIAG</code> /
+<code>BLINKGTK_EGL_MANUAL_VIEWPORT</code> /
+<code>BLINKGTK_EGL_BRIDGE_SETTLE_MS</code> /
+<code>BLINKGTK_EGL_GTK4_NATIVE</code> /
+<code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
+<code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
+<code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
+<code>BLINKGTK_USE_EGL_WIDGET</code> /
+<code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
+<code>BLINKGTK_120_TYPEB_FIX</code> /
+<code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
+<code>BLINKGTK_HARNESS_AUDIT</code> /
+<code>BLINKGTK_AURA_SHOW_IMMEDIATE</code></p>
+<h2 id="4-廃止">4. 廃止</h2>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>状態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_ENABLE_THREADED_COMPOSITING</code></td>
+<td>廃止(threaded compositing は既定 ON 化済み。旧名は無効)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="関連">関連</h2>
+<ul>
+<li><code>c-api-reference-ja.md</code>
+§BLINKGTK_GPU_MODE(本リファレンスへ統合予定)</li>
+<li>API リファレンスマニュアル 第 9 章(#121)の正本は本ファイル</li>
+</ul>
+</body>
+</html>
+</div></div>

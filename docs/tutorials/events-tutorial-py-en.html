@@ -1,0 +1,669 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Event Handling Tutorial (Python/PyGObject) — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK Event Handling Tutorial (Python/PyGObject) —
+BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-event-handling-tutorial-pythonpygobject">BlinkGTK Event
+Handling Tutorial (Python/PyGObject)</h1>
+<p><strong>Last Updated</strong>: 2026-01-01 <strong>Target
+Version</strong>: BlinkGTK v0.9.29-dev or later <strong>Phase</strong>:
+Phase 5 (Performance Optimization &amp; User API)
+<strong>Level</strong>: Beginner to Intermediate
+<strong>Language</strong>: English | <a
+href="./events-tutorial-py-ja.md">日本語</a></p>
+<hr />
+<h2 id="clipboard-table-of-contents">📋 Table of Contents</h2>
+<ol type="1">
+<li><a href="#introduction">Introduction</a></li>
+<li><a href="#signal-basics">Signal Basics</a></li>
+<li><a href="#four-signals">Four Signals</a></li>
+<li><a href="#pythonic-patterns">Pythonic Patterns</a></li>
+<li><a href="#asyncawait-integration">async/await Integration</a></li>
+<li><a href="#complete-browser-implementation">Complete Browser
+Implementation</a></li>
+</ol>
+<hr />
+<h2 id="introduction">Introduction</h2>
+<p>This tutorial teaches you how to perform event-driven programming in
+Python with BlinkGTK.</p>
+<h3 id="what-youll-learn">What You'll Learn</h3>
+<ul>
+<li>Using GObject signals in Python</li>
+<li>4 signals (load-changed, load-failed, title-changed,
+uri-changed)</li>
+<li>Pythonic idioms</li>
+<li>Integration with async/await</li>
+</ul>
+<hr />
+<h2 id="signal-basics">Signal Basics</h2>
+<h3 id="connecting-signals">Connecting Signals</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserWindow(Gtk.ApplicationWindow):</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_title(<span class="st">&quot;Signal Example&quot;</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_default_size(<span class="dv">800</span>, <span class="dv">600</span>)</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(<span class="va">self</span>.web_view)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Connect signal</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&#39;load-changed&#39;</span>, <span class="va">self</span>.on_load_changed)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_load_changed(<span class="va">self</span>, web_view, load_event):</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Load state changed&quot;&quot;&quot;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>        events <span class="op">=</span> {</span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>            blink_gtk.LoadEvent.STARTED: <span class="st">&quot;Started&quot;</span>,</span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>            blink_gtk.LoadEvent.REDIRECTED: <span class="st">&quot;Redirected&quot;</span>,</span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a>            blink_gtk.LoadEvent.COMMITTED: <span class="st">&quot;Committed&quot;</span>,</span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a>            blink_gtk.LoadEvent.FINISHED: <span class="st">&quot;Finished&quot;</span>,</span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;[load-changed] </span><span class="sc">{</span>events<span class="sc">.</span>get(load_event, <span class="st">&#39;Unknown&#39;</span>)<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="concise-syntax-with-lambda">Concise Syntax with Lambda</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Simple logging</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>web_view.<span class="ex">connect</span>(<span class="st">&#39;load-changed&#39;</span>,</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                <span class="kw">lambda</span> w, e: <span class="bu">print</span>(<span class="ss">f&quot;Load event: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">&quot;</span>))</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Title update</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>web_view.<span class="ex">connect</span>(<span class="st">&#39;title-changed&#39;</span>,</span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                <span class="kw">lambda</span> w, title: <span class="va">self</span>.set_title(<span class="ss">f&quot;</span><span class="sc">{</span>title<span class="sc">}</span><span class="ss"> - Browser&quot;</span>))</span></code></pre></div>
+<hr />
+<h2 id="four-signals">Four Signals</h2>
+<h3 id="1-load-changed">1. load-changed</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_load_changed(<span class="va">self</span>, web_view, load_event):</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Load state changed&quot;&quot;&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.STARTED:</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.progress_bar.set_fraction(<span class="fl">0.0</span>)</span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.progress_bar.set_visible(<span class="va">True</span>)</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.status_label.set_text(<span class="st">&quot;Loading...&quot;</span>)</span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.COMMITTED:</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.progress_bar.set_fraction(<span class="fl">0.5</span>)</span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">elif</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.FINISHED:</span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.progress_bar.set_fraction(<span class="fl">1.0</span>)</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.progress_bar.set_visible(<span class="va">False</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.status_label.set_text(<span class="st">&quot;Done&quot;</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Update navigation buttons</span></span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.back_button.set_sensitive(web_view.can_go_back())</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.forward_button.set_sensitive(web_view.can_go_forward())</span></code></pre></div>
+<h3 id="2-load-failed">2. load-failed</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_load_failed(<span class="va">self</span>, web_view, failing_url, error_code):</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Load failed&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    error_messages <span class="op">=</span> {</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="dv">2</span>: <span class="st">&quot;Failed to load&quot;</span>,</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="dv">7</span>: <span class="st">&quot;Timeout&quot;</span>,</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="dv">105</span>: <span class="st">&quot;Server not found&quot;</span>,</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>        <span class="op">-</span><span class="dv">106</span>: <span class="st">&quot;No internet connection&quot;</span>,</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    error_msg <span class="op">=</span> error_messages.get(error_code, <span class="ss">f&quot;Unknown error (code: </span><span class="sc">{</span>error_code<span class="sc">}</span><span class="ss">)&quot;</span>)</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Error dialog</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    dialog <span class="op">=</span> Gtk.MessageDialog(</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>        transient_for<span class="op">=</span><span class="va">self</span>,</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>        modal<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>        message_type<span class="op">=</span>Gtk.MessageType.ERROR,</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>        buttons<span class="op">=</span>Gtk.ButtonsType.OK,</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>        text<span class="op">=</span><span class="st">&quot;Loading Error&quot;</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    )</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    dialog.format_secondary_text(<span class="ss">f&quot;</span><span class="sc">{</span>error_msg<span class="sc">}</span><span class="ch">\n\n</span><span class="ss">URL: </span><span class="sc">{</span>failing_url<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    dialog.<span class="ex">connect</span>(<span class="st">&#39;response&#39;</span>, <span class="kw">lambda</span> d, r: d.destroy())</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    dialog.show()</span></code></pre></div>
+<h3 id="3-title-changed">3. title-changed</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_title_changed(<span class="va">self</span>, web_view, title):</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Title changed&quot;&quot;&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.set_title(<span class="ss">f&quot;</span><span class="sc">{</span>title<span class="sc">}</span><span class="ss"> - Python Browser&quot;</span>)</span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;[title-changed] </span><span class="sc">{</span>title<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="4-uri-changed">4. uri-changed</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_uri_changed(<span class="va">self</span>, web_view, uri):</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;URI changed&quot;&quot;&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">self</span>.url_entry.set_text(uri)</span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Update security icon</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> uri.startswith(<span class="st">&quot;https://&quot;</span>):</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.security_icon.set_from_icon_name(<span class="st">&quot;dialog-password&quot;</span>)</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.security_icon.set_tooltip_text(<span class="st">&quot;This page is secure&quot;</span>)</span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span>:</span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.security_icon.set_from_icon_name(<span class="st">&quot;dialog-warning&quot;</span>)</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.security_icon.set_tooltip_text(<span class="st">&quot;This page is not secure&quot;</span>)</span></code></pre></div>
+<hr />
+<h2 id="pythonic-patterns">Pythonic Patterns</h2>
+<h3 id="1-decorator-for-signal-handlers">1. Decorator for Signal
+Handlers</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> functools <span class="im">import</span> wraps</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Callable</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> signal_handler(signal_name: <span class="bu">str</span>) <span class="op">-&gt;</span> Callable:</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Signal handler decorator&quot;&quot;&quot;</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> decorator(func: Callable) <span class="op">-&gt;</span> Callable:</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>        <span class="at">@wraps</span>(func)</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> wrapper(<span class="op">*</span>args, <span class="op">**</span>kwargs):</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>            <span class="cf">try</span>:</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>                <span class="cf">return</span> func(<span class="op">*</span>args, <span class="op">**</span>kwargs)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>            <span class="cf">except</span> <span class="pp">Exception</span> <span class="im">as</span> e:</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f&quot;Error in </span><span class="sc">{</span>signal_name<span class="sc">}</span><span class="ss"> handler: </span><span class="sc">{</span>e<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> wrapper</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> decorator</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserWindow(Gtk.ApplicationWindow):</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(<span class="va">self</span>.web_view)</span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Connect decorated handlers</span></span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&#39;load-changed&#39;</span>, <span class="va">self</span>.on_load_changed)</span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&#39;load-failed&#39;</span>, <span class="va">self</span>.on_load_failed)</span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    <span class="at">@signal_handler</span>(<span class="st">&#39;load-changed&#39;</span>)</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_load_changed(<span class="va">self</span>, web_view, load_event):</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.FINISHED:</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">&quot;Loading complete&quot;</span>)</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-33"><a href="#cb7-33" aria-hidden="true" tabindex="-1"></a>    <span class="at">@signal_handler</span>(<span class="st">&#39;load-failed&#39;</span>)</span>
+<span id="cb7-34"><a href="#cb7-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_load_failed(<span class="va">self</span>, web_view, failing_url, error_code):</span>
+<span id="cb7-35"><a href="#cb7-35" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Error: </span><span class="sc">{</span>error_code<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="2-signal-manager-class">2. Signal Manager Class</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Dict, List, Callable</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SignalManager:</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Class to manage signals&quot;&quot;&quot;</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, web_view: blink_gtk.WebView):</span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> web_view</span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.handlers: Dict[<span class="bu">str</span>, List[<span class="bu">int</span>]] <span class="op">=</span> {}</span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="ex">connect</span>(<span class="va">self</span>, signal_name: <span class="bu">str</span>, handler: Callable) <span class="op">-&gt;</span> <span class="bu">int</span>:</span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Connect a signal&quot;&quot;&quot;</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>        handler_id <span class="op">=</span> <span class="va">self</span>.web_view.<span class="ex">connect</span>(signal_name, handler)</span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> signal_name <span class="kw">not</span> <span class="kw">in</span> <span class="va">self</span>.handlers:</span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.handlers[signal_name] <span class="op">=</span> []</span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.handlers[signal_name].append(handler_id)</span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> handler_id</span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> disconnect(<span class="va">self</span>, signal_name: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Disconnect all handlers for a specific signal&quot;&quot;&quot;</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> signal_name <span class="kw">in</span> <span class="va">self</span>.handlers:</span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>            <span class="cf">for</span> handler_id <span class="kw">in</span> <span class="va">self</span>.handlers[signal_name]:</span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>                <span class="va">self</span>.web_view.disconnect(handler_id)</span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>            <span class="kw">del</span> <span class="va">self</span>.handlers[signal_name]</span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> disconnect_all(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Disconnect all signal handlers&quot;&quot;&quot;</span></span>
+<span id="cb8-30"><a href="#cb8-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> signal_name <span class="kw">in</span> <span class="bu">list</span>(<span class="va">self</span>.handlers.keys()):</span>
+<span id="cb8-31"><a href="#cb8-31" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.disconnect(signal_name)</span>
+<span id="cb8-32"><a href="#cb8-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-33"><a href="#cb8-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage example</span></span>
+<span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>signal_manager <span class="op">=</span> SignalManager(web_view)</span>
+<span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>signal_manager.<span class="ex">connect</span>(<span class="st">&#39;load-changed&#39;</span>, on_load_changed)</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>signal_manager.<span class="ex">connect</span>(<span class="st">&#39;title-changed&#39;</span>, on_title_changed)</span>
+<span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a><span class="co"># Later cleanup</span></span>
+<span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>signal_manager.disconnect_all()</span></code></pre></div>
+<hr />
+<h2 id="asyncawait-integration">async/await Integration</h2>
+<h3 id="1-asynchronous-loading">1. Asynchronous Loading</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> asyncio</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> GLib</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> AsyncBrowserWindow(Gtk.ApplicationWindow):</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(<span class="va">self</span>.web_view)</span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Event</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.load_finished_event <span class="op">=</span> asyncio.Event()</span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&#39;load-changed&#39;</span>, <span class="va">self</span>.on_load_changed)</span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_load_changed(<span class="va">self</span>, web_view, load_event):</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.FINISHED:</span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Set event</span></span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.load_finished_event.<span class="bu">set</span>()</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> load_url_async(<span class="va">self</span>, url: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Load URL asynchronously&quot;&quot;&quot;</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.load_finished_event.clear()</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.load_uri(url)</span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> <span class="va">self</span>.load_finished_event.wait()</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Loading complete: </span><span class="sc">{</span>url<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a><span class="co"># Usage example</span></span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> main():</span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> AsyncBrowserWindow()</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a>    <span class="co"># Load multiple URLs sequentially</span></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>    urls <span class="op">=</span> [</span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;https://example.com&quot;</span>,</span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;https://www.chromium.org&quot;</span>,</span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;https://www.python.org&quot;</span>,</span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>    ]</span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a>    <span class="cf">for</span> url <span class="kw">in</span> urls:</span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> window.load_url_async(url)</span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> asyncio.sleep(<span class="dv">2</span>)  <span class="co"># Wait 2 seconds</span></span></code></pre></div>
+<h3 id="2-parallel-loading">2. Parallel Loading</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> asyncio</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> List</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> MultiTabBrowser:</span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Browser with multiple tabs&quot;&quot;&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>):</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.tabs: List[blink_gtk.WebView] <span class="op">=</span> []</span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> load_multiple_urls(<span class="va">self</span>, urls: List[<span class="bu">str</span>]) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Load multiple URLs in parallel&quot;&quot;&quot;</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        tasks <span class="op">=</span> []</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> url <span class="kw">in</span> urls:</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>            web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.tabs.append(web_view)</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>            <span class="co"># Create async task</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>            task <span class="op">=</span> asyncio.create_task(<span class="va">self</span>._load_url_async(web_view, url))</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>            tasks.append(task)</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Wait for all to complete</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> asyncio.gather(<span class="op">*</span>tasks)</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Loaded </span><span class="sc">{</span><span class="bu">len</span>(urls)<span class="sc">}</span><span class="ss"> URLs&quot;</span>)</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">async</span> <span class="kw">def</span> _load_url_async(<span class="va">self</span>, web_view: blink_gtk.WebView, url: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Load single URL asynchronously&quot;&quot;&quot;</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>        event <span class="op">=</span> asyncio.Event()</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>        <span class="kw">def</span> on_load_changed(w, load_event):</span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.FINISHED:</span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>                event.<span class="bu">set</span>()</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>        web_view.<span class="ex">connect</span>(<span class="st">&#39;load-changed&#39;</span>, on_load_changed)</span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>        web_view.load_uri(url)</span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> event.wait()</span></code></pre></div>
+<h3 id="3-loading-with-timeout">3. Loading with Timeout</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> asyncio</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="cf">async</span> <span class="kw">def</span> load_with_timeout(</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>    web_view: blink_gtk.WebView,</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    url: <span class="bu">str</span>,</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    timeout: <span class="bu">float</span> <span class="op">=</span> <span class="fl">30.0</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Load URL with timeout&quot;&quot;&quot;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    event <span class="op">=</span> asyncio.Event()</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_load_changed(w, load_event):</span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.FINISHED:</span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>            event.<span class="bu">set</span>()</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_load_failed(w, failing_url, error_code):</span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>        event.<span class="bu">set</span>()</span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>    web_view.<span class="ex">connect</span>(<span class="st">&#39;load-changed&#39;</span>, on_load_changed)</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    web_view.<span class="ex">connect</span>(<span class="st">&#39;load-failed&#39;</span>, on_load_failed)</span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    web_view.load_uri(url)</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">await</span> asyncio.wait_for(event.wait(), timeout<span class="op">=</span>timeout)</span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">True</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>    <span class="cf">except</span> asyncio.<span class="pp">TimeoutError</span>:</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;Timeout: </span><span class="sc">{</span>url<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>        web_view.stop()</span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">False</span></span></code></pre></div>
+<hr />
+<h2 id="complete-browser-implementation">Complete Browser
+Implementation</h2>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;Complete browser with all features&quot;&quot;&quot;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> CompleteBrowser(Gtk.ApplicationWindow):</span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;Complete browser with all features&quot;&quot;&quot;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_title(<span class="st">&quot;Complete Browser (Python)&quot;</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_default_size(<span class="dv">1200</span>, <span class="dv">800</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._build_ui()</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._connect_signals()</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _build_ui(<span class="va">self</span>):</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Build UI&quot;&quot;&quot;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        vbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.VERTICAL)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Toolbar</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>        toolbar <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.HORIZONTAL, spacing<span class="op">=</span><span class="dv">5</span>)</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        toolbar.set_margin_start(<span class="dv">5</span>)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        toolbar.set_margin_end(<span class="dv">5</span>)</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>        toolbar.set_margin_top(<span class="dv">5</span>)</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        toolbar.set_margin_bottom(<span class="dv">5</span>)</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.back_button <span class="op">=</span> Gtk.Button.new_from_icon_name(<span class="st">&quot;go-previous&quot;</span>)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.forward_button <span class="op">=</span> Gtk.Button.new_from_icon_name(<span class="st">&quot;go-next&quot;</span>)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.reload_button <span class="op">=</span> Gtk.Button.new_from_icon_name(<span class="st">&quot;view-refresh&quot;</span>)</span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stop_button <span class="op">=</span> Gtk.Button.new_from_icon_name(<span class="st">&quot;process-stop&quot;</span>)</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.security_icon <span class="op">=</span> Gtk.Image.new_from_icon_name(<span class="st">&quot;dialog-warning&quot;</span>)</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.url_entry <span class="op">=</span> Gtk.Entry()</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stop_button.set_visible(<span class="va">False</span>)</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.back_button.set_sensitive(<span class="va">False</span>)</span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.forward_button.set_sensitive(<span class="va">False</span>)</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.url_entry.set_hexpand(<span class="va">True</span>)</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> widget <span class="kw">in</span> [<span class="va">self</span>.back_button, <span class="va">self</span>.forward_button,</span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>                      <span class="va">self</span>.reload_button, <span class="va">self</span>.stop_button,</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>                      <span class="va">self</span>.security_icon, <span class="va">self</span>.url_entry]:</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>            toolbar.append(widget)</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Settings</span></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>        settings_box <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.HORIZONTAL, spacing<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>        settings_box.set_margin_start(<span class="dv">5</span>)</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>        settings_box.set_margin_end(<span class="dv">5</span>)</span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>        settings_box.set_margin_bottom(<span class="dv">5</span>)</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.js_switch <span class="op">=</span> Gtk.Switch()</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.images_switch <span class="op">=</span> Gtk.Switch()</span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.storage_switch <span class="op">=</span> Gtk.Switch()</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> switch <span class="kw">in</span> [<span class="va">self</span>.js_switch, <span class="va">self</span>.images_switch, <span class="va">self</span>.storage_switch]:</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>            switch.set_active(<span class="va">True</span>)</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a>        settings_box.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;JavaScript:&quot;</span>))</span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a>        settings_box.append(<span class="va">self</span>.js_switch)</span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>        settings_box.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;Images:&quot;</span>))</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>        settings_box.append(<span class="va">self</span>.images_switch)</span>
+<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>        settings_box.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;Storage:&quot;</span>))</span>
+<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>        settings_box.append(<span class="va">self</span>.storage_switch)</span>
+<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-69"><a href="#cb12-69" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Progress bar</span></span>
+<span id="cb12-70"><a href="#cb12-70" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.progress_bar <span class="op">=</span> Gtk.ProgressBar()</span>
+<span id="cb12-71"><a href="#cb12-71" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.progress_bar.set_visible(<span class="va">False</span>)</span>
+<span id="cb12-72"><a href="#cb12-72" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-73"><a href="#cb12-73" aria-hidden="true" tabindex="-1"></a>        <span class="co"># WebView</span></span>
+<span id="cb12-74"><a href="#cb12-74" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb12-75"><a href="#cb12-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-76"><a href="#cb12-76" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Status bar</span></span>
+<span id="cb12-77"><a href="#cb12-77" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.status_label <span class="op">=</span> Gtk.Label(label<span class="op">=</span><span class="st">&quot;Ready&quot;</span>)</span>
+<span id="cb12-78"><a href="#cb12-78" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.status_label.set_halign(Gtk.Align.START)</span>
+<span id="cb12-79"><a href="#cb12-79" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.status_label.set_margin_start(<span class="dv">5</span>)</span>
+<span id="cb12-80"><a href="#cb12-80" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.status_label.set_margin_bottom(<span class="dv">2</span>)</span>
+<span id="cb12-81"><a href="#cb12-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-82"><a href="#cb12-82" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Layout</span></span>
+<span id="cb12-83"><a href="#cb12-83" aria-hidden="true" tabindex="-1"></a>        vbox.append(toolbar)</span>
+<span id="cb12-84"><a href="#cb12-84" aria-hidden="true" tabindex="-1"></a>        vbox.append(settings_box)</span>
+<span id="cb12-85"><a href="#cb12-85" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.progress_bar)</span>
+<span id="cb12-86"><a href="#cb12-86" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.web_view)</span>
+<span id="cb12-87"><a href="#cb12-87" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.status_label)</span>
+<span id="cb12-88"><a href="#cb12-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-89"><a href="#cb12-89" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_vexpand(<span class="va">True</span>)</span>
+<span id="cb12-90"><a href="#cb12-90" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(vbox)</span>
+<span id="cb12-91"><a href="#cb12-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-92"><a href="#cb12-92" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> _connect_signals(<span class="va">self</span>):</span>
+<span id="cb12-93"><a href="#cb12-93" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Connect signals&quot;&quot;&quot;</span></span>
+<span id="cb12-94"><a href="#cb12-94" aria-hidden="true" tabindex="-1"></a>        <span class="co"># WebView signals</span></span>
+<span id="cb12-95"><a href="#cb12-95" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&#39;load-changed&#39;</span>, <span class="va">self</span>.on_load_changed)</span>
+<span id="cb12-96"><a href="#cb12-96" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&#39;load-failed&#39;</span>, <span class="va">self</span>.on_load_failed)</span>
+<span id="cb12-97"><a href="#cb12-97" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&#39;title-changed&#39;</span>, <span class="va">self</span>.on_title_changed)</span>
+<span id="cb12-98"><a href="#cb12-98" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&#39;uri-changed&#39;</span>, <span class="va">self</span>.on_uri_changed)</span>
+<span id="cb12-99"><a href="#cb12-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-100"><a href="#cb12-100" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Buttons</span></span>
+<span id="cb12-101"><a href="#cb12-101" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.back_button.<span class="ex">connect</span>(<span class="st">&#39;clicked&#39;</span>, <span class="kw">lambda</span> b: <span class="va">self</span>.web_view.go_back())</span>
+<span id="cb12-102"><a href="#cb12-102" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.forward_button.<span class="ex">connect</span>(<span class="st">&#39;clicked&#39;</span>, <span class="kw">lambda</span> b: <span class="va">self</span>.web_view.go_forward())</span>
+<span id="cb12-103"><a href="#cb12-103" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.reload_button.<span class="ex">connect</span>(<span class="st">&#39;clicked&#39;</span>, <span class="kw">lambda</span> b: <span class="va">self</span>.web_view.<span class="bu">reload</span>())</span>
+<span id="cb12-104"><a href="#cb12-104" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stop_button.<span class="ex">connect</span>(<span class="st">&#39;clicked&#39;</span>, <span class="kw">lambda</span> b: <span class="va">self</span>.web_view.stop())</span>
+<span id="cb12-105"><a href="#cb12-105" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.url_entry.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, <span class="va">self</span>.on_url_activate)</span>
+<span id="cb12-106"><a href="#cb12-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-107"><a href="#cb12-107" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Settings</span></span>
+<span id="cb12-108"><a href="#cb12-108" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.js_switch.<span class="ex">connect</span>(<span class="st">&#39;notify::active&#39;</span>,</span>
+<span id="cb12-109"><a href="#cb12-109" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> s, _: <span class="va">self</span>.web_view.set_enable_javascript(s.get_active()))</span>
+<span id="cb12-110"><a href="#cb12-110" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.images_switch.<span class="ex">connect</span>(<span class="st">&#39;notify::active&#39;</span>,</span>
+<span id="cb12-111"><a href="#cb12-111" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> s, _: <span class="va">self</span>.web_view.set_auto_load_images(s.get_active()))</span>
+<span id="cb12-112"><a href="#cb12-112" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.storage_switch.<span class="ex">connect</span>(<span class="st">&#39;notify::active&#39;</span>,</span>
+<span id="cb12-113"><a href="#cb12-113" aria-hidden="true" tabindex="-1"></a>            <span class="kw">lambda</span> s, _: <span class="va">self</span>.web_view.set_enable_local_storage(s.get_active()))</span>
+<span id="cb12-114"><a href="#cb12-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-115"><a href="#cb12-115" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_load_changed(<span class="va">self</span>, web_view, load_event):</span>
+<span id="cb12-116"><a href="#cb12-116" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Load state changed&quot;&quot;&quot;</span></span>
+<span id="cb12-117"><a href="#cb12-117" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.STARTED:</span>
+<span id="cb12-118"><a href="#cb12-118" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.progress_bar.set_fraction(<span class="fl">0.0</span>)</span>
+<span id="cb12-119"><a href="#cb12-119" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.progress_bar.set_visible(<span class="va">True</span>)</span>
+<span id="cb12-120"><a href="#cb12-120" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.stop_button.set_visible(<span class="va">True</span>)</span>
+<span id="cb12-121"><a href="#cb12-121" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.reload_button.set_visible(<span class="va">False</span>)</span>
+<span id="cb12-122"><a href="#cb12-122" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.status_label.set_text(<span class="st">&quot;Loading...&quot;</span>)</span>
+<span id="cb12-123"><a href="#cb12-123" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-124"><a href="#cb12-124" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.COMMITTED:</span>
+<span id="cb12-125"><a href="#cb12-125" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.progress_bar.set_fraction(<span class="fl">0.5</span>)</span>
+<span id="cb12-126"><a href="#cb12-126" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-127"><a href="#cb12-127" aria-hidden="true" tabindex="-1"></a>        <span class="cf">elif</span> load_event <span class="op">==</span> blink_gtk.LoadEvent.FINISHED:</span>
+<span id="cb12-128"><a href="#cb12-128" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.progress_bar.set_fraction(<span class="fl">1.0</span>)</span>
+<span id="cb12-129"><a href="#cb12-129" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.progress_bar.set_visible(<span class="va">False</span>)</span>
+<span id="cb12-130"><a href="#cb12-130" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.stop_button.set_visible(<span class="va">False</span>)</span>
+<span id="cb12-131"><a href="#cb12-131" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.reload_button.set_visible(<span class="va">True</span>)</span>
+<span id="cb12-132"><a href="#cb12-132" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.status_label.set_text(<span class="st">&quot;Done&quot;</span>)</span>
+<span id="cb12-133"><a href="#cb12-133" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-134"><a href="#cb12-134" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.back_button.set_sensitive(web_view.can_go_back())</span>
+<span id="cb12-135"><a href="#cb12-135" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.forward_button.set_sensitive(web_view.can_go_forward())</span>
+<span id="cb12-136"><a href="#cb12-136" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-137"><a href="#cb12-137" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_load_failed(<span class="va">self</span>, web_view, failing_url, error_code):</span>
+<span id="cb12-138"><a href="#cb12-138" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Load failed&quot;&quot;&quot;</span></span>
+<span id="cb12-139"><a href="#cb12-139" aria-hidden="true" tabindex="-1"></a>        error_messages <span class="op">=</span> {</span>
+<span id="cb12-140"><a href="#cb12-140" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span><span class="dv">2</span>: <span class="st">&quot;Failed to load&quot;</span>,</span>
+<span id="cb12-141"><a href="#cb12-141" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span><span class="dv">7</span>: <span class="st">&quot;Timeout&quot;</span>,</span>
+<span id="cb12-142"><a href="#cb12-142" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span><span class="dv">105</span>: <span class="st">&quot;Server not found&quot;</span>,</span>
+<span id="cb12-143"><a href="#cb12-143" aria-hidden="true" tabindex="-1"></a>            <span class="op">-</span><span class="dv">106</span>: <span class="st">&quot;No internet connection&quot;</span>,</span>
+<span id="cb12-144"><a href="#cb12-144" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb12-145"><a href="#cb12-145" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-146"><a href="#cb12-146" aria-hidden="true" tabindex="-1"></a>        error_msg <span class="op">=</span> error_messages.get(error_code, <span class="ss">f&quot;Unknown error (code: </span><span class="sc">{</span>error_code<span class="sc">}</span><span class="ss">)&quot;</span>)</span>
+<span id="cb12-147"><a href="#cb12-147" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.status_label.set_text(<span class="ss">f&quot;</span><span class="sc">{</span>error_msg<span class="sc">}</span><span class="ss"> (code: </span><span class="sc">{</span>error_code<span class="sc">}</span><span class="ss">)&quot;</span>)</span>
+<span id="cb12-148"><a href="#cb12-148" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-149"><a href="#cb12-149" aria-hidden="true" tabindex="-1"></a>        <span class="co"># Error dialog</span></span>
+<span id="cb12-150"><a href="#cb12-150" aria-hidden="true" tabindex="-1"></a>        dialog <span class="op">=</span> Gtk.MessageDialog(</span>
+<span id="cb12-151"><a href="#cb12-151" aria-hidden="true" tabindex="-1"></a>            transient_for<span class="op">=</span><span class="va">self</span>,</span>
+<span id="cb12-152"><a href="#cb12-152" aria-hidden="true" tabindex="-1"></a>            modal<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb12-153"><a href="#cb12-153" aria-hidden="true" tabindex="-1"></a>            message_type<span class="op">=</span>Gtk.MessageType.ERROR,</span>
+<span id="cb12-154"><a href="#cb12-154" aria-hidden="true" tabindex="-1"></a>            buttons<span class="op">=</span>Gtk.ButtonsType.OK,</span>
+<span id="cb12-155"><a href="#cb12-155" aria-hidden="true" tabindex="-1"></a>            text<span class="op">=</span><span class="st">&quot;Loading Error&quot;</span></span>
+<span id="cb12-156"><a href="#cb12-156" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb12-157"><a href="#cb12-157" aria-hidden="true" tabindex="-1"></a>        dialog.format_secondary_text(<span class="ss">f&quot;</span><span class="sc">{</span>error_msg<span class="sc">}</span><span class="ch">\n\n</span><span class="ss">URL: </span><span class="sc">{</span>failing_url<span class="sc">}</span><span class="ch">\n</span><span class="ss">Error code: </span><span class="sc">{</span>error_code<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb12-158"><a href="#cb12-158" aria-hidden="true" tabindex="-1"></a>        dialog.<span class="ex">connect</span>(<span class="st">&#39;response&#39;</span>, <span class="kw">lambda</span> d, r: d.destroy())</span>
+<span id="cb12-159"><a href="#cb12-159" aria-hidden="true" tabindex="-1"></a>        dialog.show()</span>
+<span id="cb12-160"><a href="#cb12-160" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-161"><a href="#cb12-161" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.progress_bar.set_visible(<span class="va">False</span>)</span>
+<span id="cb12-162"><a href="#cb12-162" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.stop_button.set_visible(<span class="va">False</span>)</span>
+<span id="cb12-163"><a href="#cb12-163" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.reload_button.set_visible(<span class="va">True</span>)</span>
+<span id="cb12-164"><a href="#cb12-164" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-165"><a href="#cb12-165" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_title_changed(<span class="va">self</span>, web_view, title):</span>
+<span id="cb12-166"><a href="#cb12-166" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;Title changed&quot;&quot;&quot;</span></span>
+<span id="cb12-167"><a href="#cb12-167" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_title(<span class="ss">f&quot;</span><span class="sc">{</span>title<span class="sc">}</span><span class="ss"> - Complete Browser&quot;</span>)</span>
+<span id="cb12-168"><a href="#cb12-168" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-169"><a href="#cb12-169" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_uri_changed(<span class="va">self</span>, web_view, uri):</span>
+<span id="cb12-170"><a href="#cb12-170" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;URI changed&quot;&quot;&quot;</span></span>
+<span id="cb12-171"><a href="#cb12-171" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.url_entry.set_text(uri)</span>
+<span id="cb12-172"><a href="#cb12-172" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-173"><a href="#cb12-173" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> uri.startswith(<span class="st">&quot;https://&quot;</span>):</span>
+<span id="cb12-174"><a href="#cb12-174" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.security_icon.set_from_icon_name(<span class="st">&quot;dialog-password&quot;</span>)</span>
+<span id="cb12-175"><a href="#cb12-175" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.security_icon.set_tooltip_text(<span class="st">&quot;This page is secure&quot;</span>)</span>
+<span id="cb12-176"><a href="#cb12-176" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb12-177"><a href="#cb12-177" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.security_icon.set_from_icon_name(<span class="st">&quot;dialog-warning&quot;</span>)</span>
+<span id="cb12-178"><a href="#cb12-178" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.security_icon.set_tooltip_text(<span class="st">&quot;This page is not secure&quot;</span>)</span>
+<span id="cb12-179"><a href="#cb12-179" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-180"><a href="#cb12-180" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_url_activate(<span class="va">self</span>, entry):</span>
+<span id="cb12-181"><a href="#cb12-181" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;URL entry activated&quot;&quot;&quot;</span></span>
+<span id="cb12-182"><a href="#cb12-182" aria-hidden="true" tabindex="-1"></a>        url <span class="op">=</span> entry.get_text()</span>
+<span id="cb12-183"><a href="#cb12-183" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.load_uri(url)</span>
+<span id="cb12-184"><a href="#cb12-184" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-185"><a href="#cb12-185" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-186"><a href="#cb12-186" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb12-187"><a href="#cb12-187" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> CompleteBrowser(application<span class="op">=</span>app)</span>
+<span id="cb12-188"><a href="#cb12-188" aria-hidden="true" tabindex="-1"></a>    window.web_view.load_uri(<span class="st">&quot;https://www.chromium.org&quot;</span>)</span>
+<span id="cb12-189"><a href="#cb12-189" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb12-190"><a href="#cb12-190" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-191"><a href="#cb12-191" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-192"><a href="#cb12-192" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb12-193"><a href="#cb12-193" aria-hidden="true" tabindex="-1"></a>    blink_gtk.init()</span>
+<span id="cb12-194"><a href="#cb12-194" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-195"><a href="#cb12-195" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.complete&#39;</span>)</span>
+<span id="cb12-196"><a href="#cb12-196" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb12-197"><a href="#cb12-197" aria-hidden="true" tabindex="-1"></a>    app.run()</span>
+<span id="cb12-198"><a href="#cb12-198" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-199"><a href="#cb12-199" aria-hidden="true" tabindex="-1"></a>    blink_gtk.shutdown()</span></code></pre></div>
+<hr />
+<h2 id="summary">Summary</h2>
+<p>In this tutorial, you learned how to handle events in BlinkGTK with
+Python.</p>
+<h3 id="what-you-learned">What You Learned</h3>
+<ul>
+<li>✅ Using GObject signals in Python</li>
+<li>✅ 4 signals (load-changed, load-failed, title-changed,
+uri-changed)</li>
+<li>✅ Pythonic idioms (decorators, manager classes)</li>
+<li>✅ async/await integration (async loading, parallel loading,
+timeout)</li>
+<li>✅ Complete browser implementation</li>
+</ul>
+<h3 id="next-steps">Next Steps</h3>
+<ul>
+<li><a href="./settings-tutorial-py-en.md">Settings API Tutorial
+(Python)</a> - Settings API details</li>
+<li><a href="../api-reference/signals-api-ja.md">GObject Signals API
+Reference</a> - Signal details</li>
+<li><a href="../examples/">Python Sample Code</a> - Complete
+implementation examples</li>
+</ul>
+<hr />
+<p><strong>Author</strong>: BlinkGTK Development Team
+<strong>License</strong>: BSD 3-Clause <strong>Feedback</strong>: <a
+href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
+</body>
+</html>
+</div></div>

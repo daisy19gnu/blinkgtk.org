@@ -1,0 +1,908 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Settings API チュートリアル (Python/PyGObject) — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK Settings API チュートリアル
+(Python/PyGObject) — BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-settings-api-チュートリアル-pythonpygobject">BlinkGTK
+Settings API チュートリアル (Python/PyGObject)</h1>
+<p><strong>最終更新</strong>: 2026-01-01
+<strong>対象バージョン</strong>: BlinkGTK v0.9.29-dev以降
+<strong>Phase</strong>: Phase 5 (Performance Optimization &amp; User
+API) <strong>レベル</strong>: 初級〜中級 <strong>言語</strong>: 日本語 |
+<a href="./settings-tutorial-py-en.md">English</a></p>
+<hr />
+<h2 id="clipboard-目次">📋 目次</h2>
+<ol type="1">
+<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#pygobjectのセットアップ">PyGObjectのセットアップ</a></li>
+<li><a href="#基本的な使い方">基本的な使い方</a></li>
+<li><a href="#settings-apiの詳細">Settings APIの詳細</a></li>
+<li><a href="#pythonicなパターン">Pythonicなパターン</a></li>
+<li><a href="#実用例">実用例</a></li>
+<li><a href="#webkitgtkからの移行">WebKitGTKからの移行</a></li>
+</ol>
+<hr />
+<h2 id="はじめに">はじめに</h2>
+<p>このチュートリアルでは、PythonとPyGObjectを使用してBlinkGTKのSettings
+APIを活用する方法を学びます。</p>
+<h3 id="学習内容">学習内容</h3>
+<ul>
+<li>PyGObjectの基本的な使い方</li>
+<li>BlinkGTK Settings APIの8つの関数</li>
+<li>Pythonicなコードスタイル</li>
+<li>WebKitGTKからの移行方法</li>
+</ul>
+<h3 id="前提知識">前提知識</h3>
+<ul>
+<li>Pythonの基本構文</li>
+<li>オブジェクト指向プログラミングの基礎</li>
+<li>GTK4の基本的な知識（あると望ましい）</li>
+</ul>
+<hr />
+<h2 id="pygobjectのセットアップ">PyGObjectのセットアップ</h2>
+<h3 id="インストール">インストール</h3>
+<p><strong>Fedora/RHEL系</strong>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install python3-gobject gtk4</span></code></pre></div>
+<p><strong>Ubuntu/Debian系</strong>:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install python3-gi python3-gi-cairo gir1.2-gtk-4.0</span></code></pre></div>
+<p><strong>Arch Linux</strong>:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> pacman <span class="at">-S</span> python-gobject gtk4</span></code></pre></div>
+<h3 id="最初のプログラム">最初のプログラム</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;最小限のBlinkGTKアプリケーション&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;アプリケーション起動時のコールバック&quot;&quot;&quot;</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app)</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    window.set_title(<span class="st">&quot;My First BlinkGTK App&quot;</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    window.set_default_size(<span class="dv">800</span>, <span class="dv">600</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    window.set_child(web_view)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    web_view.load_uri(<span class="st">&quot;https://example.com&quot;</span>)</span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    blink_gtk.init()</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.first&#39;</span>)</span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    app.run()</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    blink_gtk.shutdown()</span></code></pre></div>
+<p><strong>実行</strong>:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> first_app.py</span></code></pre></div>
+<hr />
+<h2 id="基本的な使い方">基本的な使い方</h2>
+<h3 id="javascript制御">JavaScript制御</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;JavaScript制御の例&quot;&quot;&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app)</span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    window.set_title(<span class="st">&quot;JavaScript Control&quot;</span>)</span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>    window.set_default_size(<span class="dv">800</span>, <span class="dv">600</span>)</span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>    web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    window.set_child(web_view)</span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># JavaScript無効化</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    web_view.set_enable_javascript(<span class="va">False</span>)</span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 確認</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    js_enabled <span class="op">=</span> web_view.get_enable_javascript()</span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;JavaScript: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> js_enabled <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    web_view.load_uri(<span class="st">&quot;https://example.com&quot;</span>)</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    blink_gtk.init()</span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.jscontrol&#39;</span>)</span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    app.run()</span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    blink_gtk.shutdown()</span></code></pre></div>
+<h3 id="user-agent変更">User-Agent変更</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;User-Agent変更の例&quot;&quot;&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app)</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>    web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    window.set_child(web_view)</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    <span class="co"># User-Agent変更</span></span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>    custom_ua <span class="op">=</span> <span class="st">&quot;MyPythonApp/1.0 (BlinkGTK; Python 3.11)&quot;</span></span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>    web_view.set_user_agent(custom_ua)</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 確認</span></span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>    current_ua <span class="op">=</span> web_view.get_user_agent()</span>
+<span id="cb7-21"><a href="#cb7-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;User-Agent: </span><span class="sc">{</span>current_ua<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb7-22"><a href="#cb7-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-23"><a href="#cb7-23" aria-hidden="true" tabindex="-1"></a>    web_view.load_uri(<span class="st">&quot;https://example.com&quot;</span>)</span>
+<span id="cb7-24"><a href="#cb7-24" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb7-25"><a href="#cb7-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-26"><a href="#cb7-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-27"><a href="#cb7-27" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb7-28"><a href="#cb7-28" aria-hidden="true" tabindex="-1"></a>    blink_gtk.init()</span>
+<span id="cb7-29"><a href="#cb7-29" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.useragent&#39;</span>)</span>
+<span id="cb7-30"><a href="#cb7-30" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb7-31"><a href="#cb7-31" aria-hidden="true" tabindex="-1"></a>    app.run()</span>
+<span id="cb7-32"><a href="#cb7-32" aria-hidden="true" tabindex="-1"></a>    blink_gtk.shutdown()</span></code></pre></div>
+<hr />
+<h2 id="settings-apiの詳細">Settings APIの詳細</h2>
+<h3 id="1-javascript制御">1. JavaScript制御</h3>
+<h4
+id="set_enable_javascriptenabled-bool">set_enable_javascript(enabled:
+bool)</h4>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># JavaScript有効化</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>web_view.set_enable_javascript(<span class="va">True</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="co"># JavaScript無効化</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>web_view.set_enable_javascript(<span class="va">False</span>)</span></code></pre></div>
+<h4 id="get_enable_javascript---bool">get_enable_javascript() -&gt;
+bool</h4>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>js_enabled <span class="op">=</span> web_view.get_enable_javascript()</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;JavaScript: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> js_enabled <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p><strong>デフォルト値</strong>: <code>True</code>（有効）</p>
+<h3 id="2-user-agent制御">2. User-Agent制御</h3>
+<h4 id="set_user_agentuser_agent-str">set_user_agent(user_agent:
+str)</h4>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># モバイルエミュレーション</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36&quot;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>web_view.set_user_agent(mobile_ua)</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co"># カスタムUser-Agent</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>custom_ua <span class="op">=</span> <span class="ss">f&quot;MyApp/</span><span class="sc">{</span>version<span class="sc">}</span><span class="ss"> (BlinkGTK; Python </span><span class="sc">{</span>sys<span class="sc">.</span>version_info<span class="sc">.</span>major<span class="sc">}</span><span class="ss">.</span><span class="sc">{</span>sys<span class="sc">.</span>version_info<span class="sc">.</span>minor<span class="sc">}</span><span class="ss">)&quot;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>web_view.set_user_agent(custom_ua)</span></code></pre></div>
+<h4 id="get_user_agent---str">get_user_agent() -&gt; str</h4>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>current_ua <span class="op">=</span> web_view.get_user_agent()</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;現在のUser-Agent: </span><span class="sc">{</span>current_ua<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="3-画像読み込み制御">3. 画像読み込み制御</h3>
+<h4 id="set_auto_load_imagesenabled-bool">set_auto_load_images(enabled:
+bool)</h4>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 画像読み込み無効化（データセーバーモード）</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>web_view.set_auto_load_images(<span class="va">False</span>)</span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 画像読み込み有効化</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>web_view.set_auto_load_images(<span class="va">True</span>)</span></code></pre></div>
+<h4 id="get_auto_load_images---bool">get_auto_load_images() -&gt;
+bool</h4>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a>images_enabled <span class="op">=</span> web_view.get_auto_load_images()</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;画像読み込み: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> images_enabled <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p><strong>デフォルト値</strong>: <code>True</code>（有効）</p>
+<h3 id="4-ローカルストレージ制御">4. ローカルストレージ制御</h3>
+<h4
+id="set_enable_local_storageenabled-bool">set_enable_local_storage(enabled:
+bool)</h4>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ローカルストレージ無効化（プライバシーモード）</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>web_view.set_enable_local_storage(<span class="va">False</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ローカルストレージ有効化</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>web_view.set_enable_local_storage(<span class="va">True</span>)</span></code></pre></div>
+<h4 id="get_enable_local_storage---bool">get_enable_local_storage()
+-&gt; bool</h4>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>storage_enabled <span class="op">=</span> web_view.get_enable_local_storage()</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;ローカルストレージ: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> storage_enabled <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<p><strong>デフォルト値</strong>: <code>True</code>（有効）</p>
+<hr />
+<h2 id="pythonicなパターン">Pythonicなパターン</h2>
+<h3 id="1-type-hintsの使用">1. type hintsの使用</h3>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Optional</span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserSettings:</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;ブラウザ設定を管理するクラス&quot;&quot;&quot;</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, web_view: blink_gtk.WebView):</span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> web_view</span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> enable_javascript(<span class="va">self</span>, enabled: <span class="bu">bool</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;JavaScriptを有効/無効にする&quot;&quot;&quot;</span></span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_enable_javascript(enabled)</span>
+<span id="cb16-17"><a href="#cb16-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-18"><a href="#cb16-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> set_user_agent(<span class="va">self</span>, user_agent: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb16-19"><a href="#cb16-19" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;User-Agentを設定する&quot;&quot;&quot;</span></span>
+<span id="cb16-20"><a href="#cb16-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_user_agent(user_agent)</span>
+<span id="cb16-21"><a href="#cb16-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-22"><a href="#cb16-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> enable_images(<span class="va">self</span>, enabled: <span class="bu">bool</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb16-23"><a href="#cb16-23" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;画像読み込みを有効/無効にする&quot;&quot;&quot;</span></span>
+<span id="cb16-24"><a href="#cb16-24" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_auto_load_images(enabled)</span>
+<span id="cb16-25"><a href="#cb16-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-26"><a href="#cb16-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> enable_storage(<span class="va">self</span>, enabled: <span class="bu">bool</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb16-27"><a href="#cb16-27" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;ローカルストレージを有効/無効にする&quot;&quot;&quot;</span></span>
+<span id="cb16-28"><a href="#cb16-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_enable_local_storage(enabled)</span>
+<span id="cb16-29"><a href="#cb16-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-30"><a href="#cb16-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_settings(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">any</span>]:</span>
+<span id="cb16-31"><a href="#cb16-31" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;現在の設定を辞書で取得&quot;&quot;&quot;</span></span>
+<span id="cb16-32"><a href="#cb16-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {</span>
+<span id="cb16-33"><a href="#cb16-33" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;javascript&#39;</span>: <span class="va">self</span>.web_view.get_enable_javascript(),</span>
+<span id="cb16-34"><a href="#cb16-34" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;images&#39;</span>: <span class="va">self</span>.web_view.get_auto_load_images(),</span>
+<span id="cb16-35"><a href="#cb16-35" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;storage&#39;</span>: <span class="va">self</span>.web_view.get_enable_local_storage(),</span>
+<span id="cb16-36"><a href="#cb16-36" aria-hidden="true" tabindex="-1"></a>            <span class="st">&#39;user_agent&#39;</span>: <span class="va">self</span>.web_view.get_user_agent(),</span>
+<span id="cb16-37"><a href="#cb16-37" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb16-38"><a href="#cb16-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-39"><a href="#cb16-39" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> apply_settings(<span class="va">self</span>, settings: <span class="bu">dict</span>[<span class="bu">str</span>, <span class="bu">any</span>]) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb16-40"><a href="#cb16-40" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;設定を一括適用&quot;&quot;&quot;</span></span>
+<span id="cb16-41"><a href="#cb16-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&#39;javascript&#39;</span> <span class="kw">in</span> settings:</span>
+<span id="cb16-42"><a href="#cb16-42" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.enable_javascript(settings[<span class="st">&#39;javascript&#39;</span>])</span>
+<span id="cb16-43"><a href="#cb16-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&#39;images&#39;</span> <span class="kw">in</span> settings:</span>
+<span id="cb16-44"><a href="#cb16-44" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.enable_images(settings[<span class="st">&#39;images&#39;</span>])</span>
+<span id="cb16-45"><a href="#cb16-45" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&#39;storage&#39;</span> <span class="kw">in</span> settings:</span>
+<span id="cb16-46"><a href="#cb16-46" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.enable_storage(settings[<span class="st">&#39;storage&#39;</span>])</span>
+<span id="cb16-47"><a href="#cb16-47" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&#39;user_agent&#39;</span> <span class="kw">in</span> settings:</span>
+<span id="cb16-48"><a href="#cb16-48" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.set_user_agent(settings[<span class="st">&#39;user_agent&#39;</span>])</span></code></pre></div>
+<h3 id="2-プロパティの使用">2. プロパティの使用</h3>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserWindow(Gtk.ApplicationWindow):</span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;プロパティを使用したブラウザウィンドウ&quot;&quot;&quot;</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(<span class="va">self</span>._web_view)</span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> javascript_enabled(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;JavaScriptが有効かどうか&quot;&quot;&quot;</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._web_view.get_enable_javascript()</span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="at">@javascript_enabled.setter</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> javascript_enabled(<span class="va">self</span>, enabled: <span class="bu">bool</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;JavaScriptを有効/無効にする&quot;&quot;&quot;</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._web_view.set_enable_javascript(enabled)</span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> user_agent(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">str</span>:</span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;現在のUser-Agent&quot;&quot;&quot;</span></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._web_view.get_user_agent()</span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>    <span class="at">@user_agent.setter</span></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> user_agent(<span class="va">self</span>, ua: <span class="bu">str</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;User-Agentを設定&quot;&quot;&quot;</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._web_view.set_user_agent(ua)</span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> images_enabled(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;画像読み込みが有効かどうか&quot;&quot;&quot;</span></span>
+<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>._web_view.get_auto_load_images()</span>
+<span id="cb17-33"><a href="#cb17-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-34"><a href="#cb17-34" aria-hidden="true" tabindex="-1"></a>    <span class="at">@images_enabled.setter</span></span>
+<span id="cb17-35"><a href="#cb17-35" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> images_enabled(<span class="va">self</span>, enabled: <span class="bu">bool</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb17-36"><a href="#cb17-36" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;画像読み込みを有効/無効にする&quot;&quot;&quot;</span></span>
+<span id="cb17-37"><a href="#cb17-37" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>._web_view.set_auto_load_images(enabled)</span>
+<span id="cb17-38"><a href="#cb17-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-39"><a href="#cb17-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-40"><a href="#cb17-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用例</span></span>
+<span id="cb17-41"><a href="#cb17-41" aria-hidden="true" tabindex="-1"></a>window <span class="op">=</span> BrowserWindow(application<span class="op">=</span>app)</span>
+<span id="cb17-42"><a href="#cb17-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-43"><a href="#cb17-43" aria-hidden="true" tabindex="-1"></a><span class="co"># プロパティとして使用</span></span>
+<span id="cb17-44"><a href="#cb17-44" aria-hidden="true" tabindex="-1"></a>window.javascript_enabled <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb17-45"><a href="#cb17-45" aria-hidden="true" tabindex="-1"></a>window.user_agent <span class="op">=</span> <span class="st">&quot;MyApp/1.0&quot;</span></span>
+<span id="cb17-46"><a href="#cb17-46" aria-hidden="true" tabindex="-1"></a>window.images_enabled <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb17-47"><a href="#cb17-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-48"><a href="#cb17-48" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;JavaScript: </span><span class="sc">{</span>window<span class="sc">.</span>javascript_enabled<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb17-49"><a href="#cb17-49" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;User-Agent: </span><span class="sc">{</span>window<span class="sc">.</span>user_agent<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="3-コンテキストマネージャ">3. コンテキストマネージャ</h3>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> contextlib <span class="im">import</span> contextmanager</span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Iterator</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="at">@contextmanager</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> temporary_settings(</span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    web_view: blink_gtk.WebView,</span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    <span class="op">**</span>settings</span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>) <span class="op">-&gt;</span> Iterator[<span class="va">None</span>]:</span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">    一時的に設定を変更するコンテキストマネージャ</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">    使用例:</span></span>
+<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a><span class="co">        with temporary_settings(web_view, javascript=False, images=False):</span></span>
+<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="co">            web_view.load_uri(&quot;https://example.com&quot;)</span></span>
+<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a><span class="co">        # コンテキスト終了後、元の設定に自動復帰</span></span>
+<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">    &quot;&quot;&quot;</span></span>
+<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 現在の設定を保存</span></span>
+<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>    original <span class="op">=</span> {</span>
+<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;javascript&#39;</span>: web_view.get_enable_javascript(),</span>
+<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;images&#39;</span>: web_view.get_auto_load_images(),</span>
+<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a>        <span class="st">&#39;storage&#39;</span>: web_view.get_enable_local_storage(),</span>
+<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    }</span>
+<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 新しい設定を適用</span></span>
+<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">&#39;javascript&#39;</span> <span class="kw">in</span> settings:</span>
+<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>        web_view.set_enable_javascript(settings[<span class="st">&#39;javascript&#39;</span>])</span>
+<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">&#39;images&#39;</span> <span class="kw">in</span> settings:</span>
+<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>        web_view.set_auto_load_images(settings[<span class="st">&#39;images&#39;</span>])</span>
+<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="st">&#39;storage&#39;</span> <span class="kw">in</span> settings:</span>
+<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a>        web_view.set_enable_local_storage(settings[<span class="st">&#39;storage&#39;</span>])</span>
+<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">try</span>:</span>
+<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">yield</span></span>
+<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a>    <span class="cf">finally</span>:</span>
+<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 元の設定に戻す</span></span>
+<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>        web_view.set_enable_javascript(original[<span class="st">&#39;javascript&#39;</span>])</span>
+<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>        web_view.set_auto_load_images(original[<span class="st">&#39;images&#39;</span>])</span>
+<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>        web_view.set_enable_local_storage(original[<span class="st">&#39;storage&#39;</span>])</span>
+<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用例</span></span>
+<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a><span class="cf">with</span> temporary_settings(web_view, javascript<span class="op">=</span><span class="va">False</span>, images<span class="op">=</span><span class="va">False</span>):</span>
+<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>    <span class="co"># このブロック内では設定が変更される</span></span>
+<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>    web_view.load_uri(<span class="st">&quot;https://example.com&quot;</span>)</span>
+<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a><span class="co"># ブロック終了後、自動的に元の設定に戻る</span></span></code></pre></div>
+<h3 id="4-データクラスの使用">4. データクラスの使用</h3>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dataclasses <span class="im">import</span> dataclass</span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserConfig:</span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;ブラウザ設定を表すデータクラス&quot;&quot;&quot;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    javascript: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    images: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>    storage: <span class="bu">bool</span> <span class="op">=</span> <span class="va">True</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    user_agent: <span class="bu">str</span> <span class="op">=</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> apply_to(<span class="va">self</span>, web_view: blink_gtk.WebView) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;WebViewに設定を適用&quot;&quot;&quot;</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>        web_view.set_enable_javascript(<span class="va">self</span>.javascript)</span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        web_view.set_auto_load_images(<span class="va">self</span>.images)</span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        web_view.set_enable_local_storage(<span class="va">self</span>.storage)</span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.user_agent:</span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>            web_view.set_user_agent(<span class="va">self</span>.user_agent)</span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>    <span class="at">@classmethod</span></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> from_web_view(cls, web_view: blink_gtk.WebView) <span class="op">-&gt;</span> <span class="st">&#39;BrowserConfig&#39;</span>:</span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;WebViewから現在の設定を取得&quot;&quot;&quot;</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> cls(</span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>            javascript<span class="op">=</span>web_view.get_enable_javascript(),</span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>            images<span class="op">=</span>web_view.get_auto_load_images(),</span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>            storage<span class="op">=</span>web_view.get_enable_local_storage(),</span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>            user_agent<span class="op">=</span>web_view.get_user_agent(),</span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>        )</span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用例</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a><span class="co"># プリセット定義</span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a>DATA_SAVER <span class="op">=</span> BrowserConfig(javascript<span class="op">=</span><span class="va">False</span>, images<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a>PRIVACY_MODE <span class="op">=</span> BrowserConfig(javascript<span class="op">=</span><span class="va">False</span>, images<span class="op">=</span><span class="va">False</span>, storage<span class="op">=</span><span class="va">False</span>)</span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a>NORMAL_MODE <span class="op">=</span> BrowserConfig()</span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a><span class="co"># 適用</span></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>DATA_SAVER.apply_to(web_view)</span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a><span class="co"># 現在の設定を取得</span></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>current_config <span class="op">=</span> BrowserConfig.from_web_view(web_view)</span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;JavaScript: </span><span class="sc">{</span>current_config<span class="sc">.</span>javascript<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<hr />
+<h2 id="実用例">実用例</h2>
+<h3 id="例1-データセーバーモード">例1: データセーバーモード</h3>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;データセーバーモードの実装&quot;&quot;&quot;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DataSaverBrowser(Gtk.ApplicationWindow):</span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;データセーバーモード付きブラウザ&quot;&quot;&quot;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_title(<span class="st">&quot;Data Saver Browser&quot;</span>)</span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_default_size(<span class="dv">800</span>, <span class="dv">600</span>)</span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="co"># UI構築</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        vbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.VERTICAL)</span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>        <span class="co"># データセーバースイッチ</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>        hbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.HORIZONTAL, spacing<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        hbox.set_margin_start(<span class="dv">10</span>)</span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>        hbox.set_margin_end(<span class="dv">10</span>)</span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>        hbox.set_margin_top(<span class="dv">10</span>)</span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>        hbox.set_margin_bottom(<span class="dv">10</span>)</span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>        label <span class="op">=</span> Gtk.Label(label<span class="op">=</span><span class="st">&quot;データセーバーモード:&quot;</span>)</span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.data_saver_switch <span class="op">=</span> Gtk.Switch()</span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.data_saver_switch.<span class="ex">connect</span>(<span class="st">&#39;notify::active&#39;</span>, <span class="va">self</span>.on_data_saver_toggled)</span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>        hbox.append(label)</span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>        hbox.append(<span class="va">self</span>.data_saver_switch)</span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a>        <span class="co"># WebView</span></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>        vbox.append(hbox)</span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.web_view)</span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_vexpand(<span class="va">True</span>)</span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(vbox)</span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_data_saver_toggled(<span class="va">self</span>, switch, _):</span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;データセーバーモード切り替え&quot;&quot;&quot;</span></span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>        enabled <span class="op">=</span> switch.get_active()</span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> enabled:</span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>            <span class="co"># データセーバーモード有効</span></span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_enable_javascript(<span class="va">False</span>)</span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_auto_load_images(<span class="va">False</span>)</span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">&quot;データセーバーモード: 有効&quot;</span>)</span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a>        <span class="cf">else</span>:</span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>            <span class="co"># 通常モード</span></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_enable_javascript(<span class="va">True</span>)</span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_auto_load_images(<span class="va">True</span>)</span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>            <span class="bu">print</span>(<span class="st">&quot;データセーバーモード: 無効&quot;</span>)</span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> DataSaverBrowser(application<span class="op">=</span>app)</span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>    window.web_view.load_uri(<span class="st">&quot;https://www.chromium.org&quot;</span>)</span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a>    blink_gtk.init()</span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.datasaver&#39;</span>)</span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a>    app.run()</span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>    blink_gtk.shutdown()</span></code></pre></div>
+<h3 id="例2-設定パネル付きブラウザ">例2: 設定パネル付きブラウザ</h3>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;設定パネル付きブラウザ&quot;&quot;&quot;</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SettingsPanel(Gtk.Box):</span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;設定パネルウィジェット&quot;&quot;&quot;</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, web_view: blink_gtk.WebView):</span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(orientation<span class="op">=</span>Gtk.Orientation.HORIZONTAL, spacing<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> web_view</span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_margin_start(<span class="dv">10</span>)</span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_margin_end(<span class="dv">10</span>)</span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_margin_top(<span class="dv">10</span>)</span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_margin_bottom(<span class="dv">10</span>)</span>
+<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>        <span class="co"># JavaScript</span></span>
+<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;JavaScript:&quot;</span>))</span>
+<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.js_switch <span class="op">=</span> Gtk.Switch()</span>
+<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.js_switch.set_active(<span class="va">True</span>)</span>
+<span id="cb21-26"><a href="#cb21-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.js_switch.<span class="ex">connect</span>(<span class="st">&#39;notify::active&#39;</span>,</span>
+<span id="cb21-27"><a href="#cb21-27" aria-hidden="true" tabindex="-1"></a>                              <span class="kw">lambda</span> s, _: web_view.set_enable_javascript(s.get_active()))</span>
+<span id="cb21-28"><a href="#cb21-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.append(<span class="va">self</span>.js_switch)</span>
+<span id="cb21-29"><a href="#cb21-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-30"><a href="#cb21-30" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 画像</span></span>
+<span id="cb21-31"><a href="#cb21-31" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;画像:&quot;</span>))</span>
+<span id="cb21-32"><a href="#cb21-32" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.images_switch <span class="op">=</span> Gtk.Switch()</span>
+<span id="cb21-33"><a href="#cb21-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.images_switch.set_active(<span class="va">True</span>)</span>
+<span id="cb21-34"><a href="#cb21-34" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.images_switch.<span class="ex">connect</span>(<span class="st">&#39;notify::active&#39;</span>,</span>
+<span id="cb21-35"><a href="#cb21-35" aria-hidden="true" tabindex="-1"></a>                                   <span class="kw">lambda</span> s, _: web_view.set_auto_load_images(s.get_active()))</span>
+<span id="cb21-36"><a href="#cb21-36" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.append(<span class="va">self</span>.images_switch)</span>
+<span id="cb21-37"><a href="#cb21-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-38"><a href="#cb21-38" aria-hidden="true" tabindex="-1"></a>        <span class="co"># ストレージ</span></span>
+<span id="cb21-39"><a href="#cb21-39" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;ストレージ:&quot;</span>))</span>
+<span id="cb21-40"><a href="#cb21-40" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.storage_switch <span class="op">=</span> Gtk.Switch()</span>
+<span id="cb21-41"><a href="#cb21-41" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.storage_switch.set_active(<span class="va">True</span>)</span>
+<span id="cb21-42"><a href="#cb21-42" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.storage_switch.<span class="ex">connect</span>(<span class="st">&#39;notify::active&#39;</span>,</span>
+<span id="cb21-43"><a href="#cb21-43" aria-hidden="true" tabindex="-1"></a>                                    <span class="kw">lambda</span> s, _: web_view.set_enable_local_storage(s.get_active()))</span>
+<span id="cb21-44"><a href="#cb21-44" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.append(<span class="va">self</span>.storage_switch)</span>
+<span id="cb21-45"><a href="#cb21-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-46"><a href="#cb21-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-47"><a href="#cb21-47" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserWindow(Gtk.ApplicationWindow):</span>
+<span id="cb21-48"><a href="#cb21-48" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;設定パネル付きブラウザウィンドウ&quot;&quot;&quot;</span></span>
+<span id="cb21-49"><a href="#cb21-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-50"><a href="#cb21-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb21-51"><a href="#cb21-51" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb21-52"><a href="#cb21-52" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_title(<span class="st">&quot;Browser with Settings&quot;</span>)</span>
+<span id="cb21-53"><a href="#cb21-53" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_default_size(<span class="dv">1000</span>, <span class="dv">700</span>)</span>
+<span id="cb21-54"><a href="#cb21-54" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-55"><a href="#cb21-55" aria-hidden="true" tabindex="-1"></a>        vbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.VERTICAL)</span>
+<span id="cb21-56"><a href="#cb21-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-57"><a href="#cb21-57" aria-hidden="true" tabindex="-1"></a>        <span class="co"># WebView</span></span>
+<span id="cb21-58"><a href="#cb21-58" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb21-59"><a href="#cb21-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-60"><a href="#cb21-60" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 設定パネル</span></span>
+<span id="cb21-61"><a href="#cb21-61" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.settings_panel <span class="op">=</span> SettingsPanel(<span class="va">self</span>.web_view)</span>
+<span id="cb21-62"><a href="#cb21-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-63"><a href="#cb21-63" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.settings_panel)</span>
+<span id="cb21-64"><a href="#cb21-64" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.web_view)</span>
+<span id="cb21-65"><a href="#cb21-65" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-66"><a href="#cb21-66" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_vexpand(<span class="va">True</span>)</span>
+<span id="cb21-67"><a href="#cb21-67" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(vbox)</span>
+<span id="cb21-68"><a href="#cb21-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-69"><a href="#cb21-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-70"><a href="#cb21-70" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb21-71"><a href="#cb21-71" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> BrowserWindow(application<span class="op">=</span>app)</span>
+<span id="cb21-72"><a href="#cb21-72" aria-hidden="true" tabindex="-1"></a>    window.web_view.load_uri(<span class="st">&quot;https://www.chromium.org&quot;</span>)</span>
+<span id="cb21-73"><a href="#cb21-73" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb21-74"><a href="#cb21-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-75"><a href="#cb21-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-76"><a href="#cb21-76" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb21-77"><a href="#cb21-77" aria-hidden="true" tabindex="-1"></a>    blink_gtk.init()</span>
+<span id="cb21-78"><a href="#cb21-78" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.settings&#39;</span>)</span>
+<span id="cb21-79"><a href="#cb21-79" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb21-80"><a href="#cb21-80" aria-hidden="true" tabindex="-1"></a>    app.run()</span>
+<span id="cb21-81"><a href="#cb21-81" aria-hidden="true" tabindex="-1"></a>    blink_gtk.shutdown()</span></code></pre></div>
+<h3 id="例3-プロファイルシステム">例3: プロファイルシステム</h3>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;プロファイルシステムの実装&quot;&quot;&quot;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dataclasses <span class="im">import</span> dataclass</span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> enum <span class="im">import</span> Enum</span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> Gtk</span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ProfileType(Enum):</span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;プロファイルタイプ&quot;&quot;&quot;</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    NORMAL <span class="op">=</span> <span class="st">&quot;通常&quot;</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>    DATA_SAVER <span class="op">=</span> <span class="st">&quot;データセーバー&quot;</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>    PRIVACY <span class="op">=</span> <span class="st">&quot;プライバシー&quot;</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    MOBILE <span class="op">=</span> <span class="st">&quot;モバイル&quot;</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserProfile:</span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;ブラウザプロファイル&quot;&quot;&quot;</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>    name: <span class="bu">str</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>    javascript: <span class="bu">bool</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    images: <span class="bu">bool</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a>    storage: <span class="bu">bool</span></span>
+<span id="cb22-27"><a href="#cb22-27" aria-hidden="true" tabindex="-1"></a>    user_agent: <span class="bu">str</span> <span class="op">=</span> <span class="st">&quot;&quot;</span></span>
+<span id="cb22-28"><a href="#cb22-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-29"><a href="#cb22-29" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> apply_to(<span class="va">self</span>, web_view: blink_gtk.WebView) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb22-30"><a href="#cb22-30" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;プロファイルを適用&quot;&quot;&quot;</span></span>
+<span id="cb22-31"><a href="#cb22-31" aria-hidden="true" tabindex="-1"></a>        web_view.set_enable_javascript(<span class="va">self</span>.javascript)</span>
+<span id="cb22-32"><a href="#cb22-32" aria-hidden="true" tabindex="-1"></a>        web_view.set_auto_load_images(<span class="va">self</span>.images)</span>
+<span id="cb22-33"><a href="#cb22-33" aria-hidden="true" tabindex="-1"></a>        web_view.set_enable_local_storage(<span class="va">self</span>.storage)</span>
+<span id="cb22-34"><a href="#cb22-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.user_agent:</span>
+<span id="cb22-35"><a href="#cb22-35" aria-hidden="true" tabindex="-1"></a>            web_view.set_user_agent(<span class="va">self</span>.user_agent)</span>
+<span id="cb22-36"><a href="#cb22-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-37"><a href="#cb22-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-38"><a href="#cb22-38" aria-hidden="true" tabindex="-1"></a><span class="co"># プロファイル定義</span></span>
+<span id="cb22-39"><a href="#cb22-39" aria-hidden="true" tabindex="-1"></a>PROFILES <span class="op">=</span> {</span>
+<span id="cb22-40"><a href="#cb22-40" aria-hidden="true" tabindex="-1"></a>    ProfileType.NORMAL: BrowserProfile(</span>
+<span id="cb22-41"><a href="#cb22-41" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">&quot;通常モード&quot;</span>,</span>
+<span id="cb22-42"><a href="#cb22-42" aria-hidden="true" tabindex="-1"></a>        javascript<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-43"><a href="#cb22-43" aria-hidden="true" tabindex="-1"></a>        images<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-44"><a href="#cb22-44" aria-hidden="true" tabindex="-1"></a>        storage<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-45"><a href="#cb22-45" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-46"><a href="#cb22-46" aria-hidden="true" tabindex="-1"></a>    ProfileType.DATA_SAVER: BrowserProfile(</span>
+<span id="cb22-47"><a href="#cb22-47" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">&quot;データセーバーモード&quot;</span>,</span>
+<span id="cb22-48"><a href="#cb22-48" aria-hidden="true" tabindex="-1"></a>        javascript<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb22-49"><a href="#cb22-49" aria-hidden="true" tabindex="-1"></a>        images<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb22-50"><a href="#cb22-50" aria-hidden="true" tabindex="-1"></a>        storage<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-51"><a href="#cb22-51" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-52"><a href="#cb22-52" aria-hidden="true" tabindex="-1"></a>    ProfileType.PRIVACY: BrowserProfile(</span>
+<span id="cb22-53"><a href="#cb22-53" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">&quot;プライバシーモード&quot;</span>,</span>
+<span id="cb22-54"><a href="#cb22-54" aria-hidden="true" tabindex="-1"></a>        javascript<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb22-55"><a href="#cb22-55" aria-hidden="true" tabindex="-1"></a>        images<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb22-56"><a href="#cb22-56" aria-hidden="true" tabindex="-1"></a>        storage<span class="op">=</span><span class="va">False</span>,</span>
+<span id="cb22-57"><a href="#cb22-57" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-58"><a href="#cb22-58" aria-hidden="true" tabindex="-1"></a>    ProfileType.MOBILE: BrowserProfile(</span>
+<span id="cb22-59"><a href="#cb22-59" aria-hidden="true" tabindex="-1"></a>        name<span class="op">=</span><span class="st">&quot;モバイルエミュレーション&quot;</span>,</span>
+<span id="cb22-60"><a href="#cb22-60" aria-hidden="true" tabindex="-1"></a>        javascript<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-61"><a href="#cb22-61" aria-hidden="true" tabindex="-1"></a>        images<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-62"><a href="#cb22-62" aria-hidden="true" tabindex="-1"></a>        storage<span class="op">=</span><span class="va">True</span>,</span>
+<span id="cb22-63"><a href="#cb22-63" aria-hidden="true" tabindex="-1"></a>        user_agent<span class="op">=</span><span class="st">&quot;Mozilla/5.0 (Linux; Android 10) AppleWebKit/537.36&quot;</span>,</span>
+<span id="cb22-64"><a href="#cb22-64" aria-hidden="true" tabindex="-1"></a>    ),</span>
+<span id="cb22-65"><a href="#cb22-65" aria-hidden="true" tabindex="-1"></a>}</span>
+<span id="cb22-66"><a href="#cb22-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-67"><a href="#cb22-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-68"><a href="#cb22-68" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ProfileBrowser(Gtk.ApplicationWindow):</span>
+<span id="cb22-69"><a href="#cb22-69" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;プロファイル切り替え可能なブラウザ&quot;&quot;&quot;</span></span>
+<span id="cb22-70"><a href="#cb22-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-71"><a href="#cb22-71" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb22-72"><a href="#cb22-72" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb22-73"><a href="#cb22-73" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_title(<span class="st">&quot;Profile Browser&quot;</span>)</span>
+<span id="cb22-74"><a href="#cb22-74" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_default_size(<span class="dv">1000</span>, <span class="dv">700</span>)</span>
+<span id="cb22-75"><a href="#cb22-75" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-76"><a href="#cb22-76" aria-hidden="true" tabindex="-1"></a>        vbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.VERTICAL)</span>
+<span id="cb22-77"><a href="#cb22-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-78"><a href="#cb22-78" aria-hidden="true" tabindex="-1"></a>        <span class="co"># プロファイル選択</span></span>
+<span id="cb22-79"><a href="#cb22-79" aria-hidden="true" tabindex="-1"></a>        hbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.HORIZONTAL, spacing<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb22-80"><a href="#cb22-80" aria-hidden="true" tabindex="-1"></a>        hbox.set_margin_start(<span class="dv">10</span>)</span>
+<span id="cb22-81"><a href="#cb22-81" aria-hidden="true" tabindex="-1"></a>        hbox.set_margin_end(<span class="dv">10</span>)</span>
+<span id="cb22-82"><a href="#cb22-82" aria-hidden="true" tabindex="-1"></a>        hbox.set_margin_top(<span class="dv">10</span>)</span>
+<span id="cb22-83"><a href="#cb22-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-84"><a href="#cb22-84" aria-hidden="true" tabindex="-1"></a>        hbox.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;プロファイル:&quot;</span>))</span>
+<span id="cb22-85"><a href="#cb22-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-86"><a href="#cb22-86" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.profile_combo <span class="op">=</span> Gtk.ComboBoxText()</span>
+<span id="cb22-87"><a href="#cb22-87" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> profile_type <span class="kw">in</span> ProfileType:</span>
+<span id="cb22-88"><a href="#cb22-88" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.profile_combo.append(profile_type.value, profile_type.value)</span>
+<span id="cb22-89"><a href="#cb22-89" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.profile_combo.set_active(<span class="dv">0</span>)</span>
+<span id="cb22-90"><a href="#cb22-90" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.profile_combo.<span class="ex">connect</span>(<span class="st">&#39;changed&#39;</span>, <span class="va">self</span>.on_profile_changed)</span>
+<span id="cb22-91"><a href="#cb22-91" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-92"><a href="#cb22-92" aria-hidden="true" tabindex="-1"></a>        hbox.append(<span class="va">self</span>.profile_combo)</span>
+<span id="cb22-93"><a href="#cb22-93" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-94"><a href="#cb22-94" aria-hidden="true" tabindex="-1"></a>        <span class="co"># WebView</span></span>
+<span id="cb22-95"><a href="#cb22-95" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb22-96"><a href="#cb22-96" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-97"><a href="#cb22-97" aria-hidden="true" tabindex="-1"></a>        vbox.append(hbox)</span>
+<span id="cb22-98"><a href="#cb22-98" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.web_view)</span>
+<span id="cb22-99"><a href="#cb22-99" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-100"><a href="#cb22-100" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_vexpand(<span class="va">True</span>)</span>
+<span id="cb22-101"><a href="#cb22-101" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(vbox)</span>
+<span id="cb22-102"><a href="#cb22-102" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-103"><a href="#cb22-103" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_profile_changed(<span class="va">self</span>, combo):</span>
+<span id="cb22-104"><a href="#cb22-104" aria-hidden="true" tabindex="-1"></a>        <span class="co">&quot;&quot;&quot;プロファイル変更時&quot;&quot;&quot;</span></span>
+<span id="cb22-105"><a href="#cb22-105" aria-hidden="true" tabindex="-1"></a>        profile_name <span class="op">=</span> combo.get_active_text()</span>
+<span id="cb22-106"><a href="#cb22-106" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-107"><a href="#cb22-107" aria-hidden="true" tabindex="-1"></a>        <span class="co"># プロファイルを検索</span></span>
+<span id="cb22-108"><a href="#cb22-108" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> profile_type, profile <span class="kw">in</span> PROFILES.items():</span>
+<span id="cb22-109"><a href="#cb22-109" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> profile.name <span class="op">==</span> profile_name:</span>
+<span id="cb22-110"><a href="#cb22-110" aria-hidden="true" tabindex="-1"></a>                profile.apply_to(<span class="va">self</span>.web_view)</span>
+<span id="cb22-111"><a href="#cb22-111" aria-hidden="true" tabindex="-1"></a>                <span class="bu">print</span>(<span class="ss">f&quot;プロファイル適用: </span><span class="sc">{</span>profile<span class="sc">.</span>name<span class="sc">}</span><span class="ss">&quot;</span>)</span>
+<span id="cb22-112"><a href="#cb22-112" aria-hidden="true" tabindex="-1"></a>                <span class="cf">break</span></span>
+<span id="cb22-113"><a href="#cb22-113" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-114"><a href="#cb22-114" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-115"><a href="#cb22-115" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb22-116"><a href="#cb22-116" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> ProfileBrowser(application<span class="op">=</span>app)</span>
+<span id="cb22-117"><a href="#cb22-117" aria-hidden="true" tabindex="-1"></a>    window.web_view.load_uri(<span class="st">&quot;https://www.chromium.org&quot;</span>)</span>
+<span id="cb22-118"><a href="#cb22-118" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb22-119"><a href="#cb22-119" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-120"><a href="#cb22-120" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-121"><a href="#cb22-121" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&#39;__main__&#39;</span>:</span>
+<span id="cb22-122"><a href="#cb22-122" aria-hidden="true" tabindex="-1"></a>    blink_gtk.init()</span>
+<span id="cb22-123"><a href="#cb22-123" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.profiles&#39;</span>)</span>
+<span id="cb22-124"><a href="#cb22-124" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb22-125"><a href="#cb22-125" aria-hidden="true" tabindex="-1"></a>    app.run()</span>
+<span id="cb22-126"><a href="#cb22-126" aria-hidden="true" tabindex="-1"></a>    blink_gtk.shutdown()</span></code></pre></div>
+<hr />
+<h2 id="webkitgtkからの移行">WebKitGTKからの移行</h2>
+<h3 id="api対応表">API対応表</h3>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK (Python)</th>
+<th>BlinkGTK (Python)</th>
+<th>互換性</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>settings.set_enable_javascript(enabled)</code></td>
+<td><code>web_view.set_enable_javascript(enabled)</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>settings.get_enable_javascript()</code></td>
+<td><code>web_view.get_enable_javascript()</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>settings.set_user_agent(ua)</code></td>
+<td><code>web_view.set_user_agent(ua)</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>settings.get_user_agent()</code></td>
+<td><code>web_view.get_user_agent()</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>settings.set_auto_load_images(enabled)</code></td>
+<td><code>web_view.set_auto_load_images(enabled)</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>settings.get_auto_load_images()</code></td>
+<td><code>web_view.get_auto_load_images()</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>settings.set_enable_local_storage(enabled)</code></td>
+<td><code>web_view.set_enable_local_storage(enabled)</code></td>
+<td>✅</td>
+</tr>
+<tr>
+<td><code>settings.get_enable_local_storage()</code></td>
+<td><code>web_view.get_enable_local_storage()</code></td>
+<td>✅</td>
+</tr>
+</tbody>
+</table>
+<h3 id="移行例">移行例</h3>
+<p><strong>Before (WebKitGTK)</strong>:</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;WebKit2&#39;</span>, <span class="st">&#39;4.1&#39;</span>)</span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> WebKit2</span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> WebKit2.WebView()</span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>settings <span class="op">=</span> web_view.get_settings()</span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>settings.set_enable_javascript(<span class="va">False</span>)</span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>settings.set_user_agent(<span class="st">&quot;MyApp/1.0&quot;</span>)</span></code></pre></div>
+<p><strong>After (BlinkGTK)</strong>:</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> blink_gtk</span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_gtk.WebView.new()</span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Settingsオブジェクト不要、直接WebViewに設定</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>web_view.set_enable_javascript(<span class="va">False</span>)</span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>web_view.set_user_agent(<span class="st">&quot;MyApp/1.0&quot;</span>)</span></code></pre></div>
+<p><strong>主な違い</strong>:</p>
+<ul>
+<li>✅ Settingsオブジェクトの取得が不要</li>
+<li>✅ 関数名はほぼ同じ</li>
+<li>✅ より簡潔なAPI</li>
+</ul>
+<hr />
+<h2 id="まとめ">まとめ</h2>
+<p>このチュートリアルでは、Python/PyGObjectでBlinkGTK Settings
+APIを使用する方法を学びました。</p>
+<h3 id="学んだこと">学んだこと</h3>
+<ul>
+<li>✅ PyGObjectの基本的なセットアップ</li>
+<li>✅ Settings APIの8つの関数</li>
+<li>✅ Pythonicなコーディングパターン</li>
+<li>✅ 実用的な実装例（データセーバー、プロファイル）</li>
+<li>✅ WebKitGTKからの移行方法</li>
+</ul>
+<h3 id="次のステップ">次のステップ</h3>
+<ul>
+<li><a href="./events-tutorial-py-ja.md">Events チュートリアル
+(Python)</a> - シグナルとイベント処理</li>
+<li><a href="../api-reference/settings-api-ja.md">Settings
+APIリファレンス</a> - 詳細なAPI仕様</li>
+<li><a href="../examples/">Pythonサンプルコード</a> - 完全な実装例</li>
+</ul>
+<hr />
+<p><strong>作成者</strong>: BlinkGTK開発チーム
+<strong>ライセンス</strong>: BSD 3-Clause
+<strong>フィードバック</strong>: <a
+href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
+</body>
+</html>
+</div></div>

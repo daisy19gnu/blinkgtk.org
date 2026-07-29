@@ -1,0 +1,523 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Settings API Reference — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK Settings API Reference — BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-settings-api-reference">BlinkGTK Settings API
+Reference</h1>
+<p><strong>Version</strong>: v0.9.28-dev <strong>Last updated</strong>:
+2026-01-01 <strong>Language</strong>: <a
+href="./settings-api-ja.md">日本語</a> | English</p>
+<hr />
+<h2 id="overview">Overview</h2>
+<p>The Settings API provides functions for customizing the behavior of a
+BlinkWebView.</p>
+<p><strong>Features</strong>:</p>
+<ul>
+<li>Full compatibility with the WebKitGTK WebKitSettings API</li>
+<li>Control over JavaScript, image loading, storage, and more</li>
+<li>Provided as a C API with GObject compatibility</li>
+<li>Usable from Python (PyGObject) and Rust (gtk-rs) as well</li>
+</ul>
+<p><strong>Available since</strong>: Build 171</p>
+<hr />
+<h2 id="api-list">API List</h2>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Setter</th>
+<th>Getter</th>
+<th>Default value</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JavaScript control</td>
+<td><code>blink_web_view_set_javascript_enabled()</code></td>
+<td><code>blink_web_view_get_javascript_enabled()</code></td>
+<td>TRUE (enabled)</td>
+</tr>
+<tr>
+<td>User-Agent</td>
+<td><code>blink_web_view_set_user_agent()</code></td>
+<td><code>blink_web_view_get_user_agent()</code></td>
+<td>Chromium default</td>
+</tr>
+<tr>
+<td>Image loading</td>
+<td><code>blink_web_view_set_images_enabled()</code></td>
+<td><code>blink_web_view_get_images_enabled()</code></td>
+<td>TRUE (enabled)</td>
+</tr>
+<tr>
+<td>Local storage</td>
+<td><code>blink_web_view_set_local_storage_enabled()</code></td>
+<td><code>blink_web_view_get_local_storage_enabled()</code></td>
+<td>TRUE (enabled)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="javascript-control">JavaScript Control</h2>
+<h3
+id="blink_web_view_set_javascript_enabled">blink_web_view_set_javascript_enabled()</h3>
+<p>Enables or disables JavaScript.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
+<p><strong>Parameters</strong>: | Parameter | Type | Description |
+|-----------|---|------| | <code>web_view</code> |
+<code>BlinkWebView*</code> | BlinkWebView widget | |
+<code>enabled</code> | <code>gboolean</code> | TRUE = enabled, FALSE =
+disabled |</p>
+<p><strong>Return value</strong>: None</p>
+<p><strong>Default value</strong>: TRUE (enabled)</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">// Display secure content with JavaScript disabled</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>WebKitGTK equivalent</strong>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_javascript<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
+<p><strong>Available since</strong>: Build 171</p>
+<hr />
+<h3
+id="blink_web_view_get_javascript_enabled">blink_web_view_get_javascript_enabled()</h3>
+<p>Gets whether JavaScript is enabled.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<p><strong>Parameters</strong>: | Parameter | Type | Description |
+|-----------|---|------| | <code>web_view</code> |
+<code>BlinkWebView*</code> | BlinkWebView widget |</p>
+<p><strong>Return value</strong>: <code>gboolean</code> - TRUE =
+enabled, FALSE = disabled</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_javascript_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;JavaScript is enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;JavaScript is disabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Available since</strong>: Build 171</p>
+<hr />
+<h2 id="user-agent-control">User-Agent Control</h2>
+<h3
+id="blink_web_view_set_user_agent">blink_web_view_set_user_agent()</h3>
+<p>Sets a custom User-Agent string.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> user_agent<span class="op">);</span></span></code></pre></div>
+<p><strong>Parameters</strong>: | Parameter | Type | Description |
+|-----------|---|------| | <code>web_view</code> |
+<code>BlinkWebView*</code> | BlinkWebView widget | |
+<code>user_agent</code> | <code>const char*</code> | User-Agent string
+|</p>
+<p><strong>Return value</strong>: None</p>
+<p><strong>Default value</strong>: Chromium's default User-Agent</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Set a custom User-Agent</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0 (Linux; BlinkGTK)&quot;</span><span class="op">);</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://httpbin.org/user-agent&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>Practical example - mobile User-Agent</strong>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Behave as a mobile device</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) &quot;</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;AppleWebKit/537.36 (KHTML, like Gecko) &quot;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;Chrome/143.0.0.0 Mobile Safari/537.36&quot;</span><span class="op">;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span></code></pre></div>
+<p><strong>WebKitGTK equivalent</strong>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_user_agent<span class="op">(</span>settings<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>Available since</strong>: Build 171</p>
+<hr />
+<h3
+id="blink_web_view_get_user_agent">blink_web_view_get_user_agent()</h3>
+<p>Gets the current User-Agent string.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<p><strong>Parameters</strong>: | Parameter | Type | Description |
+|-----------|---|------| | <code>web_view</code> |
+<code>BlinkWebView*</code> | BlinkWebView widget |</p>
+<p><strong>Return value</strong>: <code>char*</code> - User-Agent string
+(the caller must free it with <code>g_free()</code>)</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> user_agent <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>g_print<span class="op">(</span><span class="st">&quot;Current User-Agent: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> user_agent<span class="op">);</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>user_agent<span class="op">);</span>  <span class="co">// Important: free the memory</span></span></code></pre></div>
+<p><strong>Memory management</strong>: Important: The return value must
+be freed by the caller with <code>g_free()</code>.</p>
+<p><strong>Available since</strong>: Build 171</p>
+<hr />
+<h2 id="image-loading-control">Image Loading Control</h2>
+<h3
+id="blink_web_view_set_images_enabled">blink_web_view_set_images_enabled()</h3>
+<p>Controls automatic image loading.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
+<p><strong>Parameters</strong>: | Parameter | Type | Description |
+|-----------|---|------| | <code>web_view</code> |
+<code>BlinkWebView*</code> | BlinkWebView widget | |
+<code>enabled</code> | <code>gboolean</code> | TRUE = auto-load, FALSE =
+disabled |</p>
+<p><strong>Return value</strong>: None</p>
+<p><strong>Default value</strong>: TRUE (auto-loading enabled)</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Disable image loading (display text only)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>Practical example - lightweight browsing</strong>:</p>
+<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Data-usage reduction mode</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> enable_data_saver_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Data saver mode enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>WebKitGTK equivalent</strong>:</p>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_auto_load_images<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
+<p><strong>Available since</strong>: Build 172</p>
+<hr />
+<h3
+id="blink_web_view_get_images_enabled">blink_web_view_get_images_enabled()</h3>
+<p>Gets the automatic image loading setting.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<p><strong>Parameters</strong>: | Parameter | Type | Description |
+|-----------|---|------| | <code>web_view</code> |
+<code>BlinkWebView*</code> | BlinkWebView widget |</p>
+<p><strong>Return value</strong>: <code>gboolean</code> - TRUE =
+auto-loading enabled, FALSE = disabled</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_images_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Images will be loaded</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Images are blocked</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Available since</strong>: Build 172</p>
+<hr />
+<h2 id="local-storage-control">Local Storage Control</h2>
+<h3
+id="blink_web_view_set_local_storage_enabled">blink_web_view_set_local_storage_enabled()</h3>
+<p>Enables or disables HTML5 LocalStorage.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
+<p><strong>Parameters</strong>: | Parameter | Type | Description |
+|-----------|---|------| | <code>web_view</code> |
+<code>BlinkWebView*</code> | BlinkWebView widget | |
+<code>enabled</code> | <code>gboolean</code> | TRUE = enabled, FALSE =
+disabled |</p>
+<p><strong>Return value</strong>: None</p>
+<p><strong>Default value</strong>: TRUE (enabled)</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Disable local storage (privacy protection)</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>Practical example - privacy mode</strong>:</p>
+<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Privacy protection mode</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> enable_privacy_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Privacy mode enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>WebKitGTK equivalent</strong>:</p>
+<div class="sourceCode" id="cb21"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_local_storage<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
+<p><strong>Available since</strong>: Build 172</p>
+<hr />
+<h3
+id="blink_web_view_get_local_storage_enabled">blink_web_view_get_local_storage_enabled()</h3>
+<p>Gets the LocalStorage setting.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<p><strong>Parameters</strong>: | Parameter | Type | Description |
+|-----------|---|------| | <code>web_view</code> |
+<code>BlinkWebView*</code> | BlinkWebView widget |</p>
+<p><strong>Return value</strong>: <code>gboolean</code> - TRUE =
+enabled, FALSE = disabled</p>
+<p><strong>Example</strong>:</p>
+<div class="sourceCode" id="cb23"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_local_storage_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;LocalStorage is enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;LocalStorage is disabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Available since</strong>: Build 172</p>
+<hr />
+<h2 id="practical-combined-examples">Practical Combined Examples</h2>
+<h3 id="data-saver-mode">Data Saver Mode</h3>
+<p>When you want to conserve bandwidth:</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_data_saver<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="maximum-security-mode">Maximum Security Mode</h3>
+<p>When security is the top priority:</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_secure_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="mobile-emulation">Mobile Emulation</h3>
+<p>When behaving as a mobile device:</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_mobile_emulation<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) &quot;</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;AppleWebKit/537.36 Chrome/143.0.0.0 Mobile&quot;</span><span class="op">;</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="webkitgtk-migration-guide">WebKitGTK Migration Guide</h2>
+<h3 id="api-mapping">API Mapping</h3>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+<th>Compatibility</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>webkit_settings_set_enable_javascript()</code></td>
+<td><code>blink_web_view_set_javascript_enabled()</code></td>
+<td>Fully compatible</td>
+</tr>
+<tr>
+<td><code>webkit_settings_get_enable_javascript()</code></td>
+<td><code>blink_web_view_get_javascript_enabled()</code></td>
+<td>Fully compatible</td>
+</tr>
+<tr>
+<td><code>webkit_settings_set_user_agent()</code></td>
+<td><code>blink_web_view_set_user_agent()</code></td>
+<td>Fully compatible</td>
+</tr>
+<tr>
+<td><code>webkit_settings_get_user_agent()</code></td>
+<td><code>blink_web_view_get_user_agent()</code></td>
+<td>Fully compatible</td>
+</tr>
+<tr>
+<td><code>webkit_settings_set_auto_load_images()</code></td>
+<td><code>blink_web_view_set_images_enabled()</code></td>
+<td>Fully compatible</td>
+</tr>
+<tr>
+<td><code>webkit_settings_get_auto_load_images()</code></td>
+<td><code>blink_web_view_get_images_enabled()</code></td>
+<td>Fully compatible</td>
+</tr>
+<tr>
+<td><code>webkit_settings_set_enable_local_storage()</code></td>
+<td><code>blink_web_view_set_local_storage_enabled()</code></td>
+<td>Fully compatible</td>
+</tr>
+<tr>
+<td><code>webkit_settings_get_enable_local_storage()</code></td>
+<td><code>blink_web_view_get_local_storage_enabled()</code></td>
+<td>Fully compatible</td>
+</tr>
+</tbody>
+</table>
+<h3 id="migration-code-example">Migration Code Example</h3>
+<p><strong>Before (WebKitGTK)</strong>:</p>
+<div class="sourceCode" id="cb27"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>WebKitWebView<span class="op">*</span> web_view <span class="op">=</span> webkit_web_view_new<span class="op">();</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_javascript<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_user_agent<span class="op">(</span>settings<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>After (BlinkGTK)</strong>:</p>
+<div class="sourceCode" id="cb28"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>Differences</strong>:</p>
+<ul>
+<li>No need to obtain a Settings object (settings are applied directly
+to the WebView)</li>
+<li>Only the function names change (the behavior is identical)</li>
+<li>No type conversion needed (unified as <code>GtkWidget*</code>)</li>
+</ul>
+<hr />
+<h2 id="configuration-from-the-command-line">Configuration from the
+Command Line</h2>
+<p>When using simple_browser, settings can be configured via
+command-line arguments:</p>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Disable JavaScript</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./simple_browser</span> <span class="at">--no-javascript</span> https://example.com</span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Disable image loading</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="ex">./simple_browser</span> <span class="at">--no-images</span> https://example.com</span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Change the User-Agent</span></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="ex">./simple_browser</span> <span class="at">--user-agent</span><span class="op">=</span><span class="st">&quot;MyApp/1.0&quot;</span> https://example.com</span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a><span class="co"># Combine multiple settings</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a><span class="ex">./simple_browser</span> <span class="at">--no-javascript</span> <span class="at">--no-images</span> <span class="at">--no-local-storage</span> https://example.com</span></code></pre></div>
+<hr />
+<h2 id="related-documentation">Related Documentation</h2>
+<h3 id="api-reference">API Reference</h3>
+<ul>
+<li><a href="./navigation-api-en.md">Navigation API</a> - Page
+navigation, history operations</li>
+<li><a href="./signals-api-en.md">GObject Signals API</a> - Event
+notification system</li>
+</ul>
+<h3 id="tutorials">Tutorials</h3>
+<ul>
+<li><a href="../tutorials/settings-tutorial-c-en.md">C Tutorial</a></li>
+<li><a href="../tutorials/settings-tutorial-py-en.md">Python
+Tutorial</a></li>
+<li><a href="../tutorials/settings-tutorial-rs-en.md">Rust
+Tutorial</a></li>
+</ul>
+<h3 id="migration-guide">Migration Guide</h3>
+<ul>
+<li><a href="../migration/webkitgtk-to-blinkgtk-en.md">WebKitGTK
+Migration Guide</a></li>
+</ul>
+<hr />
+<h2 id="version-history">Version History</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Release date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.9.28-dev</td>
+<td>2026-01-01</td>
+<td>Build 174: Cross-links added</td>
+</tr>
+<tr>
+<td>v0.9.27-dev</td>
+<td>2026-01-01</td>
+<td>Build 173: Settings API documentation completed</td>
+</tr>
+<tr>
+<td>v0.9.26-dev</td>
+<td>2025-12-31</td>
+<td>Build 172: Image loading and local storage control added</td>
+</tr>
+<tr>
+<td>v0.9.25-dev</td>
+<td>2025-12-31</td>
+<td>Build 171: JavaScript control and User-Agent settings added</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<p><strong>License</strong>: BSD-3-Clause <strong>Project</strong>:
+BlinkGTK <strong>Maintainer</strong>: BlinkGTK Project <a
+href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
+</body>
+</html>
+</div></div>

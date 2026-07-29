@@ -1,0 +1,176 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK API リファレンスマニュアル(目次) — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK API リファレンスマニュアル(目次) —
+BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-api-リファレンスマニュアル目次">BlinkGTK API
+リファレンスマニュアル(目次)</h1>
+<p><strong>作成者</strong>: BlinkGTK Project <strong>対象</strong>:
+BlinkGTK API バージョン 0.1(製品バージョン v1.1 系)/ Chromium 150
+baseline</p>
+<p>BlinkGTK を GTK4 アプリケーションに組み込むための API
+リファレンスです。本マニュアルは章別の分冊(<code>NN-&lt;slug&gt;-ja.md</code>
+/
+<code>-en.md</code>)で構成されます。日本語版を正とし、英語版がこれに追随します。</p>
+<blockquote>
+<p>パス・パッケージ名中の <code>0.1</code> は <strong>API
+バージョン</strong>です(GTK4 の <code>gtk-4.0</code>
+と同じ規約)。製品バージョン(v1.1.0 等)とは独立で、互換性のない API
+変更時にのみ変わります。</p>
+</blockquote>
+<h2 id="章構成--chapters">章構成 / Chapters</h2>
+<table>
+<thead>
+<tr>
+<th>#</th>
+<th>章</th>
+<th>ファイル</th>
+<th>状態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1</td>
+<td>概観とライフサイクル</td>
+<td><code>01-overview-lifecycle-ja.md</code></td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>2</td>
+<td>ウィジェットの生成と埋め込み</td>
+<td><code>02-widget-embedding-ja.md</code></td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>3</td>
+<td>ナビゲーション</td>
+<td><code>03-navigation-ja.md</code></td>
+<td>既存: <a
+href="./navigation-api-ja.md"><code>navigation-api-ja.md</code></a>
+を母体</td>
+</tr>
+<tr>
+<td>4</td>
+<td>設定 (Settings)</td>
+<td><code>04-settings-ja.md</code></td>
+<td>既存: <a
+href="./settings-api-ja.md"><code>settings-api-ja.md</code></a>
+を母体</td>
+</tr>
+<tr>
+<td>5</td>
+<td>シグナル (GObject Signals)</td>
+<td><code>05-signals-ja.md</code></td>
+<td>既存: <a
+href="./signals-api-ja.md"><code>signals-api-ja.md</code></a>
+を母体</td>
+</tr>
+<tr>
+<td>6</td>
+<td>JavaScript 連携</td>
+<td><code>06-javascript-ja.md</code></td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>7</td>
+<td>アクセシビリティ</td>
+<td><code>07-accessibility-ja.md</code></td>
+<td>🔴 <strong>機能未実装のため退避</strong> (<a
+href="../../archived/unimplemented-api/accessibility/README-ja.md">経緯</a>)。実装後に起草</td>
+</tr>
+<tr>
+<td>8</td>
+<td>描画・スクリーンショット</td>
+<td><code>08-rendering-ja.md</code></td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>9</td>
+<td>環境変数</td>
+<td><a
+href="./environment-variables-ja.md"><code>environment-variables-ja.md</code></a></td>
+<td><strong>確定(正本)</strong></td>
+</tr>
+<tr>
+<td>10</td>
+<td>エラーハンドリングと診断</td>
+<td><code>10-errors-ja.md</code></td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>11</td>
+<td>完全な C API 一覧</td>
+<td><code>c-api-reference-ja.md</code></td>
+<td>既存: <a
+href="./c-api-reference-ja.md"><code>c-api-reference-ja.md</code></a>
+が母体</td>
+</tr>
+<tr>
+<td>12</td>
+<td>GObject Introspection / 言語バインディング</td>
+<td><code>12-gobject-introspection-ja.md</code></td>
+<td>起草予定(PyGObject / GJS / Vala)</td>
+</tr>
+<tr>
+<td>13</td>
+<td>バージョニングと互換性</td>
+<td><code>13-versioning-ja.md</code></td>
+<td>起草予定(SONAME / API 版数 / 安定性)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="分担--authoring">分担 / Authoring</h2>
+<ul>
+<li><strong>草稿(日本語)</strong>:
+consumer(組み込み利用)視点で起草。</li>
+<li><strong>監修 + 英語版追随</strong>: BlinkGTK Project
+側が内部仕様の監修(セマンティクス訂正・env
+意味確定・非推奨指定)と英語版整備を担当。</li>
+<li>章ごとの小 PR で進行。命名は
+<code>NN-&lt;slug&gt;-ja.md</code>(日本語)/
+<code>NN-&lt;slug&gt;-en.md</code>(英語)。</li>
+</ul>
+<h2 id="既存ドキュメントの扱い">既存ドキュメントの扱い</h2>
+<p>既存の <code>*-ja.md</code>(navigation / settings / signals /
+c-api-reference /
+blink-web-view)は各章の母体として統合・改訂の対象です。章別ファイルへの移行後は、旧ファイルは新章への参照に置き換えるか、統合します。</p>
+<h2 id="関連">関連</h2>
+<ul>
+<li>インストール・依存: 配布物同梱の <code>INSTALL.md</code>、および
+blinkgtk-dist リポジトリ</li>
+<li>第9章(環境変数)の env は「公開サポート / エスケープハッチ /
+内部診断」の 3 区分。内部診断 env は無保証・サポート対象外です。</li>
+</ul>
+</body>
+</html>
+</div></div>

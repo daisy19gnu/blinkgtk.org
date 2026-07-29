@@ -1,0 +1,769 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Rust (gtk4-rs) チュートリアル — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK Rust (gtk4-rs) チュートリアル — BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-rust-gtk4-rs-チュートリアル">BlinkGTK Rust (gtk4-rs)
+チュートリアル</h1>
+<p><strong>Build 174: Rust言語バインディング対応</strong></p>
+<hr />
+<h2 id="目次">目次</h2>
+<ol type="1">
+<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#gtk4-rsのセットアップ">gtk4-rsのセットアップ</a></li>
+<li><a href="#最小限のブラウザ">最小限のブラウザ</a></li>
+<li><a href="#シグナル処理">シグナル処理</a></li>
+<li><a href="#プロパティ監視">プロパティ監視</a></li>
+<li><a href="#ナビゲーション機能">ナビゲーション機能</a></li>
+<li><a href="#実践的な使い方">実践的な使い方</a></li>
+<li><a href="#トラブルシューティング">トラブルシューティング</a></li>
+</ol>
+<hr />
+<h2 id="はじめに">はじめに</h2>
+<p>BlinkGTKはGObject
+Introspectionに対応しているため、Rustからgtk4-rsを通じて利用できます。Rustの型安全性とゼロコスト抽象化により、安全で高速なブラウザアプリケーションを構築できます。</p>
+<h3 id="blinkgtkの特徴">BlinkGTKの特徴</h3>
+<ul>
+<li><strong>完全なWeb標準対応</strong>:
+Chromium/Blinkエンジンによる98-100%のWeb標準サポート</li>
+<li><strong>GTK4ネイティブ</strong>: GTK4ウィジェットとして統合</li>
+<li><strong>Rustの型安全性</strong>: コンパイル時の安全性保証</li>
+<li><strong>ゼロコスト抽象化</strong>: C言語と同等のパフォーマンス</li>
+</ul>
+<h3 id="前提条件">前提条件</h3>
+<ul>
+<li>Rust 1.70以上</li>
+<li>gtk4-rs 0.9以上</li>
+<li>GTK4 4.6以上</li>
+<li>BlinkGTK 0.9.82以上</li>
+</ul>
+<hr />
+<h2 id="gtk4-rsのセットアップ">gtk4-rsのセットアップ</h2>
+<h3
+id="必要なパッケージのインストール">必要なパッケージのインストール</h3>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rustツールチェーン（未インストールの場合）</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">--proto</span> <span class="st">&#39;=https&#39;</span> <span class="at">--tlsv1.2</span> <span class="at">-sSf</span> https://sh.rustup.rs <span class="kw">|</span> <span class="fu">sh</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># GTK4開発ライブラリ</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora/RHEL</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4-devel gobject-introspection-devel</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co"># Ubuntu/Debian</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-dev libgirepository1.0-dev</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co"># Arch Linux</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> pacman <span class="at">-S</span> gtk4 gobject-introspection</span></code></pre></div>
+<h3 id="プロジェクト作成">プロジェクト作成</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 新しいRustプロジェクト作成</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cargo</span> new my-blinkgtk-browser</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> my-blinkgtk-browser</span></code></pre></div>
+<h3 id="cargotoml設定">Cargo.toml設定</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode toml"><code class="sourceCode toml"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[package]</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">name</span> <span class="op">=</span> <span class="st">&quot;my-blinkgtk-browser&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="dt">version</span> <span class="op">=</span> <span class="st">&quot;0.1.0&quot;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">edition</span> <span class="op">=</span> <span class="st">&quot;2021&quot;</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="kw">[dependencies]</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dt">gtk4</span> <span class="op">=</span> <span class="st">&quot;0.9&quot;</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="dt">glib</span> <span class="op">=</span> <span class="st">&quot;0.20&quot;</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="dt">gio</span> <span class="op">=</span> <span class="st">&quot;0.20&quot;</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="kw">[build-dependencies]</span></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="dt">pkg-config</span> <span class="op">=</span> <span class="st">&quot;0.3&quot;</span></span></code></pre></div>
+<h3 id="buildrs作成">build.rs作成</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// build.rs</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::</span>env<span class="op">;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::path::</span><span class="dt">PathBuf</span><span class="op">;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">{</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// BlinkGTKライブラリのパスを設定</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> blinkgtk_lib <span class="op">=</span> <span class="st">&quot;/path/to/BlinkGTK/lib&quot;</span><span class="op">;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">&quot;cargo:rustc-link-search=native={}&quot;</span><span class="op">,</span> blinkgtk_lib)<span class="op">;</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">&quot;cargo:rustc-link-lib=blinkgtk&quot;</span>)<span class="op">;</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>    <span class="pp">println!</span>(<span class="st">&quot;cargo:rerun-if-changed=build.rs&quot;</span>)<span class="op">;</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="環境変数設定">環境変数設定</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># LD_LIBRARY_PATHにBlinkGTKライブラリを追加</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/path/to/BlinkGTK/lib:<span class="va">$LD_LIBRARY_PATH</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"># GI_TYPELIB_PATHにBlinkGTK typelibを追加</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GI_TYPELIB_PATH</span><span class="op">=</span>/path/to/BlinkGTK/gir:<span class="va">$GI_TYPELIB_PATH</span></span></code></pre></div>
+<hr />
+<h2 id="最小限のブラウザ">最小限のブラウザ</h2>
+<h3 id="基本的な使い方">基本的な使い方</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">// src/main.rs</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">gtk4::prelude::</span><span class="op">*;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">gtk4::</span><span class="op">{</span>glib<span class="op">,</span> Application<span class="op">,</span> ApplicationWindow<span class="op">};</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::ffi::</span>CString<span class="op">;</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK FFI宣言</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="kw">mod</span> ffi <span class="op">{</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">use</span> <span class="pp">glib::ffi::</span><span class="op">{</span>gboolean<span class="op">,</span> gchar<span class="op">,</span> gdouble<span class="op">,</span> GType<span class="op">};</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">use</span> <span class="pp">gtk4::ffi::</span>GtkWidget<span class="op">;</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">extern</span> <span class="st">&quot;C&quot;</span> <span class="op">{</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>        <span class="kw">pub</span> <span class="kw">fn</span> blink_gtk_init(argc<span class="op">:</span> <span class="op">*</span><span class="kw">mut</span> <span class="dt">i32</span><span class="op">,</span> argv<span class="op">:</span> <span class="op">*</span><span class="kw">mut</span> <span class="op">*</span><span class="kw">mut</span> <span class="op">*</span><span class="kw">mut</span> gchar)<span class="op">;</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">pub</span> <span class="kw">fn</span> blink_gtk_shutdown()<span class="op">;</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a>        <span class="kw">pub</span> <span class="kw">fn</span> blink_web_view_new() <span class="op">-&gt;</span> <span class="op">*</span><span class="kw">mut</span> GtkWidget<span class="op">;</span></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a>        <span class="kw">pub</span> <span class="kw">fn</span> blink_web_view_load_uri(web_view<span class="op">:</span> <span class="op">*</span><span class="kw">mut</span> GtkWidget<span class="op">,</span> uri<span class="op">:</span> <span class="op">*</span><span class="kw">const</span> gchar)<span class="op">;</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a><span class="kw">const</span> APP_ID<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span> <span class="op">=</span> <span class="st">&quot;org.example.MinimalBrowser&quot;</span><span class="op">;</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">-&gt;</span> <span class="pp">glib::</span>ExitCode <span class="op">{</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">// BlinkGTK初期化</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a>    <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> argc <span class="op">=</span> <span class="pp">std::env::</span>args()<span class="op">.</span>len() <span class="kw">as</span> <span class="dt">i32</span><span class="op">;</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> argv<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="pp">std::env::</span>args()</span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span>map(<span class="op">|</span>arg<span class="op">|</span> <span class="pp">CString::</span>new(arg)<span class="op">.</span>unwrap()<span class="op">.</span>into_raw())</span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span>collect()<span class="op">;</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> argv_ptr <span class="op">=</span> argv<span class="op">.</span>as_mut_ptr()<span class="op">;</span></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>        <span class="pp">ffi::</span>blink_gtk_init(<span class="op">&amp;</span><span class="kw">mut</span> argc<span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> argv_ptr)<span class="op">;</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    <span class="co">// GTK4アプリケーション作成</span></span>
+<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> app <span class="op">=</span> <span class="pp">Application::</span>builder()<span class="op">.</span>application_id(APP_ID)<span class="op">.</span>build()<span class="op">;</span></span>
+<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-36"><a href="#cb6-36" aria-hidden="true" tabindex="-1"></a>    app<span class="op">.</span>connect_activate(build_ui)<span class="op">;</span></span>
+<span id="cb6-37"><a href="#cb6-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-38"><a href="#cb6-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> exit_code <span class="op">=</span> app<span class="op">.</span>run()<span class="op">;</span></span>
+<span id="cb6-39"><a href="#cb6-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-40"><a href="#cb6-40" aria-hidden="true" tabindex="-1"></a>    <span class="co">// BlinkGTK終了</span></span>
+<span id="cb6-41"><a href="#cb6-41" aria-hidden="true" tabindex="-1"></a>    <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb6-42"><a href="#cb6-42" aria-hidden="true" tabindex="-1"></a>        <span class="pp">ffi::</span>blink_gtk_shutdown()<span class="op">;</span></span>
+<span id="cb6-43"><a href="#cb6-43" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-44"><a href="#cb6-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-45"><a href="#cb6-45" aria-hidden="true" tabindex="-1"></a>    exit_code</span>
+<span id="cb6-46"><a href="#cb6-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-47"><a href="#cb6-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-48"><a href="#cb6-48" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> build_ui(app<span class="op">:</span> <span class="op">&amp;</span>Application) <span class="op">{</span></span>
+<span id="cb6-49"><a href="#cb6-49" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ウィンドウ作成</span></span>
+<span id="cb6-50"><a href="#cb6-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> window <span class="op">=</span> <span class="pp">ApplicationWindow::</span>builder()</span>
+<span id="cb6-51"><a href="#cb6-51" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>application(app)</span>
+<span id="cb6-52"><a href="#cb6-52" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>title(<span class="st">&quot;BlinkGTK Minimal Browser&quot;</span>)</span>
+<span id="cb6-53"><a href="#cb6-53" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>default_width(<span class="dv">1024</span>)</span>
+<span id="cb6-54"><a href="#cb6-54" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>default_height(<span class="dv">768</span>)</span>
+<span id="cb6-55"><a href="#cb6-55" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>build()<span class="op">;</span></span>
+<span id="cb6-56"><a href="#cb6-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-57"><a href="#cb6-57" aria-hidden="true" tabindex="-1"></a>    <span class="co">// BlinkWebView作成</span></span>
+<span id="cb6-58"><a href="#cb6-58" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> web_view_ptr <span class="op">=</span> <span class="kw">unsafe</span> <span class="op">{</span> <span class="pp">ffi::</span>blink_web_view_new() <span class="op">};</span></span>
+<span id="cb6-59"><a href="#cb6-59" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> web_view <span class="op">=</span> <span class="kw">unsafe</span> <span class="op">{</span> <span class="pp">gtk4::Widget::</span>from_glib_none(web_view_ptr) <span class="op">};</span></span>
+<span id="cb6-60"><a href="#cb6-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-61"><a href="#cb6-61" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ウィンドウに追加</span></span>
+<span id="cb6-62"><a href="#cb6-62" aria-hidden="true" tabindex="-1"></a>    window<span class="op">.</span>set_child(<span class="cn">Some</span>(<span class="op">&amp;</span>web_view))<span class="op">;</span></span>
+<span id="cb6-63"><a href="#cb6-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-64"><a href="#cb6-64" aria-hidden="true" tabindex="-1"></a>    <span class="co">// URLをロード</span></span>
+<span id="cb6-65"><a href="#cb6-65" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> url <span class="op">=</span> <span class="st">&quot;https://www.example.com&quot;</span><span class="op">;</span></span>
+<span id="cb6-66"><a href="#cb6-66" aria-hidden="true" tabindex="-1"></a>    <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb6-67"><a href="#cb6-67" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> url_c <span class="op">=</span> <span class="pp">CString::</span>new(url)<span class="op">.</span>unwrap()<span class="op">;</span></span>
+<span id="cb6-68"><a href="#cb6-68" aria-hidden="true" tabindex="-1"></a>        <span class="pp">ffi::</span>blink_web_view_load_uri(web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _<span class="op">,</span> url_c<span class="op">.</span>as_ptr())<span class="op">;</span></span>
+<span id="cb6-69"><a href="#cb6-69" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb6-70"><a href="#cb6-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-71"><a href="#cb6-71" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ウィンドウを表示</span></span>
+<span id="cb6-72"><a href="#cb6-72" aria-hidden="true" tabindex="-1"></a>    window<span class="op">.</span>present()<span class="op">;</span></span>
+<span id="cb6-73"><a href="#cb6-73" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="ビルドと実行">ビルドと実行</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ビルド</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">cargo</span> build <span class="at">--release</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 実行</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/path/to/BlinkGTK/lib:<span class="va">$LD_LIBRARY_PATH</span> <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  <span class="ex">./target/release/my-blinkgtk-browser</span></span></code></pre></div>
+<hr />
+<h2 id="シグナル処理">シグナル処理</h2>
+<h3 id="blinkloadevent列挙型">BlinkLoadEvent列挙型</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>repr<span class="at">(</span>C<span class="at">)]</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="at">#[</span>derive<span class="at">(</span><span class="bu">Debug</span><span class="op">,</span> <span class="bu">Clone</span><span class="op">,</span> <span class="bu">Copy</span><span class="op">,</span> <span class="bu">PartialEq</span><span class="op">,</span> <span class="bu">Eq</span><span class="at">)]</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">enum</span> BlinkLoadEvent <span class="op">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    Started <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    Redirected <span class="op">=</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    Committed <span class="op">=</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a>    Finished <span class="op">=</span> <span class="dv">3</span><span class="op">,</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-10"><a href="#cb8-10" aria-hidden="true" tabindex="-1"></a><span class="kw">impl</span> BlinkLoadEvent <span class="op">{</span></span>
+<span id="cb8-11"><a href="#cb8-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> from_i32(value<span class="op">:</span> <span class="dt">i32</span>) <span class="op">-&gt;</span> <span class="dt">Option</span><span class="op">&lt;</span><span class="dt">Self</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb8-12"><a href="#cb8-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">match</span> value <span class="op">{</span></span>
+<span id="cb8-13"><a href="#cb8-13" aria-hidden="true" tabindex="-1"></a>            <span class="dv">0</span> <span class="op">=&gt;</span> <span class="cn">Some</span>(<span class="pp">BlinkLoadEvent::</span>Started)<span class="op">,</span></span>
+<span id="cb8-14"><a href="#cb8-14" aria-hidden="true" tabindex="-1"></a>            <span class="dv">1</span> <span class="op">=&gt;</span> <span class="cn">Some</span>(<span class="pp">BlinkLoadEvent::</span>Redirected)<span class="op">,</span></span>
+<span id="cb8-15"><a href="#cb8-15" aria-hidden="true" tabindex="-1"></a>            <span class="dv">2</span> <span class="op">=&gt;</span> <span class="cn">Some</span>(<span class="pp">BlinkLoadEvent::</span>Committed)<span class="op">,</span></span>
+<span id="cb8-16"><a href="#cb8-16" aria-hidden="true" tabindex="-1"></a>            <span class="dv">3</span> <span class="op">=&gt;</span> <span class="cn">Some</span>(<span class="pp">BlinkLoadEvent::</span>Finished)<span class="op">,</span></span>
+<span id="cb8-17"><a href="#cb8-17" aria-hidden="true" tabindex="-1"></a>            _ <span class="op">=&gt;</span> <span class="cn">None</span><span class="op">,</span></span>
+<span id="cb8-18"><a href="#cb8-18" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb8-19"><a href="#cb8-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-20"><a href="#cb8-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-21"><a href="#cb8-21" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> as_str(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="op">&amp;</span><span class="ot">&#39;static</span> <span class="dt">str</span> <span class="op">{</span></span>
+<span id="cb8-22"><a href="#cb8-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">match</span> <span class="kw">self</span> <span class="op">{</span></span>
+<span id="cb8-23"><a href="#cb8-23" aria-hidden="true" tabindex="-1"></a>            <span class="pp">BlinkLoadEvent::</span>Started <span class="op">=&gt;</span> <span class="st">&quot;STARTED&quot;</span><span class="op">,</span></span>
+<span id="cb8-24"><a href="#cb8-24" aria-hidden="true" tabindex="-1"></a>            <span class="pp">BlinkLoadEvent::</span>Redirected <span class="op">=&gt;</span> <span class="st">&quot;REDIRECTED&quot;</span><span class="op">,</span></span>
+<span id="cb8-25"><a href="#cb8-25" aria-hidden="true" tabindex="-1"></a>            <span class="pp">BlinkLoadEvent::</span>Committed <span class="op">=&gt;</span> <span class="st">&quot;COMMITTED&quot;</span><span class="op">,</span></span>
+<span id="cb8-26"><a href="#cb8-26" aria-hidden="true" tabindex="-1"></a>            <span class="pp">BlinkLoadEvent::</span>Finished <span class="op">=&gt;</span> <span class="st">&quot;FINISHED&quot;</span><span class="op">,</span></span>
+<span id="cb8-27"><a href="#cb8-27" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb8-28"><a href="#cb8-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-29"><a href="#cb8-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="シグナル接続">シグナル接続</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">gtk4::</span><span class="op">{</span>glib<span class="op">,</span> <span class="pp">prelude::</span><span class="op">*};</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> build_ui(app<span class="op">:</span> <span class="op">&amp;</span>Application) <span class="op">{</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... ウィンドウとWebView作成 ...</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">// load-changedシグナル接続</span></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>    web_view<span class="op">.</span>connect_closure(</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>        <span class="cn">false</span><span class="op">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>        <span class="pp">glib::closure_local!</span>(<span class="op">|</span>_web_view<span class="op">:</span> <span class="pp">gtk4::</span>Widget<span class="op">,</span> load_event<span class="op">:</span> <span class="dt">i32</span><span class="op">|</span> <span class="op">{</span></span>
+<span id="cb9-11"><a href="#cb9-11" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(event) <span class="op">=</span> <span class="pp">BlinkLoadEvent::</span>from_i32(load_event) <span class="op">{</span></span>
+<span id="cb9-12"><a href="#cb9-12" aria-hidden="true" tabindex="-1"></a>                <span class="pp">println!</span>(<span class="st">&quot;Load state: {}&quot;</span><span class="op">,</span> event<span class="op">.</span>as_str())<span class="op">;</span></span>
+<span id="cb9-13"><a href="#cb9-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-14"><a href="#cb9-14" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> event <span class="op">==</span> <span class="pp">BlinkLoadEvent::</span>Finished <span class="op">{</span></span>
+<span id="cb9-15"><a href="#cb9-15" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb9-16"><a href="#cb9-16" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">let</span> uri_ptr <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_get_uri(</span>
+<span id="cb9-17"><a href="#cb9-17" aria-hidden="true" tabindex="-1"></a>                            _web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _</span>
+<span id="cb9-18"><a href="#cb9-18" aria-hidden="true" tabindex="-1"></a>                        )<span class="op">;</span></span>
+<span id="cb9-19"><a href="#cb9-19" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">let</span> title_ptr <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_get_title(</span>
+<span id="cb9-20"><a href="#cb9-20" aria-hidden="true" tabindex="-1"></a>                            _web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _</span>
+<span id="cb9-21"><a href="#cb9-21" aria-hidden="true" tabindex="-1"></a>                        )<span class="op">;</span></span>
+<span id="cb9-22"><a href="#cb9-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-23"><a href="#cb9-23" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">let</span> uri <span class="op">=</span> <span class="cf">if</span> <span class="op">!</span>uri_ptr<span class="op">.</span>is_null() <span class="op">{</span></span>
+<span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>                            <span class="pp">glib::GString::</span>from_glib_none(uri_ptr)<span class="op">.</span>to_string()</span>
+<span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>                        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">String</span><span class="pp">::</span>from(<span class="st">&quot;(none)&quot;</span>)</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>                        <span class="op">};</span></span>
+<span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a>                        <span class="kw">let</span> title <span class="op">=</span> <span class="cf">if</span> <span class="op">!</span>title_ptr<span class="op">.</span>is_null() <span class="op">{</span></span>
+<span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>                            <span class="pp">glib::GString::</span>from_glib_none(title_ptr)<span class="op">.</span>to_string()</span>
+<span id="cb9-31"><a href="#cb9-31" aria-hidden="true" tabindex="-1"></a>                        <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb9-32"><a href="#cb9-32" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">String</span><span class="pp">::</span>from(<span class="st">&quot;(none)&quot;</span>)</span>
+<span id="cb9-33"><a href="#cb9-33" aria-hidden="true" tabindex="-1"></a>                        <span class="op">};</span></span>
+<span id="cb9-34"><a href="#cb9-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-35"><a href="#cb9-35" aria-hidden="true" tabindex="-1"></a>                        <span class="pp">println!</span>(<span class="st">&quot;Page loaded: {} ({})&quot;</span><span class="op">,</span> title<span class="op">,</span> uri)<span class="op">;</span></span>
+<span id="cb9-36"><a href="#cb9-36" aria-hidden="true" tabindex="-1"></a>                    <span class="op">}</span></span>
+<span id="cb9-37"><a href="#cb9-37" aria-hidden="true" tabindex="-1"></a>                <span class="op">}</span></span>
+<span id="cb9-38"><a href="#cb9-38" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb9-39"><a href="#cb9-39" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)<span class="op">,</span></span>
+<span id="cb9-40"><a href="#cb9-40" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb9-41"><a href="#cb9-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-42"><a href="#cb9-42" aria-hidden="true" tabindex="-1"></a>    <span class="co">// title-changedシグナル接続</span></span>
+<span id="cb9-43"><a href="#cb9-43" aria-hidden="true" tabindex="-1"></a>    web_view<span class="op">.</span>connect_closure(</span>
+<span id="cb9-44"><a href="#cb9-44" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
+<span id="cb9-45"><a href="#cb9-45" aria-hidden="true" tabindex="-1"></a>        <span class="cn">false</span><span class="op">,</span></span>
+<span id="cb9-46"><a href="#cb9-46" aria-hidden="true" tabindex="-1"></a>        <span class="pp">glib::closure_local!</span>(<span class="op">|</span>_web_view<span class="op">:</span> <span class="pp">gtk4::</span>Widget<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb9-47"><a href="#cb9-47" aria-hidden="true" tabindex="-1"></a>            <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb9-48"><a href="#cb9-48" aria-hidden="true" tabindex="-1"></a>                <span class="kw">let</span> title_ptr <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_get_title(</span>
+<span id="cb9-49"><a href="#cb9-49" aria-hidden="true" tabindex="-1"></a>                    _web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _</span>
+<span id="cb9-50"><a href="#cb9-50" aria-hidden="true" tabindex="-1"></a>                )<span class="op">;</span></span>
+<span id="cb9-51"><a href="#cb9-51" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="op">!</span>title_ptr<span class="op">.</span>is_null() <span class="op">{</span></span>
+<span id="cb9-52"><a href="#cb9-52" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">let</span> title <span class="op">=</span> <span class="pp">glib::GString::</span>from_glib_none(title_ptr)<span class="op">.</span>to_string()<span class="op">;</span></span>
+<span id="cb9-53"><a href="#cb9-53" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;Title changed: {}&quot;</span><span class="op">,</span> title)<span class="op">;</span></span>
+<span id="cb9-54"><a href="#cb9-54" aria-hidden="true" tabindex="-1"></a>                <span class="op">}</span></span>
+<span id="cb9-55"><a href="#cb9-55" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb9-56"><a href="#cb9-56" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)<span class="op">,</span></span>
+<span id="cb9-57"><a href="#cb9-57" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb9-58"><a href="#cb9-58" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-59"><a href="#cb9-59" aria-hidden="true" tabindex="-1"></a>    <span class="co">// load-failedシグナル接続</span></span>
+<span id="cb9-60"><a href="#cb9-60" aria-hidden="true" tabindex="-1"></a>    web_view<span class="op">.</span>connect_closure(</span>
+<span id="cb9-61"><a href="#cb9-61" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;load-failed&quot;</span><span class="op">,</span></span>
+<span id="cb9-62"><a href="#cb9-62" aria-hidden="true" tabindex="-1"></a>        <span class="cn">false</span><span class="op">,</span></span>
+<span id="cb9-63"><a href="#cb9-63" aria-hidden="true" tabindex="-1"></a>        <span class="pp">glib::closure_local!</span>(</span>
+<span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span>_web_view<span class="op">:</span> <span class="pp">gtk4::</span>Widget<span class="op">,</span></span>
+<span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>             load_event<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span></span>
+<span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>             failing_uri<span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>             error<span class="op">:</span> <span class="pp">glib::</span><span class="bu">Error</span><span class="op">|</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>             <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(event) <span class="op">=</span> <span class="pp">BlinkLoadEvent::</span>from_i32(load_event) <span class="op">{</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;Load failed: {}&quot;</span><span class="op">,</span> event<span class="op">.</span>as_str())<span class="op">;</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;  URI: {}&quot;</span><span class="op">,</span> failing_uri)<span class="op">;</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;  Error: {}&quot;</span><span class="op">,</span> error)<span class="op">;</span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>                <span class="op">}</span></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>                <span class="cn">true</span> <span class="co">// Signal handled</span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>        )<span class="op">,</span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="プロパティ監視">プロパティ監視</h2>
+<h3 id="notifyプロパティ名シグナル">notify::プロパティ名シグナル</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::cell::</span>RefCell<span class="op">;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::rc::</span>Rc<span class="op">;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> build_ui(app<span class="op">:</span> <span class="op">&amp;</span>Application) <span class="op">{</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... ウィンドウとWebView作成 ...</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> progress_bar <span class="op">=</span> <span class="pp">Rc::</span>new(<span class="pp">RefCell::</span>new(<span class="pp">ProgressBar::</span>new()))<span class="op">;</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    progress_bar<span class="op">.</span>borrow()<span class="op">.</span>set_hexpand(<span class="cn">true</span>)<span class="op">;</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    progress_bar<span class="op">.</span>borrow()<span class="op">.</span>set_show_text(<span class="cn">true</span>)<span class="op">;</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// notify::estimated-load-progress</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> progress <span class="op">=</span> progress_bar<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> web_view_clone <span class="op">=</span> web_view<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>        web_view<span class="op">.</span>connect_notify_local(</span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>            <span class="cn">Some</span>(<span class="st">&quot;estimated-load-progress&quot;</span>)<span class="op">,</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>            <span class="kw">move</span> <span class="op">|</span>_web_view<span class="op">,</span> _pspec<span class="op">|</span> <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                <span class="kw">let</span> prog <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_get_estimated_load_progress(</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>                    web_view_clone<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                )<span class="op">;</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                <span class="pp">println!</span>(<span class="st">&quot;Progress: {:.0}%&quot;</span><span class="op">,</span> prog <span class="op">*</span> <span class="dv">100.0</span>)<span class="op">;</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>                progress<span class="op">.</span>borrow()<span class="op">.</span>set_fraction(prog)<span class="op">;</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>                progress<span class="op">.</span>borrow()<span class="op">.</span>set_text(<span class="cn">Some</span>(<span class="op">&amp;</span><span class="pp">format!</span>(<span class="st">&quot;{:.0}%&quot;</span><span class="op">,</span> prog <span class="op">*</span> <span class="dv">100.0</span>)))<span class="op">;</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>            <span class="op">},</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>        )<span class="op">;</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">// notify::uri</span></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> web_view_clone <span class="op">=</span> web_view<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>        web_view<span class="op">.</span>connect_notify_local(</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>            <span class="cn">Some</span>(<span class="st">&quot;uri&quot;</span>)<span class="op">,</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a>            <span class="kw">move</span> <span class="op">|</span>_web_view<span class="op">,</span> _pspec<span class="op">|</span> <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>                <span class="kw">let</span> uri_ptr <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_get_uri(</span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>                    web_view_clone<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _</span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a>                )<span class="op">;</span></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="op">!</span>uri_ptr<span class="op">.</span>is_null() <span class="op">{</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">let</span> uri <span class="op">=</span> <span class="pp">glib::GString::</span>from_glib_none(uri_ptr)<span class="op">.</span>to_string()<span class="op">;</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;URI changed: {}&quot;</span><span class="op">,</span> uri)<span class="op">;</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a>                <span class="op">}</span></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>            <span class="op">},</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>        )<span class="op">;</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a>    <span class="co">// notify::title</span></span>
+<span id="cb10-49"><a href="#cb10-49" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb10-50"><a href="#cb10-50" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> window <span class="op">=</span> window<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb10-51"><a href="#cb10-51" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> web_view_clone <span class="op">=</span> web_view<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb10-52"><a href="#cb10-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-53"><a href="#cb10-53" aria-hidden="true" tabindex="-1"></a>        web_view<span class="op">.</span>connect_notify_local(</span>
+<span id="cb10-54"><a href="#cb10-54" aria-hidden="true" tabindex="-1"></a>            <span class="cn">Some</span>(<span class="st">&quot;title&quot;</span>)<span class="op">,</span></span>
+<span id="cb10-55"><a href="#cb10-55" aria-hidden="true" tabindex="-1"></a>            <span class="kw">move</span> <span class="op">|</span>_web_view<span class="op">,</span> _pspec<span class="op">|</span> <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb10-56"><a href="#cb10-56" aria-hidden="true" tabindex="-1"></a>                <span class="kw">let</span> title_ptr <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_get_title(</span>
+<span id="cb10-57"><a href="#cb10-57" aria-hidden="true" tabindex="-1"></a>                    web_view_clone<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _</span>
+<span id="cb10-58"><a href="#cb10-58" aria-hidden="true" tabindex="-1"></a>                )<span class="op">;</span></span>
+<span id="cb10-59"><a href="#cb10-59" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="op">!</span>title_ptr<span class="op">.</span>is_null() <span class="op">{</span></span>
+<span id="cb10-60"><a href="#cb10-60" aria-hidden="true" tabindex="-1"></a>                    <span class="kw">let</span> title <span class="op">=</span> <span class="pp">glib::GString::</span>from_glib_none(title_ptr)<span class="op">.</span>to_string()<span class="op">;</span></span>
+<span id="cb10-61"><a href="#cb10-61" aria-hidden="true" tabindex="-1"></a>                    window<span class="op">.</span>set_title(<span class="cn">Some</span>(<span class="op">&amp;</span><span class="pp">format!</span>(<span class="st">&quot;{} - Browser&quot;</span><span class="op">,</span> title)))<span class="op">;</span></span>
+<span id="cb10-62"><a href="#cb10-62" aria-hidden="true" tabindex="-1"></a>                <span class="op">}</span></span>
+<span id="cb10-63"><a href="#cb10-63" aria-hidden="true" tabindex="-1"></a>            <span class="op">},</span></span>
+<span id="cb10-64"><a href="#cb10-64" aria-hidden="true" tabindex="-1"></a>        )<span class="op">;</span></span>
+<span id="cb10-65"><a href="#cb10-65" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-66"><a href="#cb10-66" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="ナビゲーション機能">ナビゲーション機能</h2>
+<h3 id="ナビゲーションメソッド">ナビゲーションメソッド</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">gtk4::</span><span class="op">{</span><span class="dt">Box</span><span class="op">,</span> Button<span class="op">,</span> Entry<span class="op">,</span> Orientation<span class="op">};</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> build_ui(app<span class="op">:</span> <span class="op">&amp;</span>Application) <span class="op">{</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ... ウィンドウ作成 ...</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> main_box <span class="op">=</span> <span class="dt">Box</span><span class="pp">::</span>new(<span class="pp">Orientation::</span>Vertical<span class="op">,</span> <span class="dv">0</span>)<span class="op">;</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ツールバー</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> toolbar <span class="op">=</span> <span class="dt">Box</span><span class="pp">::</span>new(<span class="pp">Orientation::</span>Horizontal<span class="op">,</span> <span class="dv">5</span>)<span class="op">;</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 戻るボタン</span></span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> back_button <span class="op">=</span> <span class="pp">Button::</span>with_label(<span class="st">&quot;◀&quot;</span>)<span class="op">;</span></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> web_view <span class="op">=</span> web_view<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        back_button<span class="op">.</span>connect_clicked(<span class="kw">move</span> <span class="op">|</span>_<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a>            <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>                <span class="pp">ffi::</span>blink_web_view_go_back(web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _)<span class="op">;</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    toolbar<span class="op">.</span>append(<span class="op">&amp;</span>back_button)<span class="op">;</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 進むボタン</span></span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> forward_button <span class="op">=</span> <span class="pp">Button::</span>with_label(<span class="st">&quot;▶&quot;</span>)<span class="op">;</span></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> web_view <span class="op">=</span> web_view<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>        forward_button<span class="op">.</span>connect_clicked(<span class="kw">move</span> <span class="op">|</span>_<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>            <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>                <span class="pp">ffi::</span>blink_web_view_go_forward(web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _)<span class="op">;</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb11-31"><a href="#cb11-31" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb11-32"><a href="#cb11-32" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-33"><a href="#cb11-33" aria-hidden="true" tabindex="-1"></a>    toolbar<span class="op">.</span>append(<span class="op">&amp;</span>forward_button)<span class="op">;</span></span>
+<span id="cb11-34"><a href="#cb11-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-35"><a href="#cb11-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">// リロードボタン</span></span>
+<span id="cb11-36"><a href="#cb11-36" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> reload_button <span class="op">=</span> <span class="pp">Button::</span>with_label(<span class="st">&quot;↻&quot;</span>)<span class="op">;</span></span>
+<span id="cb11-37"><a href="#cb11-37" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb11-38"><a href="#cb11-38" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> web_view <span class="op">=</span> web_view<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb11-39"><a href="#cb11-39" aria-hidden="true" tabindex="-1"></a>        reload_button<span class="op">.</span>connect_clicked(<span class="kw">move</span> <span class="op">|</span>_<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb11-40"><a href="#cb11-40" aria-hidden="true" tabindex="-1"></a>            <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb11-41"><a href="#cb11-41" aria-hidden="true" tabindex="-1"></a>                <span class="pp">ffi::</span>blink_web_view_reload(web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _)<span class="op">;</span></span>
+<span id="cb11-42"><a href="#cb11-42" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb11-43"><a href="#cb11-43" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb11-44"><a href="#cb11-44" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-45"><a href="#cb11-45" aria-hidden="true" tabindex="-1"></a>    toolbar<span class="op">.</span>append(<span class="op">&amp;</span>reload_button)<span class="op">;</span></span>
+<span id="cb11-46"><a href="#cb11-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-47"><a href="#cb11-47" aria-hidden="true" tabindex="-1"></a>    <span class="co">// URL Entry</span></span>
+<span id="cb11-48"><a href="#cb11-48" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> url_entry <span class="op">=</span> <span class="pp">Entry::</span>new()<span class="op">;</span></span>
+<span id="cb11-49"><a href="#cb11-49" aria-hidden="true" tabindex="-1"></a>    url_entry<span class="op">.</span>set_hexpand(<span class="cn">true</span>)<span class="op">;</span></span>
+<span id="cb11-50"><a href="#cb11-50" aria-hidden="true" tabindex="-1"></a>    <span class="op">{</span></span>
+<span id="cb11-51"><a href="#cb11-51" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> web_view <span class="op">=</span> web_view<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb11-52"><a href="#cb11-52" aria-hidden="true" tabindex="-1"></a>        url_entry<span class="op">.</span>connect_activate(<span class="kw">move</span> <span class="op">|</span>entry<span class="op">|</span> <span class="op">{</span></span>
+<span id="cb11-53"><a href="#cb11-53" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> url <span class="op">=</span> entry<span class="op">.</span>text()<span class="op">.</span>to_string()<span class="op">;</span></span>
+<span id="cb11-54"><a href="#cb11-54" aria-hidden="true" tabindex="-1"></a>            <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb11-55"><a href="#cb11-55" aria-hidden="true" tabindex="-1"></a>                <span class="kw">let</span> url_c <span class="op">=</span> <span class="pp">CString::</span>new(url)<span class="op">.</span>unwrap()<span class="op">;</span></span>
+<span id="cb11-56"><a href="#cb11-56" aria-hidden="true" tabindex="-1"></a>                <span class="pp">ffi::</span>blink_web_view_load_uri(</span>
+<span id="cb11-57"><a href="#cb11-57" aria-hidden="true" tabindex="-1"></a>                    web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _<span class="op">,</span></span>
+<span id="cb11-58"><a href="#cb11-58" aria-hidden="true" tabindex="-1"></a>                    url_c<span class="op">.</span>as_ptr()</span>
+<span id="cb11-59"><a href="#cb11-59" aria-hidden="true" tabindex="-1"></a>                )<span class="op">;</span></span>
+<span id="cb11-60"><a href="#cb11-60" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb11-61"><a href="#cb11-61" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span>)<span class="op">;</span></span>
+<span id="cb11-62"><a href="#cb11-62" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb11-63"><a href="#cb11-63" aria-hidden="true" tabindex="-1"></a>    toolbar<span class="op">.</span>append(<span class="op">&amp;</span>url_entry)<span class="op">;</span></span>
+<span id="cb11-64"><a href="#cb11-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-65"><a href="#cb11-65" aria-hidden="true" tabindex="-1"></a>    main_box<span class="op">.</span>append(<span class="op">&amp;</span>toolbar)<span class="op">;</span></span>
+<span id="cb11-66"><a href="#cb11-66" aria-hidden="true" tabindex="-1"></a>    main_box<span class="op">.</span>append(<span class="op">&amp;</span>web_view)<span class="op">;</span></span>
+<span id="cb11-67"><a href="#cb11-67" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-68"><a href="#cb11-68" aria-hidden="true" tabindex="-1"></a>    window<span class="op">.</span>set_child(<span class="cn">Some</span>(<span class="op">&amp;</span>main_box))<span class="op">;</span></span>
+<span id="cb11-69"><a href="#cb11-69" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="ナビゲーション状態の確認">ナビゲーション状態の確認</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::cell::</span>RefCell<span class="op">;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::rc::</span>Rc<span class="op">;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ナビゲーションボタン更新関数</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> back_button_rc <span class="op">=</span> <span class="pp">Rc::</span>new(<span class="pp">RefCell::</span>new(back_button<span class="op">.</span>clone()))<span class="op">;</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> forward_button_rc <span class="op">=</span> <span class="pp">Rc::</span>new(<span class="pp">RefCell::</span>new(forward_button<span class="op">.</span>clone()))<span class="op">;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a><span class="kw">let</span> update_navigation_buttons <span class="op">=</span> <span class="op">{</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> web_view <span class="op">=</span> web_view<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> back_btn <span class="op">=</span> back_button_rc<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> forward_btn <span class="op">=</span> forward_button_rc<span class="op">.</span>clone()<span class="op">;</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">move</span> <span class="op">||</span> <span class="op">{</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> can_go_back <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_can_go_back(</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>                web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>            ) <span class="op">!=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> can_go_forward <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_can_go_forward(</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>                web_view<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>            ) <span class="op">!=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>            back_btn<span class="op">.</span>borrow()<span class="op">.</span>set_sensitive(can_go_back)<span class="op">;</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>            forward_btn<span class="op">.</span>borrow()<span class="op">.</span>set_sensitive(can_go_forward)<span class="op">;</span></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a><span class="co">// load-changedで呼び出し</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>web_view<span class="op">.</span>connect_closure(</span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>    <span class="cn">false</span><span class="op">,</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    <span class="pp">glib::closure_local!</span>(<span class="kw">move</span> <span class="op">|</span>_web_view<span class="op">:</span> <span class="pp">gtk4::</span>Widget<span class="op">,</span> _load_event<span class="op">:</span> <span class="dt">i32</span><span class="op">|</span> <span class="op">{</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        update_navigation_buttons()<span class="op">;</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span>)<span class="op">,</span></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>)<span class="op">;</span></span></code></pre></div>
+<hr />
+<h2 id="実践的な使い方">実践的な使い方</h2>
+<h3 id="型安全なラッパークラス">型安全なラッパークラス</h3>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">gtk4::</span>glib<span class="op">;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="pp">std::ffi::</span>CString<span class="op">;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">struct</span> BlinkWebView <span class="op">{</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    widget<span class="op">:</span> <span class="pp">gtk4::</span>Widget<span class="op">,</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a><span class="kw">impl</span> BlinkWebView <span class="op">{</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> new() <span class="op">-&gt;</span> <span class="dt">Self</span> <span class="op">{</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> widget_ptr <span class="op">=</span> <span class="kw">unsafe</span> <span class="op">{</span> <span class="pp">ffi::</span>blink_web_view_new() <span class="op">};</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> widget <span class="op">=</span> <span class="kw">unsafe</span> <span class="op">{</span> <span class="pp">gtk4::Widget::</span>from_glib_none(widget_ptr) <span class="op">};</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>        <span class="dt">Self</span> <span class="op">{</span> widget <span class="op">}</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> load_uri(<span class="op">&amp;</span><span class="kw">self</span><span class="op">,</span> uri<span class="op">:</span> <span class="op">&amp;</span><span class="dt">str</span>) <span class="op">{</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> uri_c <span class="op">=</span> <span class="pp">CString::</span>new(uri)<span class="op">.</span>unwrap()<span class="op">;</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>            <span class="pp">ffi::</span>blink_web_view_load_uri(</span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                <span class="kw">self</span><span class="op">.</span>widget<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _<span class="op">,</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>                uri_c<span class="op">.</span>as_ptr()</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>            )<span class="op">;</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> reload(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">{</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>            <span class="pp">ffi::</span>blink_web_view_reload(<span class="kw">self</span><span class="op">.</span>widget<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _)<span class="op">;</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> go_back(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">{</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>            <span class="pp">ffi::</span>blink_web_view_go_back(<span class="kw">self</span><span class="op">.</span>widget<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _)<span class="op">;</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> go_forward(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">{</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>            <span class="pp">ffi::</span>blink_web_view_go_forward(<span class="kw">self</span><span class="op">.</span>widget<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _)<span class="op">;</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> can_go_back(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>            <span class="pp">ffi::</span>blink_web_view_can_go_back(<span class="kw">self</span><span class="op">.</span>widget<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _) <span class="op">!=</span> <span class="dv">0</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> can_go_forward(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>            <span class="pp">ffi::</span>blink_web_view_can_go_forward(<span class="kw">self</span><span class="op">.</span>widget<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _) <span class="op">!=</span> <span class="dv">0</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> get_uri(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">Option</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> uri_ptr <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_get_uri(<span class="kw">self</span><span class="op">.</span>widget<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _)<span class="op">;</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">!</span>uri_ptr<span class="op">.</span>is_null() <span class="op">{</span></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>                <span class="cn">Some</span>(<span class="pp">glib::GString::</span>from_glib_none(uri_ptr)<span class="op">.</span>to_string())</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>                <span class="cn">None</span></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> get_title(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="dt">Option</span><span class="op">&lt;</span><span class="dt">String</span><span class="op">&gt;</span> <span class="op">{</span></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>        <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a>            <span class="kw">let</span> title_ptr <span class="op">=</span> <span class="pp">ffi::</span>blink_web_view_get_title(<span class="kw">self</span><span class="op">.</span>widget<span class="op">.</span>as_ptr() <span class="kw">as</span> <span class="op">*</span><span class="kw">mut</span> _)<span class="op">;</span></span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a>            <span class="cf">if</span> <span class="op">!</span>title_ptr<span class="op">.</span>is_null() <span class="op">{</span></span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a>                <span class="cn">Some</span>(<span class="pp">glib::GString::</span>from_glib_none(title_ptr)<span class="op">.</span>to_string())</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>                <span class="cn">None</span></span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>    <span class="kw">pub</span> <span class="kw">fn</span> as_widget(<span class="op">&amp;</span><span class="kw">self</span>) <span class="op">-&gt;</span> <span class="op">&amp;</span><span class="pp">gtk4::</span>Widget <span class="op">{</span></span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>        <span class="op">&amp;</span><span class="kw">self</span><span class="op">.</span>widget</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="使用例">使用例</h3>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> build_ui(app<span class="op">:</span> <span class="op">&amp;</span>Application) <span class="op">{</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> window <span class="op">=</span> <span class="pp">ApplicationWindow::</span>builder()</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>application(app)</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>title(<span class="st">&quot;Modern Browser&quot;</span>)</span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>        <span class="op">.</span>build()<span class="op">;</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 型安全なラッパーを使用</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> web_view <span class="op">=</span> <span class="pp">BlinkWebView::</span>new()<span class="op">;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>    web_view<span class="op">.</span>load_uri(<span class="st">&quot;https://www.example.com&quot;</span>)<span class="op">;</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>    window<span class="op">.</span>set_child(<span class="cn">Some</span>(web_view<span class="op">.</span>as_widget()))<span class="op">;</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>    window<span class="op">.</span>present()<span class="op">;</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="トラブルシューティング">トラブルシューティング</h2>
+<h3 id="問題-undefined-reference-to-blink_web_view_new">問題: undefined
+reference to <code>blink_web_view_new</code></h3>
+<p><strong>原因</strong>: libblinkgtk.soへのリンクが失敗</p>
+<p><strong>解決方法</strong>:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># build.rsを確認</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="co"># Cargo.tomlに以下を追加</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="ex">[build-dependencies]</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> = <span class="st">&quot;0.3&quot;</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># LD_LIBRARY_PATHを設定</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/path/to/BlinkGTK/lib:<span class="va">$LD_LIBRARY_PATH</span></span></code></pre></div>
+<h3 id="問題-multiple-definition-of-blink_gtk_init">問題: multiple
+definition of <code>blink_gtk_init</code></h3>
+<p><strong>原因</strong>: 複数のソースファイルでFFI宣言が重複</p>
+<p><strong>解決方法</strong>:</p>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ffi.rsとして分離</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="kw">pub</span> <span class="kw">mod</span> ffi <span class="op">{</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="co">// FFI宣言をここに集約</span></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co">// 他のファイルから使用</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="kw">use</span> <span class="kw">crate</span><span class="pp">::</span>ffi<span class="op">;</span></span></code></pre></div>
+<h3 id="問題-segmentation-fault-at-runtime">問題: Segmentation fault at
+runtime</h3>
+<p><strong>原因</strong>: BlinkGTK初期化前にAPIを呼び出している</p>
+<p><strong>解決方法</strong>:</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode rust"><code class="sourceCode rust"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">fn</span> main() <span class="op">-&gt;</span> <span class="pp">glib::</span>ExitCode <span class="op">{</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">// 必ずblink_gtk_init(&amp;argc, &amp;argv)を最初に呼び出す</span></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>    <span class="kw">unsafe</span> <span class="op">{</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> argc <span class="op">=</span> <span class="pp">std::env::</span>args()<span class="op">.</span>len() <span class="kw">as</span> <span class="dt">i32</span><span class="op">;</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> argv<span class="op">:</span> <span class="dt">Vec</span><span class="op">&lt;</span>_<span class="op">&gt;</span> <span class="op">=</span> <span class="pp">std::env::</span>args()</span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span>map(<span class="op">|</span>arg<span class="op">|</span> <span class="pp">CString::</span>new(arg)<span class="op">.</span>unwrap()<span class="op">.</span>into_raw())</span>
+<span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a>            <span class="op">.</span>collect()<span class="op">;</span></span>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        <span class="kw">let</span> <span class="kw">mut</span> argv_ptr <span class="op">=</span> argv<span class="op">.</span>as_mut_ptr()<span class="op">;</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>        <span class="pp">ffi::</span>blink_gtk_init(<span class="op">&amp;</span><span class="kw">mut</span> argc<span class="op">,</span> <span class="op">&amp;</span><span class="kw">mut</span> argv_ptr)<span class="op">;</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>    <span class="co">// GTK4アプリケーション作成</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">let</span> app <span class="op">=</span> <span class="pp">Application::</span>builder()<span class="op">.</span>application_id(APP_ID)<span class="op">.</span>build()<span class="op">;</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">// ...</span></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="デバッグログの有効化">デバッグログの有効化</h3>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Rustのバックトレース有効化</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">RUST_BACKTRACE</span><span class="op">=</span>1</span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co"># GTK4のデバッグログ</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">G_MESSAGES_DEBUG</span><span class="op">=</span>all</span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 実行</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a><span class="ex">cargo</span> run</span></code></pre></div>
+<hr />
+<h2 id="サンプルコード">サンプルコード</h2>
+<p>完全なサンプルコードは以下にあります：</p>
+<ul>
+<li><code>examples/simple_browser.c</code> -
+C言語による最小限のブラウザ（公式サンプル）</li>
+<li><code>archive/examples-extra/rust/src/</code> -
+Rustサンプル（参考）</li>
+</ul>
+<p>ビルド・実行方法（C言語版）:</p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$BLINKGTK_ROOT</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> simple_browser examples/simple_browser.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./simple_browser</span></span></code></pre></div>
+<hr />
+<h2 id="まとめ">まとめ</h2>
+<p>BlinkGTKをRustから使用することで、以下のメリットがあります：</p>
+<ul>
+<li><strong>型安全性</strong>: コンパイル時の安全性保証</li>
+<li><strong>ゼロコスト抽象化</strong>: C言語と同等のパフォーマンス</li>
+<li><strong>所有権システム</strong>: メモリ安全性の保証</li>
+<li><strong>強力なWebエンジン</strong>:
+Chromium/Blinkの完全なWeb標準サポート</li>
+<li><strong>gtk4-rs統合</strong>:
+GTK4の豊富なウィジェットと組み合わせ可能</li>
+</ul>
+<p>次のステップ：</p>
+<ul>
+<li><a
+href="../api-reference/widgets-ja.md">APIリファレンス</a>で詳細な仕様を確認</li>
+<li><a
+href="c-tutorial-ja.md">C言語チュートリアル</a>でC言語からの使い方を学習</li>
+<li><a
+href="python-tutorial-ja.md">Pythonチュートリアル</a>でPythonバインディングを試す</li>
+</ul>
+<hr />
+<p><strong>BlinkGTK Project</strong> | Copyright 2025 | BSD-3-Clause
+License</p>
+</body>
+</html>
+</div></div>

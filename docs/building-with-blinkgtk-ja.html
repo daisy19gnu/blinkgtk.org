@@ -1,0 +1,275 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK を使ったアプリのビルド — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<header id="title-block-header">
+<h1 class="title">BlinkGTK を使ったアプリのビルド — BlinkGTK</h1>
+</header>
+<h1 id="blinkgtk-を使ったアプリのビルド">BlinkGTK
+を使ったアプリのビルド</h1>
+<p>BlinkGTK
+を組み込んだアプリケーションをビルドするための最小限の手引きです。</p>
+<h2 id="前提-blinkgtk-本体はソースからビルドしません">前提: BlinkGTK
+本体はソースからビルドしません</h2>
+<p>BlinkGTK は Chromium を組み込んでいるため、本体のビルドには Chromium
+の ソースツリー (100 GB 超) と数時間から十数時間のビルド時間を要します。
+<strong>利用者は配布されているパッケージを使ってください。</strong>
+本ページは
+「配布パッケージを使ってアプリをビルドする」手順を説明します。</p>
+<p>配布形態は 3 つに分かれています。</p>
+<table>
+<thead>
+<tr>
+<th>パッケージ</th>
+<th>用途</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>runtime</td>
+<td>共有ライブラリと Chromium
+ランタイム。<strong>実行</strong>に必要</td>
+</tr>
+<tr>
+<td>devel</td>
+<td>ヘッダと <code>.pc</code>。<strong>ビルド</strong>に必要</td>
+</tr>
+<tr>
+<td>gir</td>
+<td>GObject Introspection typelib。Python / GJS から使う場合に必要</td>
+</tr>
+</tbody>
+</table>
+<h2 id="1-インストール">1. インストール</h2>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.1.0-build4.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.1.0-build4.fc44.x86_64.rpm</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.1.0-build4_amd64.deb <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.1.0-build4_amd64.deb</span></code></pre></div>
+<p>tarball を使う場合は任意の場所に展開し、<code>pkg-config</code>
+に場所を教えます。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.1.0-build4-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span></code></pre></div>
+<h2 id="2-red_circle-必ず-pkg-config-経由でリンクする">2. 🔴 必ず
+pkg-config 経由でリンクする</h2>
+<p><strong>これが最も間違えやすく、最も分かりにくい失敗を招く点です。</strong></p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> myapp myapp.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<p><code>-lblinkgtk</code>
+だけを手で書いてリンクしないでください。BlinkGTK は Chromium の
+<strong>PartitionAlloc allocator shim</strong>
+を必要とし、これは実行ファイルの直接依存 (<code>DT_NEEDED</code>)
+として早期にロードされなければなりません。<code>blinkgtk-0.1.pc</code>
+の <code>Libs</code> にはこの shim が含まれています。</p>
+<p>shim を落とすと、ビルドもリンクも通り、起動もするのに
+<strong>ページの読み込みが 完了しない</strong> (ナビゲーションが commit
+しない = 白いまま) という、原因の分かり にくい症状になります。</p>
+<p>確認方法:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 行以上出れば OK。何も出なければ pkg-config を経由していない</span></span></code></pre></div>
+<h2 id="3-インクルードは-blink_gtkh-だけ">3. インクルードは
+<code>blink_gtk.h</code> だけ</h2>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span></code></pre></div>
+<p>公開 API
+はこのヘッダに集約されています。内部ヘッダを直接インクルードしないで
+ください (バージョン間で変わります)。</p>
+<h2 id="4-最小構成のアプリ">4. 最小構成のアプリ</h2>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_activate<span class="op">(</span>GtkApplication <span class="op">*</span>app<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>win <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>win<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-15"><a href="#cb6-15" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">**</span>argv<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb6-16"><a href="#cb6-16" aria-hidden="true" tabindex="-1"></a>    blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb6-17"><a href="#cb6-17" aria-hidden="true" tabindex="-1"></a>    GtkApplication <span class="op">*</span>app <span class="op">=</span> gtk_application_new<span class="op">(</span><span class="st">&quot;com.example.MyApp&quot;</span><span class="op">,</span></span>
+<span id="cb6-18"><a href="#cb6-18" aria-hidden="true" tabindex="-1"></a>                                              G_APPLICATION_DEFAULT_FLAGS<span class="op">);</span></span>
+<span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>app<span class="op">,</span> <span class="st">&quot;activate&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_activate<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> g_application_run<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> argc<span class="op">,</span> argv<span class="op">);</span></span>
+<span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a>    g_object_unref<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>注意</strong>: <code>blink_web_view_new()</code> は
+<code>GtkWidget *</code> を返しますが、BlinkGTK の API は
+<code>BlinkWebView *</code> を取ります。<code>BLINK_WEB_VIEW()</code>
+でキャストしてください。</p>
+<h2 id="5-makefile-の例">5. Makefile の例</h2>
+<pre class="make"><code>CC      ?= cc
+PKGS     = blinkgtk-0.1
+CFLAGS  += -O2 -Wall $(shell pkg-config --cflags $(PKGS))
+LDLIBS  += $(shell pkg-config --libs $(PKGS))
+
+myapp: myapp.c
+    $(CC) $(CFLAGS) -o $@ $&lt; $(LDLIBS)</code></pre>
+<h2 id="6-実行時に必要なもの">6. 実行時に必要なもの</h2>
+<h3 id="wayland-が必要です">Wayland が必要です</h3>
+<p>BlinkGTK は <strong>Wayland 専用</strong>です。X11
+では動作しません。Wayland セッションで 実行するか、ヘッドレス検証には
+Weston の headless バックエンドを使ってください。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">weston</span> <span class="at">--backend</span><span class="op">=</span>headless-backend.so <span class="at">--width</span><span class="op">=</span>1024 <span class="at">--height</span><span class="op">=</span>768 <span class="kw">&amp;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">WAYLAND_DISPLAY</span><span class="op">=</span>wayland-1</span></code></pre></div>
+<h3 id="chromium-のリソースファイルの位置">Chromium
+のリソースファイルの位置</h3>
+<p>Chromium は ICU データ (<code>icudtl.dat</code>)、V8 スナップショット
+(<code>snapshot_blob.bin</code> /
+<code>v8_context_snapshot.bin</code>)、リソースパック
+(<code>content_shell.pak</code>) を必要とします。これらは
+<strong>カレントディレクトリではなく実行ファイルのあるディレクトリを基準に</strong>
+探索されます。</p>
+<p>RPM / DEB
+でインストールした場合は正しい場所に配置されるため、通常は何もする
+必要はありません。tarball
+を展開して使う場合や、実行ファイルを別の場所に置いた
+場合は次のエラーになります。</p>
+<pre><code>ERROR:base/i18n/icu_util.cc: Invalid file descriptor to ICU data received.
+FATAL:base/i18n/icu_util.cc: Check failed: result.</code></pre>
+<p>このときは、実行ファイルをリソースと同じディレクトリに置くか、ライブラリ
+探索パスを合わせてください。</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/blinkgtk-0.1:<span class="dt">\</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>/opt/blinkgtk/usr/lib64/blinkgtk-0.1/chromium</span></code></pre></div>
+<h2 id="7-うまくいかないときの確認順序">7.
+うまくいかないときの確認順序</h2>
+<table>
+<thead>
+<tr>
+<th>症状</th>
+<th>最初に確認すること</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>リンクエラー (<code>undefined reference</code>)</td>
+<td><code>pkg-config --libs blinkgtk-0.1</code> が値を返すか。devel
+パッケージが入っているか</td>
+</tr>
+<tr>
+<td>起動するがページが白いまま</td>
+<td><code>readelf -d ./myapp | grep allocator_shim</code> — shim
+が直接依存にあるか (第 2 節)</td>
+</tr>
+<tr>
+<td><code>Invalid file descriptor to ICU data</code></td>
+<td>実行ファイルとリソースの位置関係 (第 6 節)</td>
+</tr>
+<tr>
+<td>ウィンドウが出ない</td>
+<td>Wayland セッションか。<code>echo $WAYLAND_DISPLAY</code></td>
+</tr>
+<tr>
+<td>Python から import できない</td>
+<td>gir パッケージが入っているか</td>
+</tr>
+</tbody>
+</table>
+<h2 id="関連">関連</h2>
+<ul>
+<li>インストール手順の詳細: <code>INSTALL.md</code></li>
+<li>組み込みの設計指針: 統合ガイド (consumer integration guide)</li>
+<li>配布物に同梱される動くサンプル: <code>examples/</code></li>
+</ul>
+</body>
+</html>
+</div></div>
