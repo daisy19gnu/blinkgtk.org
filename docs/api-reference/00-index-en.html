@@ -35,73 +35,209 @@ Reference Manual (Table of Contents)</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
 <strong>Target</strong>: BlinkGTK API version 0.1 (product v1.1 series)
 / Chromium 150 baseline</p>
-<p>API reference for embedding BlinkGTK into GTK4 applications. This
-manual is organized as per-chapter files
-(<code>NN-&lt;slug&gt;-ja.md</code> / <code>-en.md</code>). The Japanese
-version is canonical; the English version follows it.</p>
+<p><a href="./00-index-ja.html">日本語</a></p>
+<p>The API reference for embedding BlinkGTK in a GTK4 application.<br />
+The Japanese pages are canonical; the English pages follow them.</p>
 <blockquote>
 <p>The <code>0.1</code> in paths and package names is the <strong>API
-version</strong> (like GTK4's <code>gtk-4.0</code>), independent of the
-product version (v1.1.0 etc.); it changes only on incompatible API
-revisions.</p>
+version</strong> (the same<br />
+convention as GTK4's <code>gtk-4.0</code>). It is independent of the
+product version<br />
+(v1.1.0 etc.) and changes only on incompatible API changes.</p>
 </blockquote>
-<h2 id="chapters">Chapters</h2>
-<p>|</p>
-<h1 id="-chapter--file--status-">| Chapter | File | Status |</h1>
-<p>|---|---|---|---|<br />
-| 1 | Overview and lifecycle | <code>01-overview-lifecycle-en.md</code>
-| planned |<br />
-| 2 | Creating and embedding the widget |
-<code>02-widget-embedding-en.md</code> | planned |<br />
-| 3 | Navigation | <code>03-navigation-en.md</code> | base:
-<code>navigation-api-*.md</code> |<br />
-| 4 | Settings | <code>04-settings-en.md</code> | base:
-<code>settings-api-*.md</code> |<br />
-| 5 | Signals (GObject) | <code>05-signals-en.md</code> | base:
-<code>signals-api-*.md</code> |<br />
-| 6 | JavaScript integration | <code>06-javascript-en.md</code> |
-planned |<br />
-| 7 | Accessibility | <code>07-accessibility-en.md</code> | <strong>Not
-implemented; docs moved aside</strong> (<a
-href="../../archived/unimplemented-api/accessibility/README-ja.html">why</a>).
-To be drafted after implementation |<br />
-| 8 | Rendering and screenshots | <code>08-rendering-en.md</code> |
-planned |<br />
-| 9 | Environment variables | <a
-href="./environment-variables-en.html"><code>environment-variables-en.md</code></a>
-| <strong>final (canonical)</strong> |<br />
-| 10 | Error handling and diagnostics | <code>10-errors-en.md</code> |
-planned |<br />
-| 11 | Complete C API listing | <a
-href="./c-api-reference-en.html"><code>c-api-reference-en.md</code></a> |
-base |<br />
-| 12 | GObject Introspection / language bindings |
-<code>12-gobject-introspection-en.md</code> | planned (PyGObject / GJS /
-Vala) |<br />
-| 13 | Versioning and compatibility | <code>13-versioning-en.md</code> |
-planned (SONAME / API version / stability) |</p>
-<h2 id="authoring">Authoring</h2>
+<h2 id="find-by-what-you-want-to-do">Find by what you want to do</h2>
+<table>
+<thead>
+<tr>
+<th>What you want</th>
+<th>Page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Find the function by goal (reverse lookup)</strong></td>
+<td><a href="./howto-index-en.html">How do I…?</a></td>
+</tr>
+<tr>
+<td>Load pages, go back / forward</td>
+<td><a href="./navigation-api-en.html">Navigation API</a></td>
+</tr>
+<tr>
+<td>React to load completion, title changes, ...</td>
+<td><a href="./signals-api-en.html">Signals API</a></td>
+</tr>
+<tr>
+<td>Configure JavaScript, images, User-Agent, cookies</td>
+<td><a href="./settings-api-en.html">Settings API</a></td>
+</tr>
+<tr>
+<td>GPU mode and content protection (no-copy etc.)</td>
+<td><a href="./settings-api-en.html">Settings API — Modes and
+policies</a></td>
+</tr>
+<tr>
+<td>Search within the page, zoom</td>
+<td><a href="./page-search-zoom-en.html">Find-in-Page and Zoom</a></td>
+</tr>
+<tr>
+<td>Create your own URL scheme (<code>ebook://</code> etc.)</td>
+<td><a href="./app-integration-api-en.html">Application Integration
+API</a></td>
+</tr>
+<tr>
+<td>Exchange messages between page JavaScript and C</td>
+<td><a href="./app-integration-api-en.html">Application Integration
+API</a></td>
+</tr>
+<tr>
+<td>Inject scripts / CSS into every page</td>
+<td><a href="./app-integration-api-en.html">Application Integration
+API</a></td>
+</tr>
+<tr>
+<td>Provide your own dialogs, file chooser, downloads, auth</td>
+<td><a href="./ui-handlers-api-en.html">UI Handlers API</a></td>
+</tr>
+<tr>
+<td>Answer permission requests (geolocation, notifications)</td>
+<td><a href="./signals-api-en.html">Signals API —
+permission-request</a></td>
+</tr>
+<tr>
+<td>Debug with Chrome DevTools</td>
+<td><a href="./devtools-api-en.html">DevTools API</a></td>
+</tr>
+<tr>
+<td>Switch behaviour with environment variables</td>
+<td><a href="./environment-variables-en.html">Environment
+Variables</a></td>
+</tr>
+<tr>
+<td>The <code>BlinkWebView</code> widget itself</td>
+<td><a href="./blink-web-view-en.html">BlinkWebView</a></td>
+</tr>
+<tr>
+<td>Browse every API in one list</td>
+<td><a href="./c-api-reference-en.html">C API Reference</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="pages">Pages</h2>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="./howto-index-en.html"><code>howto-index-en.md</code></a></td>
+<td>How do I…? — find the function by goal</td>
+</tr>
+<tr>
+<td><a
+href="./navigation-api-en.html"><code>navigation-api-en.md</code></a></td>
+<td>Loading URLs / HTML, history, reload</td>
+</tr>
+<tr>
+<td><a
+href="./signals-api-en.html"><code>signals-api-en.md</code></a></td>
+<td>GObject signals (load-changed / title-changed / permission-request,
+...)</td>
+</tr>
+<tr>
+<td><a
+href="./settings-api-en.html"><code>settings-api-en.md</code></a></td>
+<td>Runtime settings, GPU mode, content policy</td>
+</tr>
+<tr>
+<td><a
+href="./page-search-zoom-en.html"><code>page-search-zoom-en.md</code></a></td>
+<td>Find in page, zoom</td>
+</tr>
+<tr>
+<td><a
+href="./app-integration-api-en.html"><code>app-integration-api-en.md</code></a></td>
+<td>Custom schemes, JS-to-C messaging, script injection</td>
+</tr>
+<tr>
+<td><a
+href="./ui-handlers-api-en.html"><code>ui-handlers-api-en.md</code></a></td>
+<td>JS dialogs, file chooser, downloads, HTTP auth, certificates</td>
+</tr>
+<tr>
+<td><a
+href="./devtools-api-en.html"><code>devtools-api-en.md</code></a></td>
+<td>Chrome DevTools integration</td>
+</tr>
+<tr>
+<td><a
+href="./environment-variables-en.html"><code>environment-variables-en.md</code></a></td>
+<td>The canonical list of supported environment variables</td>
+</tr>
+<tr>
+<td><a
+href="./blink-web-view-en.html"><code>blink-web-view-en.md</code></a></td>
+<td>The <code>BlinkWebView</code> widget</td>
+</tr>
+<tr>
+<td><a
+href="./c-api-reference-en.html"><code>c-api-reference-en.md</code></a></td>
+<td>Every C API in one list</td>
+</tr>
+</tbody>
+</table>
+<p>Every page comes as a Japanese (<code>-ja.md</code>) / English
+(<code>-en.md</code>) pair.</p>
+<h2 id="planned">Planned</h2>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overview and lifecycle</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>GObject Introspection / language bindings (PyGObject / GJS /
+Vala)</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>Versioning and compatibility (SONAME / API version / stability)</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>Accessibility</td>
+<td><strong>Withdrawn — not implemented</strong>; will be written once
+implemented</td>
+</tr>
+</tbody>
+</table>
+<h2 id="about-accuracy">About accuracy</h2>
+<p>This reference is machine-verified:</p>
 <ul>
-<li><strong>Draft (Japanese)</strong>: written from the consumer
-(embedding) perspective.</li>
-<li><strong>Review + English translation</strong>: BlinkGTK Project
-handles internal-spec review (semantics, env meanings, deprecations) and
-the English version.</li>
-<li>Per-chapter small PRs. Naming: <code>NN-&lt;slug&gt;-ja.md</code> /
-<code>NN-&lt;slug&gt;-en.md</code>.</li>
+<li>Every API mentioned exists in the shipped header and shared
+library</li>
+<li>Every public API in the header is covered by some page<br />
+(experimental APIs are excluded with a stated reason)</li>
+<li>Every complete code example compiles</li>
 </ul>
-<h2 id="existing-documents">Existing documents</h2>
-<p>Existing <code>*-ja.md</code> files (navigation / settings / signals
-/ c-api-reference / blink-web-view) serve as the base for their chapters
-and will be consolidated/revised. After migration, old files are
-replaced with references to the new chapters or merged in.</p>
-<h2 id="see-also">See also</h2>
+<h2 id="related">Related</h2>
 <ul>
-<li>Installation and dependencies: bundled <code>INSTALL.md</code> and
-the blinkgtk-dist repository.</li>
-<li>Chapter 9 (environment variables) splits env into three tiers:
-publicly supported / escape hatches / internal diagnostics.
-Internal-diagnostic env vars are unsupported.</li>
+<li>Installation and dependencies: the bundled <code>INSTALL.md</code>
+and the blinkgtk-dist repository</li>
+<li>Environment variables fall into three classes: supported / escape
+hatch /<br />
+internal diagnostics. Internal diagnostic variables are unsupported and
+may<br />
+change without notice.</li>
 </ul>
 </body>
 </html>

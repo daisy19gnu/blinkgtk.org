@@ -58,6 +58,12 @@
   a { color: #e8590c; text-decoration: none; }
   a:hover { color: #c2410c; }
   .muted { color: #6b7680; font-size: .9rem; }
+  .hero-fig { margin: 0; }
+  .hero-fig img { max-width: 100%; height: auto; border: 1px solid rgba(128,128,128,.35); border-radius: 6px; display: block; }
+  .hero-fig figcaption { font-size: .85rem; color: #6b7680; margin-top: .55em; }
+  pre.code { background: rgba(128,128,128,.10); padding: 1em 1.2em; overflow-x: auto; border-radius: 6px; font-size: .82rem; line-height: 1.55; margin: .4em 0 .6em; }
+  .cap-list { margin: .2em 0 .3em; padding-left: 1.3em; }
+  .cap-list li { margin: .34em 0; }
   footer { margin-top: 4em; font-size: .8rem; color: #8a949d; }
   .dl-list { margin: .2em 0 .7em; padding-left: 1.3em; }
   .dl-list li { margin: .18em 0; }
@@ -79,6 +85,65 @@
     </header>
 
     <main>
+      <div class="card">
+        <figure class="hero-fig">
+          <img src="assets/hero_tategumi.png" width="1408" height="778"
+               alt="BlinkGTK が縦書きの日本語コラムを描画したところ。ルビ・圏点・縦中横を含む縦組みレイアウト / BlinkGTK rendering a Japanese column in vertical writing mode, with ruby annotations, emphasis dots and tate-chu-yoko">
+          <figcaption>
+            縦書き・ルビ・圏点・縦中横 — GTK4 ウィジェットの中で Blink がそのまま描画します。
+            画像は v1.1.0-build6 の <code>blink_web_view_capture_screenshot()</code> で取得した実出力です。<br>
+            <span class="muted">Vertical writing, ruby, emphasis dots, tate-chu-yoko — rendered by Blink inside a GTK4
+            widget. Captured from v1.1.0-build6 with <code>blink_web_view_capture_screenshot()</code>.</span>
+          </figcaption>
+        </figure>
+      </div>
+
+      <div class="card">
+        <h2>できること / What you can do</h2>
+        <ul class="cap-list">
+          <li>縦書き・ルビ・禁則処理を含む日本語組版 — Blink の実装そのまま
+            <span class="muted">/ Japanese typography incl. vertical writing and ruby, straight from Blink</span></li>
+          <li>HTML5・CSS3・JavaScript・メディア再生 — Chromium 150 と同じ Web プラットフォーム
+            <span class="muted">/ The same web platform as Chromium 150</span></li>
+          <li><a href="docs/api-reference/app-integration-api-ja.html">独自 URL スキーム・JS↔C メッセージング</a>で、Web ページをアプリの UI にする
+            <span class="muted">/ Custom URL schemes and JS↔C messaging turn pages into app UI</span></li>
+          <li><a href="docs/api-reference/ui-handlers-api-ja.html">ダイアログ・ファイル選択・ダウンロードを自前 UI に</a>差し替え
+            <span class="muted">/ Provide your own dialogs, file choosers and downloads</span></li>
+          <li><a href="docs/api-reference/settings-api-ja.html">コンテンツ保護</a> — 電子書籍・キオスク向けにコピー・保存・印刷を禁止
+            <span class="muted">/ Content protection for e-book readers and kiosks</span></li>
+          <li>GObject シグナルと Introspection — C のほか Python・GJS・Vala からも
+            <span class="muted">/ GObject signals &amp; introspection: C, Python, GJS, Vala</span></li>
+          <li><a href="docs/api-reference/devtools-api-ja.html">Chrome DevTools でデバッグ</a>
+            <span class="muted">/ Debug with Chrome DevTools</span></li>
+        </ul>
+        <p class="muted">目的から関数を探すには: <a href="docs/api-reference/howto-index-ja.html">逆引きリファレンス</a> ·
+          <a href="docs/api-reference/howto-index-en.html">How do I…?</a></p>
+      </div>
+
+      <div class="card">
+        <h2>最小のアプリ — これで全部 / A minimal app — this is all of it</h2>
+<pre class="code"><code>#include &lt;blink_gtk/blink_gtk.h&gt;
+#include &lt;gtk/gtk.h&gt;
+
+int main(int argc, char **argv)
+{
+    blink_gtk_init(&amp;argc, &amp;argv);
+    gtk_init();
+
+    GtkWidget *win  = gtk_window_new();
+    GtkWidget *view = blink_web_view_new();
+    gtk_window_set_child(GTK_WINDOW(win), view);
+    blink_web_view_load_uri(BLINK_WEB_VIEW(view), "https://example.com/");
+    gtk_window_present(GTK_WINDOW(win));
+
+    return blink_gtk_run_main_loop();
+}</code></pre>
+        <p class="muted">ビルドは <code>pkg-config --cflags --libs blinkgtk-0.1</code> を通すだけ。リソース配置を含む完全な手順は
+          <a href="docs/building-with-blinkgtk-ja.html">アプリのビルド</a>へ。
+          / Build with <code>pkg-config</code>; the complete walkthrough is in
+          <a href="docs/building-with-blinkgtk-en.html">Building your application</a>.</p>
+      </div>
+
       <div class="card" lang="ja">
         <span class="lang-label">日本語</span>
         <p>BlinkGTK は、Google Chrome と同じ Chromium / Blink レンダリングエンジンを、GTK4 アプリケーションへネイティブに組み込むための WebView エンジンです。Electron のようにブラウザ全体を同梱するのではなく、最新の Web エンジンそのものを一つの GTK ウィジェットとして扱えます。Wayland に対応し、自己描画方式で、上流の Chromium に追従して更新されます。</p>

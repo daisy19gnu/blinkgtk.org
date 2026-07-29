@@ -34,75 +34,204 @@
 <p><strong>作成者</strong>: BlinkGTK Project<br />
 <strong>対象</strong>: BlinkGTK API バージョン 0.1(製品バージョン v1.1
 系)/ Chromium 150 baseline</p>
+<p><a href="./00-index-en.html">English</a></p>
 <p>BlinkGTK を GTK4 アプリケーションに組み込むための API
-リファレンスです。本マニュアルは章別の分冊(<code>NN-&lt;slug&gt;-ja.md</code>
-/
-<code>-en.md</code>)で構成されます。日本語版を正とし、英語版がこれに追随します。</p>
+リファレンスです。<br />
+日本語版を正とし、英語版がこれに追随します。</p>
 <blockquote>
 <p>パス・パッケージ名中の <code>0.1</code> は <strong>API
-バージョン</strong>です(GTK4 の <code>gtk-4.0</code>
-と同じ規約)。製品バージョン(v1.1.0 等)とは独立で、互換性のない API
-変更時にのみ変わります。</p>
+バージョン</strong>です(GTK4 の <code>gtk-4.0</code> と<br />
+同じ規約)。製品バージョン(v1.1.0 等)とは独立で、互換性のない API
+変更時に<br />
+のみ変わります。</p>
 </blockquote>
-<h2 id="章構成--chapters">章構成 / Chapters</h2>
-<p>|</p>
-<h1 id="-章--ファイル--状態-">| 章 | ファイル | 状態 |</h1>
-<p>|---|---|---|---|<br />
-| 1 | 概観とライフサイクル | <code>01-overview-lifecycle-ja.md</code> |
-起草予定 |<br />
-| 2 | ウィジェットの生成と埋め込み |
-<code>02-widget-embedding-ja.md</code> | 起草予定 |<br />
-| 3 | ナビゲーション | <code>03-navigation-ja.md</code> | 既存: <a
-href="./navigation-api-ja.html"><code>navigation-api-ja.md</code></a>
-を母体 |<br />
-| 4 | 設定 (Settings) | <code>04-settings-ja.md</code> | 既存: <a
-href="./settings-api-ja.html"><code>settings-api-ja.md</code></a> を母体
-|<br />
-| 5 | シグナル (GObject Signals) | <code>05-signals-ja.md</code> | 既存:
-<a href="./signals-api-ja.html"><code>signals-api-ja.md</code></a> を母体
-|<br />
-| 6 | JavaScript 連携 | <code>06-javascript-ja.md</code> | 起草予定
-|<br />
-| 7 | アクセシビリティ | <code>07-accessibility-ja.md</code> |
-<strong>機能未実装のため退避</strong> (<a
-href="../../archived/unimplemented-api/accessibility/README-ja.html">経緯</a>)。実装後に起草
-|<br />
-| 8 | 描画・スクリーンショット | <code>08-rendering-ja.md</code> |
-起草予定 |<br />
-| 9 | 環境変数 | <a
-href="./environment-variables-ja.html"><code>environment-variables-ja.md</code></a>
-| <strong>確定(正本)</strong> |<br />
-| 10 | エラーハンドリングと診断 | <code>10-errors-ja.md</code> |
-起草予定 |<br />
-| 11 | 完全な C API 一覧 | <code>c-api-reference-ja.md</code> | 既存: <a
-href="./c-api-reference-ja.html"><code>c-api-reference-ja.md</code></a>
-が母体 |<br />
-| 12 | GObject Introspection / 言語バインディング |
-<code>12-gobject-introspection-ja.md</code> | 起草予定(PyGObject / GJS /
-Vala) |<br />
-| 13 | バージョニングと互換性 | <code>13-versioning-ja.md</code> |
-起草予定(SONAME / API 版数 / 安定性) |</p>
-<h2 id="分担--authoring">分担 / Authoring</h2>
+<h2 id="したいことから探す">したいことから探す</h2>
+<table>
+<thead>
+<tr>
+<th>したいこと</th>
+<th>ページ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>やりたいことから関数名を引く (逆引き)</strong></td>
+<td><a href="./howto-index-ja.html">逆引きリファレンス</a></td>
+</tr>
+<tr>
+<td>ページを読み込む・戻る・進む</td>
+<td><a href="./navigation-api-ja.html">Navigation API</a></td>
+</tr>
+<tr>
+<td>読み込み完了・タイトル変更などを受け取る</td>
+<td><a href="./signals-api-ja.html">Signals API</a></td>
+</tr>
+<tr>
+<td>JavaScript・画像・User-Agent・Cookie を設定する</td>
+<td><a href="./settings-api-ja.html">Settings API</a></td>
+</tr>
+<tr>
+<td>GPU モード・コンテンツ保護 (コピー禁止など)</td>
+<td><a href="./settings-api-ja.html">Settings API —
+モードとポリシー</a></td>
+</tr>
+<tr>
+<td>ページ内を検索する・表示を拡大する</td>
+<td><a href="./page-search-zoom-ja.html">ページ内検索とズーム</a></td>
+</tr>
+<tr>
+<td>独自 URL スキーム (<code>ebook://</code> 等) を作る</td>
+<td><a href="./app-integration-api-ja.html">アプリ連携 API</a></td>
+</tr>
+<tr>
+<td>ページの JavaScript と C でメッセージをやり取りする</td>
+<td><a href="./app-integration-api-ja.html">アプリ連携 API</a></td>
+</tr>
+<tr>
+<td>全ページにスクリプト・CSS を注入する</td>
+<td><a href="./app-integration-api-ja.html">アプリ連携 API</a></td>
+</tr>
+<tr>
+<td>ダイアログ・ファイル選択・ダウンロード・認証を自前 UI にする</td>
+<td><a href="./ui-handlers-api-ja.html">UI ハンドラ API</a></td>
+</tr>
+<tr>
+<td>位置情報・通知などの権限要求に応答する</td>
+<td><a href="./signals-api-ja.html">Signals API —
+permission-request</a></td>
+</tr>
+<tr>
+<td>Chrome DevTools でデバッグする</td>
+<td><a href="./devtools-api-ja.html">DevTools API</a></td>
+</tr>
+<tr>
+<td>環境変数で挙動を切り替える</td>
+<td><a
+href="./environment-variables-ja.html">環境変数リファレンス</a></td>
+</tr>
+<tr>
+<td>ウィジェットとしての <code>BlinkWebView</code></td>
+<td><a href="./blink-web-view-ja.html">BlinkWebView</a></td>
+</tr>
+<tr>
+<td>全 API を一覧で見る</td>
+<td><a href="./c-api-reference-ja.html">C API リファレンス</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ページ一覧">ページ一覧</h2>
+<table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="./howto-index-ja.html"><code>howto-index-ja.md</code></a></td>
+<td>逆引き — 目的から関数を探す</td>
+</tr>
+<tr>
+<td><a
+href="./navigation-api-ja.html"><code>navigation-api-ja.md</code></a></td>
+<td>URL / HTML の読み込み、履歴、リロード</td>
+</tr>
+<tr>
+<td><a
+href="./signals-api-ja.html"><code>signals-api-ja.md</code></a></td>
+<td>GObject シグナル (load-changed / title-changed / permission-request
+等)</td>
+</tr>
+<tr>
+<td><a
+href="./settings-api-ja.html"><code>settings-api-ja.md</code></a></td>
+<td>実行時設定・GPU モード・コンテンツポリシー</td>
+</tr>
+<tr>
+<td><a
+href="./page-search-zoom-ja.html"><code>page-search-zoom-ja.md</code></a></td>
+<td>ページ内検索・ズーム</td>
+</tr>
+<tr>
+<td><a
+href="./app-integration-api-ja.html"><code>app-integration-api-ja.md</code></a></td>
+<td>カスタムスキーム・JS↔︎C メッセージング・スクリプト注入</td>
+</tr>
+<tr>
+<td><a
+href="./ui-handlers-api-ja.html"><code>ui-handlers-api-ja.md</code></a></td>
+<td>JS ダイアログ・ファイル選択・ダウンロード・HTTP 認証・証明書</td>
+</tr>
+<tr>
+<td><a
+href="./devtools-api-ja.html"><code>devtools-api-ja.md</code></a></td>
+<td>Chrome DevTools 連携</td>
+</tr>
+<tr>
+<td><a
+href="./environment-variables-ja.html"><code>environment-variables-ja.md</code></a></td>
+<td>公開サポート環境変数の正リスト</td>
+</tr>
+<tr>
+<td><a
+href="./blink-web-view-ja.html"><code>blink-web-view-ja.md</code></a></td>
+<td><code>BlinkWebView</code> ウィジェット</td>
+</tr>
+<tr>
+<td><a
+href="./c-api-reference-ja.html"><code>c-api-reference-ja.md</code></a></td>
+<td>全 C API の一覧</td>
+</tr>
+</tbody>
+</table>
+<p>各ページは日本語 (<code>-ja.md</code>) と英語 (<code>-en.md</code>)
+の対で提供されます。</p>
+<h2 id="起草予定">起草予定</h2>
+<table>
+<thead>
+<tr>
+<th>章</th>
+<th>状態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>概観とライフサイクル</td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>GObject Introspection / 言語バインディング (PyGObject / GJS /
+Vala)</td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>バージョニングと互換性 (SONAME / API 版数 / 安定性)</td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>アクセシビリティ</td>
+<td><strong>機能未実装のため退避</strong>。実装後に起草</td>
+</tr>
+</tbody>
+</table>
+<h2 id="記載の正確性について">記載の正確性について</h2>
+<p>このリファレンスは機械検証されています。</p>
 <ul>
-<li><strong>草稿(日本語)</strong>:
-consumer(組み込み利用)視点で起草。</li>
-<li><strong>監修 + 英語版追随</strong>: BlinkGTK Project
-側が内部仕様の監修(セマンティクス訂正・env
-意味確定・非推奨指定)と英語版整備を担当。</li>
-<li>章ごとの小 PR で進行。命名は
-<code>NN-&lt;slug&gt;-ja.md</code>(日本語)/
-<code>NN-&lt;slug&gt;-en.md</code>(英語)。</li>
+<li>記載されたすべての API
+が、配布物のヘッダと共有ライブラリに実在すること</li>
+<li>ヘッダのすべての公開 API
+が、いずれかのページに記載されていること<br />
+(実験的 API は理由付きで除外リストに登録)</li>
+<li>完全なコード例がコンパイルできること</li>
 </ul>
-<h2 id="既存ドキュメントの扱い">既存ドキュメントの扱い</h2>
-<p>既存の <code>*-ja.md</code>(navigation / settings / signals /
-c-api-reference /
-blink-web-view)は各章の母体として統合・改訂の対象です。章別ファイルへの移行後は、旧ファイルは新章への参照に置き換えるか、統合します。</p>
 <h2 id="関連">関連</h2>
 <ul>
 <li>インストール・依存: 配布物同梱の <code>INSTALL.md</code>、および
 blinkgtk-dist リポジトリ</li>
-<li>第9章(環境変数)の env は「公開サポート / エスケープハッチ /
-内部診断」の 3 区分。内部診断 env は無保証・サポート対象外です。</li>
+<li>環境変数は「公開サポート / エスケープハッチ / 内部診断」の 3
+区分。内部診断 env は無保証・サポート対象外です。</li>
 </ul>
 </body>
 </html>

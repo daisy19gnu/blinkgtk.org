@@ -1,0 +1,15 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 313" font-family="Liberation Sans, Harano Aji Gothic, sans-serif">
+<text x="380" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">How a custom URL scheme works</text>
+<rect x="140" y="40" width="480" height="63" rx="6" fill="#e9f6ec" stroke="#3a8a4d" stroke-width="1.5"/>
+<text x="380" y="67" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a6a30">The page navigates to app://home/</text>
+<text x="380" y="86" text-anchor="middle" font-size="10" fill="#1a6a30">blink_web_view_load_uri() or a link on the page</text>
+<line x1="380" y1="103" x2="380" y2="121" stroke="#5b6770" stroke-width="1.6"/><path d="M 375 121 L 385 121 L 380 129 Z" fill="#5b6770"/>
+<rect x="140" y="129" width="480" height="63" rx="6" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.5"/>
+<text x="380" y="156" text-anchor="middle" font-size="12" font-weight="bold" fill="#8a1a1a">BlinkGTK matches it against registered schemes</text>
+<text x="380" y="175" text-anchor="middle" font-size="10" fill="#8a1a1a">registered with blink_web_view_register_custom_scheme()</text>
+<line x1="380" y1="192" x2="380" y2="210" stroke="#5b6770" stroke-width="1.6"/><path d="M 375 210 L 385 210 L 380 218 Z" fill="#5b6770"/>
+<rect x="140" y="218" width="480" height="79" rx="6" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="380" y="245" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a8a">Your C callback returns the content, shown as the page</text>
+<text x="380" y="264" text-anchor="middle" font-size="10" fill="#1a3a8a">return a string: register_custom_scheme()</text>
+<text x="380" y="280" text-anchor="middle" font-size="10" fill="#1a3a8a">binary data + MIME type: register_custom_scheme_full()</text>
+</svg>

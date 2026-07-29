@@ -375,27 +375,95 @@ enabled, FALSE = disabled</p>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>Available since</strong>: v1.1.0 or later</p>
 <hr />
+<h2 id="modes-and-policies">Modes and policies</h2>
+<h3 id="gpu-mode">GPU mode</h3>
+<p>Reads and sets the rendering path. The default (software) works
+everywhere.</p>
+<div class="sourceCode" id="cb25"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>  BLINK_GPU_MODE_SOFTWARE    <span class="op">=</span> <span class="dv">0</span><span class="op">,</span>  <span class="co">/* CPU rendering (default, no GPU needed) */</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>  BLINK_GPU_MODE_SWIFTSHADER <span class="op">=</span> <span class="dv">1</span><span class="op">,</span>  <span class="co">/* CPU-based GL emulation (WebGL/WebGPU) */</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>  BLINK_GPU_MODE_EGL         <span class="op">=</span> <span class="dv">2</span><span class="op">,</span>  <span class="co">/* native GPU rendering (WebGL/WebGPU, GPU required) */</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkGpuMode<span class="op">;</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span>   blink_web_view_new_with_gpu_mode<span class="op">(</span>BlinkGpuMode mode<span class="op">);</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>BlinkGpuMode blink_web_view_get_gpu_mode<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<p>The GPU mode is <strong>chosen when the WebView is created</strong>
+(use<br />
+<code>new_with_gpu_mode()</code> instead of
+<code>blink_web_view_new()</code>). It cannot be<br />
+switched afterwards. In the current implementation the mode is<br />
+<strong>process-wide</strong>: with multiple WebViews of different modes
+in one process,<br />
+the first WebView's mode wins.</p>
+<h3 id="content-policy">Content policy</h3>
+<p>Bit flags that forbid copy, save, print, selection, and so on — for
+ebook<br />
+readers and kiosks that must guarantee content-protection behaviour.</p>
+<div class="sourceCode" id="cb26"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_content_policy<span class="op">(</span>view<span class="op">,</span> BLINK_CONTENT_POLICY_EBOOK_READER<span class="op">);</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>BlinkContentPolicy p <span class="op">=</span> blink_web_view_get_content_policy<span class="op">(</span>view<span class="op">);</span></span></code></pre></div>
+<table>
+<thead>
+<tr>
+<th>Main flags</th>
+<th>Forbids</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_ALLOW_ALL</code></td>
+<td>(no restrictions, default)</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_COPY</code></td>
+<td>Copying to the clipboard</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_SAVE</code></td>
+<td>Saving the page</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_IMAGE_SAVE</code></td>
+<td>Saving images</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_SELECTION</code></td>
+<td>Text selection</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_EBOOK_READER</code></td>
+<td>Preset for ebook readers</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_KIOSK</code></td>
+<td>Preset for kiosks</td>
+</tr>
+</tbody>
+</table>
+<p>See <code>BlinkContentPolicy</code> in the <code>blink_gtk.h</code>
+header for the full list.</p>
+<hr />
 <h2 id="practical-combined-examples">Practical Combined Examples</h2>
 <h3 id="data-saver-mode">Data Saver Mode</h3>
 <p>When you want to conserve bandwidth:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_data_saver<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_data_saver<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 id="maximum-security-mode">Maximum Security Mode</h3>
 <p>When security is the top priority:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_secure_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_secure_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 id="mobile-emulation">Mobile Emulation</h3>
 <p>When behaving as a mobile device:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_mobile_emulation<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) &quot;</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;AppleWebKit/537.36 Chrome/143.0.0.0 Mobile&quot;</span><span class="op">;</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_mobile_emulation<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) &quot;</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;AppleWebKit/537.36 Chrome/143.0.0.0 Mobile&quot;</span><span class="op">;</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <hr />
 <h2 id="webkitgtk-migration-guide">WebKitGTK Migration Guide</h2>
 <h3 id="api-mapping">API Mapping</h3>
@@ -452,14 +520,14 @@ enabled, FALSE = disabled</p>
 </table>
 <h3 id="migration-code-example">Migration Code Example</h3>
 <p><strong>Before (WebKitGTK)</strong>:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>WebKitWebView<span class="op">*</span> web_view <span class="op">=</span> webkit_web_view_new<span class="op">();</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>web_view<span class="op">);</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_javascript<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_user_agent<span class="op">(</span>settings<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>WebKitWebView<span class="op">*</span> web_view <span class="op">=</span> webkit_web_view_new<span class="op">();</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_javascript<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_user_agent<span class="op">(</span>settings<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
 <p><strong>After (BlinkGTK)</strong>:</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb31"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
 <p><strong>Differences</strong>:</p>
 <ul>
 <li>No need to obtain a Settings object (settings are applied directly
@@ -471,14 +539,14 @@ to the WebView)</li>
 <h2 id="when-to-apply-settings">When to apply settings</h2>
 <p>Apply settings right after <code>blink_web_view_new()</code>, before
 loading a URL.</p>
-<div class="sourceCode" id="cb30"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* Configure before loading a page */</span></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb32"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* Configure before loading a page */</span></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
 <p>The bundled <code>blinkgtk_browser</code> sample is minimal and
 changes no settings. To try these out, add the<br />
 calls above and rebuild it (the <code>Makefile</code> in
@@ -497,13 +565,7 @@ notification system</li>
 <li><a href="../tutorials/settings-tutorial-c-en.html">C Tutorial</a></li>
 <li><a href="../tutorials/settings-tutorial-py-en.html">Python
 Tutorial</a></li>
-<li><a href="../tutorials/settings-tutorial-rs-en.html">Rust
-Tutorial</a></li>
-</ul>
-<h3 id="migration-guide">Migration Guide</h3>
-<ul>
-<li><a href="../migration/webkitgtk-to-blinkgtk-en.html">WebKitGTK
-Migration Guide</a></li>
+<li><a href="../tutorials/rust-tutorial-en.html">Rust Tutorial</a></li>
 </ul>
 <hr />
 <h2 id="version-history">Version History</h2>

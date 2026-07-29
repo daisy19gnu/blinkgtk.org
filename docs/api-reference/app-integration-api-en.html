@@ -1,0 +1,407 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Application Integration API Reference — Custom
+Schemes, Messaging, Script Injection — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1
+id="blinkgtk-application-integration-api-reference--custom-schemes-messaging-script-injection">BlinkGTK
+Application Integration API Reference — Custom Schemes, Messaging,
+Script Injection</h1>
+<p><strong>Version</strong>: v1.1.0<br />
+<strong>Last updated</strong>: 2026-07-29<br />
+<strong>Language</strong>: English |</p>
+<p><a href="./app-integration-api-ja.html">日本語</a></p>
+<hr />
+<h2 id="about-this-page">About this page</h2>
+<p>APIs that connect your application and the web page <strong>in both
+directions</strong>:</p>
+<ul>
+<li><strong>Create your own URL scheme</strong> — your application
+answers URLs like<br />
+<code>ebook://book/chapter1.html</code>. A reader application can
+decrypt the contents<br />
+of a protected EPUB and hand them to the page this way</li>
+<li><strong>Exchange messages with the page</strong> — call C callbacks
+from the page's<br />
+JavaScript, and call the page's JavaScript from C</li>
+<li><strong>Inject scripts and CSS into every page</strong> — add your
+application's<br />
+JavaScript or styling without modifying the content itself</li>
+</ul>
+<h3 id="usage">Usage</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Register the &quot;app&quot; scheme; the app answers app://... requests */</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_app_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g_strdup<span class="op">(</span><span class="st">&quot;&lt;html&gt;&lt;body&gt;&lt;h1&gt;Served by the app&lt;/h1&gt;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">);</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_register_custom_scheme<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;app&quot;</span><span class="op">,</span> on_app_scheme<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;app://home/&quot;</span><span class="op">);</span></span></code></pre></div>
+<h3 id="overview">Overview</h3>
+<table>
+<thead>
+<tr>
+<th>What you want</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Register a scheme (text response)</td>
+<td><code>blink_web_view_register_custom_scheme()</code></td>
+</tr>
+<tr>
+<td>Register a scheme (binary response + MIME type)</td>
+<td><code>blink_web_view_register_custom_scheme_full()</code></td>
+</tr>
+<tr>
+<td>Receive JS → C messages</td>
+<td><code>blink_web_view_register_message_handler()</code></td>
+</tr>
+<tr>
+<td>Remove a message handler</td>
+<td><code>blink_web_view_unregister_message_handler()</code></td>
+</tr>
+<tr>
+<td>Send C → JS messages</td>
+<td><code>blink_web_view_send_message_to_page()</code></td>
+</tr>
+<tr>
+<td>Inject a script</td>
+<td><code>blink_web_view_inject_user_script()</code></td>
+</tr>
+<tr>
+<td>Inject CSS</td>
+<td><code>blink_web_view_inject_user_stylesheet()</code></td>
+</tr>
+<tr>
+<td>Remove everything injected</td>
+<td><code>blink_web_view_remove_all_user_scripts()</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="custom-url-schemes">Custom URL schemes</h2>
+<p><img src="./assets/fig-custom-scheme-en.svg"
+alt="How a custom URL scheme works: BlinkGTK matches the navigation against registered schemes and your C callback returns the content shown as the page." /></p>
+<h3
+id="blink_web_view_register_custom_scheme">blink_web_view_register_custom_scheme()</h3>
+<p>Registers a URI scheme. Navigating to a URL with that scheme invokes
+your<br />
+callback instead of a network load, and the returned string becomes the
+page.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">char</span><span class="op">*</span> <span class="op">(*</span>BlinkCustomSchemeCallback<span class="op">)(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>                                           gpointer user_data<span class="op">);</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_register_custom_scheme<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> scheme<span class="op">,</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                                           BlinkCustomSchemeCallback callback<span class="op">,</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                                           gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p>Return HTML / text / JSON allocated with <code>g_strdup()</code> or
+similar (BlinkGTK<br />
+frees it). Return <code>NULL</code> for a 404.</p>
+<h3
+id="blink_web_view_register_custom_scheme_full">blink_web_view_register_custom_scheme_full()</h3>
+<p>The binary-capable variant. Use this for images, audio, fonts — any
+data that<br />
+may contain <code>0x00</code> bytes (the text variant truncates at the
+first <code>0x00</code>).</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> GBytes<span class="op">*</span> <span class="op">(*</span>BlinkCustomSchemeBytesCallback<span class="op">)(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                                  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                                  <span class="dt">char</span><span class="op">**</span> out_mime<span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>                                                  gpointer user_data<span class="op">);</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_register_custom_scheme_full<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>                                                <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> scheme<span class="op">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>                                                BlinkCustomSchemeBytesCallback callback<span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                gpointer user_data<span class="op">);</span></span></code></pre></div>
+<ul>
+<li>The response is a <code>GBytes</code> (it carries its own length, so
+it is binary-safe)</li>
+<li>Set <code>out_mime</code> to a Content-Type such as
+<code>g_strdup("image/jpeg")</code>; if left<br />
+unset, the type is guessed from the URI</li>
+<li>Return <code>NULL</code> for a 404</li>
+</ul>
+<p><strong>Example: serving an image from the application</strong></p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> GBytes<span class="op">*</span> on_ebook_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">char</span> <span class="op">**</span>out_mime<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_str_has_suffix<span class="op">(</span>uri<span class="op">,</span> <span class="st">&quot;/cover.jpg&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>        gsize len <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>        gchar <span class="op">*</span>bytes <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>g_file_get_contents<span class="op">(</span><span class="st">&quot;/path/to/cover.jpg&quot;</span><span class="op">,</span> <span class="op">&amp;</span>bytes<span class="op">,</span> <span class="op">&amp;</span>len<span class="op">,</span> NULL<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>            <span class="op">*</span>out_mime <span class="op">=</span> g_strdup<span class="op">(</span><span class="st">&quot;image/jpeg&quot;</span><span class="op">);</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> g_bytes_new_take<span class="op">(</span>bytes<span class="op">,</span> len<span class="op">);</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> NULL<span class="op">;</span>  <span class="co">/* 404 */</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<hr />
+<h2 id="js--c-messaging">JS ↔︎ C messaging</h2>
+<p><img src="./assets/fig-js-bridge-en.svg"
+alt="Messaging between page JavaScript and the C application: postMessage is received by a C handler, and send_message_to_page is received by addMessageHandler — both directions." /></p>
+<p>Pages get a <code>window.blinkgtk</code> object.</p>
+<table>
+<thead>
+<tr>
+<th>Direction</th>
+<th>JavaScript side</th>
+<th>C side</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JS → C</td>
+<td><code>window.blinkgtk.postMessage('name', data)</code></td>
+<td>receive via
+<code>blink_web_view_register_message_handler()</code></td>
+</tr>
+<tr>
+<td>C → JS</td>
+<td>receive via
+<code>window.blinkgtk.addMessageHandler('name', fn)</code></td>
+<td><code>blink_web_view_send_message_to_page()</code></td>
+</tr>
+</tbody>
+</table>
+<h3
+id="blink_web_view_register_message_handler">blink_web_view_register_message_handler()</h3>
+<p>Registers a handler for JS → C messages.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkMessageCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="dt">const</span> guint8<span class="op">*</span> data<span class="op">,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                     gsize length<span class="op">,</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                     gpointer user_data<span class="op">);</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_register_message_handler<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                                             <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                                             BlinkMessageCallback callback<span class="op">,</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                                             gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p><code>name</code> is an alphanumeric handler name. When the page
+calls<br />
+<code>window.blinkgtk.postMessage('name', data)</code>, your callback
+receives <code>data</code> as<br />
+a <strong>Base64-encoded byte sequence</strong>. Decode with
+<code>g_base64_decode()</code>.</p>
+<h3
+id="blink_web_view_unregister_message_handler">blink_web_view_unregister_message_handler()</h3>
+<p>Removes a registered handler.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_unregister_message_handler<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">);</span></span></code></pre></div>
+<h3
+id="blink_web_view_send_message_to_page">blink_web_view_send_message_to_page()</h3>
+<p>Sends a message from C to the page's JavaScript.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_send_message_to_page<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                                         <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> data<span class="op">);</span></span></code></pre></div>
+<p>The page registers its handler first:</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">blinkgtk</span><span class="op">.</span><span class="fu">addMessageHandler</span>(<span class="st">&#39;page-turn&#39;</span><span class="op">,</span> <span class="kw">function</span> (data) {</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;from the app:&#39;</span><span class="op">,</span> data)<span class="op">;</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div>
+<hr />
+<h2 id="script-and-css-injection">Script and CSS injection</h2>
+<h3
+id="blink_web_view_inject_user_script">blink_web_view_inject_user_script()</h3>
+<p>Injects JavaScript into the page.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_user_script<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> script<span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                                       gboolean inject_at_document_start<span class="op">);</span></span></code></pre></div>
+<ul>
+<li><code>inject_at_document_start=TRUE</code>: stored, and executed at
+the <strong>start of every<br />
+subsequent page load</strong>, before the page's own scripts. Use this
+to override<br />
+page APIs</li>
+<li><code>FALSE</code>: executed immediately in the current page
+(equivalent to<br />
+<code>blink_web_view_execute_javascript()</code>)</li>
+</ul>
+<h3
+id="blink_web_view_inject_user_stylesheet">blink_web_view_inject_user_stylesheet()</h3>
+<p>Injects CSS into the current page and future pages.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_user_stylesheet<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> css<span class="op">);</span></span></code></pre></div>
+<p>Useful for reader features like a dark theme or line-height
+adjustment without<br />
+touching the content.</p>
+<h3
+id="blink_web_view_remove_all_user_scripts">blink_web_view_remove_all_user_scripts()</h3>
+<p>Removes all injected scripts and stylesheets.</p>
+<p><strong>Signature</strong>:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_remove_all_user_scripts<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<hr />
+<h2
+id="complete-example-a-custom-scheme-plus-a-notification-from-the-page">Complete
+example: a custom scheme plus a notification from the page</h2>
+<p>The application serves <code>app://home/</code>, and a button in the
+page notifies C.</p>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_app_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g_strdup<span class="op">(</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;html&gt;&lt;body&gt;&quot;</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;h1&gt;Served by the app&lt;/h1&gt;&quot;</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;button onclick=</span><span class="sc">\&quot;</span><span class="st">window.blinkgtk.postMessage(&#39;clicked&#39;,&#39;hello&#39;)</span><span class="sc">\&quot;</span><span class="st">&gt;&quot;</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Notify C&lt;/button&gt;&quot;</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">);</span></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_message<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span> <span class="dt">const</span> guint8 <span class="op">*</span>data<span class="op">,</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                       gsize length<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    gsize out_len <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    guchar <span class="op">*</span>decoded <span class="op">=</span> g_base64_decode<span class="op">((</span><span class="dt">const</span> gchar <span class="op">*)</span>data<span class="op">,</span> <span class="op">&amp;</span>out_len<span class="op">);</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;from page &#39;</span><span class="sc">%s</span><span class="st">&#39;: </span><span class="sc">%.*s\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>out_len<span class="op">,</span> decoded<span class="op">);</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>decoded<span class="op">);</span></span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">**</span>argv<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>win <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_custom_scheme<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app&quot;</span><span class="op">,</span></span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>                                          on_app_scheme<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;clicked&quot;</span><span class="op">,</span></span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>                                            on_message<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">));</span></span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app://home/&quot;</span><span class="op">);</span></span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Build:</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> app-integration app-integration.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<hr />
+<h2 id="related">Related</h2>
+<ul>
+<li>Immediate JavaScript execution with results: <a
+href="./c-api-reference-en.html">C API Reference</a></li>
+<li>Settings (enabling/disabling JavaScript, etc.): <a
+href="./settings-api-en.html">Settings API</a></li>
+</ul>
+<h2 id="change-history">Change history</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.1.0</td>
+<td>First version of this page (the binary-capable scheme ships in
+v1.1.0; the rest since v1.0)</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>

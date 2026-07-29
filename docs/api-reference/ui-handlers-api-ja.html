@@ -1,0 +1,421 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK UI ハンドラ API リファレンス —
+ダイアログ・ファイル選択・ダウンロード・認証 — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1
+id="blinkgtk-ui-ハンドラ-api-リファレンス--ダイアログファイル選択ダウンロード認証">BlinkGTK
+UI ハンドラ API リファレンス —
+ダイアログ・ファイル選択・ダウンロード・認証</h1>
+<p><strong>バージョン</strong>: v1.1.0<br />
+<strong>最終更新</strong>: 2026-07-29<br />
+<strong>言語</strong>: 日本語 |</p>
+<p><a href="./ui-handlers-api-en.html">English</a></p>
+<hr />
+<h2 id="このページについて">このページについて</h2>
+<p>ページが要求する <strong>ブラウザの UI
+をアプリが引き受ける</strong>ための API です。<br />
+JavaScript の
+<code>alert()</code>、ファイル選択、ダウンロード先の決定、HTTP
+認証、<br />
+証明書エラーの扱いを、アプリ自身のダイアログ・ポリシーで実装できます。</p>
+<p><strong>ハンドラを設定しない場合の既定動作</strong>が決まっているため、必要なものだけ<br />
+実装すれば動きます。</p>
+<table>
+<thead>
+<tr>
+<th>ページの要求</th>
+<th>ハンドラ未設定時の既定動作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>alert()</code></td>
+<td>自動で OK</td>
+</tr>
+<tr>
+<td><code>confirm()</code> / <code>prompt()</code></td>
+<td>自動でキャンセル (false / 空)</td>
+</tr>
+<tr>
+<td>ファイル選択 (<code>&lt;input type="file"&gt;</code>)</td>
+<td>キャンセル</td>
+</tr>
+<tr>
+<td>ダウンロード</td>
+<td><code>~/Downloads/</code> に保存</td>
+</tr>
+<tr>
+<td>HTTP 認証 (401 / 407)</td>
+<td>キャンセル</td>
+</tr>
+<tr>
+<td>証明書エラー</td>
+<td>記録して続行
+(開発向けの既定。<strong>製品ではハンドラの実装を推奨</strong>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="使い方">使い方</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* ダウンロード先をアプリが決める */</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_download<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>url<span class="op">,</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                         <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>suggested<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>mime<span class="op">,</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>                         gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g_build_filename<span class="op">(</span>g_get_home_dir<span class="op">(),</span> <span class="st">&quot;MyApp&quot;</span><span class="op">,</span> suggested<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_download_handler<span class="op">(</span>view<span class="op">,</span> on_download<span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
+<h3 id="一覧">一覧</h3>
+<table>
+<thead>
+<tr>
+<th>したいこと</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alert / confirm / prompt を自前 UI で</td>
+<td><code>blink_web_view_set_javascript_dialog_handler()</code></td>
+</tr>
+<tr>
+<td>ファイル選択を自前 UI で</td>
+<td><code>blink_web_view_set_file_chooser_handler()</code> +
+<code>blink_web_view_file_chooser_response()</code></td>
+</tr>
+<tr>
+<td>ダウンロード先を決める</td>
+<td><code>blink_web_view_set_download_handler()</code></td>
+</tr>
+<tr>
+<td>HTTP 認証に応答する</td>
+<td><code>blink_web_view_set_auth_handler()</code> +
+<code>blink_web_view_auth_response()</code></td>
+</tr>
+<tr>
+<td>証明書エラーを判断する</td>
+<td><code>blink_web_view_set_certificate_error_handler()</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="javascript-ダイアログ">JavaScript ダイアログ</h2>
+<h3
+id="blink_web_view_set_javascript_dialog_handler">blink_web_view_set_javascript_dialog_handler()</h3>
+<p><code>alert()</code> / <code>confirm()</code> / <code>prompt()</code>
+/ <code>beforeunload</code> の要求を受け取ります。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_ALERT <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_CONFIRM <span class="op">=</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_PROMPT <span class="op">=</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_BEFORE_UNLOAD <span class="op">=</span> <span class="dv">3</span><span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkJSDialogType<span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkJSDialogResponseCallback<span class="op">)(</span>gboolean success<span class="op">,</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>                                              <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> input_text<span class="op">,</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>                                              gpointer user_data<span class="op">);</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> gboolean <span class="op">(*</span>BlinkJSDialogRequestCallback<span class="op">)(</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    BlinkJSDialogType dialog_type<span class="op">,</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> message<span class="op">,</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> default_prompt<span class="op">,</span></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    BlinkJSDialogResponseCallback response_callback<span class="op">,</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>    gpointer response_user_data<span class="op">,</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_javascript_dialog_handler<span class="op">(</span></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    BlinkJSDialogRequestCallback callback<span class="op">,</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p>ハンドラは自前のダイアログを表示し、ユーザーの応答が決まったら<br />
+<strong>必ず <code>response_callback</code> を呼びます</strong>
+(呼ぶまでレンダラは待ち続けます)。<br />
+非同期でかまいません — ハンドラから <code>TRUE</code>
+を返してダイアログを表示し、<br />
+ボタンが押されてから <code>response_callback</code> を呼べます。</p>
+<ul>
+<li><code>success</code>: OK なら <code>TRUE</code>、キャンセルなら
+<code>FALSE</code></li>
+<li><code>input_text</code>: prompt の入力文字列 (それ以外は
+<code>NULL</code> でよい)</li>
+<li>ハンドラが <code>FALSE</code> を返すと既定動作になります</li>
+<li><code>callback</code> に <code>NULL</code> を渡すと解除です</li>
+</ul>
+<hr />
+<h2 id="ファイル選択">ファイル選択</h2>
+<h3
+id="blink_web_view_set_file_chooser_handler">blink_web_view_set_file_chooser_handler()</h3>
+<p><code>&lt;input type="file"&gt;</code> の要求を受け取ります。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> gboolean <span class="op">(*</span>BlinkFileChooserRequestCallback<span class="op">)(</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    gboolean allow_multiple<span class="op">,</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> accept_types<span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_file_chooser_handler<span class="op">(</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>    BlinkFileChooserRequestCallback callback<span class="op">,</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span></code></pre></div>
+<ul>
+<li><code>allow_multiple</code>: 複数選択が許可されているか</li>
+<li><code>accept_types</code>: 受け入れる MIME
+タイプ・拡張子のカンマ区切り (<code>NULL</code> あり)</li>
+</ul>
+<p>ハンドラで <code>GtkFileDialog</code>
+などを開き、選択が決まったら次を呼びます。</p>
+<h3
+id="blink_web_view_file_chooser_response">blink_web_view_file_chooser_response()</h3>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_file_chooser_response<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>                                          <span class="dt">const</span> <span class="dt">char</span><span class="op">**</span> file_paths<span class="op">);</span></span></code></pre></div>
+<p><code>file_paths</code> は NULL 終端のパス配列です。キャンセルは
+<code>NULL</code> を渡します。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>paths<span class="op">[]</span> <span class="op">=</span> <span class="op">{</span> <span class="st">&quot;/home/user/photo.jpg&quot;</span><span class="op">,</span> NULL <span class="op">};</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_file_chooser_response<span class="op">(</span>view<span class="op">,</span> paths<span class="op">);</span></span></code></pre></div>
+<hr />
+<h2 id="ダウンロード">ダウンロード</h2>
+<h3
+id="blink_web_view_set_download_handler">blink_web_view_set_download_handler()</h3>
+<p>ダウンロード開始前に呼ばれ、保存先を返します。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">char</span><span class="op">*</span> <span class="op">(*</span>BlinkDownloadRequestCallback<span class="op">)(</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> suggested_filename<span class="op">,</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mime_type<span class="op">,</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_download_handler<span class="op">(</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a>    BlinkDownloadRequestCallback callback<span class="op">,</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p>保存先の絶対パスを <code>g_strdup()</code> 等で確保して返します
+(BlinkGTK 側が解放)。<br />
+<code>NULL</code> を返すと既定の <code>~/Downloads/</code>
+に保存されます。</p>
+<hr />
+<h2 id="http-認証">HTTP 認証</h2>
+<h3
+id="blink_web_view_set_auth_handler">blink_web_view_set_auth_handler()</h3>
+<p>HTTP 401 / プロキシ 407 の認証要求を受け取ります。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> gboolean <span class="op">(*</span>BlinkAuthRequestCallback<span class="op">)(</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> realm<span class="op">,</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>    gboolean is_proxy<span class="op">,</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_auth_handler<span class="op">(</span></span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>    BlinkAuthRequestCallback callback<span class="op">,</span></span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p>ハンドラで <code>TRUE</code>
+を返し、資格情報が決まったら次を呼びます<br />
+(認証ダイアログを出す場合は非同期でかまいません)。</p>
+<h3
+id="blink_web_view_auth_response">blink_web_view_auth_response()</h3>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_auth_response<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                                  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> username<span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                                  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> password<span class="op">);</span></span></code></pre></div>
+<p><code>username</code> に <code>NULL</code>
+を渡すとキャンセルです。</p>
+<hr />
+<h2 id="証明書エラー">証明書エラー</h2>
+<h3
+id="blink_web_view_set_certificate_error_handler">blink_web_view_set_certificate_error_handler()</h3>
+<p>SSL 証明書エラーの続行可否を判断します。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> gboolean <span class="op">(*</span>BlinkCertErrorCallback<span class="op">)(</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> error_description<span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_certificate_error_handler<span class="op">(</span></span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb9-9"><a href="#cb9-9" aria-hidden="true" tabindex="-1"></a>    BlinkCertErrorCallback callback<span class="op">,</span></span>
+<span id="cb9-10"><a href="#cb9-10" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p><code>TRUE</code> で続行、<code>FALSE</code> でブロックします。</p>
+<p><strong>注意</strong>:
+ハンドラ未設定時の既定は「記録して続行」です。これは開発向けの<br />
+既定であり、<strong>外部の任意のサイトを表示する製品では、<code>FALSE</code>
+を返す<br />
+ハンドラを設定してブロックする</strong>ことを推奨します。表示対象が自アプリの<br />
+コンテンツに限られるキオスク・リーダーではこの限りではありません。</p>
+<hr />
+<h2 id="完全な例-ダウンロード先の指定と-confirm-の自前実装">完全な例:
+ダウンロード先の指定と confirm() の自前実装</h2>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_download<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>url<span class="op">,</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>                         <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>suggested<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>mime<span class="op">,</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>                         gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* アプリ専用フォルダに保存する */</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>dir <span class="op">=</span> g_build_filename<span class="op">(</span>g_get_home_dir<span class="op">(),</span> <span class="st">&quot;MyAppDownloads&quot;</span><span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>    g_mkdir_with_parents<span class="op">(</span>dir<span class="op">,</span> <span class="bn">0700</span><span class="op">);</span></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>dest <span class="op">=</span> g_build_filename<span class="op">(</span>dir<span class="op">,</span> suggested <span class="op">?</span> suggested <span class="op">:</span> <span class="st">&quot;download.bin&quot;</span><span class="op">,</span></span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>                                  NULL<span class="op">);</span></span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>dir<span class="op">);</span></span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> dest<span class="op">;</span>  <span class="co">/* BlinkGTK が解放する */</span></span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_js_dialog<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>                             BlinkJSDialogType type<span class="op">,</span></span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a>                             <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>message<span class="op">,</span></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>                             <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>default_prompt<span class="op">,</span></span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>                             BlinkJSDialogResponseCallback respond<span class="op">,</span></span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>                             gpointer respond_data<span class="op">,</span></span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>                             gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>type <span class="op">==</span> BLINK_JS_DIALOG_CONFIRM<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        g_print<span class="op">(</span><span class="st">&quot;confirm: </span><span class="sc">%s</span><span class="st"> → OK として応答</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> message<span class="op">);</span></span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>        respond<span class="op">(</span>TRUE<span class="op">,</span> NULL<span class="op">,</span> respond_data<span class="op">);</span></span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> TRUE<span class="op">;</span></span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> FALSE<span class="op">;</span>  <span class="co">/* それ以外は既定動作 */</span></span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">**</span>argv<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a>    blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>win <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb10-36"><a href="#cb10-36" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-37"><a href="#cb10-37" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb10-38"><a href="#cb10-38" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb10-39"><a href="#cb10-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-40"><a href="#cb10-40" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_download_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> on_download<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb10-41"><a href="#cb10-41" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_dialog_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span></span>
+<span id="cb10-42"><a href="#cb10-42" aria-hidden="true" tabindex="-1"></a>                                                 on_js_dialog<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb10-43"><a href="#cb10-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-44"><a href="#cb10-44" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">));</span></span>
+<span id="cb10-45"><a href="#cb10-45" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span>
+<span id="cb10-46"><a href="#cb10-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-47"><a href="#cb10-47" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb10-48"><a href="#cb10-48" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>ビルド:</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> handlers-demo handlers-demo.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<hr />
+<h2 id="関連">関連</h2>
+<ul>
+<li>位置情報・通知などの権限要求: <code>permission-request</code>
+シグナル (<a href="./signals-api-ja.html">Signals API</a>)</li>
+<li>Cookie・User-Agent: <a href="./settings-api-ja.html">Settings
+API</a></li>
+</ul>
+<h2 id="変更履歴">変更履歴</h2>
+<table>
+<thead>
+<tr>
+<th>バージョン</th>
+<th>変更</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.1.0</td>
+<td>本ページ初版 (API 自体は v1.0 系から提供)</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>

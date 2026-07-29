@@ -1,0 +1,22 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 475" font-family="Liberation Sans, Harano Aji Gothic, sans-serif">
+<text x="380" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">BlinkGTK アプリケーションのライフサイクル</text>
+<rect x="140" y="40" width="480" height="63" rx="6" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="380" y="67" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a8a">1. Chromium リソースの場所を教える</text>
+<text x="380" y="86" text-anchor="middle" font-size="10" fill="#1a3a8a">blink_gtk_set_resources_path() / blink_gtk_set_icu_data_path()</text>
+<line x1="380" y1="103" x2="380" y2="121" stroke="#5b6770" stroke-width="1.6"/><path d="M 375 121 L 385 121 L 380 129 Z" fill="#5b6770"/>
+<rect x="140" y="129" width="480" height="63" rx="6" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.5"/>
+<text x="380" y="156" text-anchor="middle" font-size="12" font-weight="bold" fill="#8a1a1a">2. エンジンを初期化する — GTK より先に呼ぶ</text>
+<text x="380" y="175" text-anchor="middle" font-size="10" fill="#8a1a1a">blink_gtk_init()</text>
+<line x1="380" y1="192" x2="380" y2="210" stroke="#5b6770" stroke-width="1.6"/><path d="M 375 210 L 385 210 L 380 218 Z" fill="#5b6770"/>
+<rect x="140" y="218" width="480" height="63" rx="6" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="380" y="245" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a8a">3. GTK・ウィンドウ・WebView を作る</text>
+<text x="380" y="264" text-anchor="middle" font-size="10" fill="#1a3a8a">gtk_init() → gtk_window_new() → blink_web_view_new()</text>
+<line x1="380" y1="281" x2="380" y2="299" stroke="#5b6770" stroke-width="1.6"/><path d="M 375 299 L 385 299 L 380 307 Z" fill="#5b6770"/>
+<rect x="140" y="307" width="480" height="63" rx="6" fill="#e9f6ec" stroke="#3a8a4d" stroke-width="1.5"/>
+<text x="380" y="334" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a6a30">4. ページを読み込み、メインループを回す</text>
+<text x="380" y="353" text-anchor="middle" font-size="10" fill="#1a6a30">blink_web_view_load_uri() → blink_gtk_run_main_loop()</text>
+<line x1="380" y1="370" x2="380" y2="388" stroke="#5b6770" stroke-width="1.6"/><path d="M 375 388 L 385 388 L 380 396 Z" fill="#5b6770"/>
+<rect x="140" y="396" width="480" height="63" rx="6" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="380" y="423" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a8a">5. 終了する</text>
+<text x="380" y="442" text-anchor="middle" font-size="10" fill="#1a3a8a">blink_gtk_quit_main_loop() → blink_gtk_shutdown()</text>
+</svg>

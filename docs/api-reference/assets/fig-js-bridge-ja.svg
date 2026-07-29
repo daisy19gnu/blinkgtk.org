@@ -1,0 +1,18 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 234" font-family="Liberation Sans, Harano Aji Gothic, sans-serif">
+<text x="380" y="22" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">ページの JavaScript と C アプリのメッセージング</text>
+<rect x="30" y="48" width="310" height="63" rx="6" fill="#e9f6ec" stroke="#3a8a4d" stroke-width="1.5"/>
+<text x="185" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a6a30">ページの JavaScript から送る</text>
+<text x="185" y="94" text-anchor="middle" font-size="10" fill="#1a6a30">window.blinkgtk.postMessage('name', data)</text>
+<rect x="420" y="48" width="310" height="63" rx="6" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="575" y="75" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a8a">C アプリで受け取る</text>
+<text x="575" y="94" text-anchor="middle" font-size="10" fill="#1a3a8a">blink_web_view_register_message_handler()</text>
+<line x1="340" y1="79" x2="412" y2="79" stroke="#5b6770" stroke-width="1.6"/><path d="M 412 74 L 412 84 L 420 79 Z" fill="#5b6770"/>
+<text x="380" y="137" text-anchor="middle" font-size="10" fill="#5b6770">data は Base64 のバイト列で届く — g_base64_decode() で復元する</text>
+<rect x="30" y="155" width="310" height="63" rx="6" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="185" y="182" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a3a8a">C アプリから送る</text>
+<text x="185" y="201" text-anchor="middle" font-size="10" fill="#1a3a8a">blink_web_view_send_message_to_page()</text>
+<rect x="420" y="155" width="310" height="63" rx="6" fill="#e9f6ec" stroke="#3a8a4d" stroke-width="1.5"/>
+<text x="575" y="182" text-anchor="middle" font-size="12" font-weight="bold" fill="#1a6a30">ページの JavaScript で受け取る</text>
+<text x="575" y="201" text-anchor="middle" font-size="10" fill="#1a6a30">window.blinkgtk.addMessageHandler('name', fn)</text>
+<line x1="340" y1="186" x2="412" y2="186" stroke="#5b6770" stroke-width="1.6"/><path d="M 412 181 L 412 191 L 420 186 Z" fill="#5b6770"/>
+</svg>

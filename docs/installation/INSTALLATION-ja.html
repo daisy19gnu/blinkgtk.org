@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK インストールガイド — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-インストールガイド">BlinkGTK インストールガイド</h1>
+<p>BlinkGTK の <strong>バイナリ配布物</strong>
+をインストールする手順です。BlinkGTK は<br />
+WebKitGTK と同様に <strong>runtime</strong>（アプリの実行に必要）と
+<strong>devel</strong>（BlinkGTK を<br />
+組み込むアプリの開発に必要）を分割配布します。GitHub Releases
+からバイナリ<br />
+（RPM / DEB /
+tarball）を取得してください。ソースからのビルドは配布物には<br />
+含まれません（バイナリ配布）。</p>
+<hr />
+<h2 id="目次">目次</h2>
+<ol type="1">
+<li><a href="#システム要件">システム要件</a></li>
+<li><a href="#パッケージ構成runtime--devel">パッケージ構成（runtime /
+devel）</a></li>
+<li><a href="#インストール方法">インストール方法</a>
+<ul>
+<li><a href="#fedora--rhelrpm">Fedora / RHEL（RPM）</a></li>
+<li><a href="#debian--ubuntudeb">Debian / Ubuntu（DEB）</a></li>
+<li><a href="#tarballfhs-レイアウト">Tarball（FHS レイアウト）</a></li>
+</ul></li>
+<li><a href="#インストール確認">インストール確認</a></li>
+<li><a href="#consumer-アプリのビルド">consumer アプリのビルド</a></li>
+<li><a href="#アンインストール">アンインストール</a></li>
+<li><a href="#トラブルシューティング">トラブルシューティング</a></li>
+</ol>
+<hr />
+<h2 id="システム要件">システム要件</h2>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>要件</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CPU</td>
+<td>x86_64 (64-bit)</td>
+</tr>
+<tr>
+<td>メモリ</td>
+<td>最小 2GB、推奨 4GB 以上</td>
+</tr>
+<tr>
+<td>ディスク</td>
+<td>runtime 展開に約 700MB</td>
+</tr>
+<tr>
+<td>OS</td>
+<td>Linux (Fedora 44+, Ubuntu 24.04+, Debian 13+)</td>
+</tr>
+<tr>
+<td>ディスプレイ</td>
+<td><strong>Wayland のみ</strong>（X11 非対応）</td>
+</tr>
+<tr>
+<td>GTK4</td>
+<td>&gt;= 4.6.0</td>
+</tr>
+<tr>
+<td>GLib</td>
+<td>&gt;= 2.70.0</td>
+</tr>
+</tbody>
+</table>
+<p>ランタイム依存（アプリ実行に必要な共有ライブラリ）:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora / RHEL</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4 glib2 wayland vulkan-loader</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-1 libglib2.0-0 libwayland-client0 libvulkan1</span></code></pre></div>
+<p>Chromium ランタイム一式（V8 / Blink / Viz 等の 500 以上の .so
+とリソース）は<br />
+runtime パッケージの <strong>private
+ディレクトリ</strong>（<code>/usr/lib64/blinkgtk-0.1/</code>）に<br />
+同梱されるため、別途インストールは不要です。</p>
+<hr />
+<h2 id="パッケージ構成runtime--devel">パッケージ構成（runtime /
+devel）</h2>
+<table>
+<thead>
+<tr>
+<th>パッケージ</th>
+<th>用途</th>
+<th>主な内容</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>|</p>
+<p><strong>blinkgtk-bin</strong>（runtime） | アプリ実行 |
+<code>/usr/lib64/libblinkgtk-0.1.so.0</code>（公開 ABI）+
+<code>/usr/lib64/blinkgtk-0.1/</code>（Chromium 一式・private）+
+<code>/usr/libexec/blinkgtk-0.1/</code>（simple_browser）+
+<code>THIRD_PARTY_NOTICES.html</code> |<br />
+|</p>
+<p><strong>blinkgtk-bin-devel</strong>（devel） | consumer 開発 |
+ヘッダ（<code>/usr/include/blinkgtk-0.1/</code>）+
+pkg-config（<code>/usr/lib64/pkgconfig/blinkgtk-0.1.pc</code>）+
+<code>.so</code> symlink |<br />
+|</p>
+<p><strong>blinkgtk-bin-gir</strong>（gir） | Python/Rust 等の
+introspection | <code>BlinkGTK-0.1.typelib</code> |</p>
+<p>アプリを動かすだけなら <strong>runtime のみ</strong>、BlinkGTK
+を組み込むアプリを開発する場合は<br />
+<strong>devel（+ gir）</strong> も導入します。</p>
+<hr />
+<h2 id="インストール方法">インストール方法</h2>
+<p>配布アセットは GitHub Releases
+から取得します（<code>SHA256SUMS</code> で検証してください）。</p>
+<h3 id="fedora--rhelrpm">Fedora / RHEL（RPM）</h3>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime のみ（アプリ実行）</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 開発する場合は devel + gir も</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm</span></code></pre></div>
+<h3 id="debian--ubuntudeb">Debian / Ubuntu（DEB）</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb        <span class="co"># runtime</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
+<h3 id="tarballfhs-レイアウト">Tarball（FHS レイアウト）</h3>
+<p>runtime / devel とも FHS
+レイアウト（<code>usr/lib64/...</code>）です。root（<code>/</code>）に展開します。</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                                    <span class="co"># ld.so.conf.d を反映</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel（consumer 開発時のみ）</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
+<p><code>ldconfig</code> は runtime に含まれる
+<code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code><br />
+（private ディレクトリを検索パスに追加）を反映するために実行します。</p>
+<hr />
+<h2 id="インストール確認">インストール確認</h2>
+<h3 id="runtimeアプリ実行">runtime（アプリ実行）</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 公開 ABI が ld.so で解決されるか</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ldconfig <span class="at">-p</span> <span class="kw">|</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> libblinkgtk-0.1</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">libblinkgtk-0.1.so.0</span> <span class="er">(</span><span class="ex">libc6,x86-64</span><span class="kw">)</span> <span class="ex">=</span><span class="op">&gt;</span> /usr/lib64/libblinkgtk-0.1.so.0</span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a><span class="co"># デモブラウザ（Wayland セッションで）</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> /usr/libexec/blinkgtk-0.1/simple_browser</span></code></pre></div>
+<h3 id="develpkg-config">devel（pkg-config）</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--modversion</span> blinkgtk-0.1</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>VERSION<span class="op">&gt;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--cflags</span> blinkgtk-0.1</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-I/usr/include/blinkgtk-0.1</span> <span class="at">-I</span>/usr/include/gtk-4.0 ... <span class="at">-pthread</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--libs</span> blinkgtk-0.1</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="ex">-L/usr/lib64</span> <span class="at">-L</span>/usr/lib64/blinkgtk-0.1 <span class="at">-L</span>/usr/lib64/blinkgtk-0.1/chromium <span class="dt">\</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">-lblinkgtk-0.1</span> <span class="at">-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</span> ...</span></code></pre></div>
+<p><strong>重要</strong>: <code>--libs</code> に PartitionAlloc
+allocator shim<br />
+（<code>-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</code>）が<br />
+含まれます。consumer は <strong>必ず pkg-config
+経由でリンク</strong>してください（shim を<br />
+実行ファイルに直接リンクしないと Chromium のナビゲーションが失敗します
+—<br />
+Issue #90）。</p>
+<h3 id="girpython--pygobject">gir（Python / PyGObject）</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> python3 <span class="at">-c</span> <span class="st">&quot;import gi; gi.require_version(&#39;BlinkGTK&#39;,&#39;0.1&#39;); from gi.repository import BlinkGTK; print(&#39;BlinkGTK OK&#39;)&quot;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">BlinkGTK</span> OK</span></code></pre></div>
+<hr />
+<h2 id="consumer-アプリのビルド">consumer アプリのビルド</h2>
+<p>BlinkGTK を組み込むアプリは pkg-config でビルドします（shim
+の直接リンクが<br />
+自動で付与されます）。</p>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> my_app.c <span class="at">-o</span> my_app <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<p>詳細は <a href="../consumer-integration-guide-ja.html">consumer
+統合ガイド</a>（ライフサイクル /<br />
+WebView 埋め込み / GPU モード / 注入 等）を参照してください。</p>
+<hr />
+<h2 id="アンインストール">アンインストール</h2>
+<h3 id="rpm">RPM</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf remove blinkgtk-bin blinkgtk-bin-devel blinkgtk-bin-gir</span></code></pre></div>
+<h3 id="deb">DEB</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt remove libblinkgtk-0.1-0 libblinkgtk-0.1-dev</span></code></pre></div>
+<h3 id="tarball">Tarball</h3>
+<p>tarball は FHS
+配置のため、展開したファイルを手動で削除します（パッケージ<br />
+管理を使う RPM/DEB を推奨）。主な配置先:
+<code>/usr/lib64/libblinkgtk-0.1.so*</code>,<br />
+<code>/usr/lib64/blinkgtk-0.1/</code>,
+<code>/usr/libexec/blinkgtk-0.1/</code>,<br />
+<code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code>,
+<code>/usr/include/blinkgtk-0.1/</code>（devel）,<br />
+<code>/usr/lib64/pkgconfig/blinkgtk-0.1.pc</code>（devel）。削除後に
+<code>sudo ldconfig</code>。</p>
+<hr />
+<h2 id="トラブルシューティング">トラブルシューティング</h2>
+<h3 id="1-libblinkgtk-01so0-cannot-open-shared-object-file">1.
+<code>libblinkgtk-0.1.so.0: cannot open shared object file</code></h3>
+<p>ld.so の検索パスに private ディレクトリが反映されていません。</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                          <span class="co"># /etc/ld.so.conf.d/blinkgtk-0.1.conf を反映</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> libblinkgtk-0.1     <span class="co"># 解決を確認</span></span></code></pre></div>
+<h3 id="2-pkg-config-が-blinkgtk-01-を検出しない">2. pkg-config が
+blinkgtk-0.1 を検出しない</h3>
+<p>devel パッケージ未導入、または <code>PKG_CONFIG_PATH</code>
+未設定です。</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># devel を導入 (上記) するか、tarball 配置時は:</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1</span></code></pre></div>
+<h3 id="3-自作アプリで黒画面--ナビゲーション失敗issue-90">3.
+自作アプリで黒画面 / ナビゲーション失敗（Issue #90）</h3>
+<p>consumer が allocator shim
+を直接リンクしていません。<strong>pkg-config 経由で<br />
+リンク</strong>してください（<code>pkg-config --libs blinkgtk-0.1</code>
+が shim を含みます）。<br />
+確認: `readelf -d ./my_app | grep NEEDED |</p>
+<p>grep partition_alloc_allocator_shim`<br />
+が 1 件あること。</p>
+<h3 id="4-python-import-エラーnamespace-blinkgtk-not-available">4.
+Python import
+エラー（<code>Namespace BlinkGTK not available</code>）</h3>
+<p>gir パッケージ未導入、または <code>GI_TYPELIB_PATH</code>
+未設定です。</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># gir を導入 (上記) するか、tarball 配置時は:</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GI_TYPELIB_PATH</span><span class="op">=</span>/usr/lib64/girepository-1.0:<span class="va">$GI_TYPELIB_PATH</span></span></code></pre></div>
+<h3 id="5-failed-to-open-wayland-display">5.
+<code>Failed to open Wayland display</code></h3>
+<p>BlinkGTK は <strong>Wayland のみ</strong>対応です（X11 非対応）。</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$WAYLAND_DISPLAY</span>    <span class="co"># 空なら Wayland セッションで再ログイン</span></span></code></pre></div>
+<hr />
+<h2 id="次のステップ">次のステップ</h2>
+<ol type="1">
+<li><strong>consumer 統合ガイド</strong>: <a
+href="../consumer-integration-guide-ja.html">consumer-integration-guide-ja.md</a></li>
+<li><strong>アプリのビルド</strong>: <a
+href="../building-with-blinkgtk-ja.html">building-with-blinkgtk-ja.md</a></li>
+<li><strong>Python / Rust</strong>: <a
+href="../tutorials/python-tutorial-ja.html">python-tutorial-ja.md</a></li>
+</ol>
+<hr />
+<h2 id="サポート">サポート</h2>
+<ul>
+<li><strong>不具合報告</strong>: <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">https://github.com/daisy19gnu/blinkgtk-dist/issues</a></li>
+<li><strong>お問い合わせ</strong>: <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a></li>
+</ul>
+<hr />
+<p><strong>Copyright 2026 BlinkGTK Project</strong><br />
+<strong>SPDX-License-Identifier: BSD-3-Clause</strong></p>
+</body>
+</html>
+</div></div>

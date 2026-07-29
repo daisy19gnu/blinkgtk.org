@@ -133,12 +133,12 @@
 </table>
 <h2 id="1-インストール">1. インストール</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.1.0-build4.fc44.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.1.0-build4.fc44.x86_64.rpm</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.1.0-build6.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.1.0-build6.fc44.x86_64.rpm</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.1.0-build4_amd64.deb <span class="dt">\</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.1.0-build4_amd64.deb</span></code></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.1.0-build6_amd64.deb <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.1.0-build6_amd64.deb</span></code></pre></div>
 <p>tarball を使う場合は任意の場所に展開し、<code>pkg-config</code>
 に場所を教えます。</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.1.0-build6-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
@@ -173,6 +173,10 @@
 はこのヘッダに集約されています。内部ヘッダを直接インクルードしないで<br />
 ください (バージョン間で変わります)。</p>
 <h2 id="4-最小構成のアプリ">4. 最小構成のアプリ</h2>
+<p><img src="api-reference/assets/fig-lifecycle-ja.svg"
+alt="BlinkGTK アプリケーションのライフサイクル。リソースの場所指定、blink_gtk_init、ウィンドウと WebView の作成、読み込みとメインループ、終了処理の 5 段。" /></p>
+<p><em>呼び出しの順序が重要です。特に <code>blink_gtk_init()</code> は
+GTK より先に呼びます。</em></p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>

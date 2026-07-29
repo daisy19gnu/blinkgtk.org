@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK DevTools API リファレンス — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-devtools-api-リファレンス">BlinkGTK DevTools API
+リファレンス</h1>
+<p><strong>バージョン</strong>: v1.1.0<br />
+<strong>最終更新</strong>: 2026-07-29<br />
+<strong>言語</strong>: 日本語 |</p>
+<p><a href="./devtools-api-en.html">English</a></p>
+<hr />
+<h2 id="このページについて">このページについて</h2>
+<p>表示中のページを <strong>Chrome DevTools
+でデバッグする</strong>ための API です。<br />
+DOM の検査、コンソール、ネットワーク、パフォーマンス計測など、Chrome
+と<br />
+同じ開発者ツールがそのまま使えます。</p>
+<h3 id="使い方">使い方</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* リモートデバッグを開く (ポート 0 = 自動割り当て) */</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gint port <span class="op">=</span> blink_web_view_open_devtools<span class="op">(</span>view<span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>port <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>url <span class="op">=</span> blink_web_view_get_devtools_url<span class="op">(</span>view<span class="op">);</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;DevTools: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> url <span class="op">?</span> url <span class="op">:</span> <span class="st">&quot;(URL 取得失敗)&quot;</span><span class="op">);</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>url<span class="op">);</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>表示された URL を Chrome / Chromium
+で開くか、<code>chrome://inspect</code> から<br />
+接続します。</p>
+<h3 id="一覧">一覧</h3>
+<table>
+<thead>
+<tr>
+<th>したいこと</th>
+<th>API</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>DevTools を開く</td>
+<td><code>blink_web_view_open_devtools()</code></td>
+</tr>
+<tr>
+<td>DevTools を閉じる</td>
+<td><code>blink_web_view_close_devtools()</code></td>
+</tr>
+<tr>
+<td>フロントエンド URL を取得</td>
+<td><code>blink_web_view_get_devtools_url()</code></td>
+</tr>
+<tr>
+<td>DevTools の表示言語を設定</td>
+<td><code>blink_gtk_set_devtools_locale()</code></td>
+</tr>
+<tr>
+<td>DevTools の表示言語を取得</td>
+<td><code>blink_gtk_get_devtools_locale()</code></td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="api">API</h2>
+<h3
+id="blink_web_view_open_devtools">blink_web_view_open_devtools()</h3>
+<p>リモートデバッグを指定ポートで開きます。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>gint blink_web_view_open_devtools<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gint port<span class="op">);</span></span></code></pre></div>
+<p><code>port</code> に <code>0</code>
+を渡すと空きポートが自動で選ばれます。戻り値は実際に使われる<br />
+ポート番号で、失敗時は <code>0</code> です。</p>
+<h3
+id="blink_web_view_close_devtools">blink_web_view_close_devtools()</h3>
+<p>リモートデバッグ接続を閉じます。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_close_devtools<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<h3
+id="blink_web_view_get_devtools_url">blink_web_view_get_devtools_url()</h3>
+<p>DevTools フロントエンドの URL を返します。呼び出し側が
+<code>g_free()</code> で<br />
+解放します。未接続時は <code>NULL</code> です。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> blink_web_view_get_devtools_url<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<h3
+id="blink_gtk_set_devtools_locale--blink_gtk_get_devtools_locale">blink_gtk_set_devtools_locale()
+/ blink_gtk_get_devtools_locale()</h3>
+<p>DevTools の表示言語を設定・取得します。<code>"ja"</code> を設定すると
+DevTools の<br />
+UI が日本語になります。<code>blink_gtk_init()</code>
+より前に呼んでください。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_devtools_locale<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> locale<span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_devtools_locale<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
+<hr />
+<h2 id="注意">注意</h2>
+<ul>
+<li>リモートデバッグポートは <strong>localhost
+からのみ</strong>利用する前提です。外部に<br />
+開放しないでください</li>
+<li>製品ビルドでは、デバッグ用の隠しオプションなどからのみ開けるようにする<br />
+ことを推奨します</li>
+</ul>
+<h2 id="関連">関連</h2>
+<ul>
+<li>JavaScript の実行と結果の取得: <a href="./c-api-reference-ja.html">C
+API リファレンス</a></li>
+</ul>
+<h2 id="変更履歴">変更履歴</h2>
+<table>
+<thead>
+<tr>
+<th>バージョン</th>
+<th>変更</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v1.1.0</td>
+<td>本ページ初版 (API 自体は v1.0 系から提供)</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>

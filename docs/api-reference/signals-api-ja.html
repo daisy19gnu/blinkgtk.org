@@ -216,6 +216,12 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 <td>URI変更</td>
 <td>アドレスバー更新</td>
 </tr>
+<tr>
+<td><code>permission-request</code></td>
+<td>BlinkPermissionRequest</td>
+<td>ページが権限を要求</td>
+<td>位置情報・通知等の許可判断 (既定は拒否)</td>
+</tr>
 </tbody>
 </table>
 <hr />
@@ -799,170 +805,212 @@ WebKitGTKは<code>notify::title</code>プロパティ変更通知を使用しま
 <p><strong>注意</strong>:
 WebKitGTKは<code>notify::uri</code>プロパティ変更通知を使用しますが、BlinkGTKは専用の<code>uri-changed</code>シグナルを提供します。</p>
 <hr />
+<h2 id="権限要求-permission-request">権限要求 (permission-request)</h2>
+<p>ページが位置情報・通知・カメラ・マイクなどの権限を要求したときに発火します。<br />
+<strong>既定は拒否</strong>です。ハンドラを繋がない場合、すべての要求は自動的に拒否<br />
+されます。キオスク端末や電子書籍リーダーで挙動を保証できます。</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_permission<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>                              BlinkPermissionRequest <span class="op">*</span>req<span class="op">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>                              gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>kind <span class="op">=</span> blink_permission_request_get_type_name<span class="op">(</span>req<span class="op">);</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_strcmp0<span class="op">(</span>kind<span class="op">,</span> <span class="st">&quot;notifications&quot;</span><span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>        blink_permission_request_allow<span class="op">(</span>req<span class="op">);</span>   <span class="co">/* 通知だけ許可 */</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">else</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>        blink_permission_request_deny<span class="op">(</span>req<span class="op">);</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> TRUE<span class="op">;</span>   <span class="co">/* 処理した */</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;permission-request&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_permission<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<h3 id="仕様">仕様</h3>
+<ul>
+<li>ハンドラは <code>BlinkPermissionRequest</code>
+を受け取り、<strong>必ず</strong><br />
+<code>blink_permission_request_allow()</code> か
+<code>blink_permission_request_deny()</code> の<br />
+<strong>どちらか一方を一度だけ</strong>呼びます。呼んだ後のハンドルは無効です</li>
+<li><code>blink_permission_request_get_type_name()</code>
+が要求種別を返します:<br />
+<code>"geolocation"</code> / <code>"notifications"</code> /
+<code>"audio-capture"</code> /<br />
+<code>"video-capture"</code> / <code>"midi"</code> /
+<code>"clipboard"</code> / <code>"unknown"</code></li>
+<li>戻り値の文字列はハンドルが所有し、allow/deny を呼ぶまで有効です</li>
+<li>ハンドラが <code>TRUE</code> を返さなければ要求は拒否されます
+(deny-by-default)</li>
+<li>ユーザーに確認ダイアログを出す場合は、ハンドラで <code>TRUE</code>
+を返して<br />
+ダイアログを表示し、応答が決まってから allow/deny を呼べます
+(非同期可)</li>
+</ul>
+<h3 id="api">API</h3>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_permission_request_get_type_name<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>        blink_permission_request_allow<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>        blink_permission_request_deny<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span></code></pre></div>
+<hr />
 <h2 id="実用的なパターン">実用的なパターン</h2>
 <h3 id="パターン1-完全なブラウザui更新">パターン1:
 完全なブラウザUI更新</h3>
 <p>複数のシグナルを組み合わせた完全なブラウザUIの実装例です。</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window<span class="op">;</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> url_entry<span class="op">;</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> back_button<span class="op">;</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> forward_button<span class="op">;</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> reload_button<span class="op">;</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> stop_button<span class="op">;</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> progress_bar<span class="op">;</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> status_label<span class="op">;</span></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> security_icon<span class="op">;</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view<span class="op">;</span></span>
-<span id="cb18-15"><a href="#cb18-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BrowserUI<span class="op">;</span></span>
-<span id="cb18-16"><a href="#cb18-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-17"><a href="#cb18-17" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-changed: ロード状態でUI更新 */</span></span>
-<span id="cb18-18"><a href="#cb18-18" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb18-19"><a href="#cb18-19" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
-<span id="cb18-20"><a href="#cb18-20" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb18-21"><a href="#cb18-21" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
-<span id="cb18-22"><a href="#cb18-22" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-23"><a href="#cb18-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb18-24"><a href="#cb18-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_STARTED<span class="op">:</span></span>
-<span id="cb18-25"><a href="#cb18-25" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.0</span><span class="op">);</span></span>
-<span id="cb18-26"><a href="#cb18-26" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> TRUE<span class="op">);</span></span>
-<span id="cb18-27"><a href="#cb18-27" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> TRUE<span class="op">);</span></span>
-<span id="cb18-28"><a href="#cb18-28" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb18-29"><a href="#cb18-29" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;読み込み中...&quot;</span><span class="op">);</span></span>
-<span id="cb18-30"><a href="#cb18-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb18-31"><a href="#cb18-31" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-32"><a href="#cb18-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_COMMITTED<span class="op">:</span></span>
-<span id="cb18-33"><a href="#cb18-33" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.5</span><span class="op">);</span></span>
-<span id="cb18-34"><a href="#cb18-34" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb18-35"><a href="#cb18-35" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-36"><a href="#cb18-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_FINISHED<span class="op">:</span> <span class="op">{</span></span>
-<span id="cb18-37"><a href="#cb18-37" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">1.0</span><span class="op">);</span></span>
-<span id="cb18-38"><a href="#cb18-38" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb18-39"><a href="#cb18-39" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb18-40"><a href="#cb18-40" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> TRUE<span class="op">);</span></span>
-<span id="cb18-41"><a href="#cb18-41" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;完了&quot;</span><span class="op">);</span></span>
-<span id="cb18-42"><a href="#cb18-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-43"><a href="#cb18-43" aria-hidden="true" tabindex="-1"></a>            <span class="co">// ナビゲーションボタンの状態更新</span></span>
-<span id="cb18-44"><a href="#cb18-44" aria-hidden="true" tabindex="-1"></a>            gboolean can_go_back <span class="op">=</span> blink_web_view_can_go_back<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
-<span id="cb18-45"><a href="#cb18-45" aria-hidden="true" tabindex="-1"></a>            gboolean can_go_forward <span class="op">=</span> blink_web_view_can_go_forward<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
-<span id="cb18-46"><a href="#cb18-46" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_sensitive<span class="op">(</span>ui<span class="op">-&gt;</span>back_button<span class="op">,</span> can_go_back<span class="op">);</span></span>
-<span id="cb18-47"><a href="#cb18-47" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_sensitive<span class="op">(</span>ui<span class="op">-&gt;</span>forward_button<span class="op">,</span> can_go_forward<span class="op">);</span></span>
-<span id="cb18-48"><a href="#cb18-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb18-49"><a href="#cb18-49" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
-<span id="cb18-50"><a href="#cb18-50" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb18-51"><a href="#cb18-51" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-52"><a href="#cb18-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-53"><a href="#cb18-53" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-failed: エラー表示 */</span></span>
-<span id="cb18-54"><a href="#cb18-54" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb18-55"><a href="#cb18-55" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb18-56"><a href="#cb18-56" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
-<span id="cb18-57"><a href="#cb18-57" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb18-58"><a href="#cb18-58" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
-<span id="cb18-59"><a href="#cb18-59" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-60"><a href="#cb18-60" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> message <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;読み込みエラー (コード: </span><span class="sc">%d</span><span class="st">)&quot;</span><span class="op">,</span> error_code<span class="op">);</span></span>
-<span id="cb18-61"><a href="#cb18-61" aria-hidden="true" tabindex="-1"></a>    gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> message<span class="op">);</span></span>
-<span id="cb18-62"><a href="#cb18-62" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>message<span class="op">);</span></span>
-<span id="cb18-63"><a href="#cb18-63" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-64"><a href="#cb18-64" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb18-65"><a href="#cb18-65" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb18-66"><a href="#cb18-66" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> TRUE<span class="op">);</span></span>
-<span id="cb18-67"><a href="#cb18-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-68"><a href="#cb18-68" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-69"><a href="#cb18-69" aria-hidden="true" tabindex="-1"></a><span class="co">/* title-changed: ウィンドウタイトル更新 */</span></span>
-<span id="cb18-70"><a href="#cb18-70" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb18-71"><a href="#cb18-71" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
-<span id="cb18-72"><a href="#cb18-72" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb18-73"><a href="#cb18-73" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
-<span id="cb18-74"><a href="#cb18-74" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-75"><a href="#cb18-75" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> window_title <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> - MyBrowser&quot;</span><span class="op">,</span> title<span class="op">);</span></span>
-<span id="cb18-76"><a href="#cb18-76" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>ui<span class="op">-&gt;</span>window<span class="op">),</span> window_title<span class="op">);</span></span>
-<span id="cb18-77"><a href="#cb18-77" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>window_title<span class="op">);</span></span>
-<span id="cb18-78"><a href="#cb18-78" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-79"><a href="#cb18-79" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-80"><a href="#cb18-80" aria-hidden="true" tabindex="-1"></a><span class="co">/* uri-changed: アドレスバー＆セキュリティアイコン更新 */</span></span>
-<span id="cb18-81"><a href="#cb18-81" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_uri_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb18-82"><a href="#cb18-82" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
-<span id="cb18-83"><a href="#cb18-83" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb18-84"><a href="#cb18-84" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
-<span id="cb18-85"><a href="#cb18-85" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-86"><a href="#cb18-86" aria-hidden="true" tabindex="-1"></a>    <span class="co">// アドレスバー更新</span></span>
-<span id="cb18-87"><a href="#cb18-87" aria-hidden="true" tabindex="-1"></a>    gtk_editable_set_text<span class="op">(</span>GTK_EDITABLE<span class="op">(</span>ui<span class="op">-&gt;</span>url_entry<span class="op">),</span> uri<span class="op">);</span></span>
-<span id="cb18-88"><a href="#cb18-88" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-89"><a href="#cb18-89" aria-hidden="true" tabindex="-1"></a>    <span class="co">// セキュリティアイコン更新</span></span>
-<span id="cb18-90"><a href="#cb18-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_str_has_prefix<span class="op">(</span>uri<span class="op">,</span> <span class="st">&quot;https://&quot;</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb18-91"><a href="#cb18-91" aria-hidden="true" tabindex="-1"></a>        gtk_image_set_from_icon_name<span class="op">(</span>GTK_IMAGE<span class="op">(</span>ui<span class="op">-&gt;</span>security_icon<span class="op">),</span></span>
-<span id="cb18-92"><a href="#cb18-92" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;dialog-password&quot;</span><span class="op">);</span></span>
-<span id="cb18-93"><a href="#cb18-93" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb18-94"><a href="#cb18-94" aria-hidden="true" tabindex="-1"></a>        gtk_image_set_from_icon_name<span class="op">(</span>GTK_IMAGE<span class="op">(</span>ui<span class="op">-&gt;</span>security_icon<span class="op">),</span></span>
-<span id="cb18-95"><a href="#cb18-95" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;dialog-warning&quot;</span><span class="op">);</span></span>
-<span id="cb18-96"><a href="#cb18-96" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb18-97"><a href="#cb18-97" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-98"><a href="#cb18-98" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-99"><a href="#cb18-99" aria-hidden="true" tabindex="-1"></a><span class="co">/* シグナル接続 */</span></span>
-<span id="cb18-100"><a href="#cb18-100" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> setup_signals<span class="op">(</span>BrowserUI<span class="op">*</span> ui<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb18-101"><a href="#cb18-101" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
-<span id="cb18-102"><a href="#cb18-102" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> ui<span class="op">);</span></span>
-<span id="cb18-103"><a href="#cb18-103" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;load-failed&quot;</span><span class="op">,</span></span>
-<span id="cb18-104"><a href="#cb18-104" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_load_failed<span class="op">),</span> ui<span class="op">);</span></span>
-<span id="cb18-105"><a href="#cb18-105" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
-<span id="cb18-106"><a href="#cb18-106" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> ui<span class="op">);</span></span>
-<span id="cb18-107"><a href="#cb18-107" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span></span>
-<span id="cb18-108"><a href="#cb18-108" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> ui<span class="op">);</span></span>
-<span id="cb18-109"><a href="#cb18-109" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> window<span class="op">;</span></span>
+<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> url_entry<span class="op">;</span></span>
+<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> back_button<span class="op">;</span></span>
+<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> forward_button<span class="op">;</span></span>
+<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> reload_button<span class="op">;</span></span>
+<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> stop_button<span class="op">;</span></span>
+<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> progress_bar<span class="op">;</span></span>
+<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> status_label<span class="op">;</span></span>
+<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> security_icon<span class="op">;</span></span>
+<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    GtkWidget<span class="op">*</span> web_view<span class="op">;</span></span>
+<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BrowserUI<span class="op">;</span></span>
+<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-changed: ロード状態でUI更新 */</span></span>
+<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_STARTED<span class="op">:</span></span>
+<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.0</span><span class="op">);</span></span>
+<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;読み込み中...&quot;</span><span class="op">);</span></span>
+<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_COMMITTED<span class="op">:</span></span>
+<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">0.5</span><span class="op">);</span></span>
+<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_FINISHED<span class="op">:</span> <span class="op">{</span></span>
+<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a>            gtk_progress_bar_set_fraction<span class="op">(</span>GTK_PROGRESS_BAR<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">),</span> <span class="fl">1.0</span><span class="op">);</span></span>
+<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>            gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> <span class="st">&quot;完了&quot;</span><span class="op">);</span></span>
+<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a>            <span class="co">// ナビゲーションボタンの状態更新</span></span>
+<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>            gboolean can_go_back <span class="op">=</span> blink_web_view_can_go_back<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>            gboolean can_go_forward <span class="op">=</span> blink_web_view_can_go_forward<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_sensitive<span class="op">(</span>ui<span class="op">-&gt;</span>back_button<span class="op">,</span> can_go_back<span class="op">);</span></span>
+<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>            gtk_widget_set_sensitive<span class="op">(</span>ui<span class="op">-&gt;</span>forward_button<span class="op">,</span> can_go_forward<span class="op">);</span></span>
+<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>            <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-failed: エラー表示 */</span></span>
+<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-60"><a href="#cb20-60" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> message <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;読み込みエラー (コード: </span><span class="sc">%d</span><span class="st">)&quot;</span><span class="op">,</span> error_code<span class="op">);</span></span>
+<span id="cb20-61"><a href="#cb20-61" aria-hidden="true" tabindex="-1"></a>    gtk_label_set_text<span class="op">(</span>GTK_LABEL<span class="op">(</span>ui<span class="op">-&gt;</span>status_label<span class="op">),</span> message<span class="op">);</span></span>
+<span id="cb20-62"><a href="#cb20-62" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>message<span class="op">);</span></span>
+<span id="cb20-63"><a href="#cb20-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-64"><a href="#cb20-64" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>progress_bar<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb20-65"><a href="#cb20-65" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>stop_button<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb20-66"><a href="#cb20-66" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>reload_button<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb20-67"><a href="#cb20-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb20-68"><a href="#cb20-68" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-69"><a href="#cb20-69" aria-hidden="true" tabindex="-1"></a><span class="co">/* title-changed: ウィンドウタイトル更新 */</span></span>
+<span id="cb20-70"><a href="#cb20-70" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb20-71"><a href="#cb20-71" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb20-72"><a href="#cb20-72" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-73"><a href="#cb20-73" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb20-74"><a href="#cb20-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-75"><a href="#cb20-75" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> window_title <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> - MyBrowser&quot;</span><span class="op">,</span> title<span class="op">);</span></span>
+<span id="cb20-76"><a href="#cb20-76" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>ui<span class="op">-&gt;</span>window<span class="op">),</span> window_title<span class="op">);</span></span>
+<span id="cb20-77"><a href="#cb20-77" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>window_title<span class="op">);</span></span>
+<span id="cb20-78"><a href="#cb20-78" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb20-79"><a href="#cb20-79" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-80"><a href="#cb20-80" aria-hidden="true" tabindex="-1"></a><span class="co">/* uri-changed: アドレスバー＆セキュリティアイコン更新 */</span></span>
+<span id="cb20-81"><a href="#cb20-81" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_uri_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb20-82"><a href="#cb20-82" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb20-83"><a href="#cb20-83" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-84"><a href="#cb20-84" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb20-85"><a href="#cb20-85" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-86"><a href="#cb20-86" aria-hidden="true" tabindex="-1"></a>    <span class="co">// アドレスバー更新</span></span>
+<span id="cb20-87"><a href="#cb20-87" aria-hidden="true" tabindex="-1"></a>    gtk_editable_set_text<span class="op">(</span>GTK_EDITABLE<span class="op">(</span>ui<span class="op">-&gt;</span>url_entry<span class="op">),</span> uri<span class="op">);</span></span>
+<span id="cb20-88"><a href="#cb20-88" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-89"><a href="#cb20-89" aria-hidden="true" tabindex="-1"></a>    <span class="co">// セキュリティアイコン更新</span></span>
+<span id="cb20-90"><a href="#cb20-90" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_str_has_prefix<span class="op">(</span>uri<span class="op">,</span> <span class="st">&quot;https://&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb20-91"><a href="#cb20-91" aria-hidden="true" tabindex="-1"></a>        gtk_image_set_from_icon_name<span class="op">(</span>GTK_IMAGE<span class="op">(</span>ui<span class="op">-&gt;</span>security_icon<span class="op">),</span></span>
+<span id="cb20-92"><a href="#cb20-92" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;dialog-password&quot;</span><span class="op">);</span></span>
+<span id="cb20-93"><a href="#cb20-93" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb20-94"><a href="#cb20-94" aria-hidden="true" tabindex="-1"></a>        gtk_image_set_from_icon_name<span class="op">(</span>GTK_IMAGE<span class="op">(</span>ui<span class="op">-&gt;</span>security_icon<span class="op">),</span></span>
+<span id="cb20-95"><a href="#cb20-95" aria-hidden="true" tabindex="-1"></a>                                    <span class="st">&quot;dialog-warning&quot;</span><span class="op">);</span></span>
+<span id="cb20-96"><a href="#cb20-96" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb20-97"><a href="#cb20-97" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb20-98"><a href="#cb20-98" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-99"><a href="#cb20-99" aria-hidden="true" tabindex="-1"></a><span class="co">/* シグナル接続 */</span></span>
+<span id="cb20-100"><a href="#cb20-100" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> setup_signals<span class="op">(</span>BrowserUI<span class="op">*</span> ui<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb20-101"><a href="#cb20-101" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb20-102"><a href="#cb20-102" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb20-103"><a href="#cb20-103" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;load-failed&quot;</span><span class="op">,</span></span>
+<span id="cb20-104"><a href="#cb20-104" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_load_failed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb20-105"><a href="#cb20-105" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
+<span id="cb20-106"><a href="#cb20-106" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb20-107"><a href="#cb20-107" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>ui<span class="op">-&gt;</span>web_view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span></span>
+<span id="cb20-108"><a href="#cb20-108" aria-hidden="true" tabindex="-1"></a>                     G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb20-109"><a href="#cb20-109" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 id="パターン2-シグナルブロックアンブロック">パターン2:
 シグナルブロック/アンブロック</h3>
 <p>一時的にシグナルを無効化したい場合の例です。</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> load_url_without_history<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>                                     gpointer handler_id<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// uri-changedシグナルを一時的にブロック</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    g_signal_handler_block<span class="op">(</span>web_view<span class="op">,</span> GPOINTER_TO_UINT<span class="op">(</span>handler_id<span class="op">));</span></span>
-<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// URLを読み込み</span></span>
-<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> url<span class="op">);</span></span>
-<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// シグナルのブロックを解除</span></span>
-<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>    g_signal_handler_unblock<span class="op">(</span>web_view<span class="op">,</span> GPOINTER_TO_UINT<span class="op">(</span>handler_id<span class="op">));</span></span>
-<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* 使用例 */</span></span>
-<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>gulong handler_id <span class="op">=</span> g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span></span>
-<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>                                     G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a><span class="co">// 履歴に記録せずにURLを読み込み</span></span>
-<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a>load_url_without_history<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">,</span></span>
-<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a>                         GUINT_TO_POINTER<span class="op">(</span>handler_id<span class="op">));</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> load_url_without_history<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                                     gpointer handler_id<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    <span class="co">// uri-changedシグナルを一時的にブロック</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    g_signal_handler_block<span class="op">(</span>web_view<span class="op">,</span> GPOINTER_TO_UINT<span class="op">(</span>handler_id<span class="op">));</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>    <span class="co">// URLを読み込み</span></span>
+<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> url<span class="op">);</span></span>
+<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a>    <span class="co">// シグナルのブロックを解除</span></span>
+<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>    g_signal_handler_unblock<span class="op">(</span>web_view<span class="op">,</span> GPOINTER_TO_UINT<span class="op">(</span>handler_id<span class="op">));</span></span>
+<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* 使用例 */</span></span>
+<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a>gulong handler_id <span class="op">=</span> g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span></span>
+<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>                                     G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a><span class="co">// 履歴に記録せずにURLを読み込み</span></span>
+<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>load_url_without_history<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">,</span></span>
+<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>                         GUINT_TO_POINTER<span class="op">(</span>handler_id<span class="op">));</span></span></code></pre></div>
 <h3 id="パターン3-シグナルハンドラの切断">パターン3:
 シグナルハンドラの切断</h3>
-<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>    gulong load_changed_id<span class="op">;</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    gulong load_failed_id<span class="op">;</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    gulong title_changed_id<span class="op">;</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    gulong uri_changed_id<span class="op">;</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> SignalHandlers<span class="op">;</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> disconnect_all_signals<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>                                   SignalHandlers<span class="op">*</span> handlers<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>load_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>load_changed_id<span class="op">);</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>load_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>load_failed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>load_failed_id<span class="op">);</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>load_failed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>title_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>title_changed_id<span class="op">);</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>title_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>uri_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>uri_changed_id<span class="op">);</span></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>uri_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>    gulong load_changed_id<span class="op">;</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>    gulong load_failed_id<span class="op">;</span></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>    gulong title_changed_id<span class="op">;</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>    gulong uri_changed_id<span class="op">;</span></span>
+<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> SignalHandlers<span class="op">;</span></span>
+<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> disconnect_all_signals<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>                                   SignalHandlers<span class="op">*</span> handlers<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>load_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>load_changed_id<span class="op">);</span></span>
+<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>load_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>load_failed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>load_failed_id<span class="op">);</span></span>
+<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>load_failed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>title_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-19"><a href="#cb22-19" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>title_changed_id<span class="op">);</span></span>
+<span id="cb22-20"><a href="#cb22-20" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>title_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb22-21"><a href="#cb22-21" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-22"><a href="#cb22-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>handlers<span class="op">-&gt;</span>uri_changed_id <span class="op">&gt;</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb22-23"><a href="#cb22-23" aria-hidden="true" tabindex="-1"></a>        g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handlers<span class="op">-&gt;</span>uri_changed_id<span class="op">);</span></span>
+<span id="cb22-24"><a href="#cb22-24" aria-hidden="true" tabindex="-1"></a>        handlers<span class="op">-&gt;</span>uri_changed_id <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb22-25"><a href="#cb22-25" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb22-26"><a href="#cb22-26" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <hr />
 <h2 id="webkitgtk互換性-4">WebKitGTK互換性</h2>
 <h3 id="シグナル対応表">シグナル対応表</h3>
@@ -1004,77 +1052,77 @@ WebKitGTKは<code>notify::uri</code>プロパティ変更通知を使用しま�
 </table>
 <h3 id="移行ガイド">移行ガイド</h3>
 <h4 id="load-changed-1">load-changed</h4>
-<div class="sourceCode" id="cb21"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>                           WebKitLoadEvent load_event<span class="op">,</span></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_STARTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb21-7"><a href="#cb21-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_COMMITTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb21-8"><a href="#cb21-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_FINISHED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb21-9"><a href="#cb21-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb21-10"><a href="#cb21-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb21-11"><a href="#cb21-11" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
-<span id="cb21-12"><a href="#cb21-12" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb21-13"><a href="#cb21-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-14"><a href="#cb21-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
-<span id="cb21-15"><a href="#cb21-15" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb21-16"><a href="#cb21-16" aria-hidden="true" tabindex="-1"></a>                           BlinkLoadEvent load_event<span class="op">,</span></span>
-<span id="cb21-17"><a href="#cb21-17" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb21-18"><a href="#cb21-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb21-19"><a href="#cb21-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_STARTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb21-20"><a href="#cb21-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_COMMITTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb21-21"><a href="#cb21-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_FINISHED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
-<span id="cb21-22"><a href="#cb21-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb21-23"><a href="#cb21-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb21-24"><a href="#cb21-24" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
-<span id="cb21-25"><a href="#cb21-25" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                           WebKitLoadEvent load_event<span class="op">,</span></span>
+<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_STARTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_COMMITTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> WEBKIT_LOAD_FINISHED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
+<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a>                           BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">switch</span> <span class="op">(</span>load_event<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb23-19"><a href="#cb23-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_STARTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb23-20"><a href="#cb23-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_COMMITTED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb23-21"><a href="#cb23-21" aria-hidden="true" tabindex="-1"></a>        <span class="cf">case</span> BLINK_LOAD_FINISHED<span class="op">:</span> <span class="co">/* ... */</span> <span class="cf">break</span><span class="op">;</span></span>
+<span id="cb23-22"><a href="#cb23-22" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb23-23"><a href="#cb23-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb23-24"><a href="#cb23-24" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb23-25"><a href="#cb23-25" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
 <p><strong>変更点</strong>:
 型名とenum値のプレフィックスのみ（<code>WEBKIT_</code> →
 <code>BLINK_</code>）</p>
 <h4 id="load-failed-1">load-failed</h4>
-<div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_load_failed<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a>                               WebKitLoadEvent load_event<span class="op">,</span></span>
-<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
-<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>                               GError<span class="op">*</span> error<span class="op">,</span></span>
-<span id="cb22-6"><a href="#cb22-6" aria-hidden="true" tabindex="-1"></a>                               gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb22-7"><a href="#cb22-7" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Error: </span><span class="sc">%s</span><span class="st"> (code=</span><span class="sc">%d</span><span class="st">, domain=</span><span class="sc">%d</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span></span>
-<span id="cb22-8"><a href="#cb22-8" aria-hidden="true" tabindex="-1"></a>            error<span class="op">-&gt;</span>message<span class="op">,</span> error<span class="op">-&gt;</span>code<span class="op">,</span> error<span class="op">-&gt;</span>domain<span class="op">);</span></span>
-<span id="cb22-9"><a href="#cb22-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> FALSE<span class="op">;</span>  <span class="co">// デフォルトエラーページ表示</span></span>
-<span id="cb22-10"><a href="#cb22-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb22-11"><a href="#cb22-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb22-12"><a href="#cb22-12" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
-<span id="cb22-13"><a href="#cb22-13" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb22-14"><a href="#cb22-14" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb22-15"><a href="#cb22-15" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
-<span id="cb22-16"><a href="#cb22-16" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb22-17"><a href="#cb22-17" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Error code: </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">);</span></span>
-<span id="cb22-18"><a href="#cb22-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_load_failed<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>                               WebKitLoadEvent load_event<span class="op">,</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>                               GError<span class="op">*</span> error<span class="op">,</span></span>
+<span id="cb24-6"><a href="#cb24-6" aria-hidden="true" tabindex="-1"></a>                               gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb24-7"><a href="#cb24-7" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Error: </span><span class="sc">%s</span><span class="st"> (code=</span><span class="sc">%d</span><span class="st">, domain=</span><span class="sc">%d</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb24-8"><a href="#cb24-8" aria-hidden="true" tabindex="-1"></a>            error<span class="op">-&gt;</span>message<span class="op">,</span> error<span class="op">-&gt;</span>code<span class="op">,</span> error<span class="op">-&gt;</span>domain<span class="op">);</span></span>
+<span id="cb24-9"><a href="#cb24-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> FALSE<span class="op">;</span>  <span class="co">// デフォルトエラーページ表示</span></span>
+<span id="cb24-10"><a href="#cb24-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
+<span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Error code: </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">);</span></span>
+<span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>変更点</strong>:</p>
 <ul>
 <li>WebKitGTKは<code>GError*</code>、BlinkGTKは<code>int</code></li>
 <li>WebKitGTKは<code>gboolean</code>を返す、BlinkGTKは<code>void</code></li>
 </ul>
 <h4 id="title-changed--uri-changed">title-changed / uri-changed</h4>
-<div class="sourceCode" id="cb23"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_notify_title<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a>                           GParamSpec<span class="op">*</span> pspec<span class="op">,</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title <span class="op">=</span> webkit_web_view_get_title<span class="op">(</span>web_view<span class="op">);</span></span>
-<span id="cb23-6"><a href="#cb23-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ... */</span></span>
-<span id="cb23-7"><a href="#cb23-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb23-8"><a href="#cb23-8" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;notify::title&quot;</span><span class="op">,</span></span>
-<span id="cb23-9"><a href="#cb23-9" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_notify_title<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb23-10"><a href="#cb23-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb23-11"><a href="#cb23-11" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
-<span id="cb23-12"><a href="#cb23-12" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb23-13"><a href="#cb23-13" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
-<span id="cb23-14"><a href="#cb23-14" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb23-15"><a href="#cb23-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ... */</span></span>
-<span id="cb23-16"><a href="#cb23-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb23-17"><a href="#cb23-17" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
-<span id="cb23-18"><a href="#cb23-18" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebKitGTK */</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_notify_title<span class="op">(</span>WebKitWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>                           GParamSpec<span class="op">*</span> pspec<span class="op">,</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title <span class="op">=</span> webkit_web_view_get_title<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ... */</span></span>
+<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb25-8"><a href="#cb25-8" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;notify::title&quot;</span><span class="op">,</span></span>
+<span id="cb25-9"><a href="#cb25-9" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_notify_title<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb25-10"><a href="#cb25-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb25-11"><a href="#cb25-11" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
+<span id="cb25-12"><a href="#cb25-12" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb25-13"><a href="#cb25-13" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb25-14"><a href="#cb25-14" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb25-15"><a href="#cb25-15" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ... */</span></span>
+<span id="cb25-16"><a href="#cb25-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb25-17"><a href="#cb25-17" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span></span>
+<span id="cb25-18"><a href="#cb25-18" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
 <p><strong>変更点</strong>:</p>
 <ul>
 <li>シグナル名: <code>notify::title</code> →
@@ -1088,85 +1136,85 @@ WebKitGTKは<code>notify::uri</code>プロパティ変更通知を使用しま�
 <p><strong>原因と対策</strong>:</p>
 <ol type="1">
 <li><p><strong>シグナル名のタイプミス</strong></p>
-<div class="sourceCode" id="cb24"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 間違い</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load_changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// アンダースコア</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 正しい</span></span>
-<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// ハイフン</span></span></code></pre></div></li>
-<li><p><strong>WebViewが作成される前に接続</strong></p>
-<div class="sourceCode" id="cb25"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 間違い</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 正しい</span></span>
-<span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span></code></pre></div></li>
-<li><p><strong>GTKメインループが動いていない</strong></p>
 <div class="sourceCode" id="cb26"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 シグナルは発火しない（メインループがない）</span></span>
+class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 間違い</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load_changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// アンダースコア</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 メインループ開始後にシグナル発火</span></span></code></pre></div></li>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 正しい</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// ハイフン</span></span></code></pre></div></li>
+<li><p><strong>WebViewが作成される前に接続</strong></p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 間違い</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 正しい</span></span>
+<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span></code></pre></div></li>
+<li><p><strong>GTKメインループが動いていない</strong></p>
+<div class="sourceCode" id="cb28"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 シグナルは発火しない（メインループがない）</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 メインループ開始後にシグナル発火</span></span></code></pre></div></li>
 </ol>
 <h3 id="シグナルハンドラでクラッシュ">シグナルハンドラでクラッシュ</h3>
 <p><strong>症状</strong>: シグナルハンドラ内でSegmentation fault</p>
 <p><strong>原因と対策</strong>:</p>
 <ol type="1">
 <li><p><strong>user_dataがNULL</strong></p>
-<div class="sourceCode" id="cb27"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    MyData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>MyData<span class="op">*)</span>user_data<span class="op">;</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span>  <span class="co">// 非対応 user_dataがNULLならクラッシュ</span></span>
-<span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">// 対策: NULLチェック</span></span>
-<span id="cb27-9"><a href="#cb27-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb27-10"><a href="#cb27-10" aria-hidden="true" tabindex="-1"></a>    MyData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>MyData<span class="op">*)</span>user_data<span class="op">;</span></span>
-<span id="cb27-11"><a href="#cb27-11" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span></span>
-<span id="cb27-12"><a href="#cb27-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb29"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>    MyData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>MyData<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span>  <span class="co">// 非対応 user_dataがNULLならクラッシュ</span></span>
+<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a><span class="co">// 対策: NULLチェック</span></span>
+<span id="cb29-9"><a href="#cb29-9" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb29-10"><a href="#cb29-10" aria-hidden="true" tabindex="-1"></a>    MyData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>MyData<span class="op">*)</span>user_data<span class="op">;</span></span>
+<span id="cb29-11"><a href="#cb29-11" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span></span>
+<span id="cb29-12"><a href="#cb29-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div></li>
 <li><p><strong>文字列のライフタイム</strong></p>
-<div class="sourceCode" id="cb28"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> saved_title <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
-<span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    saved_title <span class="op">=</span> title<span class="op">;</span>  <span class="co">// 非対応 titleは一時的なポインタ</span></span>
-<span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">// 対策: 文字列をコピー</span></span>
-<span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>saved_title<span class="op">);</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>saved_title <span class="op">=</span> g_strdup<span class="op">(</span>title<span class="op">);</span>  <span class="co">// 対応 コピーを保存</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb30"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> saved_title <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>    saved_title <span class="op">=</span> title<span class="op">;</span>  <span class="co">// 非対応 titleは一時的なポインタ</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a><span class="co">// 対策: 文字列をコピー</span></span>
+<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>saved_title<span class="op">);</span></span>
+<span id="cb30-11"><a href="#cb30-11" aria-hidden="true" tabindex="-1"></a>saved_title <span class="op">=</span> g_strdup<span class="op">(</span>title<span class="op">);</span>  <span class="co">// 対応 コピーを保存</span></span></code></pre></div></li>
 </ol>
 <h3 id="メモリリーク">メモリリーク</h3>
 <p><strong>症状</strong>: メモリ使用量が増え続ける</p>
 <p><strong>原因と対策</strong>:</p>
 <ol type="1">
 <li><p><strong>シグナルハンドラが切断されていない</strong></p>
-<div class="sourceCode" id="cb29"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 ハンドラIDを保存</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>gulong handler_id <span class="op">=</span> g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a><span class="co">// WebView破棄前に切断</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handler_id<span class="op">);</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb31"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 ハンドラIDを保存</span></span>
+<span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a>gulong handler_id <span class="op">=</span> g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb31-3"><a href="#cb31-3" aria-hidden="true" tabindex="-1"></a>                                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb31-4"><a href="#cb31-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb31-5"><a href="#cb31-5" aria-hidden="true" tabindex="-1"></a><span class="co">// WebView破棄前に切断</span></span>
+<span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>g_signal_handler_disconnect<span class="op">(</span>web_view<span class="op">,</span> handler_id<span class="op">);</span></span></code></pre></div></li>
 <li><p><strong>文字列のリーク</strong></p>
-<div class="sourceCode" id="cb30"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span>
-<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ↑ この関数はg_strdup()した文字列を返す</span></span>
-<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 メモリリーク</span></span>
-<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
-<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 使用後に解放</span></span>
-<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
-<span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>g_print<span class="op">(</span><span class="st">&quot;UA: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> ua<span class="op">);</span></span>
-<span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>ua<span class="op">);</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb32"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span>
+<span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ↑ この関数はg_strdup()した文字列を返す</span></span>
+<span id="cb32-3"><a href="#cb32-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-4"><a href="#cb32-4" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 メモリリーク</span></span>
+<span id="cb32-5"><a href="#cb32-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb32-6"><a href="#cb32-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb32-7"><a href="#cb32-7" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 使用後に解放</span></span>
+<span id="cb32-8"><a href="#cb32-8" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb32-9"><a href="#cb32-9" aria-hidden="true" tabindex="-1"></a>g_print<span class="op">(</span><span class="st">&quot;UA: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> ua<span class="op">);</span></span>
+<span id="cb32-10"><a href="#cb32-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>ua<span class="op">);</span></span></code></pre></div></li>
 </ol>
 <hr />
 <h2 id="まとめ">まとめ</h2>
