@@ -162,7 +162,12 @@
     .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function (rels) {
       var pkg = /\.(rpm|deb|tar\.gz|tar\.bz2)$/;
-      var n = 0;
+      // 取り下げ済み (draft 化) build のダウンロード実績。公開 API は draft を
+      // 返さないため、ここに固定値で引き継ぐ。取り下げのたびに更新する。
+      // 内訳 (package 資産のみ、2026-07-29 時点):
+      //   build2: 27 / build3: 55 / build4: 8 / build5: 16
+      var withdrawn = 106;
+      var n = withdrawn;
       rels.forEach(function (rel) {
         (rel.assets || []).forEach(function (a) {
           if (pkg.test(a.name)) n += a.download_count || 0;
