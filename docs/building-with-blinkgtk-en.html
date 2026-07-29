@@ -143,7 +143,7 @@ GJS</td>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.1.0-build4_amd64.deb</span></code></pre></div>
 <p>If you use the tarball, extract it anywhere and tell
 <code>pkg-config</code> where it is:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.1.0-build4-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.1.0-build5-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span></code></pre></div>
 <h2 id="2-always-link-through-pkg-config">2. Always link through
 pkg-config</h2>
@@ -264,6 +264,40 @@ a direct dependency? (section 2)</td>
 </tr>
 </tbody>
 </table>
+<h2 id="8-about-using-gtk4-itself">8. About using GTK4 itself</h2>
+<p>BlinkGTK is <strong>a library that provides one GTK4 widget</strong>.
+How to use GTK4 itself — windows, layout, buttons, menus, event handling
+— is covered by the GTK4 documentation, not here.</p>
+<ul>
+<li>GTK4 API reference: <a
+href="https://docs.gtk.org/gtk4/">https://docs.gtk.org/gtk4/</a></li>
+<li>Getting started with GTK4: <a
+href="https://docs.gtk.org/gtk4/getting_started.html">https://docs.gtk.org/gtk4/getting_started.html</a></li>
+<li>GObject basics: <a
+href="https://docs.gtk.org/gobject/">https://docs.gtk.org/gobject/</a></li>
+<li>GLib (main loop, signals, and so on): <a
+href="https://docs.gtk.org/glib/">https://docs.gtk.org/glib/</a></li>
+<li>Migrating from GTK3: <a
+href="https://docs.gtk.org/gtk4/migrating-3to4.html">https://docs.gtk.org/gtk4/migrating-3to4.html</a></li>
+</ul>
+<p><code>BlinkWebView</code> derives from <code>GtkWidget</code>, so it
+behaves like any other GTK4 widget: put it in a container, set size
+requests, connect signals.</p>
+<p><strong>The main loop is the one exception.</strong> Use
+<code>blink_gtk_run_main_loop()</code> rather than GTK's
+<code>g_application_run()</code> or <code>g_main_loop_run()</code> (see
+section 4).</p>
+<h3 id="using-it-from-python-rust-and-other-languages">Using it from
+Python, Rust, and other languages</h3>
+<p>BlinkGTK supports GObject Introspection, so it can be used from
+PyGObject and gtk-rs. Refer to the documentation of each binding for how
+to use them.</p>
+<ul>
+<li>PyGObject: <a
+href="https://pygobject.gnome.org/">https://pygobject.gnome.org/</a></li>
+<li>gtk-rs (Rust): <a
+href="https://gtk-rs.org/">https://gtk-rs.org/</a></li>
+</ul>
 <h2 id="related">Related</h2>
 <ul>
 <li>Detailed installation steps: <code>INSTALL.md</code></li>

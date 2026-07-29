@@ -142,7 +142,7 @@
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.1.0-build4_amd64.deb</span></code></pre></div>
 <p>tarball を使う場合は任意の場所に展開し、<code>pkg-config</code>
 に場所を教えます。</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.1.0-build4-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.1.0-build5-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span></code></pre></div>
 <h2 id="2-必ず-pkg-config-経由でリンクする">2. 必ず pkg-config
 経由でリンクする</h2>
@@ -264,6 +264,43 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#
 </tr>
 </tbody>
 </table>
+<h2 id="8-gtk4-の使い方について">8. GTK4 の使い方について</h2>
+<p>BlinkGTK は <strong>GTK4 のウィジェットを 1
+つ提供するライブラリ</strong>です。ウィンドウ、
+レイアウト、ボタン、メニュー、イベント処理といった GTK4
+そのものの使い方は、 GTK4
+の公式ドキュメントを参照してください。本ドキュメントでは扱いません。</p>
+<ul>
+<li>GTK4 API リファレンス: <a
+href="https://docs.gtk.org/gtk4/">https://docs.gtk.org/gtk4/</a></li>
+<li>GTK4 入門 (Getting Started): <a
+href="https://docs.gtk.org/gtk4/getting_started.html">https://docs.gtk.org/gtk4/getting_started.html</a></li>
+<li>GObject の基礎: <a
+href="https://docs.gtk.org/gobject/">https://docs.gtk.org/gobject/</a></li>
+<li>GLib (メインループ・シグナル等): <a
+href="https://docs.gtk.org/glib/">https://docs.gtk.org/glib/</a></li>
+<li>移行ガイド (GTK3 から): <a
+href="https://docs.gtk.org/gtk4/migrating-3to4.html">https://docs.gtk.org/gtk4/migrating-3to4.html</a></li>
+</ul>
+<p><code>BlinkWebView</code> は <code>GtkWidget</code>
+を継承しているため、他の GTK4 ウィジェットと 同じように扱えます
+(コンテナに入れる、サイズ要求を設定する、シグナルを繋ぐ等)。</p>
+<p><strong>ただしメインループだけは例外です。</strong> GTK の
+<code>g_application_run()</code> や <code>g_main_loop_run()</code>
+ではなく、<code>blink_gtk_run_main_loop()</code> を使ってください (第 4
+節)。</p>
+<h3 id="python--rust-など他言語から使う場合">Python / Rust
+など他言語から使う場合</h3>
+<p>BlinkGTK は GObject Introspection に対応しているため、PyGObject や
+gtk-rs
+から利用できます。各言語バインディングの使い方はそれぞれのドキュメントを
+参照してください。</p>
+<ul>
+<li>PyGObject: <a
+href="https://pygobject.gnome.org/">https://pygobject.gnome.org/</a></li>
+<li>gtk-rs (Rust): <a
+href="https://gtk-rs.org/">https://gtk-rs.org/</a></li>
+</ul>
 <h2 id="関連">関連</h2>
 <ul>
 <li>インストール手順の詳細: <code>INSTALL.md</code></li>

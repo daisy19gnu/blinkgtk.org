@@ -118,9 +118,9 @@ BlinkGTK (<code>libblinkgtk.so</code>) を利用して独自アプリ (C / Pytho
 層を含むため、一般的な GTK ライブラリとは異なる<strong>リンク時・
 実行時の前提条件</strong>があります。これらを満たさないと、ビルドや起動は一見成功しても、Web
 ページが描画されない（黒画面 / 白画面）という症状になります。</p>
-<p>内部サンプル <code>simple_browser</code>
-はビルドシステム上でこれらの前提を満たしていますが、外部の consumer
-アプリが手動でリンクすると、前提が抜け落ちることがあります。本ガイドはその差分を
+<p>同梱サンプル <code>blinkgtk_browser</code> は <code>pkg-config</code>
+経由でリンクすることでこれらの前提を
+満たしています。手動でリンク指定を書くと前提が抜け落ちることがあります。本ガイドはその差分を
 明示し、開発者が同じ落とし穴で時間を失わないようにすることを目的とします。</p>
 <hr />
 <h2
@@ -147,9 +147,11 @@ shim の読み込みがプロセス起動後の
 <p>アロケータ shim
 のインターポーズは<strong>プロセス開始時点</strong>で確立されている必要があります。
 そのため shim は <strong>実行ファイルの直接依存（直接 NEEDED）</strong>
-としてリンクしなければなりません。 内部サンプル
-<code>simple_browser</code> は、ビルド定義で shim を実行ファイルの直接
-NEEDED に持つため、
+としてリンクしなければなりません。 同梱サンプル
+<code>blinkgtk_browser</code> は
+<code>pkg-config --libs blinkgtk-0.1</code> でリンクしており、
+<code>blinkgtk-0.1.pc</code> の <code>Libs</code> に shim
+が含まれるため直接 NEEDED になります。これにより
 プロセス開始時にインターポーズが成立し、正常に描画します。</p>
 <h3 id="23-未リンク時の症状">2.3 未リンク時の症状</h3>
 <p>shim を直接リンクしないと、Chromium 148 以降ではレンダラの
@@ -257,7 +259,7 @@ shim を<strong>明示的に 追加</strong>してください。</p>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → 1 行出れば直接 NEEDED 済み。出なければ未リンク（黒画面の原因）。</span></span></code></pre></div>
 <p>内部サンプルとの差分比較も有効です。</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your_app        <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> /tmp/app.needed</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./simple_browser  <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> /tmp/ref.needed</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./blinkgtk_browser  <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> /tmp/ref.needed</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> /tmp/ref.needed /tmp/app.needed</span></code></pre></div>
 <hr />
 <h2 id="4-ライフサイクルと-webview-の埋め込み">4. ライフサイクルと
@@ -516,7 +518,7 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12
 <p>これを怠ると
 <code>Invalid file descriptor to ICU data received</code>（<code>base/i18n/icu_util.cc</code>）で
 起動時にクラッシュします。同梱の
-<code>simple_browser</code>（<code>/usr/libexec/blinkgtk-0.1/</code>）は、
+<code>blinkgtk_browser</code>（<code>/usr/libexec/blinkgtk-0.1/</code>）は、
 実行ファイルの隣に上記リソースへの相対 symlink を配置することで
 DIR_MODULE 解決を成立させて います（consumer
 アプリでリソースを実行ファイルの隣に置けない場合は上記 API

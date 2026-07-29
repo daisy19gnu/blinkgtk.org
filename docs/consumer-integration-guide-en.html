@@ -119,11 +119,11 @@ it embeds Chromium's content layer, it carries <strong>link-time and
 run-time prerequisites</strong> that differ from ordinary GTK libraries.
 If these are not met, the build and launch may appear to succeed while
 no web content is rendered (black or white screen).</p>
-<p>The bundled <code>simple_browser</code> sample satisfies these
-prerequisites through the build system. When an external consumer
-application links manually, those prerequisites can be dropped. This
-guide makes the difference explicit so developers do not lose time to
-the same pitfalls.</p>
+<p>The bundled <code>blinkgtk_browser</code> sample satisfies these
+prerequisites by linking through <code>pkg-config</code>. When an
+external consumer application links manually, those prerequisites can be
+dropped. This guide makes the difference explicit so developers do not
+lose time to the same pitfalls.</p>
 <hr />
 <h2
 id="2-relationship-between-libblinkgtkso-and-the-partitionalloc-allocator-shim-most-important">2.
@@ -147,9 +147,11 @@ Transitive loading happens too late in process startup for the early
 <p>The allocator shim interposition must be established <strong>at
 process start</strong>. Therefore the shim must be linked as a
 <strong>direct dependency (direct NEEDED) of the executable</strong>.
-The bundled <code>simple_browser</code> lists the shim as a direct
-NEEDED of the executable in its build definition, so interposition is
-established at process start and rendering works.</p>
+The bundled <code>blinkgtk_browser</code> links with
+<code>pkg-config --libs blinkgtk-0.1</code>, and the <code>Libs</code>
+line of <code>blinkgtk-0.1.pc</code> includes the shim, so it ends up as
+a direct NEEDED of the executable, so interposition is established at
+process start and rendering works.</p>
 <h3 id="23-symptoms-when-not-linked">2.3 Symptoms when not linked</h3>
 <p>Without direct linking, the renderer's <strong>navigation commit
 fails</strong> on Chromium 148 and later, producing a black screen at
@@ -256,7 +258,7 @@ rendering failures.</p>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># -&gt; one line means it is a direct NEEDED. No line means it is not linked (cause of black screen).</span></span></code></pre></div>
 <p>Comparing against the bundled sample is also effective.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your_app        <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> /tmp/app.needed</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./simple_browser  <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> /tmp/ref.needed</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./blinkgtk_browser  <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> /tmp/ref.needed</span>
 <span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> /tmp/ref.needed /tmp/app.needed</span></code></pre></div>
 <hr />
 <h2 id="4-lifecycle-and-embedding-the-webview">4. Lifecycle and
@@ -522,7 +524,7 @@ directory explicitly <strong>before</strong>
 <p>Without this you get
 <code>Invalid file descriptor to ICU data received</code>
 (<code>base/i18n/icu_util.cc</code>) and a startup crash. The bundled
-<code>simple_browser</code> (<code>/usr/libexec/blinkgtk-0.1/</code>)
+<code>blinkgtk_browser</code> (<code>/usr/libexec/blinkgtk-0.1/</code>)
 satisfies DIR_MODULE resolution by placing relative symlinks to those
 resources next to the executable (if your consumer app cannot place
 resources next to the executable, use the APIs above).</p>

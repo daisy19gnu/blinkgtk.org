@@ -545,18 +545,14 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb21-1"><a h
 <h2 id="サンプルコード">サンプルコード</h2>
 <p>完全なサンプルコードは以下にあります：</p>
 <ul>
-<li><code>examples/simple_browser.c</code> -
+<li><code>examples/blinkgtk_browser.c</code> -
 C言語による最小限のブラウザ（公式サンプル）</li>
-<li><code>archive/examples-extra/python/minimal_browser.py</code> -
-Pythonブラウザ（参考）</li>
-<li><code>archive/examples-extra/python/signal_example.py</code> -
-シグナル処理デモ（参考）</li>
 </ul>
 <p>実行方法（C言語版）:</p>
 <div class="sourceCode" id="cb22"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$BLINKGTK_ROOT</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> simple_browser examples/simple_browser.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span>
-<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./simple_browser</span></span></code></pre></div>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> blinkgtk_browser examples/blinkgtk_browser.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./blinkgtk_browser</span></span></code></pre></div>
 <hr />
 <h2 id="まとめ">まとめ</h2>
 <p>BlinkGTKをPythonから使用することで、以下のメリットがあります：</p>

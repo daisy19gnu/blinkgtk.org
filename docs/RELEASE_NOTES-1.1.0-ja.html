@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.1.0-build4 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.1.0-build5 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -30,9 +30,9 @@
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
 <header id="title-block-header">
-<h1 class="title">BlinkGTK 1.1.0-build4 リリースノート — BlinkGTK</h1>
+<h1 class="title">BlinkGTK 1.1.0-build5 リリースノート — BlinkGTK</h1>
 </header>
-<h1 id="blinkgtk-110-build4-リリースノート">BlinkGTK 1.1.0-build4
+<h1 id="blinkgtk-110-build5-リリースノート">BlinkGTK 1.1.0-build5
 リリースノート</h1>
 <p><strong>日付</strong>: 2026-07-29 <strong>Chromium</strong>:
 150.0.7871.46 (stable) <strong>状態</strong>: 開発版
@@ -86,6 +86,41 @@ RenderWidgetHostView が再作成された際、マウス入力が破棄済み�
 登録、プロパティ通知 (notify::) の発火、 <code>uri-changed</code>
 シグナルの実ナビゲーション発火に対応。PyGObject / GJS
 から機械検証済み。</li>
+</ul>
+<h2 id="build5-での変更-2026-07-29">build5 での変更 (2026-07-29)</h2>
+<h3 id="同梱サンプルの入れ替え">同梱サンプルの入れ替え</h3>
+<p>同梱するサンプルを、<code>https://google.com/</code>
+を表示するだけの最小構成 <strong><code>blinkgtk_browser</code></strong>
+1 本にしました。従来同梱していた開発用ブラウザは、
+描画経路の切り替えや組版オーバーレイなど開発時にしか使わない機能を多数含み、
+BlinkGTK の組み込み方を知るための例としては大きすぎたためです。</p>
+<p><code>examples/</code> には <code>blinkgtk_browser.c</code> (105
+行)、<code>Makefile</code>、<code>README.md</code> の 3
+つだけが入ります。<code>make</code> だけでビルドできます。</p>
+<h3 id="修正">修正</h3>
+<ul>
+<li><strong><code>blink_gtk_set_resources_path()</code>
+が一部のリソースに効いていなかった問題</strong>を 修正しました。ICU
+データと V8 スナップショットは指定が反映される一方、 リソースパック
+(<code>content_shell.pak</code>) だけが実行ファイルのあるディレクトリ
+基準のままで、実行ファイルをリソースと別の場所に置いたアプリケーションが
+<code>Check failed: data_pack-&gt;LoadFromPath(path)</code>
+で起動できませんでした。</li>
+<li>同梱サンプルの実行ファイルに、ビルド環境の絶対パスが
+<code>rpath</code> として 埋め込まれていた問題を修正しました。</li>
+</ul>
+<h3 id="ドキュメント">ドキュメント</h3>
+<ul>
+<li><strong>GTK4 自体の使い方については GTK4
+公式ドキュメントへ誘導</strong>するようにしました
+(<code>docs.gtk.org</code>)。BlinkGTK は GTK4 ウィジェットを 1
+つ提供するライブラリです。
+ただしメインループだけは例外で、<code>blink_gtk_run_main_loop()</code>
+を使う必要が あります (GTK の <code>g_application_run()</code>
+では画面が白いままになります)。</li>
+<li>設定 API
+のドキュメントから、同梱サンプルには存在しないコマンドライン
+オプションの例を削除し、API での設定例に置き換えました。</li>
 </ul>
 <h2 id="build4-での変更-2026-07-29">build4 での変更 (2026-07-29)</h2>
 <p><strong>本 build4

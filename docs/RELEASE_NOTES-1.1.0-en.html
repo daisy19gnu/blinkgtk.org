@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.1.0-build4 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.1.0-build5 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -30,9 +30,9 @@
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
 <header id="title-block-header">
-<h1 class="title">BlinkGTK 1.1.0-build4 Release Notes — BlinkGTK</h1>
+<h1 class="title">BlinkGTK 1.1.0-build5 Release Notes — BlinkGTK</h1>
 </header>
-<h1 id="blinkgtk-110-build4-release-notes">BlinkGTK 1.1.0-build4 Release
+<h1 id="blinkgtk-110-build5-release-notes">BlinkGTK 1.1.0-build5 Release
 Notes</h1>
 <p><strong>Date</strong>: 2026-07-29 <strong>Chromium</strong>:
 150.0.7871.46 (stable) <strong>Status</strong>: Development build
@@ -86,6 +86,42 @@ the destroyed old host (requiring a restart). Fixed.</li>
 enum/flag types (LoadEvent / LoadError / GpuMode / ContentPolicy),
 property notifications (notify::), and <code>uri-changed</code> signal
 emission on real navigation. Verified from PyGObject / GJS.</li>
+</ul>
+<h2 id="changes-in-build5-2026-07-29">Changes in build5
+(2026-07-29)</h2>
+<h3 id="the-bundled-sample-has-been-replaced">The bundled sample has
+been replaced</h3>
+<p>The bundle now contains a single minimal sample,
+<strong><code>blinkgtk_browser</code></strong>, which does nothing but
+display <code>https://google.com/</code>. The development browser
+shipped previously contained a great deal of development-only machinery
+(render-path switching, typesetting overlays, and so on) and was too
+large to serve as an example of how to embed BlinkGTK.</p>
+<p><code>examples/</code> now contains just three files:
+<code>blinkgtk_browser.c</code> (105 lines), <code>Makefile</code>, and
+<code>README.md</code>. <code>make</code> alone builds it.</p>
+<h3 id="fixes">Fixes</h3>
+<ul>
+<li>Fixed <code>blink_gtk_set_resources_path()</code> not taking effect
+for some resources. The ICU data and the V8 snapshots honoured it, but
+the resource pack (<code>content_shell.pak</code>) was still resolved
+relative to the directory containing the executable, so an application
+placed away from the resources failed to start with
+<code>Check failed: data_pack-&gt;LoadFromPath(path)</code>.</li>
+<li>Fixed the bundled sample executable having the build machine's
+absolute path embedded as an <code>rpath</code>.</li>
+</ul>
+<h3 id="documentation">Documentation</h3>
+<ul>
+<li><strong>For GTK4 itself, the documentation now points to the
+official GTK4 documentation</strong> (<code>docs.gtk.org</code>).
+BlinkGTK is a library that provides one GTK4 widget. The main loop is
+the one exception: you must use <code>blink_gtk_run_main_loop()</code>,
+since GTK's <code>g_application_run()</code> leaves the window
+blank.</li>
+<li>Removed examples of command-line options that the bundled sample
+does not have from the settings API documentation, replacing them with
+API usage.</li>
 </ul>
 <h2 id="changes-in-build4-2026-07-29">Changes in build4
 (2026-07-29)</h2>

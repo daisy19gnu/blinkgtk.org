@@ -98,33 +98,36 @@
 <h1 class="title">Makefile — examples — BlinkGTK</h1>
 </header>
 <div class="sourceCode" id="cb1"><pre
-class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BlinkGTK examples — 配布用 Makefile</span></span>
+class="sourceCode makefile"><code class="sourceCode makefile"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># BlinkGTK examples — 配布用 Makefile / Makefile for the bundled examples</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 前提: blinkgtk-0.1.pc が pkg-config から見えること。</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   tarball 展開先で使う場合:</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># 前提 / Requires: blinkgtk-0.1 が pkg-config から見えること。</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co">#   tarball を展開して使う場合 / when using the extracted tarball:</span></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co">#     export PKG_CONFIG_PATH=&lt;展開先&gt;/usr/lib64/pkgconfig:$PKG_CONFIG_PATH</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   RPM / DEB でインストールした場合は設定不要。</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="co">#   RPM / DEB でインストールした場合は設定不要 / nothing needed for RPM or DEB.</span></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co">#</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 注意: PartitionAlloc の allocator shim は blinkgtk-0.1.pc の Libs に含まれます。</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#       pkg-config を経由せず -lblinkgtk だけでリンクすると、ページの読み込みが</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#       完了しない (navigation が commit しない) 事象が起きます。</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="dt">CC</span>      <span class="ch">?=</span><span class="st"> cc</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="dt">PKGS</span>     <span class="ch">=</span><span class="st"> blinkgtk-0.1</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a><span class="dt">CFLAGS</span>  <span class="ch">+=</span><span class="st"> -O2 -Wall </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> pkg-config --cflags </span><span class="ch">$(</span><span class="dt">PKGS</span><span class="ch">))</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="dt">LDLIBS</span>  <span class="ch">+=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> pkg-config --libs </span><span class="ch">$(</span><span class="dt">PKGS</span><span class="ch">))</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="dt">PROGS</span> <span class="ch">=</span><span class="st"> simple_browser message_bridge_smoke triple_gpu_compare</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="dv">all:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">PROGS</span><span class="ch">)</span></span>
-<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="dv">%:</span><span class="dt"> %.c</span></span>
-<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="er">    </span><span class="ch">$(</span><span class="dt">CC</span><span class="ch">)</span> <span class="ch">$(</span><span class="dt">CFLAGS</span><span class="ch">)</span> -o <span class="ch">$@</span> <span class="ch">$&lt;</span> <span class="ch">$(</span><span class="dt">LDLIBS</span><span class="ch">)</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 注意 / Note: PartitionAlloc の allocator shim は blinkgtk-0.1.pc の Libs に</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="co">#   含まれます。pkg-config を経由せず -lblinkgtk だけでリンクすると、</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co">#   ページの読み込みが完了しません (画面が白いまま)。</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="co">#   The PartitionAlloc allocator shim is in the Libs of blinkgtk-0.1.pc.</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a><span class="co">#   Linking with just -lblinkgtk instead of going through pkg-config means</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a><span class="co">#   page loads never complete and the window stays blank.</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a><span class="dt">CC</span>      <span class="ch">?=</span><span class="st"> cc</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a><span class="dt">PKGS</span>     <span class="ch">=</span><span class="st"> blinkgtk-0.1</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="dt">CFLAGS</span>  <span class="ch">+=</span><span class="st"> -O2 -Wall </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> pkg-config --cflags </span><span class="ch">$(</span><span class="dt">PKGS</span><span class="ch">))</span></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="dt">LDLIBS</span>  <span class="ch">+=</span><span class="st"> </span><span class="ch">$(</span><span class="kw">shell</span><span class="st"> pkg-config --libs </span><span class="ch">$(</span><span class="dt">PKGS</span><span class="ch">))</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a><span class="dt">PROGS</span> <span class="ch">=</span><span class="st"> blinkgtk_browser</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a><span class="dv">all:</span><span class="dt"> </span><span class="ch">$(</span><span class="dt">PROGS</span><span class="ch">)</span></span>
 <span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="dv">clean:</span></span>
-<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="er">    </span>rm -f <span class="ch">$(</span><span class="dt">PROGS</span><span class="ch">)</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="dv">%:</span><span class="dt"> %.c</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a><span class="er">    </span><span class="ch">$(</span><span class="dt">CC</span><span class="ch">)</span> <span class="ch">$(</span><span class="dt">CFLAGS</span><span class="ch">)</span> -o <span class="ch">$@</span> <span class="ch">$&lt;</span> <span class="ch">$(</span><span class="dt">LDLIBS</span><span class="ch">)</span></span>
 <span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="ot">.PHONY:</span><span class="dt"> all clean</span></span></code></pre></div>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="dv">clean:</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a><span class="er">    </span>rm -f <span class="ch">$(</span><span class="dt">PROGS</span><span class="ch">)</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a><span class="ot">.PHONY:</span><span class="dt"> all clean</span></span></code></pre></div>
 </body>
 </html>
 </div></div>

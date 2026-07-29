@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK Examples — BlinkGTK</title>
+  <title>BlinkGTK サンプル / BlinkGTK examples — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -95,29 +95,78 @@
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
 <header id="title-block-header">
-<h1 class="title">BlinkGTK Examples — BlinkGTK</h1>
+<h1 class="title">BlinkGTK サンプル / BlinkGTK examples — BlinkGTK</h1>
 </header>
-<h1 id="blinkgtk-examples">BlinkGTK Examples</h1>
-<p>This directory contains example programs demonstrating the use of
-BlinkGTK.</p>
-<h2 id="simple_browserc">simple_browser.c</h2>
-<p>A minimal web browser using BlinkGTK. Demonstrates basic usage of the
-BlinkWebView widget.</p>
-<p><strong>Features</strong>:</p>
-<ul>
-<li>URL loading</li>
-<li>Navigation controls (back, forward, reload, stop)</li>
-<li>Page title display</li>
-</ul>
-<p><strong>Compilation</strong>:</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> simple_browser simple_browser.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
-<p><strong>Usage</strong>:</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./simple_browser</span> <span class="pp">[</span><span class="ss">URL</span><span class="pp">]</span></span></code></pre></div>
-<hr />
-<p><strong>Copyright 2025-2026 BlinkGTK Project</strong>
-<strong>SPDX-License-Identifier: BSD-3-Clause</strong></p>
+<h1 id="blinkgtk-サンプル--blinkgtk-examples">BlinkGTK サンプル /
+BlinkGTK examples</h1>
+<h2 id="blinkgtk_browserc">blinkgtk_browser.c</h2>
+<p>ウィンドウを 1 つ開き、<code>https://google.com/</code>
+を表示するだけの最小構成の サンプルです。BlinkGTK
+を組み込むのに必要なものだけを示しています。</p>
+<p>A minimal sample that opens a single window and displays
+<code>https://google.com/</code>. It shows only what is required to
+embed BlinkGTK.</p>
+<h3 id="ビルド--build">ビルド / Build</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span></span></code></pre></div>
+<p><code>pkg-config</code> から <code>blinkgtk-0.1</code>
+が見えている必要があります。RPM / DEB で
+インストールした場合は設定不要です。tarball
+を展開して使う場合は次のように 指定してください。</p>
+<p><code>blinkgtk-0.1</code> must be visible to <code>pkg-config</code>.
+Nothing is needed if you installed the RPM or DEB. If you extracted the
+tarball, point it at the extraction directory:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=&lt;</span>展開先 / extraction dir<span class="op">&gt;</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span></code></pre></div>
+<h3 id="実行--run">実行 / Run</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./blinkgtk_browser</span>                      <span class="co"># https://google.com/ を開く / opens https://google.com/</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./blinkgtk_browser</span> https://example.com/ <span class="co"># URL を指定する / specify a URL</span></span></code></pre></div>
+<p>Wayland セッションが必要です。BlinkGTK は X11 では動作しません。</p>
+<p>A Wayland session is required; BlinkGTK does not run on X11.</p>
+<h3 id="この-79-行が示していること--what-these-79-lines-show">この 79
+行が示していること / What these 79 lines show</h3>
+<table>
+<thead>
+<tr>
+<th>要点 / Point</th>
+<th>内容 / Detail</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>初期化の順序 / Initialization order</td>
+<td><code>blink_gtk_init()</code> を <code>gtk_init()</code>
+より先に呼ぶ / call <code>blink_gtk_init()</code> before
+<code>gtk_init()</code></td>
+</tr>
+<tr>
+<td>メインループ / Main loop</td>
+<td><code>blink_gtk_run_main_loop()</code> を使う。GTK の
+<code>g_application_run()</code>
+では<strong>画面が白いままになる</strong> / use
+<code>blink_gtk_run_main_loop()</code>; with GTK's
+<code>g_application_run()</code> the window <strong>stays
+blank</strong></td>
+</tr>
+<tr>
+<td>型 / Types</td>
+<td><code>blink_web_view_new()</code> は <code>GtkWidget *</code>
+を返す。API に渡すときは <code>BLINK_WEB_VIEW()</code> でキャスト / it
+returns a <code>GtkWidget *</code>; cast with
+<code>BLINK_WEB_VIEW()</code></td>
+</tr>
+<tr>
+<td>リンク / Linking</td>
+<td>必ず <code>pkg-config</code>
+経由。詳細は同梱の「アプリのビルド」を参照 / always via
+<code>pkg-config</code>; see the bundled build guide</td>
+</tr>
+</tbody>
+</table>
+<p>より詳しい手順とつまずきやすい点は、同梱の
+<code>building-with-blinkgtk-ja.md</code> /
+<code>building-with-blinkgtk-en.md</code> を参照して ください。</p>
+<p>For a fuller walkthrough and the common pitfalls, see the bundled
+<code>building-with-blinkgtk-ja.md</code> /
+<code>building-with-blinkgtk-en.md</code>.</p>
 </body>
 </html>
 </div></div>
