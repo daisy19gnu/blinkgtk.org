@@ -224,7 +224,6 @@ Architecture</h3>
 </tr>
 </tbody>
 </table>
-<hr />
 <h2 id="load-events">Load Events</h2>
 <h3 id="load-changed">load-changed</h3>
 <p><strong>Overview</strong>: Emitted when the page load state
@@ -363,31 +362,30 @@ Enabling/Disabling Navigation Buttons</h4>
 <tr>
 <td><code>load-changed</code></td>
 <td><code>load-changed</code></td>
-<td>✅ Fully compatible</td>
+<td>Yes Fully compatible</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_STARTED</code></td>
 <td><code>WEBKIT_LOAD_STARTED</code></td>
-<td>✅ Equivalent</td>
+<td>Yes Equivalent</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_REDIRECTED</code></td>
 <td><code>WEBKIT_LOAD_REDIRECTED</code></td>
-<td>✅ Equivalent</td>
+<td>Yes Equivalent</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_COMMITTED</code></td>
 <td><code>WEBKIT_LOAD_COMMITTED</code></td>
-<td>✅ Equivalent</td>
+<td>Yes Equivalent</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_FINISHED</code></td>
 <td><code>WEBKIT_LOAD_FINISHED</code></td>
-<td>✅ Equivalent</td>
+<td>Yes Equivalent</td>
 </tr>
 </tbody>
 </table>
-<hr />
 <h3 id="load-failed">load-failed</h3>
 <p><strong>Overview</strong>: Emitted when the page load fails.</p>
 <h4 id="signature-1">Signature</h4>
@@ -474,9 +472,6 @@ Enabling/Disabling Navigation Buttons</h4>
 </tr>
 </tbody>
 </table>
-<p>For the full list, see <a
-href="https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h">Chromium
-net_error_list.h</a>.</p>
 <h4 id="example-1-displaying-an-error-message">Example 1: Displaying an
 Error Message</h4>
 <div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
@@ -570,12 +565,12 @@ a Custom Error Page</h4>
 <tr>
 <td><code>load-failed</code></td>
 <td><code>load-failed</code></td>
-<td>✅ Compatible</td>
+<td>Yes Compatible</td>
 </tr>
 <tr>
 <td><code>error_code</code> (int)</td>
 <td><code>error</code> (GError*)</td>
-<td>⚠️ Different format</td>
+<td>Note Different format</td>
 </tr>
 </tbody>
 </table>
@@ -676,7 +671,7 @@ Title</h4>
 <tr>
 <td><code>title-changed</code></td>
 <td><code>notify::title</code></td>
-<td>⚠️ Different</td>
+<td>Note Different</td>
 </tr>
 </tbody>
 </table>
@@ -806,7 +801,7 @@ Displaying a Secure Page Indicator</h4>
 <tr>
 <td><code>uri-changed</code></td>
 <td><code>notify::uri</code></td>
-<td>⚠️ Different</td>
+<td>Note Different</td>
 </tr>
 </tbody>
 </table>
@@ -995,25 +990,25 @@ Disconnecting Signal Handlers</h3>
 <tr>
 <td><code>load-changed</code></td>
 <td><code>load-changed</code></td>
-<td>✅ Full</td>
+<td>Yes Full</td>
 <td>Event values are also the same</td>
 </tr>
 <tr>
 <td><code>load-failed</code></td>
 <td><code>load-failed</code></td>
-<td>⚠️ Partial</td>
+<td>Note Partial</td>
 <td>Error format differs</td>
 </tr>
 <tr>
 <td><code>title-changed</code></td>
 <td><code>notify::title</code></td>
-<td>⚠️ Different</td>
+<td>Note Different</td>
 <td>WebKit uses property notification</td>
 </tr>
 <tr>
 <td><code>uri-changed</code></td>
 <td><code>notify::uri</code></td>
-<td>⚠️ Different</td>
+<td>Note Different</td>
 <td>WebKit uses property notification</td>
 </tr>
 </tbody>
@@ -1107,27 +1102,27 @@ needed)</li>
 <ol type="1">
 <li><p><strong>Typo in the signal name</strong></p>
 <div class="sourceCode" id="cb24"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong</span></span>
+class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// No Wrong</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load_changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// underscore</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">// Yes Correct</span></span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// hyphen</span></span></code></pre></div></li>
 <li><p><strong>Connecting before the WebView is created</strong></p>
 <div class="sourceCode" id="cb25"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Wrong</span></span>
+class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// No Wrong</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Correct</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Yes Correct</span></span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span></code></pre></div></li>
 <li><p><strong>The GTK main loop is not running</strong></p>
 <div class="sourceCode" id="cb26"><pre
 class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ The signal will not fire (no main loop)</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">// No The signal will not fire (no main loop)</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Signals fire once the main loop is running</span></span></code></pre></div></li>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">// Yes Signals fire once the main loop is running</span></span></code></pre></div></li>
 </ol>
 <h3 id="crash-in-a-signal-handler">Crash in a Signal Handler</h3>
 <p><strong>Symptom</strong>: Segmentation fault inside a signal
@@ -1140,7 +1135,7 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    MyData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>MyData<span class="op">*)</span>user_data<span class="op">;</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span>  <span class="co">// ❌ Crashes if user_data is NULL</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span>  <span class="co">// No Crashes if user_data is NULL</span></span>
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">// Remedy: NULL check</span></span>
@@ -1155,12 +1150,12 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    saved_title <span class="op">=</span> title<span class="op">;</span>  <span class="co">// ❌ title is a temporary pointer</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    saved_title <span class="op">=</span> title<span class="op">;</span>  <span class="co">// No title is a temporary pointer</span></span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">// Remedy: copy the string</span></span>
 <span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>saved_title<span class="op">);</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>saved_title <span class="op">=</span> g_strdup<span class="op">(</span>title<span class="op">);</span>  <span class="co">// ✅ Store a copy</span></span></code></pre></div></li>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>saved_title <span class="op">=</span> g_strdup<span class="op">(</span>title<span class="op">);</span>  <span class="co">// Yes Store a copy</span></span></code></pre></div></li>
 </ol>
 <h3 id="memory-leaks">Memory Leaks</h3>
 <p><strong>Symptom</strong>: Memory usage keeps increasing</p>
@@ -1168,7 +1163,7 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28
 <ol type="1">
 <li><p><strong>Signal handler is not disconnected</strong></p>
 <div class="sourceCode" id="cb29"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Save the handler ID</span></span>
+class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Yes Save the handler ID</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>gulong handler_id <span class="op">=</span> g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1179,10 +1174,10 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29
 class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ↑ This function returns a g_strdup()&#39;d string</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ Memory leak</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">// No Memory leak</span></span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ Free it after use</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">// Yes Free it after use</span></span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>g_print<span class="op">(</span><span class="st">&quot;UA: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> ua<span class="op">);</span></span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>ua<span class="op">);</span></span></code></pre></div></li>
@@ -1194,12 +1189,12 @@ compatibility with WebKitGTK while making use of the powerful event
 system of Chromium/Blink.</p>
 <h3 id="key-features">Key Features</h3>
 <ul>
-<li>✅ <strong>WebKitGTK compatible</strong>: The
+<li>Yes <strong>WebKitGTK compatible</strong>: The
 <code>load-changed</code> signal is fully compatible</li>
-<li>✅ <strong>Type-safe</strong>: GObject signal type checking</li>
-<li>✅ <strong>Flexible</strong>: Supports multiple handlers, and
+<li>Yes <strong>Type-safe</strong>: GObject signal type checking</li>
+<li>Yes <strong>Flexible</strong>: Supports multiple handlers, and
 block/unblock</li>
-<li>✅ <strong>Practical</strong>: Ideal for progress display, error
+<li>Yes <strong>Practical</strong>: Ideal for progress display, error
 handling, and UI updates</li>
 </ul>
 <h3 id="next-steps">Next Steps</h3>

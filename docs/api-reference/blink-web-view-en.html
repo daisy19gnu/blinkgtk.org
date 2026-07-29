@@ -280,50 +280,23 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><strong>Web standards conformance</strong></td>
-<td>85-90%</td>
-<td>98-100%</td>
-<td>Chromium/Blink</td>
-</tr>
-<tr>
-<td><strong>Base API</strong></td>
-<td>WebKitWebView</td>
-<td>BlinkWebView</td>
-<td>Similar</td>
-</tr>
-<tr>
-<td><strong>LoadURL</strong></td>
-<td>webkit_web_view_load_uri</td>
-<td>LoadURL</td>
-<td>✅</td>
-</tr>
-<tr>
-<td><strong>GoBack</strong></td>
-<td>webkit_web_view_go_back</td>
-<td>GoBack</td>
-<td>✅</td>
-</tr>
-<tr>
-<td><strong>GetTitle</strong></td>
-<td>webkit_web_view_get_title</td>
-<td>GetTitle</td>
-<td>✅</td>
-</tr>
-<tr>
-<td><strong>GObject signals</strong></td>
-<td>✅ Fully supported</td>
-<td>⏳ Future implementation</td>
-<td>Build 169+</td>
-</tr>
-<tr>
-<td><strong>GObject properties</strong></td>
-<td>✅ Fully supported</td>
-<td>⏳ Future implementation</td>
-<td>Build 170+</td>
-</tr>
 </tbody>
 </table>
+<p>|</p>
+<p><strong>Web standards conformance</strong> | 85-90% | 98-100% |
+Chromium/Blink | |</p>
+<p><strong>Base API</strong> | WebKitWebView | BlinkWebView | Similar |
+|</p>
+<p><strong>LoadURL</strong> | webkit_web_view_load_uri | LoadURL | Yes |
+|</p>
+<p><strong>GoBack</strong> | webkit_web_view_go_back | GoBack | Yes |
+|</p>
+<p><strong>GetTitle</strong> | webkit_web_view_get_title | GetTitle |
+Yes | |</p>
+<p><strong>GObject signals</strong> | Yes Fully supported | Planned
+Future implementation | Build 169+ | |</p>
+<p><strong>GObject properties</strong> | Yes Fully supported | Planned
+Future implementation | Build 170+ |</p>
 <h3 id="ease-of-migration">Ease of Migration</h3>
 <p>Because BlinkGTK adopts an API design similar to WebKitGTK, migration
 is relatively straightforward.</p>
@@ -352,10 +325,10 @@ Build 172</li>
 </ol>
 <h3 id="recommended-uses">Recommended Uses</h3>
 <ul>
-<li>✅ EPUB 3.3 readers</li>
-<li>✅ Web-based application frameworks</li>
-<li>✅ Applications requiring high Web standards conformance</li>
-<li>⚠️ Lightweight browsers (ServoGTK recommended)</li>
+<li>Yes EPUB 3.3 readers</li>
+<li>Yes Web-based application frameworks</li>
+<li>Yes Applications requiring high Web standards conformance</li>
+<li>Note Lightweight browsers (ServoGTK recommended)</li>
 </ul>
 <hr />
 <h2 id="version-history">Version History</h2>

@@ -333,8 +333,8 @@ itself" and keeps resolving after the directory is moved.</li>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. V8 snapshot consistency (normally consistent when taken from one distribution)</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    Never mix libv8.so / snapshot_blob.bin / v8_context_snapshot.bin from</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    different distribution versions in lib/chromium/ (causes startup crashes)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># Never mix libv8.so / snapshot_blob.bin / v8_context_snapshot.bin from</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># different distribution versions in lib/chromium/ (causes startup crashes)</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. Launch test on a real Wayland session</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span></span></code></pre></div>

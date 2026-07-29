@@ -105,7 +105,7 @@ Signals API リファレンス</h1>
 <strong>Phase</strong>: Phase 5 (Performance Optimization &amp; User
 API)</p>
 <hr />
-<h2 id="clipboard-目次">📋 目次</h2>
+<h2 id="目次">目次</h2>
 <ol type="1">
 <li><a href="#概要">概要</a></li>
 <li><a href="#シグナル一覧">シグナル一覧</a></li>
@@ -224,7 +224,6 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 </tr>
 </tbody>
 </table>
-<hr />
 <h2 id="ロードイベント">ロードイベント</h2>
 <h3 id="load-changed">load-changed</h3>
 <p><strong>概要</strong>:
@@ -362,31 +361,30 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 <tr>
 <td><code>load-changed</code></td>
 <td><code>load-changed</code></td>
-<td>✅ 完全互換</td>
+<td>対応 完全互換</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_STARTED</code></td>
 <td><code>WEBKIT_LOAD_STARTED</code></td>
-<td>✅ 同等</td>
+<td>対応 同等</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_REDIRECTED</code></td>
 <td><code>WEBKIT_LOAD_REDIRECTED</code></td>
-<td>✅ 同等</td>
+<td>対応 同等</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_COMMITTED</code></td>
 <td><code>WEBKIT_LOAD_COMMITTED</code></td>
-<td>✅ 同等</td>
+<td>対応 同等</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_FINISHED</code></td>
 <td><code>WEBKIT_LOAD_FINISHED</code></td>
-<td>✅ 同等</td>
+<td>対応 同等</td>
 </tr>
 </tbody>
 </table>
-<hr />
 <h3 id="load-failed">load-failed</h3>
 <p><strong>概要</strong>: ページのロードが失敗したときに発火します。</p>
 <h4 id="シグネチャ-1">シグネチャ</h4>
@@ -473,9 +471,6 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 </tr>
 </tbody>
 </table>
-<p>完全なリストは <a
-href="https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h">Chromium
-net_error_list.h</a> を参照してください。</p>
 <h4 id="使用例1-エラーメッセージ表示">使用例1: エラーメッセージ表示</h4>
 <div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
@@ -568,12 +563,12 @@ net_error_list.h</a> を参照してください。</p>
 <tr>
 <td><code>load-failed</code></td>
 <td><code>load-failed</code></td>
-<td>✅ 互換</td>
+<td>対応 互換</td>
 </tr>
 <tr>
 <td><code>error_code</code> (int)</td>
 <td><code>error</code> (GError*)</td>
-<td>⚠️ 形式が異なる</td>
+<td>注意 形式が異なる</td>
 </tr>
 </tbody>
 </table>
@@ -672,7 +667,7 @@ WebKitGTKは<code>GError*</code>構造体を使用しますが、BlinkGTKは<cod
 <tr>
 <td><code>title-changed</code></td>
 <td><code>notify::title</code></td>
-<td>⚠️ 異なる</td>
+<td>注意 異なる</td>
 </tr>
 </tbody>
 </table>
@@ -798,7 +793,7 @@ WebKitGTKは<code>notify::title</code>プロパティ変更通知を使用しま
 <tr>
 <td><code>uri-changed</code></td>
 <td><code>notify::uri</code></td>
-<td>⚠️ 異なる</td>
+<td>注意 異なる</td>
 </tr>
 </tbody>
 </table>
@@ -985,25 +980,25 @@ WebKitGTKは<code>notify::uri</code>プロパティ変更通知を使用しま�
 <tr>
 <td><code>load-changed</code></td>
 <td><code>load-changed</code></td>
-<td>✅ 完全</td>
+<td>対応 完全</td>
 <td>イベント値も同じ</td>
 </tr>
 <tr>
 <td><code>load-failed</code></td>
 <td><code>load-failed</code></td>
-<td>⚠️ 部分</td>
+<td>注意 部分</td>
 <td>エラー形式が異なる</td>
 </tr>
 <tr>
 <td><code>title-changed</code></td>
 <td><code>notify::title</code></td>
-<td>⚠️ 異なる</td>
+<td>注意 異なる</td>
 <td>WebKitはプロパティ通知</td>
 </tr>
 <tr>
 <td><code>uri-changed</code></td>
 <td><code>notify::uri</code></td>
-<td>⚠️ 異なる</td>
+<td>注意 異なる</td>
 <td>WebKitはプロパティ通知</td>
 </tr>
 </tbody>
@@ -1095,27 +1090,27 @@ WebKitGTKは<code>notify::uri</code>プロパティ変更通知を使用しま�
 <ol type="1">
 <li><p><strong>シグナル名のタイプミス</strong></p>
 <div class="sourceCode" id="cb24"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ 間違い</span></span>
+class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 間違い</span></span>
 <span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load_changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// アンダースコア</span></span>
 <span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ 正しい</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 正しい</span></span>
 <span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span>  <span class="co">// ハイフン</span></span></code></pre></div></li>
 <li><p><strong>WebViewが作成される前に接続</strong></p>
 <div class="sourceCode" id="cb25"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ 間違い</span></span>
+class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 間違い</span></span>
 <span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span>
 <span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
 <span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ 正しい</span></span>
+<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 正しい</span></span>
 <span id="cb25-6"><a href="#cb25-6" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
 <span id="cb25-7"><a href="#cb25-7" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> <span class="op">...);</span></span></code></pre></div></li>
 <li><p><strong>GTKメインループが動いていない</strong></p>
 <div class="sourceCode" id="cb26"><pre
 class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ シグナルは発火しない（メインループがない）</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 シグナルは発火しない（メインループがない）</span></span>
 <span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ メインループ開始後にシグナル発火</span></span></code></pre></div></li>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 メインループ開始後にシグナル発火</span></span></code></pre></div></li>
 </ol>
 <h3 id="シグナルハンドラでクラッシュ">シグナルハンドラでクラッシュ</h3>
 <p><strong>症状</strong>: シグナルハンドラ内でSegmentation fault</p>
@@ -1127,7 +1122,7 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent load_event<span class="op">,</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    MyData<span class="op">*</span> data <span class="op">=</span> <span class="op">(</span>MyData<span class="op">*)</span>user_data<span class="op">;</span></span>
-<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span>  <span class="co">// ❌ user_dataがNULLならクラッシュ</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a>    data<span class="op">-&gt;</span>count<span class="op">++;</span>  <span class="co">// 非対応 user_dataがNULLならクラッシュ</span></span>
 <span id="cb27-6"><a href="#cb27-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb27-7"><a href="#cb27-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb27-8"><a href="#cb27-8" aria-hidden="true" tabindex="-1"></a><span class="co">// 対策: NULLチェック</span></span>
@@ -1142,12 +1137,12 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28
 <span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
 <span id="cb28-5"><a href="#cb28-5" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    saved_title <span class="op">=</span> title<span class="op">;</span>  <span class="co">// ❌ titleは一時的なポインタ</span></span>
+<span id="cb28-6"><a href="#cb28-6" aria-hidden="true" tabindex="-1"></a>    saved_title <span class="op">=</span> title<span class="op">;</span>  <span class="co">// 非対応 titleは一時的なポインタ</span></span>
 <span id="cb28-7"><a href="#cb28-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb28-8"><a href="#cb28-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb28-9"><a href="#cb28-9" aria-hidden="true" tabindex="-1"></a><span class="co">// 対策: 文字列をコピー</span></span>
 <span id="cb28-10"><a href="#cb28-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>saved_title<span class="op">);</span></span>
-<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>saved_title <span class="op">=</span> g_strdup<span class="op">(</span>title<span class="op">);</span>  <span class="co">// ✅ コピーを保存</span></span></code></pre></div></li>
+<span id="cb28-11"><a href="#cb28-11" aria-hidden="true" tabindex="-1"></a>saved_title <span class="op">=</span> g_strdup<span class="op">(</span>title<span class="op">);</span>  <span class="co">// 対応 コピーを保存</span></span></code></pre></div></li>
 </ol>
 <h3 id="メモリリーク">メモリリーク</h3>
 <p><strong>症状</strong>: メモリ使用量が増え続ける</p>
@@ -1155,7 +1150,7 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28
 <ol type="1">
 <li><p><strong>シグナルハンドラが切断されていない</strong></p>
 <div class="sourceCode" id="cb29"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ ハンドラIDを保存</span></span>
+class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 ハンドラIDを保存</span></span>
 <span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>gulong handler_id <span class="op">=</span> g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
 <span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>                                     G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
 <span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a></span>
@@ -1166,10 +1161,10 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29
 class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a><span class="co">// ↑ この関数はg_strdup()した文字列を返す</span></span>
 <span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">// ❌ メモリリーク</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a><span class="co">// 非対応 メモリリーク</span></span>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">// ✅ 使用後に解放</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a><span class="co">// 対応 使用後に解放</span></span>
 <span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> ua <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
 <span id="cb30-9"><a href="#cb30-9" aria-hidden="true" tabindex="-1"></a>g_print<span class="op">(</span><span class="st">&quot;UA: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> ua<span class="op">);</span></span>
 <span id="cb30-10"><a href="#cb30-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>ua<span class="op">);</span></span></code></pre></div></li>
@@ -1179,12 +1174,12 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30
 <p>BlinkGTKのGObjectシグナルシステムは、WebKitGTKと高い互換性を持ちながら、Chromium/Blinkの強力なイベントシステムを活用しています。</p>
 <h3 id="主な特徴">主な特徴</h3>
 <ul>
-<li>✅ <strong>WebKitGTK互換</strong>:
+<li>対応 <strong>WebKitGTK互換</strong>:
 <code>load-changed</code>シグナルは完全互換</li>
-<li>✅ <strong>型安全</strong>: GObjectシグナルの型チェック</li>
-<li>✅ <strong>柔軟</strong>:
+<li>対応 <strong>型安全</strong>: GObjectシグナルの型チェック</li>
+<li>対応 <strong>柔軟</strong>:
 複数ハンドラ、ブロック/アンブロック対応</li>
-<li>✅ <strong>実用的</strong>:
+<li>対応 <strong>実用的</strong>:
 プログレス表示、エラー処理、UI更新に最適</li>
 </ul>
 <h3 id="次のステップ">次のステップ</h3>

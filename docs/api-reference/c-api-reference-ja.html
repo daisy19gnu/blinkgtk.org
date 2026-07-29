@@ -111,13 +111,14 @@ Build 699 以降 <strong>更新履歴</strong>:</p>
 </ul>
 <hr />
 <blockquote>
-<p><strong>⚠️ この文書は陳腐化しています（2026-07-27 追記）</strong></p>
+<p><strong>注意 この文書は陳腐化しています（2026-07-27
+追記）</strong></p>
 <p>機械照合の結果、本文書が言及する関数は <strong>32
 個</strong>に対し、配布ヘッダ <code>blink_gtk.h</code> の実在関数は
 <strong>80 個</strong>です（カバー率約 4
 割）。さらに、既に削除された以下 2 関数の記載が残っています。</p>
 <ul>
-<li>GObject↔︎C++ マッピング管理の内部 2 関数</li>
+<li>GObjectC++ マッピング管理の内部 2 関数</li>
 </ul>
 <p>現行 API の正確な情報は、配布ヘッダ
 <code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code> を一次情報として
@@ -348,8 +349,6 @@ quirks モードになり、div がインライン要素として扱われます
 </tr>
 </tbody>
 </table>
-<p><code>base_uri</code> が NULL の場合、<code>about:blank</code>
-がベース URI として使用されます。</p>
 <p><strong>使用例</strong>:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 基本的な使用 */</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
@@ -379,7 +378,6 @@ quirks モードになり、div がインライン要素として扱われます
 </tr>
 </tbody>
 </table>
-<hr />
 <h3 id="blink_web_view_go_back">blink_web_view_go_back()</h3>
 <div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_go_back<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p>履歴の前のページに戻ります。</p>
@@ -780,7 +778,7 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 <hr />
 <h2 id="内部廃止予定-api">内部・廃止予定 API</h2>
 <p>以下の API は内部管理用または廃止予定です。</p>
-<h3 id="削除済gobjectc-マッピング管理-api">（削除済）GObject↔︎C++
+<h3 id="削除済gobjectc-マッピング管理-api">（削除済）GObjectC++
 マッピング管理 API</h3>
 <p>かつて内部管理用に存在した 2 関数は
 <strong>既に削除済</strong>で、公開ヘッダにも

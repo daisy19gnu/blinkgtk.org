@@ -376,18 +376,17 @@ class="sourceCode rust"><code class="sourceCode rust"><span id="cb9-1"><a href="
 <span id="cb9-64"><a href="#cb9-64" aria-hidden="true" tabindex="-1"></a>            <span class="op">|</span>_web_view<span class="op">:</span> <span class="pp">gtk4::</span>Widget<span class="op">,</span></span>
 <span id="cb9-65"><a href="#cb9-65" aria-hidden="true" tabindex="-1"></a>             load_event<span class="op">:</span> <span class="dt">i32</span><span class="op">,</span></span>
 <span id="cb9-66"><a href="#cb9-66" aria-hidden="true" tabindex="-1"></a>             failing_uri<span class="op">:</span> <span class="dt">String</span><span class="op">,</span></span>
-<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>             error<span class="op">:</span> <span class="pp">glib::</span><span class="bu">Error</span><span class="op">|</span></span>
-<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>             <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
-<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(event) <span class="op">=</span> <span class="pp">BlinkLoadEvent::</span>from_i32(load_event) <span class="op">{</span></span>
-<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;Load failed: {}&quot;</span><span class="op">,</span> event<span class="op">.</span>as_str())<span class="op">;</span></span>
-<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;  URI: {}&quot;</span><span class="op">,</span> failing_uri)<span class="op">;</span></span>
-<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;  Error: {}&quot;</span><span class="op">,</span> error)<span class="op">;</span></span>
-<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>                <span class="op">}</span></span>
-<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>                <span class="cn">true</span> <span class="co">// Signal handled</span></span>
-<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
-<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>        )<span class="op">,</span></span>
-<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
-<span id="cb9-78"><a href="#cb9-78" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb9-67"><a href="#cb9-67" aria-hidden="true" tabindex="-1"></a>             error<span class="op">:</span> <span class="pp">glib::</span><span class="bu">Error</span><span class="op">|</span> <span class="op">-&gt;</span> <span class="dt">bool</span> <span class="op">{</span></span>
+<span id="cb9-68"><a href="#cb9-68" aria-hidden="true" tabindex="-1"></a>                <span class="cf">if</span> <span class="kw">let</span> <span class="cn">Some</span>(event) <span class="op">=</span> <span class="pp">BlinkLoadEvent::</span>from_i32(load_event) <span class="op">{</span></span>
+<span id="cb9-69"><a href="#cb9-69" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;Load failed: {}&quot;</span><span class="op">,</span> event<span class="op">.</span>as_str())<span class="op">;</span></span>
+<span id="cb9-70"><a href="#cb9-70" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;  URI: {}&quot;</span><span class="op">,</span> failing_uri)<span class="op">;</span></span>
+<span id="cb9-71"><a href="#cb9-71" aria-hidden="true" tabindex="-1"></a>                    <span class="pp">println!</span>(<span class="st">&quot;  Error: {}&quot;</span><span class="op">,</span> error)<span class="op">;</span></span>
+<span id="cb9-72"><a href="#cb9-72" aria-hidden="true" tabindex="-1"></a>                <span class="op">}</span></span>
+<span id="cb9-73"><a href="#cb9-73" aria-hidden="true" tabindex="-1"></a>                <span class="cn">true</span> <span class="co">// Signal handled</span></span>
+<span id="cb9-74"><a href="#cb9-74" aria-hidden="true" tabindex="-1"></a>            <span class="op">}</span></span>
+<span id="cb9-75"><a href="#cb9-75" aria-hidden="true" tabindex="-1"></a>        )<span class="op">,</span></span>
+<span id="cb9-76"><a href="#cb9-76" aria-hidden="true" tabindex="-1"></a>    )<span class="op">;</span></span>
+<span id="cb9-77"><a href="#cb9-77" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <hr />
 <h2 id="プロパティ監視">プロパティ監視</h2>
 <h3 id="notifyプロパティ名シグナル">notify::プロパティ名シグナル</h3>

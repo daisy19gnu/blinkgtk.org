@@ -269,50 +269,23 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb11-1"><a href="#
 </tr>
 </thead>
 <tbody>
-<tr>
-<td><strong>Web標準準拠</strong></td>
-<td>85-90%</td>
-<td>98-100%</td>
-<td>Chromium/Blink</td>
-</tr>
-<tr>
-<td><strong>基本API</strong></td>
-<td>WebKitWebView</td>
-<td>BlinkWebView</td>
-<td>類似</td>
-</tr>
-<tr>
-<td><strong>LoadURL</strong></td>
-<td>webkit_web_view_load_uri</td>
-<td>LoadURL</td>
-<td>✅</td>
-</tr>
-<tr>
-<td><strong>GoBack</strong></td>
-<td>webkit_web_view_go_back</td>
-<td>GoBack</td>
-<td>✅</td>
-</tr>
-<tr>
-<td><strong>GetTitle</strong></td>
-<td>webkit_web_view_get_title</td>
-<td>GetTitle</td>
-<td>✅</td>
-</tr>
-<tr>
-<td><strong>GObjectシグナル</strong></td>
-<td>✅ 完全対応</td>
-<td>⏳ 将来実装</td>
-<td>Build 169+</td>
-</tr>
-<tr>
-<td><strong>GObjectプロパティ</strong></td>
-<td>✅ 完全対応</td>
-<td>⏳ 将来実装</td>
-<td>Build 170+</td>
-</tr>
 </tbody>
 </table>
+<p>|</p>
+<p><strong>Web標準準拠</strong> | 85-90% | 98-100% | Chromium/Blink |
+|</p>
+<p><strong>基本API</strong> | WebKitWebView | BlinkWebView | 類似 |
+|</p>
+<p><strong>LoadURL</strong> | webkit_web_view_load_uri | LoadURL | 対応
+| |</p>
+<p><strong>GoBack</strong> | webkit_web_view_go_back | GoBack | 対応 |
+|</p>
+<p><strong>GetTitle</strong> | webkit_web_view_get_title | GetTitle |
+対応 | |</p>
+<p><strong>GObjectシグナル</strong> | 対応 完全対応 | 予定 将来実装 |
+Build 169+ | |</p>
+<p><strong>GObjectプロパティ</strong> | 対応 完全対応 | 予定 将来実装 |
+Build 170+ |</p>
 <h3 id="移行の容易性">移行の容易性</h3>
 <p>BlinkGTKはWebKitGTKと類似したAPI設計を採用しているため、移行は比較的容易です。</p>
 <p><strong>移行手順</strong>:</p>
@@ -337,10 +310,10 @@ href="../migration/webkitgtk-to-blinkgtk-ja.md">WebKitGTK移行ガイド</a></p>
 </ol>
 <h3 id="推奨用途">推奨用途</h3>
 <ul>
-<li>✅ EPUB3.3リーダー</li>
-<li>✅ Webベースアプリケーションフレームワーク</li>
-<li>✅ 高いWeb標準準拠が必要なアプリ</li>
-<li>⚠️ 軽量ブラウザ（ServoGTK推奨）</li>
+<li>対応 EPUB3.3リーダー</li>
+<li>対応 Webベースアプリケーションフレームワーク</li>
+<li>対応 高いWeb標準準拠が必要なアプリ</li>
+<li>注意 軽量ブラウザ（ServoGTK推奨）</li>
 </ul>
 <hr />
 <h2 id="バージョン履歴">バージョン履歴</h2>

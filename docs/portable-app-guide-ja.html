@@ -329,8 +329,8 @@ allocator shim の直接リンクが必須</strong>です (pkg-config
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. V8 スナップショットの整合 (同一配布物由来なら通常一致)</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co">#    lib/chromium/ の libv8.so / snapshot_blob.bin / v8_context_snapshot.bin を</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co">#    別バージョンの配布物から混在させないこと (起動時クラッシュの原因)</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># lib/chromium/ の libv8.so / snapshot_blob.bin / v8_context_snapshot.bin を</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 別バージョンの配布物から混在させないこと (起動時クラッシュの原因)</span></span>
 <span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 実機 (Wayland セッション) での起動確認</span></span>
 <span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span></span></code></pre></div>

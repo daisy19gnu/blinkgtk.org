@@ -216,7 +216,70 @@ Fedora <code>dnf provides '*/libasound.so.2'</code> / Debian
 <h2 id="5-動作確認">5. 動作確認</h2>
 <div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk                  <span class="co"># ライブラリ登録確認 (ルート展開時)</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1         <span class="co"># devel 導入時</span></span></code></pre></div>
-<h2 id="6-トラブルシューティング">6. トラブルシューティング</h2>
+<h2 id="6-アップデート">6. アップデート</h2>
+<p>同じ形式でインストールしたものを上書きします。<strong>先に古い版を削除する必要は
+ありません</strong>(パッケージマネージャが置き換えます)。</p>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RPM (Fedora)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf upgrade ./blinkgtk-bin-1.1.0-build4.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.1.0-build4.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.1.0-build4.fc44.x86_64.rpm</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># DEB (Debian / Ubuntu)</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.1.0-build4_amd64.deb <span class="dt">\</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.1.0-build4_amd64.deb</span></code></pre></div>
+<p>tarball
+の場合は、<strong>展開先を一度削除してから</strong>展開し直してください。上書き展開
+すると、旧版にあって新版に無いファイルが残り、混在した状態になります。</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /opt/blinkgtk</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /opt/blinkgtk</span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.1.0-build4-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span></code></pre></div>
+<h3 id="アップデート後の確認">アップデート後の確認</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1   <span class="co"># 新しい版数が返るか</span></span></code></pre></div>
+<p>アプリを再ビルドする必要は通常ありません(SONAME
+<code>libblinkgtk-0.1.so.0</code> は 維持されます)。SONAME
+が変わる変更を行う場合は、リリースノートに明記します。</p>
+<h2 id="7-アンインストール">7. アンインストール</h2>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RPM (Fedora)</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf remove blinkgtk-bin blinkgtk-bin-devel blinkgtk-bin-gir blinkgtk-bin-doc</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># DEB (Debian / Ubuntu)</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt remove libblinkgtk-0.1-0 libblinkgtk-0.1-dev</span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 設定ごと消す場合は apt purge</span></span></code></pre></div>
+<p>tarball
+の場合は展開先を削除します。ルートに展開した場合は、同梱されていた
+ファイルのみを削除してください。</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 任意の場所に展開した場合</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /opt/blinkgtk</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ルート (/) に展開した場合 (配布物が置くもののみ)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /usr/lib64/blinkgtk-0.1 <span class="dt">\</span></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            /usr/include/blinkgtk-0.1 <span class="dt">\</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            /usr/share/doc/blinkgtk-0.1 <span class="dt">\</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>            /usr/libexec/blinkgtk-0.1</span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-f</span>  /usr/lib64/libblinkgtk-0.1.so.0 <span class="dt">\</span></span>
+<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/libblinkgtk-0.1.so <span class="dt">\</span></span>
+<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/pkgconfig/blinkgtk-0.1.pc <span class="dt">\</span></span>
+<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/girepository-1.0/BlinkGTK-0.1.typelib <span class="dt">\</span></span>
+<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>            /usr/share/gir-1.0/BlinkGTK-0.1.gir <span class="dt">\</span></span>
+<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>            /usr/share/vala/vapi/BlinkGTK-0.1.vapi <span class="dt">\</span></span>
+<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>            /etc/ld.so.conf.d/blinkgtk-0.1.conf</span>
+<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig</span></code></pre></div>
+<h3 id="残るもの">残るもの</h3>
+<p>BlinkGTK は Chromium
+と同様に、<strong>利用者のホームにプロファイルを作ります</strong>。
+パッケージを削除しても残るため、不要なら手動で削除してください。</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> ~/.blink_gtk</span></code></pre></div>
+<h3 id="確認">確認</h3>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1   <span class="co"># 何も返らなければ削除済み</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk            <span class="co"># 出力が無ければ削除済み</span></span></code></pre></div>
+<h2 id="8-トラブルシューティング">8. トラブルシューティング</h2>
 <table>
 <thead>
 <tr>

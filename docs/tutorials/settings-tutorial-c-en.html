@@ -170,7 +170,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-33"><a href="#cb2-33" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>app<span class="op">,</span> <span class="st">&quot;activate&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_activate<span class="op">),</span> NULL<span class="op">);</span></span>
 <span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ⚠️ g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
+<span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
 <span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
 <span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
@@ -477,7 +477,7 @@ Settings Panel</h3>
 <span id="cb14-88"><a href="#cb14-88" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-89"><a href="#cb14-89" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>app<span class="op">,</span> <span class="st">&quot;activate&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_activate<span class="op">),</span> NULL<span class="op">);</span></span>
 <span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ⚠️ g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
+<span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
 <span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
 <span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
@@ -514,10 +514,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href=
 <h2 id="summary">Summary</h2>
 <p>With Settings API, you can:</p>
 <ul>
-<li>✅ Control JavaScript for improved security</li>
-<li>✅ Modify User-Agent for easier testing</li>
-<li>✅ Control image loading to reduce data usage</li>
-<li>✅ Control LocalStorage for privacy protection</li>
+<li>Yes Control JavaScript for improved security</li>
+<li>Yes Modify User-Agent for easier testing</li>
+<li>Yes Control image loading to reduce data usage</li>
+<li>Yes Control LocalStorage for privacy protection</li>
 </ul>
 <h3 id="next-steps">Next Steps</h3>
 <ul>
