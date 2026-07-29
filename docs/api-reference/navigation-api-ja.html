@@ -96,22 +96,23 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-navigation-api-リファレンス">BlinkGTK Navigation API
 リファレンス</h1>
-<p><strong>バージョン</strong>: v0.9.28-dev<br />
-<strong>最終更新</strong>: 2026-01-01<br />
-<strong>言語</strong>: 日本語 | <a
-href="./navigation-api-en.md">English</a></p>
+<p><strong>バージョン</strong>: v1.1.0<br />
+<strong>最終更新</strong>: 2026-07-29<br />
+<strong>言語</strong>: 日本語 |</p>
+<p><a href="./navigation-api-en.html">English</a></p>
 <hr />
 <h2 id="概要">概要</h2>
 <p>Navigation
 APIは、ブラウザの履歴移動とページ制御を行うためのAPIです。</p>
 <p><strong>特徴</strong>:</p>
 <ul>
-<li>WebKitGTKのNavigation APIと完全互換</li>
+<li>WebKitGTK と同じ操作を提供 (関数名は <code>blink_</code>
+接頭辞。対応表は後半)</li>
 <li>戻る/進む/リロード/停止の基本操作</li>
 <li>履歴状態の確認機能</li>
 <li>C言語APIとしてGObject互換で提供</li>
 </ul>
-<p><strong>利用可能なバージョン</strong>: Build 106以降</p>
+<p><strong>利用可能なバージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h2 id="api一覧">API一覧</h2>
 <table>
@@ -162,6 +163,7 @@ APIは、ブラウザの履歴移動とページ制御を行うためのAPIで�
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="履歴移動">履歴移動</h2>
 <h3 id="blink_web_view_go_back">blink_web_view_go_back()</h3>
 <p>履歴を1つ戻ります。</p>
@@ -195,7 +197,7 @@ BlinkWebViewウィジェット |</p>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_go_back<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 106以降</p>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h3 id="blink_web_view_go_forward">blink_web_view_go_forward()</h3>
 <p>履歴を1つ進みます。</p>
@@ -229,7 +231,7 @@ BlinkWebViewウィジェット |</p>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_go_forward<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 106以降</p>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h2 id="ページ制御">ページ制御</h2>
 <h3 id="blink_web_view_reload">blink_web_view_reload()</h3>
@@ -273,7 +275,7 @@ BlinkWebViewウィジェット |</p>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_reload<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 106以降</p>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h3 id="blink_web_view_stop">blink_web_view_stop()</h3>
 <p>ページの読み込みを停止します。</p>
@@ -326,7 +328,7 @@ BlinkWebViewウィジェット |</p>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_stop<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
 <p><strong>注意</strong>:
 WebKitGTKの<code>webkit_web_view_stop_loading()</code>に対応しますが、関数名が<code>stop()</code>に短縮されています。</p>
-<p><strong>利用可能バージョン</strong>: Build 106以降</p>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h2 id="履歴状態確認">履歴状態確認</h2>
 <h3 id="blink_web_view_can_go_back">blink_web_view_can_go_back()</h3>
@@ -376,7 +378,7 @@ BlinkWebViewウィジェット |</p>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>gboolean can_back <span class="op">=</span> blink_web_view_can_go_back<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 106以降</p>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h3
 id="blink_web_view_can_go_forward">blink_web_view_can_go_forward()</h3>
@@ -403,7 +405,7 @@ BlinkWebViewウィジェット |</p>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>gboolean can_forward <span class="op">=</span> blink_web_view_can_go_forward<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 106以降</p>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h2 id="実用的な組み合わせ例">実用的な組み合わせ例</h2>
 <h3
@@ -475,17 +477,17 @@ id="完全なナビゲーションツールバー">完全なナビゲーショ�
 <tr>
 <td><code>webkit_web_view_go_back()</code></td>
 <td><code>blink_web_view_go_back()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_go_forward()</code></td>
 <td><code>blink_web_view_go_forward()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_reload()</code></td>
 <td><code>blink_web_view_reload()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_stop_loading()</code></td>
@@ -495,12 +497,12 @@ id="完全なナビゲーションツールバー">完全なナビゲーショ�
 <tr>
 <td><code>webkit_web_view_can_go_back()</code></td>
 <td><code>blink_web_view_can_go_back()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_can_go_forward()</code></td>
 <td><code>blink_web_view_can_go_forward()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 </tbody>
 </table>
@@ -518,13 +520,13 @@ id="完全なナビゲーションツールバー">完全なナビゲーショ�
 <hr />
 <h2 id="関連ドキュメント">関連ドキュメント</h2>
 <ul>
-<li><a href="./settings-api-ja.md">Settings API</a> - Settings制御</li>
-<li><a href="./signals-api-ja.md">Signals API</a> - イベント通知</li>
+<li><a href="./settings-api-ja.html">Settings API</a> - Settings制御</li>
+<li><a href="./signals-api-ja.html">Signals API</a> - イベント通知</li>
 <li><a
-href="../tutorials/settings-tutorial-c-ja.md">C言語チュートリアル</a> -
+href="../tutorials/settings-tutorial-c-ja.html">C言語チュートリアル</a> -
 基本的な使い方</li>
 <li><a
-href="../tutorials/events-tutorial-c-ja.md">イベント処理チュートリアル</a>
+href="../tutorials/events-tutorial-c-ja.html">イベント処理チュートリアル</a>
 - イベント処理</li>
 </ul>
 <hr />
@@ -550,6 +552,7 @@ href="../tutorials/events-tutorial-c-ja.md">イベント処理チュートリア
 </tr>
 </tbody>
 </table>
+<hr />
 <p><strong>ライセンス</strong>: BSD-3-Clause<br />
 <strong>プロジェクト</strong>: BlinkGTK<br />
 <strong>メンテナー</strong>: BlinkGTK Lead <a

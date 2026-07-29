@@ -99,11 +99,9 @@ BlinkGTK</title>
 Handling Tutorial (C Language)</h1>
 <p><strong>Last Updated</strong>: 2026-01-01<br />
 <strong>Target Version</strong>: BlinkGTK v0.9.28-dev or later<br />
-<strong>Phase</strong>: Phase 5 (Performance Optimization &amp; User
-API)<br />
 <strong>Level</strong>: Beginner to Advanced<br />
-<strong>Language</strong>: English | <a
-href="./events-tutorial-c-ja.md">日本語</a></p>
+<strong>Language</strong>: English |</p>
+<p><a href="./events-tutorial-c-ja.html">日本語</a></p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
@@ -137,7 +135,7 @@ GObject signal system.</p>
 <li>C language basics</li>
 <li>Basic GTK4 usage</li>
 <li>BlinkGTK initialization (see <a
-href="./settings-tutorial-c-en.md">Settings API Tutorial</a>)</li>
+href="./settings-tutorial-c-en.html">Settings API Tutorial</a>)</li>
 </ul>
 <h3 id="required-environment">Required Environment</h3>
 <div class="sourceCode" id="cb1"><pre
@@ -146,7 +144,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">-</span> blinkgtk</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Compilation example</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> your-program.c <span class="kw">`</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> gtk4<span class="kw">`</span> <span class="at">-lblinkgtk</span> <span class="at">-o</span> your-program</span></code></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> your-program.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span> <span class="at">-o</span> your-program</span></code></pre></div>
 <hr />
 <h2 id="basics---signal-connection">Basics - Signal Connection</h2>
 <h3 id="what-are-gobject-signals">What are GObject Signals?</h3>
@@ -218,7 +216,7 @@ same signal</li>
 <span id="cb2-46"><a href="#cb2-46" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-47"><a href="#cb2-47" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb2-48"><a href="#cb2-48" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
-<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb2-49"><a href="#cb2-49" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する */</span></span>
 <span id="cb2-50"><a href="#cb2-50" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
 <span id="cb2-51"><a href="#cb2-51" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
 <span id="cb2-52"><a href="#cb2-52" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
@@ -229,7 +227,7 @@ same signal</li>
 <span id="cb2-57"><a href="#cb2-57" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>Compile and Run</strong>:</p>
 <div class="sourceCode" id="cb3"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> basic-signal.c <span class="kw">`</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> gtk4<span class="kw">`</span> <span class="at">-lblinkgtk</span> <span class="at">-o</span> basic-signal</span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> basic-signal.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span> <span class="at">-o</span> basic-signal</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./basic-signal</span></span></code></pre></div>
 <p><strong>Output</strong>:</p>
 <pre><code>Event: Started
@@ -302,7 +300,7 @@ Event: Finished</code></pre>
 <span id="cb5-63"><a href="#cb5-63" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb5-64"><a href="#cb5-64" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb5-65"><a href="#cb5-65" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
-<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb5-66"><a href="#cb5-66" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する */</span></span>
 <span id="cb5-67"><a href="#cb5-67" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
 <span id="cb5-68"><a href="#cb5-68" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
 <span id="cb5-69"><a href="#cb5-69" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
@@ -411,7 +409,7 @@ Display</h3>
 <span id="cb6-85"><a href="#cb6-85" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-86"><a href="#cb6-86" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb6-87"><a href="#cb6-87" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
-<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb6-88"><a href="#cb6-88" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する */</span></span>
 <span id="cb6-89"><a href="#cb6-89" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
 <span id="cb6-90"><a href="#cb6-90" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
 <span id="cb6-91"><a href="#cb6-91" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
@@ -501,7 +499,7 @@ Display</h3>
 <span id="cb7-70"><a href="#cb7-70" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb7-71"><a href="#cb7-71" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb7-72"><a href="#cb7-72" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
-<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb7-73"><a href="#cb7-73" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する */</span></span>
 <span id="cb7-74"><a href="#cb7-74" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
 <span id="cb7-75"><a href="#cb7-75" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
 <span id="cb7-76"><a href="#cb7-76" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
@@ -775,7 +773,7 @@ Combining Multiple Signals</h2>
 <span id="cb9-226"><a href="#cb9-226" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-227"><a href="#cb9-227" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb9-228"><a href="#cb9-228" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
-<span id="cb9-229"><a href="#cb9-229" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb9-229"><a href="#cb9-229" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する */</span></span>
 <span id="cb9-230"><a href="#cb9-230" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
 <span id="cb9-231"><a href="#cb9-231" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
 <span id="cb9-232"><a href="#cb9-232" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
@@ -786,16 +784,16 @@ Combining Multiple Signals</h2>
 <span id="cb9-237"><a href="#cb9-237" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>Compile</strong>:</p>
 <div class="sourceCode" id="cb10"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> browser-ui.c <span class="kw">`</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> gtk4<span class="kw">`</span> <span class="at">-lblinkgtk</span> <span class="at">-o</span> browser-ui</span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> browser-ui.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span> <span class="at">-o</span> browser-ui</span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./browser-ui</span></span></code></pre></div>
 <p><strong>Features</strong>:</p>
 <ul>
-<li>Yes Navigation toolbar (back/forward/reload/stop)</li>
-<li>Yes Address bar (URL entry)</li>
-<li>Yes Progress bar</li>
-<li>Yes Status bar</li>
-<li>Yes Automatic window title update</li>
-<li>Yes Automatic button enable/disable</li>
+<li>Navigation toolbar (back/forward/reload/stop)</li>
+<li>Address bar (URL entry)</li>
+<li>Progress bar</li>
+<li>Status bar</li>
+<li>Automatic window title update</li>
+<li>Automatic button enable/disable</li>
 </ul>
 <hr />
 <h2 id="advanced---complete-browser-application">Advanced - Complete
@@ -1115,7 +1113,7 @@ Browser Application</h2>
 <span id="cb11-311"><a href="#cb11-311" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb11-312"><a href="#cb11-312" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb11-313"><a href="#cb11-313" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
-<span id="cb11-314"><a href="#cb11-314" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb11-314"><a href="#cb11-314" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する */</span></span>
 <span id="cb11-315"><a href="#cb11-315" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
 <span id="cb11-316"><a href="#cb11-316" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
 <span id="cb11-317"><a href="#cb11-317" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
@@ -1126,16 +1124,16 @@ Browser Application</h2>
 <span id="cb11-322"><a href="#cb11-322" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>Compile</strong>:</p>
 <div class="sourceCode" id="cb12"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> advanced-browser.c <span class="kw">`</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> gtk4<span class="kw">`</span> <span class="at">-lblinkgtk</span> <span class="at">-o</span> advanced-browser</span>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> advanced-browser.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span> <span class="at">-o</span> advanced-browser</span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./advanced-browser</span></span></code></pre></div>
 <p><strong>Features</strong>:</p>
 <ul>
-<li>Yes Full navigation</li>
-<li>Yes Progress bar</li>
-<li>Yes Error handling</li>
-<li>Yes Security icon</li>
-<li>Yes Settings toggle (JavaScript, images, storage)</li>
-<li>Yes Auto-updating window title</li>
+<li>Full navigation</li>
+<li>Progress bar</li>
+<li>Error handling</li>
+<li>Security icon</li>
+<li>Settings toggle (JavaScript, images, storage)</li>
+<li>Auto-updating window title</li>
 </ul>
 <hr />
 <h2 id="pattern-collection">Pattern Collection</h2>
@@ -1399,24 +1397,24 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23
 GObject signal system.</p>
 <h3 id="what-you-learned">What You Learned</h3>
 <ul>
-<li>Yes <strong>Basics</strong>: GObject signal concepts and connection
+<li><strong>Basics</strong>: GObject signal concepts and connection
 methods</li>
-<li>Yes <strong>Beginner</strong>: Single signal usage for progress bars
-and error handling</li>
-<li>Yes <strong>Intermediate</strong>: Combining multiple signals for
+<li><strong>Beginner</strong>: Single signal usage for progress bars and
+error handling</li>
+<li><strong>Intermediate</strong>: Combining multiple signals for
 browser UI</li>
-<li>Yes <strong>Advanced</strong>: Complete browser with Settings API
+<li><strong>Advanced</strong>: Complete browser with Settings API
 integration</li>
-<li>Yes <strong>Pattern Collection</strong>: 5 practical implementation
+<li><strong>Pattern Collection</strong>: 5 practical implementation
 patterns</li>
 </ul>
 <h3 id="next-steps">Next Steps</h3>
 <ul>
-<li><a href="./settings-tutorial-c-en.md">Settings API Tutorial</a> -
+<li><a href="./settings-tutorial-c-en.html">Settings API Tutorial</a> -
 Settings API details</li>
-<li><a href="../api-reference/navigation-api-ja.md">Navigation API
+<li><a href="../api-reference/navigation-api-ja.html">Navigation API
 Reference</a> - Navigation functions</li>
-<li><a href="../api-reference/signals-api-ja.md">GObject Signals API
+<li><a href="../api-reference/signals-api-ja.html">GObject Signals API
 Reference</a> - Signal details</li>
 </ul>
 <h3 id="sample-code">Sample Code</h3>

@@ -98,13 +98,13 @@
 リファレンス（日本語版）</h1>
 <p><strong>作成者</strong>: BlinkGTK Development Team<br />
 <strong>作成日</strong>: 2026-03-07<br />
-<strong>対象バージョン</strong>: Build 699 以降<br />
+<strong>対象バージョン</strong>: BlinkGTK v1.1.0 以降<br />
 <strong>更新履歴</strong>:</p>
 <ul>
-<li>Build 699 (2026-03-25) - CP-204〜210 新API追加（load_html, Getter群,
-非同期スクリーンショット, load-failedシグナル, NULLガード,
-スレッド安全性ポリシー, deprecated API整理）</li>
-<li>Build 612 - 初版作成（入力イベントAPI追加）</li>
+<li>新API追加（load_html, Getter群, 非同期スクリーンショット,
+load-failedシグナル, NULLガード, スレッド安全性ポリシー, deprecated
+API整理）</li>
+<li>初版作成（入力イベントAPI追加）</li>
 </ul>
 <hr />
 <blockquote>
@@ -122,10 +122,10 @@
 <code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code>
 を一次情報として<br />
 ご参照ください。環境変数については <a
-href="./environment-variables-ja.md"><code>environment-variables-ja.md</code></a>
+href="./environment-variables-ja.html"><code>environment-variables-ja.md</code></a>
 が正本です。</p>
 <p>本文書は #121 で整備中の API リファレンス（<a
-href="./00-index-ja.md"><code>00-index-ja.md</code></a> の第 11
+href="./00-index-ja.html"><code>00-index-ja.md</code></a> の第 11
 章）の母体として<br />
 全面改訂予定です。改訂完了時に本文書は新章への移行注記のみを残して整理します。</p>
 </blockquote>
@@ -135,8 +135,7 @@ href="./00-index-ja.md"><code>00-index-ja.md</code></a> の第 11
 で定義されています。<br />
 WebKitGTK と同様の設計思想で、C 言語から直接使用できる API
 を提供します。</p>
-<h3
-id="スレッド安全性ポリシーcp-210">スレッド安全性ポリシー（CP-210）</h3>
+<h3 id="スレッド安全性ポリシー">スレッド安全性ポリシー</h3>
 <p>全ての BlinkGTK 公開 API 関数は <strong>GTK
 メインスレッドからのみ呼び出し可能</strong> です。<br />
 ワーカースレッドやバックグラウンドスレッドから呼び出した場合の動作は未定義です。<br />
@@ -152,9 +151,9 @@ GTK メインスレッド外から操作を行う必要がある場合は
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co">/* ワーカースレッド内 */</span></span>
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>g_idle_add<span class="op">(</span>load_on_main_thread<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
-<h3 id="null-ガードポリシーcp-207">NULL ガードポリシー（CP-207）</h3>
-<p>Build 699 以降、全ての公開 API 関数は <code>g_return_if_fail()</code>
-/ <code>g_return_val_if_fail()</code> による<br />
+<h3 id="null-ガードポリシー">NULL ガードポリシー</h3>
+<p>v1.1.0 以降、全ての公開 API 関数は <code>g_return_if_fail()</code> /
+<code>g_return_val_if_fail()</code> による<br />
 NULL チェックを行います。NULL ポインタを渡した場合、GLib
 の警告メッセージが出力され、<br />
 関数は安全にリターンします（クラッシュしません）。</p>
@@ -245,7 +244,7 @@ Web コンテンツ表示ウィジェットを表します。</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_shutdown<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
 <p>BlinkGTK
 をシャットダウンします。アプリケーション終了時に呼び出します。</p>
-<p><strong>注意</strong>: Build 611 以降、内部で <code>_exit(0)</code>
+<p><strong>注意</strong>: v1.1.0 以降、内部で <code>_exit(0)</code>
 を呼び出して DiscardableSharedMemoryManager の DCHECK
 を回避しています。</p>
 <hr />
@@ -301,10 +300,10 @@ Web コンテンツ表示ウィジェットを表します。</p>
 <p><strong>インライン HTML の読み込み</strong>:</p>
 <p>インライン HTML を表示する場合は
 <code>blink_web_view_load_html()</code> を使用してください<br />
-（CP-308: data:URL→load_html()移行）。</p>
+（data:URL→load_html()移行）。</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://www.google.com&quot;</span><span class="op">);</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* CP-308: data:URL→load_html()移行 — インライン HTML は load_html() を使用 */</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* data:URL→load_html()移行 — インライン HTML は load_html() を使用 */</span></span>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body style=&#39;margin:0&#39;&gt;&quot;</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;div style=&#39;display:block;background:#0000ff;width:800px;height:200px&#39;&gt;BLUE&lt;/div&gt;&quot;</span></span>
@@ -315,13 +314,13 @@ Web コンテンツ表示ウィジェットを表します。</p>
 等）は不要です。<code>#ffe</code> 等の CSS
 色指定もそのまま使用可能です。<br />
 DOCTYPE を含めてください。ないと quirks モードになり、div
-がインライン要素として扱われます（Build 609-610 で確認）。</p>
+がインライン要素として扱われます。</p>
 <hr />
 <h3 id="blink_web_view_load_html">blink_web_view_load_html()</h3>
 <div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_load_html<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                              <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> html<span class="op">,</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                              <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> base_uri<span class="op">);</span></span></code></pre></div>
-<p><strong>Build 699 以降（CP-204）</strong> -- HTML
+<p><strong>v1.1.0 以降</strong> -- HTML
 文字列を直接読み込みます。WebKitGTK の<br />
 <code>webkit_web_view_load_html()</code> と互換性のある API です。</p>
 <table>
@@ -350,6 +349,8 @@ DOCTYPE を含めてください。ないと quirks モードになり、div
 </tr>
 </tbody>
 </table>
+<p><code>base_uri</code> が NULL の場合、<code>about:blank</code>
+がベース URI として使用されます。</p>
 <p><strong>使用例</strong>:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 基本的な使用 */</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
@@ -379,6 +380,7 @@ DOCTYPE を含めてください。ないと quirks モードになり、div
 </tr>
 </tbody>
 </table>
+<hr />
 <h3 id="blink_web_view_go_back">blink_web_view_go_back()</h3>
 <div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_go_back<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p>履歴の前のページに戻ります。</p>
@@ -426,9 +428,8 @@ id="blink_web_view_get_estimated_load_progress">blink_web_view_get_estimated_loa
 <div class="sourceCode" id="cb28"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_is_loading<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong>戻り値</strong>: ロード中なら <code>TRUE</code></p>
 <hr />
-<h2 id="webpreferences-getter-apicp-204">WebPreferences Getter
-API（CP-204）</h2>
-<p>Build 699 以降、現在の WebPreferences 設定値を取得する Getter API
+<h2 id="webpreferences-getter-api">WebPreferences Getter API</h2>
+<p>v1.1.0 以降、現在の WebPreferences 設定値を取得する Getter API
 が追加されました。<br />
 対応する Setter
 API（<code>blink_web_view_set_javascript_enabled()</code>
@@ -509,7 +510,7 @@ id="blink_web_view_capture_screenshot">blink_web_view_capture_screenshot()</h3>
 非同期処理です。ファイルが書き込まれるまでに時間がかかる場合があります。</p>
 <p><strong>推奨タイミング</strong>: ナビゲーション完了後 30
 秒以上待機してからキャプチャしてください。<br />
-Renderer 初期化に約 25 秒かかります（Build 549 で確認）。</p>
+Renderer 初期化に約 25 秒かかります。</p>
 <p><strong>使用例</strong>:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 30秒後にスクリーンショット撮影 */</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean take_screenshot<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
@@ -530,7 +531,7 @@ id="blink_web_view_capture_screenshot_async">blink_web_view_capture_screenshot_a
 <span id="cb37-7"><a href="#cb37-7" aria-hidden="true" tabindex="-1"></a>                                             <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> filename<span class="op">,</span></span>
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>                                             BlinkScreenshotCallback callback<span class="op">,</span></span>
 <span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>                                             gpointer user_data<span class="op">);</span></span></code></pre></div>
-<p><strong>Build 699 以降</strong> --
+<p><strong>v1.1.0 以降</strong> --
 非同期スクリーンショットをコールバック方式で取得します。<br />
 <code>blink_web_view_capture_screenshot()</code>
 の非同期版で、完了時にコールバックが呼ばれます。</p>
@@ -621,7 +622,7 @@ id="blink_web_view_inject_test_input">blink_web_view_inject_test_input()</h3>
 <div class="sourceCode" id="cb39"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb39-1"><a href="#cb39-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_test_input<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb39-2"><a href="#cb39-2" aria-hidden="true" tabindex="-1"></a>                                      <span class="dt">double</span> mouse_x<span class="op">,</span></span>
 <span id="cb39-3"><a href="#cb39-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="dt">double</span> mouse_y<span class="op">);</span></span></code></pre></div>
-<p><strong>Build 612 以降</strong> — テスト用の入力イベントを Renderer
+<p><strong>v1.1.0 以降</strong> — テスト用の入力イベントを Renderer
 に直接インジェクトします。</p>
 <p>マウスクリック（左ボタン Down/Up）と キーボードイベント（'A'
 Down/Up）を<br />
@@ -689,13 +690,12 @@ Down/Up）を<br />
 <span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                    gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p>URI が変更されたときに発火します。</p>
 <hr />
-<h3 id="load-failed-シグナルcp-208">"load-failed"
-シグナル（CP-208）</h3>
+<h3 id="load-failed-シグナル">"load-failed" シグナル</h3>
 <div class="sourceCode" id="cb44"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_load_failed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">int</span> error_code<span class="op">,</span></span>
 <span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a>                    gpointer user_data<span class="op">);</span></span></code></pre></div>
-<p><strong>Build 699 以降</strong> --
+<p><strong>v1.1.0 以降</strong> --
 ページのロードが失敗したときに発火します。</p>
 <table>
 <thead>
@@ -794,13 +794,13 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 <code>G_DEPRECATED_FOR(blink_web_view_load_uri)</code>
 が付与されています。<br />
 <code>blink_web_view_load_uri()</code> を使用してください。</p>
-<p>Build 699 以降、コンパイル時に廃止警告が出力されます。</p>
+<p>v1.1.0 以降、コンパイル時に廃止警告が出力されます。</p>
 <h3 id="blink_web_view_get_url">blink_web_view_get_url()</h3>
 <p><strong>廃止</strong> --
 <code>G_DEPRECATED_FOR(blink_web_view_get_uri)</code>
 が付与されています。<br />
 <code>blink_web_view_get_uri()</code> を使用してください。</p>
-<p>Build 699 以降、コンパイル時に廃止警告が出力されます。</p>
+<p>v1.1.0 以降、コンパイル時に廃止警告が出力されます。</p>
 <h3 id="blink_web_view_queue_draw">blink_web_view_queue_draw()</h3>
 <p>ウィジェットの再描画をキューに入れます（内部使用）。</p>
 <h3
@@ -845,7 +845,7 @@ id="blink_web_view_set_frame_data">blink_web_view_set_frame_data()</h3>
 <span id="cb50-35"><a href="#cb50-35" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb50-36"><a href="#cb50-36" aria-hidden="true" tabindex="-1"></a>    g_object_ref_sink<span class="op">(</span>g_web_view<span class="op">);</span></span>
 <span id="cb50-37"><a href="#cb50-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb50-38"><a href="#cb50-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* CP-308: data:URL→load_html()移行 — インライン HTML ロード */</span></span>
+<span id="cb50-38"><a href="#cb50-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* data:URL→load_html()移行 — インライン HTML ロード */</span></span>
 <span id="cb50-39"><a href="#cb50-39" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>g_web_view<span class="op">),</span></span>
 <span id="cb50-40"><a href="#cb50-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&quot;</span></span>
 <span id="cb50-41"><a href="#cb50-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;body style=&#39;background:#00ff00&#39;&gt;Hello BlinkGTK&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span> NULL<span class="op">);</span></span>
@@ -914,23 +914,23 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb51-1"><a href=
 <hr />
 <h2 id="関連ドキュメント">関連ドキュメント</h2>
 <ul>
-<li><a href="./blink-web-view-ja.md">blink-web-view-ja.md</a> -
+<li><a href="./blink-web-view-ja.html">blink-web-view-ja.md</a> -
 BlinkWebView ウィジェット詳細</li>
-<li><a href="./navigation-api-ja.md">navigation-api-ja.md</a> -
+<li><a href="./navigation-api-ja.html">navigation-api-ja.md</a> -
 ナビゲーション API 詳細</li>
-<li><a href="./signals-api-ja.md">signals-api-ja.md</a> -
+<li><a href="./signals-api-ja.html">signals-api-ja.md</a> -
 シグナル一覧</li>
 <li><a
-href="../../../docs/02-technical/ffi/LANGUAGE_FFI_BINDINGS_STRATEGY.md">LANGUAGE_FFI_BINDINGS_STRATEGY.md</a>
+href="../../../docs/02-technical/ffi/LANGUAGE_FFI_BINDINGS_STRATEGY.html">LANGUAGE_FFI_BINDINGS_STRATEGY.md</a>
 - FFI バインディング戦略</li>
 <li><a
-href="../../../docs/03-current-phase/checkpoints/CHECKPOINTS.md">CHECKPOINTS.md</a>
+href="../../../docs/03-current-phase/checkpoints/CHECKPOINTS.html">CHECKPOINTS.md</a>
 - チェックポイント進捗</li>
 </ul>
 <hr />
 <p><em>このドキュメントは BlinkGTK Development Team
 が作成・管理しています。</em><br />
-<em>最終更新: Build 699 (2026-03-25)</em></p>
+<em>最終更新: 2026-03-25</em></p>
 </body>
 </html>
 </div></div>

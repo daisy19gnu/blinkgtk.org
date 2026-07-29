@@ -99,8 +99,8 @@ Tutorial (C Language)</h1>
 <p><strong>Target Audience</strong>: C Programmers, GTK4 Beginners to
 Intermediate<br />
 <strong>Last Updated</strong>: 2026-01-01<br />
-<strong>Language</strong>: English | <a
-href="./settings-tutorial-c-ja.md">日本語</a></p>
+<strong>Language</strong>: English |</p>
+<p><a href="./settings-tutorial-c-ja.html">日本語</a></p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
@@ -169,7 +169,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <span id="cb2-34"><a href="#cb2-34" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-35"><a href="#cb2-35" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb2-36"><a href="#cb2-36" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
-<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb2-37"><a href="#cb2-37" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する */</span></span>
 <span id="cb2-38"><a href="#cb2-38" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
 <span id="cb2-39"><a href="#cb2-39" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
 <span id="cb2-40"><a href="#cb2-40" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
@@ -476,7 +476,7 @@ Settings Panel</h3>
 <span id="cb14-90"><a href="#cb14-90" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-91"><a href="#cb14-91" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Note g_application_run() は使用禁止 — Chromium RunLoop が飢餓状態になる</span></span>
 <span id="cb14-92"><a href="#cb14-92" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_register/activate で GtkApplication シグナルを発火させてから</span></span>
-<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する (Build 658実証済み) */</span></span>
+<span id="cb14-93"><a href="#cb14-93" aria-hidden="true" tabindex="-1"></a><span class="co">     * blink_gtk_run_main_loop() でChromium RunLoop を起動する */</span></span>
 <span id="cb14-94"><a href="#cb14-94" aria-hidden="true" tabindex="-1"></a>    g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
 <span id="cb14-95"><a href="#cb14-95" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
 <span id="cb14-96"><a href="#cb14-96" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
@@ -506,23 +506,23 @@ reflected</p>
 <p><strong>Problem</strong>: <code>blink_gtk.h</code> not found</p>
 <p><strong>Solution</strong>: Use pkg-config</p>
 <div class="sourceCode" id="cb17"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> example.c <span class="kw">`</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> gtk4<span class="kw">`</span> <span class="at">-lblinkgtk</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> example.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
 <hr />
 <h2 id="summary">Summary</h2>
 <p>With Settings API, you can:</p>
 <ul>
-<li>Yes Control JavaScript for improved security</li>
-<li>Yes Modify User-Agent for easier testing</li>
-<li>Yes Control image loading to reduce data usage</li>
-<li>Yes Control LocalStorage for privacy protection</li>
+<li>Control JavaScript for improved security</li>
+<li>Modify User-Agent for easier testing</li>
+<li>Control image loading to reduce data usage</li>
+<li>Control LocalStorage for privacy protection</li>
 </ul>
 <h3 id="next-steps">Next Steps</h3>
 <ul>
-<li><a href="../api-reference/settings-api-ja.md">Settings API
+<li><a href="../api-reference/settings-api-ja.html">Settings API
 Reference</a> - Detailed function reference</li>
-<li><a href="./settings-tutorial-py-en.md">Python Tutorial</a> - Python
+<li><a href="./settings-tutorial-py-en.html">Python Tutorial</a> - Python
 version</li>
-<li><a href="../migration/webkitgtk-to-blinkgtk-ja.md">WebKitGTK
+<li><a href="../migration/webkitgtk-to-blinkgtk-ja.html">WebKitGTK
 Migration Guide</a> - Migration guide</li>
 </ul>
 <hr />

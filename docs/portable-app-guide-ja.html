@@ -132,168 +132,88 @@ BlinkGTK と Chromium ランタイムのみ</strong>であり、GTK4・glibc・G
 enterprise 系) では動作しない可能性が高いです。</li>
 <li>確認方法:
 <pre><code>ldd --version          # ホストの glibc バージョン
-ldd ./libblinkgtk-0.1.so.0.0.0 | grep &quot;not found&quot;   # 欠落依存の列挙</code></pre>
-<code>not found</code> が 1
-件でもあれば、そのホストでは動作しません。</li>
+ldd ./libblinkgtk-0.1.so.0.0.0 |
+</code></pre></li>
 </ul>
-<h3 id="23-gtk4-はシステム依存-同梱されない">2.3 GTK4 はシステム依存
-(同梱されない)</h3>
-<ul>
-<li>BlinkGTK は<strong>システムの GTK4</strong>
-に対してビルドされています。ポータブル版に GTK4 は同梱されず、ホストに
-GTK4 (4.6 以上、検証済みは 4.22 世代) が必要です。</li>
-<li>GTK テーマ・アイコン・IME (ibus/fcitx)
-もホスト側の構成に従います。ホストに日本語 IME
-がなければポータブル版でも日本語入力はできません。</li>
-<li>確認方法: <code>pkg-config --modversion gtk4</code>
-またはディストリビューションのパッケージ管理で gtk4 の有無を確認。</li>
-</ul>
-<h3 id="24-wayland-専用-x11-では動作しない">2.4 Wayland 専用 (X11
-では動作しない)</h3>
-<ul>
-<li>BlinkGTK は <strong>Wayland 専用</strong>です (内部で
-<code>--ozone-platform=wayland</code> を強制)。X11
-セッションでは動作しません。</li>
-<li><strong>Wayland
-コンポジタが動作しているセッション</strong>が必須です (GNOME/Mutter
-で主に検証。他コンポジタは検証度が下がります)。</li>
-<li>ログインセッションが X11 か Wayland かは
-<code>echo $XDG_SESSION_TYPE</code> で確認できます (<code>wayland</code>
-であること)。</li>
-<li>SSH 先やディスプレイのないサーバでは、そのままでは起動できません
-(weston headless 等のネスト環境が必要)。</li>
-</ul>
-<h3 id="25-gpu--描画経路">2.5 GPU / 描画経路</h3>
-<ul>
-<li><strong>software 経路</strong> (既定): GPU 不要で動作します。まず
-software で動作確認してください。</li>
-<li><strong>EGL (GPU) 経路</strong>: Mesa と dmabuf 対応 GPU が必要です
-(Intel/AMD Mesa で検証)。GPU
-やドライバ構成によっては利用できません。</li>
-<li>HiDPI (スケール 2 等)
-環境では、描画スケール不整合を避けるための設定が必要になる場合があります
-(同梱の設定・起動スクリプトの記述に従ってください)。</li>
-</ul>
-<h3 id="26-chromium-sandbox-とカーネル設定">2.6 Chromium sandbox
-とカーネル設定</h3>
-<ul>
-<li>Chromium の sandbox は <strong>unprivileged user namespaces</strong>
-を利用します。これを無効化しているシステム
-(一部のハードニング環境・コンテナ) では renderer
-の起動に失敗することがあります。</li>
-<li>コンテナ内・制限環境で起動しない場合はこの点を確認してください。sandbox
-を無効にする起動 (<code>--no-sandbox</code>)
-は動作はしますが<strong>セキュリティ保護を失うため、信頼できないコンテンツの表示には使用しないでください</strong>。</li>
-</ul>
-<h3 id="27-ファイルシステム要件">2.7 ファイルシステム要件</h3>
-<ul>
-<li><strong>noexec マウントでは実行できません</strong>。USB メモリや
-<code>/tmp</code> が noexec
-でマウントされている環境では、実行属性が有効な場所に展開してください。</li>
-<li><strong>シンボリックリンクを保持できるファイルシステム</strong>
-(ext4/xfs/btrfs) に展開してください。FAT/exFAT/NTFS では SONAME
-シンボリックリンクが実体コピーになるか失われ、起動不能や容量倍増の原因になります。</li>
-<li>配布アーカイブは <strong>tar.gz 形式を使用</strong>してください
-(実行属性とシンボリックリンクを保持)。zip
-は属性を失うため不可です。</li>
-<li>展開先パスに空白・非 ASCII 文字を含めないことを推奨します。</li>
-</ul>
-<h3 id="28-リソース">2.8 リソース</h3>
-<ul>
-<li>ディスク: 展開後 約 650MB 以上。</li>
-<li>メモリ: プロセス群 (browser + renderer + GPU) で数百 MB
-以上を想定してください。</li>
-</ul>
-<h3 id="29-フォント">2.9 フォント</h3>
-<ul>
-<li>文字描画はホストの fontconfig
-とフォントに依存します。日本語表示にはホストに日本語フォント
-(原ノ味、Noto CJK 等) が必要です。</li>
-</ul>
-<h3 id="210-制限まとめ-チェックリスト">2.10 制限まとめ
-(チェックリスト)</h3>
-<table>
-<thead>
-<tr>
-<th>項目</th>
-<th>要件</th>
-<th>確認コマンド</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>CPU</td>
-<td>x86_64</td>
-<td><code>uname -m</code></td>
-</tr>
-<tr>
-<td>glibc</td>
-<td>ビルド環境世代以降</td>
-<td><code>ldd --version</code> /
-<code>ldd ... | grep "not found"</code></td>
-</tr>
-<tr>
-<td>GTK4</td>
-<td>4.6+ (システム)</td>
-<td><code>pkg-config --modversion gtk4</code></td>
-</tr>
-<tr>
-<td>セッション</td>
-<td>Wayland</td>
-<td><code>echo $XDG_SESSION_TYPE</code></td>
-</tr>
-<tr>
-<td>GPU (EGL 時)</td>
-<td>Mesa + dmabuf</td>
-<td>software 経路で切り分け</td>
-</tr>
-<tr>
-<td>user namespaces</td>
-<td>有効</td>
-<td>sandbox 起動失敗時に確認</td>
-</tr>
-<tr>
-<td>展開先 FS</td>
-<td>ext4 等 + exec 可</td>
-<td><code>mount | grep noexec</code></td>
-</tr>
-<tr>
-<td>日本語フォント</td>
-<td>ホストに必要</td>
-<td><code>fc-list | grep -i mincho</code> 等</td>
-</tr>
-</tbody>
-</table>
-<h2 id="3-ポータブルアプリの構成">3. ポータブルアプリの構成</h2>
-<p>推奨レイアウト (単一ディレクトリ自己完結):</p>
-<pre><code>myapp-portable/
-├── myapp                    # あなたのアプリ実行ファイル (RPATH=$ORIGIN/lib)
-├── run.sh                   # 起動スクリプト (任意、環境変数の設定用)
-├── lib/
-│   ├── libblinkgtk-0.1.so.0.0.0
-│   ├── libblinkgtk-0.1.so.0     -&gt; libblinkgtk-0.1.so.0.0.0
-│   └── chromium/            # Chromium ランタイム一式 (バイナリ配布物から)
-│       ├── *.so             # 共有ライブラリ群
-│       ├── icudtl.dat / snapshot_blob.bin / v8_context_snapshot.bin
-│       ├── content_shell.pak
-│       └── locales/ja.pak, en-US.pak
-├── share/
-│   └── myapp/               # アプリのリソース
-└── THIRD_PARTY_NOTICES.html # 必須 (第 6 章)</code></pre>
-<p>ランタイム一式は、バイナリ配布 (runtime tarball) の
-<code>usr/lib64/blinkgtk-0.1/</code> 以下をそのまま <code>lib/</code>
-にコピーすることで得られます。<strong>ファイルの取捨選択はしないでください</strong>
-— Chromium ランタイムの
-.so、<code>.pak</code>、<code>.dat</code>、<code>.bin</code>、<code>locales/</code>
-は全て起動に必要です (欠落は起動時クラッシュの典型原因)。</p>
-<h2 id="4-ビルド方法">4. ビルド方法</h2>
-<h3 id="41-リンク時の必須事項">4.1 リンク時の必須事項</h3>
-<p>アプリは pkg-config を使ってビルドします。<strong>PartitionAlloc
-allocator shim の直接リンクが必須</strong>です (pkg-config
-を使えば自動で含まれます)。shim
-を欠くとページの読み込みが失敗し黒画面になります。</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> myapp myapp.c <span class="dt">\</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1 gtk4<span class="va">)</span></span></code></pre></div>
+<p>grep "not found" # 欠落依存の列挙</p>
+<pre><code>`not found` が 1 件でもあれば、そのホストでは動作しません。
+
+### 2.3 GTK4 はシステム依存 (同梱されない)
+- BlinkGTK は**システムの GTK4** に対してビルドされています。ポータブル版に GTK4 は同梱されず、ホストに GTK4 (4.6 以上、検証済みは 4.22 世代) が必要です。
+- GTK テーマ・アイコン・IME (ibus/fcitx) もホスト側の構成に従います。ホストに日本語 IME がなければポータブル版でも日本語入力はできません。
+- 確認方法: `pkg-config --modversion gtk4` またはディストリビューションのパッケージ管理で gtk4 の有無を確認。
+
+### 2.4 Wayland 専用 (X11 では動作しない)
+- BlinkGTK は **Wayland 専用**です (内部で `--ozone-platform=wayland` を強制)。X11 セッションでは動作しません。
+- **Wayland コンポジタが動作しているセッション**が必須です (GNOME/Mutter で主に検証。他コンポジタは検証度が下がります)。
+- ログインセッションが X11 か Wayland かは `echo $XDG_SESSION_TYPE` で確認できます (`wayland` であること)。
+- SSH 先やディスプレイのないサーバでは、そのままでは起動できません (weston headless 等のネスト環境が必要)。
+
+### 2.5 GPU / 描画経路
+- **software 経路** (既定): GPU 不要で動作します。まず software で動作確認してください。
+- **EGL (GPU) 経路**: Mesa と dmabuf 対応 GPU が必要です (Intel/AMD Mesa で検証)。GPU やドライバ構成によっては利用できません。
+- HiDPI (スケール 2 等) 環境では、描画スケール不整合を避けるための設定が必要になる場合があります (同梱の設定・起動スクリプトの記述に従ってください)。
+
+### 2.6 Chromium sandbox とカーネル設定
+- Chromium の sandbox は **unprivileged user namespaces** を利用します。これを無効化しているシステム (一部のハードニング環境・コンテナ) では renderer の起動に失敗することがあります。
+- コンテナ内・制限環境で起動しない場合はこの点を確認してください。sandbox を無効にする起動 (`--no-sandbox`) は動作はしますが**セキュリティ保護を失うため、信頼できないコンテンツの表示には使用しないでください**。
+
+### 2.7 ファイルシステム要件
+- **noexec マウントでは実行できません**。USB メモリや `/tmp` が noexec でマウントされている環境では、実行属性が有効な場所に展開してください。
+- **シンボリックリンクを保持できるファイルシステム** (ext4/xfs/btrfs) に展開してください。FAT/exFAT/NTFS では SONAME シンボリックリンクが実体コピーになるか失われ、起動不能や容量倍増の原因になります。
+- 配布アーカイブは **tar.gz 形式を使用**してください (実行属性とシンボリックリンクを保持)。zip は属性を失うため不可です。
+- 展開先パスに空白・非 ASCII 文字を含めないことを推奨します。
+
+### 2.8 リソース
+- ディスク: 展開後 約 650MB 以上。
+- メモリ: プロセス群 (browser + renderer + GPU) で数百 MB 以上を想定してください。
+
+### 2.9 フォント
+- 文字描画はホストの fontconfig とフォントに依存します。日本語表示にはホストに日本語フォント (原ノ味、Noto CJK 等) が必要です。
+
+### 2.10 制限まとめ (チェックリスト)
+
+| 項目 | 要件 | 確認コマンド |
+|---|---|---|
+| CPU | x86_64 | `uname -m` |
+| glibc | ビルド環境世代以降 | `ldd --version` / `ldd ... \| grep &quot;not found&quot;` |
+| GTK4 | 4.6+ (システム) | `pkg-config --modversion gtk4` |
+| セッション | Wayland | `echo $XDG_SESSION_TYPE` |
+| GPU (EGL 時) | Mesa + dmabuf | software 経路で切り分け |
+| user namespaces | 有効 | sandbox 起動失敗時に確認 |
+| 展開先 FS | ext4 等 + exec 可 | `mount \| grep noexec` |
+| 日本語フォント | ホストに必要 | `fc-list \| grep -i mincho` 等 |
+
+## 3. ポータブルアプリの構成
+
+推奨レイアウト (単一ディレクトリ自己完結):
+</code></pre>
+<p>myapp-portable/<br />
+├── myapp # あなたのアプリ実行ファイル (RPATH=$ORIGIN/lib)<br />
+├── run.sh # 起動スクリプト (任意、環境変数の設定用)<br />
+├── lib/<br />
+│ ├── libblinkgtk-0.1.so.0.0.0<br />
+│ ├── libblinkgtk-0.1.so.0 -&gt; libblinkgtk-0.1.so.0.0.0<br />
+│ └── chromium/ # Chromium ランタイム一式 (バイナリ配布物から)<br />
+│ ├── *.so # 共有ライブラリ群<br />
+│ ├── icudtl.dat / snapshot_blob.bin / v8_context_snapshot.bin<br />
+│ ├── content_shell.pak<br />
+│ └── locales/ja.pak, en-US.pak<br />
+├── share/<br />
+│ └── myapp/ # アプリのリソース<br />
+└── THIRD_PARTY_NOTICES.html # 必須 (第 6 章)</p>
+<pre><code>
+ランタイム一式は、バイナリ配布 (runtime tarball) の `usr/lib64/blinkgtk-0.1/` 以下をそのまま `lib/` にコピーすることで得られます。**ファイルの取捨選択はしないでください** — Chromium ランタイムの .so、`.pak`、`.dat`、`.bin`、`locales/` は全て起動に必要です (欠落は起動時クラッシュの典型原因)。
+
+## 4. ビルド方法
+
+### 4.1 リンク時の必須事項
+
+アプリは pkg-config を使ってビルドします。**PartitionAlloc allocator shim の直接リンクが必須**です (pkg-config を使えば自動で含まれます)。shim を欠くとページの読み込みが失敗し黒画面になります。
+
+```sh
+gcc -o myapp myapp.c \
+  $(pkg-config --cflags --libs blinkgtk-0.1 gtk4)</code></pre>
 <p>pkg-config を使わず手動リンクする場合は、<code>-lblinkgtk-0.1</code>
 に加えて必ず<br />
 <code>-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</code>
@@ -324,14 +244,16 @@ allocator shim の直接リンクが必須</strong>です (pkg-config
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ldd</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;not found&quot;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 2. shim が直接 NEEDED に入っていること</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. V8 スナップショットの整合 (同一配布物由来なら通常一致)</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a><span class="co"># lib/chromium/ の libv8.so / snapshot_blob.bin / v8_context_snapshot.bin を</span></span>
-<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 別バージョンの配布物から混在させないこと (起動時クラッシュの原因)</span></span>
-<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 実機 (Wayland セッション) での起動確認</span></span>
-<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span></span></code></pre></div>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> allocator_shim</span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a><span class="co"># 3. V8 スナップショットの整合 (同一配布物由来なら通常一致)</span></span>
+<span id="cb6-10"><a href="#cb6-10" aria-hidden="true" tabindex="-1"></a><span class="co"># lib/chromium/ の libv8.so / snapshot_blob.bin / v8_context_snapshot.bin を</span></span>
+<span id="cb6-11"><a href="#cb6-11" aria-hidden="true" tabindex="-1"></a><span class="co"># 別バージョンの配布物から混在させないこと (起動時クラッシュの原因)</span></span>
+<span id="cb6-12"><a href="#cb6-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-13"><a href="#cb6-13" aria-hidden="true" tabindex="-1"></a><span class="co"># 4. 実機 (Wayland セッション) での起動確認</span></span>
+<span id="cb6-14"><a href="#cb6-14" aria-hidden="true" tabindex="-1"></a><span class="ex">./run.sh</span></span></code></pre></div>
 <h2 id="5-配布">5. 配布</h2>
 <ul>
 <li><strong>tar.gz で固めて配布</strong>します

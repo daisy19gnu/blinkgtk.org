@@ -96,9 +96,9 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-navigation-api-reference">BlinkGTK Navigation API
 Reference</h1>
-<p><strong>Version</strong>: v0.9.28-dev<br />
-<strong>Last updated</strong>: 2026-01-01<br />
-<strong>Language</strong>: <a href="./navigation-api-ja.md">日本語</a> |
+<p><strong>Version</strong>: v1.1.0<br />
+<strong>Last updated</strong>: 2026-07-29<br />
+<strong>Language</strong>: <a href="./navigation-api-ja.html">日本語</a> |
 English</p>
 <hr />
 <h2 id="overview">Overview</h2>
@@ -111,7 +111,7 @@ and page control.</p>
 <li>History state inspection</li>
 <li>Provided as a C API with GObject compatibility</li>
 </ul>
-<p><strong>Available since</strong>: Build 106</p>
+<p><strong>Available since</strong>: v1.1.0 or later</p>
 <hr />
 <h2 id="api-list">API List</h2>
 <table>
@@ -162,6 +162,7 @@ and page control.</p>
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="history-navigation">History Navigation</h2>
 <h3 id="blink_web_view_go_back">blink_web_view_go_back()</h3>
 <p>Goes back one entry in history.</p>
@@ -195,7 +196,7 @@ and page control.</p>
 <span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_go_back<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Available since</strong>: Build 106</p>
+<p><strong>Available since</strong>: v1.1.0 or later</p>
 <hr />
 <h3 id="blink_web_view_go_forward">blink_web_view_go_forward()</h3>
 <p>Goes forward one entry in history.</p>
@@ -229,7 +230,7 @@ and page control.</p>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_go_forward<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Available since</strong>: Build 106</p>
+<p><strong>Available since</strong>: v1.1.0 or later</p>
 <hr />
 <h2 id="page-control">Page Control</h2>
 <h3 id="blink_web_view_reload">blink_web_view_reload()</h3>
@@ -274,7 +275,7 @@ change</strong>:</p>
 <span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_reload<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Available since</strong>: Build 106</p>
+<p><strong>Available since</strong>: v1.1.0 or later</p>
 <hr />
 <h3 id="blink_web_view_stop">blink_web_view_stop()</h3>
 <p>Stops the page load.</p>
@@ -328,7 +329,7 @@ change</strong>:</p>
 <p><strong>Note</strong>: This corresponds to WebKitGTK's
 <code>webkit_web_view_stop_loading()</code>, but the function name is
 shortened to <code>stop()</code>.</p>
-<p><strong>Available since</strong>: Build 106</p>
+<p><strong>Available since</strong>: v1.1.0 or later</p>
 <hr />
 <h2 id="history-state-inspection">History State Inspection</h2>
 <h3 id="blink_web_view_can_go_back">blink_web_view_can_go_back()</h3>
@@ -378,7 +379,7 @@ back, FALSE = cannot go back</p>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
 <span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>gboolean can_back <span class="op">=</span> blink_web_view_can_go_back<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Available since</strong>: Build 106</p>
+<p><strong>Available since</strong>: v1.1.0 or later</p>
 <hr />
 <h3
 id="blink_web_view_can_go_forward">blink_web_view_can_go_forward()</h3>
@@ -405,7 +406,7 @@ forward, FALSE = cannot go forward</p>
 <span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK (equivalent)</span></span>
 <span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>gboolean can_forward <span class="op">=</span> blink_web_view_can_go_forward<span class="op">(</span>web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Available since</strong>: Build 106</p>
+<p><strong>Available since</strong>: v1.1.0 or later</p>
 <hr />
 <h2 id="practical-combined-example">Practical Combined Example</h2>
 <h3 id="a-complete-navigation-toolbar">A Complete Navigation
@@ -520,13 +521,13 @@ Toolbar</h3>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
-<li><a href="./settings-api-en.md">Settings API</a> - Settings
+<li><a href="./settings-api-en.html">Settings API</a> - Settings
 control</li>
-<li><a href="./signals-api-en.md">Signals API</a> - Event
+<li><a href="./signals-api-en.html">Signals API</a> - Event
 notifications</li>
-<li><a href="../tutorials/settings-tutorial-c-en.md">C Tutorial</a> -
+<li><a href="../tutorials/settings-tutorial-c-en.html">C Tutorial</a> -
 Basic usage</li>
-<li><a href="../tutorials/events-tutorial-c-en.md">Event Handling
+<li><a href="../tutorials/events-tutorial-c-en.html">Event Handling
 Tutorial</a> - Event handling</li>
 </ul>
 <hr />
@@ -552,6 +553,7 @@ Tutorial</a> - Event handling</li>
 </tr>
 </tbody>
 </table>
+<hr />
 <p><strong>License</strong>: BSD-3-Clause<br />
 <strong>Project</strong>: BlinkGTK<br />
 <strong>Maintainer</strong>: BlinkGTK Project <a

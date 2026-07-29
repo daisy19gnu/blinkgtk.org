@@ -97,9 +97,8 @@
 <h1 id="blinkgtk-c-api-reference">BlinkGTK C API Reference</h1>
 <p><strong>Author</strong>: BlinkGTK Development Team<br />
 <strong>Date</strong>: 2026-03-07<br />
-<strong>Target Version</strong>: Build 612 and later<br />
-<strong>Changelog</strong>: Build 612 - Initial version (input event API
-added)</p>
+<strong>Target Version</strong>: v1.1.0 and later<br />
+<strong>Changelog</strong>: Initial version (input event API added)</p>
 <hr />
 <blockquote>
 <p><strong>Note This document is outdated (noted
@@ -117,12 +116,12 @@ header<br />
 <code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code> as the primary
 source. For environment variables,<br />
 <a
-href="./environment-variables-en.md"><code>environment-variables-en.md</code></a>
+href="./environment-variables-en.html"><code>environment-variables-en.md</code></a>
 is authoritative.</p>
 <p>This document will be fully revised as the basis for Chapter 11 of
 the API reference under<br />
 construction in #121 (see <a
-href="./00-index-en.md"><code>00-index-en.md</code></a>). Once that
+href="./00-index-en.html"><code>00-index-en.md</code></a>). Once that
 revision lands, this file<br />
 will be reduced to a pointer to the new chapter.</p>
 </blockquote>
@@ -217,7 +216,7 @@ rather than GTK's <code>g_application_run()</code>.</p>
 <h3 id="blink_gtk_shutdown">blink_gtk_shutdown()</h3>
 <div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_shutdown<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
 <p>Shuts down BlinkGTK. Call when the application is closing.</p>
-<p><strong>Note</strong>: From Build 611 onward, internally calls
+<p><strong>Note</strong>: From v1.1.0 onward, internally calls
 <code>_exit(0)</code> to avoid the DiscardableSharedMemoryManager
 DCHECK.</p>
 <hr />
@@ -273,10 +272,10 @@ pages</li>
 <p><strong>Loading inline HTML</strong>:</p>
 <p>To display inline HTML, use <code>blink_web_view_load_html()</code>
 instead of data: URLs<br />
-(CP-308: data:URL to load_html() migration).</p>
+(data:URL to load_html() migration).</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://www.google.com&quot;</span><span class="op">);</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* CP-308: data:URL to load_html() migration — use load_html() for inline HTML */</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* data:URL to load_html() migration — use load_html() for inline HTML */</span></span>
 <span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
 <span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&lt;body style=&#39;margin:0&#39;&gt;&quot;</span></span>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;div style=&#39;display:block;background:#0000ff;width:800px;height:200px&#39;&gt;BLUE&lt;/div&gt;&quot;</span></span>
@@ -286,8 +285,7 @@ plain HTML can be passed directly without<br />
 data: URL encoding (e.g., <code>%23</code>). CSS color values like
 <code>#ffe</code> work as-is.<br />
 Always include DOCTYPE. Without it, the browser enters quirks mode and
-div elements are treated as inline elements (confirmed in Build
-609-610).</p>
+div elements are treated as inline elements (measured).</p>
 <hr />
 <h3 id="blink_web_view_go_back">blink_web_view_go_back()</h3>
 <div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_go_back<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
@@ -371,8 +369,7 @@ successfully.</p>
 written immediately.</p>
 <p><strong>Recommended timing</strong>: Wait at least 30 seconds after
 navigation before capturing.<br />
-Renderer initialization takes approximately 25 seconds (confirmed in
-Build 549).</p>
+Renderer initialization takes approximately 25 seconds (measured).</p>
 <p><strong>Example</strong>:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Take screenshot 30 seconds after navigation */</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean take_screenshot<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
@@ -388,7 +385,7 @@ id="blink_web_view_inject_test_input">blink_web_view_inject_test_input()</h3>
 <div class="sourceCode" id="cb27"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_test_input<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>                                      <span class="dt">double</span> mouse_x<span class="op">,</span></span>
 <span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                                      <span class="dt">double</span> mouse_y<span class="op">);</span></span></code></pre></div>
-<p><strong>Build 612 and later</strong> — Injects test input events
+<p><strong>v1.1.0 and later</strong> — Injects test input events
 directly into the Renderer.</p>
 <p>Sends a mouse click (left button Down/Up) and keyboard event ('A'
 Down/Up)<br />
@@ -470,7 +467,7 @@ event pipeline to test Chromium's input routing directly.</p>
 <span id="cb29-34"><a href="#cb29-34" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb29-35"><a href="#cb29-35" aria-hidden="true" tabindex="-1"></a>    g_object_ref_sink<span class="op">(</span>g_web_view<span class="op">);</span></span>
 <span id="cb29-36"><a href="#cb29-36" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* CP-308: data:URL to load_html() migration — load inline HTML */</span></span>
+<span id="cb29-37"><a href="#cb29-37" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* data:URL to load_html() migration — load inline HTML */</span></span>
 <span id="cb29-38"><a href="#cb29-38" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>g_web_view<span class="op">),</span></span>
 <span id="cb29-39"><a href="#cb29-39" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&quot;</span></span>
 <span id="cb29-40"><a href="#cb29-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;body style=&#39;background:#00ff00&#39;&gt;Hello BlinkGTK&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span> NULL<span class="op">);</span></span>
@@ -494,17 +491,17 @@ event pipeline to test Chromium's input routing directly.</p>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
 <ul>
-<li><a href="./blink-web-view-ja.md">blink-web-view-ja.md</a> -
+<li><a href="./blink-web-view-ja.html">blink-web-view-ja.md</a> -
 BlinkWebView widget details</li>
-<li><a href="./navigation-api-ja.md">navigation-api-ja.md</a> -
+<li><a href="./navigation-api-ja.html">navigation-api-ja.md</a> -
 Navigation API details</li>
-<li><a href="./signals-api-ja.md">signals-api-ja.md</a> - Signal
+<li><a href="./signals-api-ja.html">signals-api-ja.md</a> - Signal
 reference</li>
 <li><a
-href="../../../docs/02-technical/ffi/LANGUAGE_FFI_BINDINGS_STRATEGY.md">LANGUAGE_FFI_BINDINGS_STRATEGY.md</a>
+href="../../../docs/02-technical/ffi/LANGUAGE_FFI_BINDINGS_STRATEGY.html">LANGUAGE_FFI_BINDINGS_STRATEGY.md</a>
 - FFI binding strategy</li>
 <li><a
-href="../../../docs/03-current-phase/checkpoints/CHECKPOINTS.md">CHECKPOINTS.md</a>
+href="../../../docs/03-current-phase/checkpoints/CHECKPOINTS.html">CHECKPOINTS.md</a>
 - Checkpoint progress</li>
 </ul>
 <hr />

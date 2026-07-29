@@ -141,7 +141,7 @@
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.1.0-build4_amd64.deb</span></code></pre></div>
 <p>tarball を使う場合は任意の場所に展開し、<code>pkg-config</code>
 に場所を教えます。</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.1.0-build5-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.1.0-build6-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span></code></pre></div>
 <h2 id="2-必ず-pkg-config-経由でリンクする">2. 必ず pkg-config
 経由でリンクする</h2>
@@ -161,8 +161,10 @@
 という、原因の分かり<br />
 にくい症状になります。</p>
 <p>確認方法:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 行以上出れば OK。何も出なければ pkg-config を経由していない</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> allocator_shim</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 行以上出れば OK。何も出なければ pkg-config を経由していない</span></span></code></pre></div>
 <h2 id="3-インクルードは-blink_gtkh-だけ">3. インクルードは
 <code>blink_gtk.h</code> だけ</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>

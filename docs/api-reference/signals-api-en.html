@@ -96,10 +96,8 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-gobject-signals-api-reference">BlinkGTK GObject Signals
 API Reference</h1>
-<p><strong>Last updated</strong>: 2026-01-01<br />
-<strong>Target version</strong>: BlinkGTK v0.9.28-dev and later<br />
-<strong>Phase</strong>: Phase 5 (Performance Optimization &amp; User
-API)</p>
+<p><strong>Last updated</strong>: 2026-07-29<br />
+<strong>Target version</strong>: BlinkGTK v1.1.0 or later</p>
 <hr />
 <h2 id="table-of-contents">Table of Contents</h2>
 <ol type="1">
@@ -222,6 +220,7 @@ Architecture</h3>
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="load-events">Load Events</h2>
 <h3 id="load-changed">load-changed</h3>
 <p><strong>Overview</strong>: Emitted when the page load state
@@ -360,7 +359,7 @@ Enabling/Disabling Navigation Buttons</h4>
 <tr>
 <td><code>load-changed</code></td>
 <td><code>load-changed</code></td>
-<td>Yes Fully compatible</td>
+<td>Fully compatible</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_STARTED</code></td>
@@ -384,6 +383,7 @@ Enabling/Disabling Navigation Buttons</h4>
 </tr>
 </tbody>
 </table>
+<hr />
 <h3 id="load-failed">load-failed</h3>
 <p><strong>Overview</strong>: Emitted when the page load fails.</p>
 <h4 id="signature-1">Signature</h4>
@@ -470,6 +470,9 @@ Enabling/Disabling Navigation Buttons</h4>
 </tr>
 </tbody>
 </table>
+<p>For the full list, see <a
+href="https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h">Chromium
+net_error_list.h</a>.</p>
 <h4 id="example-1-displaying-an-error-message">Example 1: Displaying an
 Error Message</h4>
 <div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
@@ -1187,21 +1190,21 @@ compatibility with WebKitGTK while making use of the powerful event
 system of Chromium/Blink.</p>
 <h3 id="key-features">Key Features</h3>
 <ul>
-<li>Yes <strong>WebKitGTK compatible</strong>: The
-<code>load-changed</code> signal is fully compatible</li>
-<li>Yes <strong>Type-safe</strong>: GObject signal type checking</li>
-<li>Yes <strong>Flexible</strong>: Supports multiple handlers, and
+<li><strong>Same idea as WebKitGTK</strong>: the
+<code>load-changed</code> signal works the same way</li>
+<li><strong>Type-safe</strong>: GObject signal type checking</li>
+<li><strong>Flexible</strong>: Supports multiple handlers, and
 block/unblock</li>
-<li>Yes <strong>Practical</strong>: Ideal for progress display, error
+<li><strong>Practical</strong>: Ideal for progress display, error
 handling, and UI updates</li>
 </ul>
 <h3 id="next-steps">Next Steps</h3>
 <ul>
-<li><a href="navigation-api-en.md">Navigation API Reference</a> -
+<li><a href="navigation-api-en.html">Navigation API Reference</a> -
 Navigation functions</li>
-<li><a href="../tutorials/events-tutorial-c-en.md">Event Handling
+<li><a href="../tutorials/events-tutorial-c-en.html">Event Handling
 Tutorial</a> - Practical patterns</li>
-<li><a href="settings-api-en.md">Settings API Reference</a> -
+<li><a href="settings-api-en.html">Settings API Reference</a> -
 Settings-related API</li>
 </ul>
 <hr />

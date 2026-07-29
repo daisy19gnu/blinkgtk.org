@@ -96,10 +96,8 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-gobject-signals-api-リファレンス">BlinkGTK GObject
 Signals API リファレンス</h1>
-<p><strong>最終更新</strong>: 2026-01-01<br />
-<strong>対象バージョン</strong>: BlinkGTK v0.9.28-dev以降<br />
-<strong>Phase</strong>: Phase 5 (Performance Optimization &amp; User
-API)</p>
+<p><strong>最終更新</strong>: 2026-07-29<br />
+<strong>対象バージョン</strong>: BlinkGTK v1.1.0 以降</p>
 <hr />
 <h2 id="目次">目次</h2>
 <ol type="1">
@@ -220,6 +218,7 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 </tr>
 </tbody>
 </table>
+<hr />
 <h2 id="ロードイベント">ロードイベント</h2>
 <h3 id="load-changed">load-changed</h3>
 <p><strong>概要</strong>:
@@ -357,7 +356,7 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 <tr>
 <td><code>load-changed</code></td>
 <td><code>load-changed</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>BLINK_LOAD_STARTED</code></td>
@@ -381,6 +380,7 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 </tr>
 </tbody>
 </table>
+<hr />
 <h3 id="load-failed">load-failed</h3>
 <p><strong>概要</strong>: ページのロードが失敗したときに発火します。</p>
 <h4 id="シグネチャ-1">シグネチャ</h4>
@@ -467,6 +467,9 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 </tr>
 </tbody>
 </table>
+<p>完全なリストは <a
+href="https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_error_list.h">Chromium
+net_error_list.h</a> を参照してください。</p>
 <h4 id="使用例1-エラーメッセージ表示">使用例1: エラーメッセージ表示</h4>
 <div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
@@ -1170,22 +1173,21 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30
 <p>BlinkGTKのGObjectシグナルシステムは、WebKitGTKと高い互換性を持ちながら、Chromium/Blinkの強力なイベントシステムを活用しています。</p>
 <h3 id="主な特徴">主な特徴</h3>
 <ul>
-<li>対応 <strong>WebKitGTK互換</strong>:
-<code>load-changed</code>シグナルは完全互換</li>
-<li>対応 <strong>型安全</strong>: GObjectシグナルの型チェック</li>
-<li>対応 <strong>柔軟</strong>:
-複数ハンドラ、ブロック/アンブロック対応</li>
-<li>対応 <strong>実用的</strong>:
+<li><strong>WebKitGTK と同じ考え方</strong>: <code>load-changed</code>
+シグナルは同じ流れで使えます</li>
+<li><strong>型安全</strong>: GObjectシグナルの型チェック</li>
+<li><strong>柔軟</strong>: 複数ハンドラ、ブロック/アンブロック対応</li>
+<li><strong>実用的</strong>:
 プログレス表示、エラー処理、UI更新に最適</li>
 </ul>
 <h3 id="次のステップ">次のステップ</h3>
 <ul>
-<li><a href="navigation-api-ja.md">Navigation API リファレンス</a> -
+<li><a href="navigation-api-ja.html">Navigation API リファレンス</a> -
 ナビゲーション関数</li>
 <li><a
-href="../tutorials/events-tutorial-c-ja.md">イベント処理チュートリアル</a>
+href="../tutorials/events-tutorial-c-ja.html">イベント処理チュートリアル</a>
 - 実践的なパターン</li>
-<li><a href="settings-api-ja.md">Settings API リファレンス</a> -
+<li><a href="settings-api-ja.html">Settings API リファレンス</a> -
 設定関連API</li>
 </ul>
 <hr />

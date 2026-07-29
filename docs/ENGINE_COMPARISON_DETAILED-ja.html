@@ -99,7 +99,7 @@ BlinkGTK</title>
 BlinkGTK 技術要件・性能比較</h1>
 <p><strong>作成者</strong>: BlinkGTK Development Team<br />
 <strong>作成日</strong>: 2026-03-26<br />
-<strong>最終更新</strong>: 2026-03-26（Build 699時点）<br />
+<strong>最終更新</strong>: 2026-03-26<br />
 <strong>対象バージョン</strong>: CEF 127+, WebKitGTK 2.44+, BlinkGTK
 v1.0.0-rc2</p>
 <hr />
@@ -148,7 +148,7 @@ v1.0.0-rc2</p>
 <td><strong>最新安定版</strong></td>
 <td>CEF 127 (Chromium 127)</td>
 <td>2.44.x (2026年3月時点)</td>
-<td>v1.0.0-rc2 (Build 699)</td>
+<td>v1.0.0-rc2</td>
 </tr>
 <tr>
 <td><strong>開発元</strong></td>
@@ -379,13 +379,13 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <td><strong>wl_subsurface</strong></td>
 <td>Ozone経由</td>
 <td>WebKitWebProcess内部</td>
-<td>実装済み（Build 689-694）</td>
+<td>実装済み</td>
 </tr>
 <tr>
 <td><strong>dmabuf</strong></td>
 <td>Ozone経由</td>
 <td>WPE/libwpe経由</td>
-<td>実装済み（Build 695-696、ゼロコピー）</td>
+<td>実装済み（ゼロコピー）</td>
 </tr>
 </tbody>
 </table>
@@ -404,7 +404,7 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <td><strong>GObject型システム</strong></td>
 <td>なし（C++ API）</td>
 <td>完全対応</td>
-<td>対応（Build 635: v1.0組込）</td>
+<td>対応</td>
 </tr>
 <tr>
 <td><strong>GIR / typelib</strong></td>
@@ -422,13 +422,13 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <td><strong>GJS (JavaScript)</strong></td>
 <td>非対応</td>
 <td>対応</td>
-<td>対応（Build 670: ESMテスト済み）</td>
+<td>対応</td>
 </tr>
 <tr>
 <td><strong>Vala</strong></td>
 <td>非対応</td>
 <td>対応</td>
-<td>対応（Build 670: .vapi生成済み）</td>
+<td>対応</td>
 </tr>
 <tr>
 <td><strong>Rust (gtk-rs)</strong></td>
@@ -572,7 +572,7 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <td><strong>多言語対応</strong></td>
 <td>Chromium内蔵</td>
 <td>WebKit内蔵</td>
-<td><code>blink_gtk_set_devtools_locale()</code> (Build 637)</td>
+<td><code>blink_gtk_set_devtools_locale()</code></td>
 </tr>
 </tbody>
 </table>
@@ -640,7 +640,7 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <td><strong>IME統合</strong></td>
 <td>OS IME自動連携</td>
 <td>GtkIMContext統合</td>
-<td>GtkIMContext統合（Build 632）</td>
+<td>GtkIMContext統合</td>
 </tr>
 <tr>
 <td><strong>変換中テキスト表示</strong></td>
@@ -721,13 +721,13 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <td><strong>dmabuf / ゼロコピー</strong></td>
 <td>Ozone経由</td>
 <td>WPE libwpe経由</td>
-<td>対応（GdkDmabufTextureBuilder、Build 695-696）</td>
+<td>対応（GdkDmabufTextureBuilder）</td>
 </tr>
 <tr>
 <td><strong>EGLSync Fence同期</strong></td>
 <td>Chromium内蔵</td>
 <td>WebKit内蔵</td>
-<td>対応（Build 696）</td>
+<td>対応</td>
 </tr>
 <tr>
 <td><strong>ソフトウェアレンダリング</strong></td>
@@ -752,25 +752,25 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <td><strong>GPU加速モード</strong></td>
 <td>60fps（推定）</td>
 <td>60fps（推定）</td>
-<td>62.4fps安定（Build 710実測・dmabuf描画）</td>
+<td>62.4fps安定（実測・dmabuf描画）</td>
 </tr>
 <tr>
 <td><strong>dmabufモード</strong></td>
 <td>60fps（推定）</td>
 <td>60fps（推定）</td>
-<td>62.5fps安定（Build 696実測）</td>
+<td>62.5fps安定（実測）</td>
 </tr>
 <tr>
 <td><strong>ソフトウェアモード</strong></td>
 <td>30-60fps（推定）</td>
 <td>30-60fps（推定）</td>
-<td>62.4fps（Build 710実測・dmabuf描画）</td>
+<td>62.4fps（実測・dmabuf描画）</td>
 </tr>
 <tr>
 <td><strong>初期表示レイテンシ</strong></td>
 <td>1-3秒（推定）</td>
 <td>1-2秒（推定）</td>
-<td>2.0秒（Build 710実測）</td>
+<td>2.0秒（実測）</td>
 </tr>
 </tbody>
 </table>
@@ -805,19 +805,19 @@ headless環境 + SwiftShader / dmabufでの実測値。</p>
 <td><strong>RPM対応</strong></td>
 <td>なし（自己同梱）</td>
 <td>あり（システムパッケージ）</td>
-<td>あり（blinkgtk-bin RPM、Build 669）</td>
+<td>あり（blinkgtk-bin RPM）</td>
 </tr>
 <tr>
 <td><strong>DEB対応</strong></td>
 <td>なし（自己同梱）</td>
 <td>あり（システムパッケージ）</td>
-<td>あり（libblinkgtk-0.1-0 DEB、Build 669）</td>
+<td>あり（libblinkgtk-0.1-0 DEB）</td>
 </tr>
 <tr>
 <td><strong>tarball対応</strong></td>
 <td>あり（公式配布）</td>
 <td>ソースtarball</td>
-<td>あり（tar.gz / tar.bz2、Build 669）</td>
+<td>あり（tar.gz / tar.bz2）</td>
 </tr>
 </tbody>
 </table>
@@ -846,11 +846,11 @@ headless環境 + SwiftShader / dmabufでの実測値。</p>
 </tr>
 <tr>
 <td>tar.gz</td>
-<td><code>blinkgtk-1.1.0-build5-linux-x86_64.tar.gz</code></td>
+<td><code>blinkgtk-1.1.0-build6-linux-x86_64.tar.gz</code></td>
 </tr>
 <tr>
 <td>tar.bz2</td>
-<td><code>blinkgtk-1.1.0-build5-linux-x86_64.tar.bz2</code></td>
+<td><code>blinkgtk-1.1.0-build6-linux-x86_64.tar.bz2</code></td>
 </tr>
 </tbody>
 </table>
@@ -1054,7 +1054,7 @@ DevTools互換性が必要な場面での選択肢となる。</p>
 </tr>
 <tr>
 <td>Chrome互換が必要なアプリ</td>
-<td>Blinkエンジンによる完全互換</td>
+<td>Blink エンジンによる高い Chrome 互換性</td>
 </tr>
 <tr>
 <td>Waylandネイティブアプリ</td>
@@ -1108,8 +1108,7 @@ DevTools互換性が必要な場面での選択肢となる。</p>
 </tr>
 </tbody>
 </table>
-<h3 id="74-既知の制限事項build-699時点">7.4 既知の制限事項（Build
-699時点）</h3>
+<h3 id="74-既知の制限事項">7.4 既知の制限事項</h3>
 <ul>
 <li>Wayland専用: X11環境では動作しない</li>
 <li>Component Build:

@@ -96,66 +96,76 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-settings-api-リファレンス">BlinkGTK Settings API
 リファレンス</h1>
-<p><strong>バージョン</strong>: v0.9.28-dev<br />
-<strong>最終更新</strong>: 2026-01-01<br />
-<strong>言語</strong>: 日本語 | <a
-href="./settings-api-en.md">English</a></p>
+<p><strong>バージョン</strong>: v1.1.0<br />
+<strong>最終更新</strong>: 2026-07-29<br />
+<strong>言語</strong>: 日本語 |</p>
+<p><a href="./settings-api-en.html">English</a></p>
 <hr />
-<h2 id="概要">概要</h2>
-<p>Settings
-APIは、BlinkWebViewの動作をカスタマイズするためのAPIです。</p>
-<p><strong>特徴</strong>:</p>
-<ul>
-<li>WebKitGTKのWebKitSettings APIと完全互換</li>
-<li>JavaScript、画像読み込み、ストレージなどの制御</li>
-<li>C言語APIとしてGObject互換で提供</li>
-<li>Python (PyGObject)、Rust (gtk-rs) からも利用可能</li>
-</ul>
-<p><strong>利用可能なバージョン</strong>: Build 171以降</p>
-<hr />
-<h2 id="api一覧">API一覧</h2>
+<h2 id="このページについて">このページについて</h2>
+<p><code>BlinkWebView</code> の挙動を変える API です。JavaScript
+の実行、画像の読み込み、<br />
+ローカルストレージ、User-Agent を切り替えられます。</p>
+<h3 id="使い方">使い方</h3>
+<p><code>blink_web_view_new()</code>
+の直後、ページを読み込む前に呼びます。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>設定は <code>BlinkWebView</code> ごとに独立しています。</p>
+<h3 id="一覧">一覧</h3>
 <table>
 <thead>
 <tr>
-<th>機能</th>
-<th>設定関数</th>
-<th>取得関数</th>
-<th>デフォルト値</th>
+<th>設定</th>
+<th>変更</th>
+<th>取得</th>
+<th>既定値</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>JavaScript制御</td>
+<td>JavaScript</td>
 <td><code>blink_web_view_set_javascript_enabled()</code></td>
 <td><code>blink_web_view_get_javascript_enabled()</code></td>
-<td>TRUE（有効）</td>
+<td>有効</td>
 </tr>
 <tr>
-<td>User-Agent</td>
-<td><code>blink_web_view_set_user_agent()</code></td>
-<td><code>blink_web_view_get_user_agent()</code></td>
-<td>Chromiumデフォルト</td>
-</tr>
-<tr>
-<td>画像読み込み</td>
+<td>画像の読み込み</td>
 <td><code>blink_web_view_set_images_enabled()</code></td>
 <td><code>blink_web_view_get_images_enabled()</code></td>
-<td>TRUE（有効）</td>
+<td>有効</td>
 </tr>
 <tr>
 <td>ローカルストレージ</td>
 <td><code>blink_web_view_set_local_storage_enabled()</code></td>
 <td><code>blink_web_view_get_local_storage_enabled()</code></td>
-<td>TRUE（有効）</td>
+<td>有効</td>
+</tr>
+<tr>
+<td>User-Agent</td>
+<td><code>blink_web_view_set_user_agent()</code></td>
+<td><code>blink_web_view_get_user_agent()</code></td>
+<td>Chromium の既定値</td>
 </tr>
 </tbody>
 </table>
+<p>Python (PyGObject) や Rust (gtk-rs) からも同じ設定を使えます。</p>
+<h3 id="webkitgtk-から移る場合">WebKitGTK から移る場合</h3>
+<p>WebKitGTK では <code>WebKitSettings</code>
+オブジェクトを介しますが、BlinkGTK は<br />
+<code>BlinkWebView</code>
+に直接設定します。<strong>関数名も呼び出し方も異なります</strong>。<br />
+対応表はこのページの後半にあります。</p>
+<hr />
 <h2 id="javascript制御">JavaScript制御</h2>
 <h3
 id="blink_web_view_set_javascript_enabled">blink_web_view_set_javascript_enabled()</h3>
 <p>JavaScriptの有効/無効を設定します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
 <p><strong>パラメータ</strong>:<br />
 | パラメータ | 型 | 説明 |<br />
 |-----------|---|------|<br />
@@ -166,26 +176,26 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |<br />
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>デフォルト値</strong>: TRUE（有効）</p>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">// JavaScript無効でセキュアなコンテンツ表示</span></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">// JavaScript無効でセキュアなコンテンツ表示</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
 <p><strong>WebKitGTK互換</strong>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_javascript<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 171以降</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_javascript<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h3
 id="blink_web_view_get_javascript_enabled">blink_web_view_get_javascript_enabled()</h3>
 <p>JavaScriptが有効かどうかを取得します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong>パラメータ</strong>:<br />
 | パラメータ | 型 | 説明 |<br />
 |-----------|---|------|<br />
@@ -194,19 +204,19 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <p><strong>戻り値</strong>: <code>gboolean</code> - TRUE = 有効、FALSE =
 無効</p>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_javascript_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;JavaScript is enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;JavaScript is disabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 171以降</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_javascript_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;JavaScript is enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;JavaScript is disabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h2 id="user-agent制御">User-Agent制御</h2>
 <h3
 id="blink_web_view_set_user_agent">blink_web_view_set_user_agent()</h3>
 <p>カスタムUser-Agent文字列を設定します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> user_agent<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> user_agent<span class="op">);</span></span></code></pre></div>
 <p><strong>パラメータ</strong>:<br />
 | パラメータ | 型 | 説明 |<br />
 |-----------|---|------|<br />
@@ -226,29 +236,29 @@ User-Agent（override 未設定の状態）</p>
 <p>設定は以後に起動する Renderer
 にも引き継がれます（<code>override_in_new_tabs=true</code>）。</p>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">// カスタムUser-Agent設定</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0 (Linux; BlinkGTK)&quot;</span><span class="op">);</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://httpbin.org/user-agent&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// カスタムUser-Agent設定</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0 (Linux; BlinkGTK)&quot;</span><span class="op">);</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://httpbin.org/user-agent&quot;</span><span class="op">);</span></span></code></pre></div>
 <p><strong>実用例 - モバイルUser-Agent</strong>:</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">// モバイル端末として振る舞う</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) &quot;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;AppleWebKit/537.36 (KHTML, like Gecko) &quot;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;Chrome/143.0.0.0 Mobile Safari/537.36&quot;</span><span class="op">;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// モバイル端末として振る舞う</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) &quot;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;AppleWebKit/537.36 (KHTML, like Gecko) &quot;</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                        <span class="st">&quot;Chrome/143.0.0.0 Mobile Safari/537.36&quot;</span><span class="op">;</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span></code></pre></div>
 <p><strong>WebKitGTK互換</strong>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_user_agent<span class="op">(</span>settings<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 171以降</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_user_agent<span class="op">(</span>settings<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h3
 id="blink_web_view_get_user_agent">blink_web_view_get_user_agent()</h3>
 <p>現在のUser-Agent文字列を取得します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong>パラメータ</strong>:<br />
 | パラメータ | 型 | 説明 |<br />
 |-----------|---|------|<br />
@@ -261,24 +271,24 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 User-Agent を使用中であることを意味する）。<br />
 非 NULL の場合、呼び出し側で <code>g_free()</code> が必要。</p>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> user_agent <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>user_agent<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;User-Agent override: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> user_agent<span class="op">);</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>user_agent<span class="op">);</span>  <span class="co">/* 重要: メモリ解放 */</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;override なし (Chromium 既定の User-Agent を使用中)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> user_agent <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>user_agent<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;User-Agent override: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> user_agent<span class="op">);</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>user_agent<span class="op">);</span>  <span class="co">/* 重要: メモリ解放 */</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;override なし (Chromium 既定の User-Agent を使用中)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>メモリ管理</strong>:<br />
 注意 <strong>重要</strong>:
 戻り値は呼び出し側で<code>g_free()</code>により解放する必要があります。</p>
-<p><strong>利用可能バージョン</strong>: Build 171以降</p>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h2 id="画像読み込み制御">画像読み込み制御</h2>
 <h3
 id="blink_web_view_set_images_enabled">blink_web_view_set_images_enabled()</h3>
 <p>画像の自動読み込みを制御します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
 <p><strong>パラメータ</strong>:<br />
 | パラメータ | 型 | 説明 |<br />
 |-----------|---|------|<br />
@@ -289,29 +299,29 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |<br />
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>デフォルト値</strong>: TRUE（自動読み込み有効）</p>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 画像読み込みを無効化（テキストのみ表示）</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 画像読み込みを無効化（テキストのみ表示）</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
 <p><strong>実用例 - 軽量ブラウジング</strong>:</p>
-<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co">// データ使用量削減モード</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> enable_data_saver_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Data saver mode enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// データ使用量削減モード</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> enable_data_saver_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Data saver mode enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>WebKitGTK互換</strong>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_auto_load_images<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
-<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 172以降</p>
+<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_auto_load_images<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h3
 id="blink_web_view_get_images_enabled">blink_web_view_get_images_enabled()</h3>
 <p>画像の自動読み込み設定を取得します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong>パラメータ</strong>:<br />
 | パラメータ | 型 | 説明 |<br />
 |-----------|---|------|<br />
@@ -320,19 +330,19 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <p><strong>戻り値</strong>: <code>gboolean</code> - TRUE =
 自動読み込み有効、FALSE = 無効</p>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_images_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
-<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Images will be loaded</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Images are blocked</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 172以降</p>
+<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_images_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Images will be loaded</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Images are blocked</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h2 id="ローカルストレージ制御">ローカルストレージ制御</h2>
 <h3
 id="blink_web_view_set_local_storage_enabled">blink_web_view_set_local_storage_enabled()</h3>
 <p>HTML5 LocalStorageの有効/無効を設定します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
 <p><strong>パラメータ</strong>:<br />
 | パラメータ | 型 | 説明 |<br />
 |-----------|---|------|<br />
@@ -343,29 +353,29 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |<br />
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>デフォルト値</strong>: TRUE（有効）</p>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ローカルストレージ無効化（プライバシー保護）</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ローカルストレージ無効化（プライバシー保護）</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
 <p><strong>実用例 - プライバシーモード</strong>:</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co">// プライバシー保護モード</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> enable_privacy_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Privacy mode enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">// プライバシー保護モード</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> enable_privacy_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Privacy mode enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb21-6"><a href="#cb21-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>WebKitGTK互換</strong>:</p>
-<div class="sourceCode" id="cb21"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
-<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_local_storage<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb21-3"><a href="#cb21-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb21-4"><a href="#cb21-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
-<span id="cb21-5"><a href="#cb21-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 172以降</p>
+<div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="co">// WebKitGTK</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_local_storage<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb22-3"><a href="#cb22-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb22-4"><a href="#cb22-4" aria-hidden="true" tabindex="-1"></a><span class="co">// BlinkGTK（同等）</span></span>
+<span id="cb22-5"><a href="#cb22-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span></code></pre></div>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h3
 id="blink_web_view_get_local_storage_enabled">blink_web_view_get_local_storage_enabled()</h3>
 <p>LocalStorage設定を取得します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong>パラメータ</strong>:<br />
 | パラメータ | 型 | 説明 |<br />
 |-----------|---|------|<br />
@@ -374,34 +384,34 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <p><strong>戻り値</strong>: <code>gboolean</code> - TRUE = 有効、FALSE =
 無効</p>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb23"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_local_storage_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
-<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;LocalStorage is enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb23-3"><a href="#cb23-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
-<span id="cb23-4"><a href="#cb23-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;LocalStorage is disabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb23-5"><a href="#cb23-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p><strong>利用可能バージョン</strong>: Build 172以降</p>
+<div class="sourceCode" id="cb24"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>blink_web_view_get_local_storage_enabled<span class="op">(</span>web_view<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;LocalStorage is enabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
+<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;LocalStorage is disabled</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb24-5"><a href="#cb24-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>利用可能バージョン</strong>: v1.1.0 以降</p>
 <hr />
 <h2 id="実用的な組み合わせ例">実用的な組み合わせ例</h2>
 <h3 id="データセーバーモード">データセーバーモード</h3>
 <p>帯域幅を節約したい場合:</p>
-<div class="sourceCode" id="cb24"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_data_saver<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb24-3"><a href="#cb24-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb24-4"><a href="#cb24-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_data_saver<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 id="最大セキュリティモード">最大セキュリティモード</h3>
 <p>セキュリティを最優先する場合:</p>
-<div class="sourceCode" id="cb25"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_secure_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb25-3"><a href="#cb25-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb25-4"><a href="#cb25-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb25-5"><a href="#cb25-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb26"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_secure_mode<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_local_storage_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_images_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h3 id="モバイルエミュレーション">モバイルエミュレーション</h3>
 <p>モバイル端末として振る舞う場合:</p>
-<div class="sourceCode" id="cb26"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_mobile_emulation<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) &quot;</span></span>
-<span id="cb26-3"><a href="#cb26-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;AppleWebKit/537.36 Chrome/143.0.0.0 Mobile&quot;</span><span class="op">;</span></span>
-<span id="cb26-4"><a href="#cb26-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span>
-<span id="cb26-5"><a href="#cb26-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb27"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> setup_mobile_emulation<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> mobile_ua <span class="op">=</span> <span class="st">&quot;Mozilla/5.0 (Linux; Android 10) &quot;</span></span>
+<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>                            <span class="st">&quot;AppleWebKit/537.36 Chrome/143.0.0.0 Mobile&quot;</span><span class="op">;</span></span>
+<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> mobile_ua<span class="op">);</span></span>
+<span id="cb27-5"><a href="#cb27-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <hr />
 <h2 id="webkitgtk移行ガイド">WebKitGTK移行ガイド</h2>
 <h3 id="api対応表">API対応表</h3>
@@ -417,73 +427,73 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <tr>
 <td><code>webkit_settings_set_enable_javascript()</code></td>
 <td><code>blink_web_view_set_javascript_enabled()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_settings_get_enable_javascript()</code></td>
 <td><code>blink_web_view_get_javascript_enabled()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_settings_set_user_agent()</code></td>
 <td><code>blink_web_view_set_user_agent()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_settings_get_user_agent()</code></td>
 <td><code>blink_web_view_get_user_agent()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_settings_set_auto_load_images()</code></td>
 <td><code>blink_web_view_set_images_enabled()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_settings_get_auto_load_images()</code></td>
 <td><code>blink_web_view_get_images_enabled()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_settings_set_enable_local_storage()</code></td>
 <td><code>blink_web_view_set_local_storage_enabled()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 <tr>
 <td><code>webkit_settings_get_enable_local_storage()</code></td>
 <td><code>blink_web_view_get_local_storage_enabled()</code></td>
-<td>対応 完全互換</td>
+<td>同じ動作</td>
 </tr>
 </tbody>
 </table>
 <h3 id="移行コード例">移行コード例</h3>
 <p><strong>Before (WebKitGTK)</strong>:</p>
-<div class="sourceCode" id="cb27"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a>WebKitWebView<span class="op">*</span> web_view <span class="op">=</span> webkit_web_view_new<span class="op">();</span></span>
-<span id="cb27-2"><a href="#cb27-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>web_view<span class="op">);</span></span>
-<span id="cb27-3"><a href="#cb27-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_javascript<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb27-4"><a href="#cb27-4" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_user_agent<span class="op">(</span>settings<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb28"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>WebKitWebView<span class="op">*</span> web_view <span class="op">=</span> webkit_web_view_new<span class="op">();</span></span>
+<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>WebKitSettings<span class="op">*</span> settings <span class="op">=</span> webkit_web_view_get_settings<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_enable_javascript<span class="op">(</span>settings<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb28-4"><a href="#cb28-4" aria-hidden="true" tabindex="-1"></a>webkit_settings_set_user_agent<span class="op">(</span>settings<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
 <p><strong>After (BlinkGTK)</strong>:</p>
-<div class="sourceCode" id="cb28"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb28-3"><a href="#cb28-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb29"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>web_view<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span></code></pre></div>
 <p><strong>差分</strong>:</p>
 <ul>
-<li>対応 Settingsオブジェクトの取得が不要（直接WebViewに設定）</li>
-<li>対応 関数名の変更のみ（動作は同一）</li>
-<li>対応 型変換不要（GtkWidget*として統一）</li>
+<li>Settingsオブジェクトの取得が不要（直接WebViewに設定）</li>
+<li>関数名の変更のみ（動作は同一）</li>
+<li>型変換不要（GtkWidget*として統一）</li>
 </ul>
 <hr />
 <h2 id="設定を適用するタイミング">設定を適用するタイミング</h2>
 <p>設定は <code>blink_web_view_new()</code> の直後、URL
 を読み込む前に適用します。</p>
-<div class="sourceCode" id="cb29"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb29-1"><a href="#cb29-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb29-2"><a href="#cb29-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-3"><a href="#cb29-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* ページを読み込む前に設定する */</span></span>
-<span id="cb29-4"><a href="#cb29-4" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
-<span id="cb29-5"><a href="#cb29-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
-<span id="cb29-6"><a href="#cb29-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span>
-<span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb30"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-3"><a href="#cb30-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* ページを読み込む前に設定する */</span></span>
+<span id="cb30-4"><a href="#cb30-4" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_javascript_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_images_enabled<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> FALSE<span class="op">);</span></span>
+<span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_user_agent<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;MyApp/1.0&quot;</span><span class="op">);</span></span>
+<span id="cb30-7"><a href="#cb30-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb30-8"><a href="#cb30-8" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
 <p>同梱サンプル <code>blinkgtk_browser</code>
 は設定を変更しない最小構成です。設定を試す<br />
 場合は、上記のように呼び出しを足してビルドし直してください<br />
@@ -493,24 +503,24 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <h2 id="関連ドキュメント">関連ドキュメント</h2>
 <h3 id="apiリファレンス">APIリファレンス</h3>
 <ul>
-<li><a href="./navigation-api-ja.md">Navigation API</a> -
+<li><a href="./navigation-api-ja.html">Navigation API</a> -
 ページ移動、履歴操作</li>
-<li><a href="./signals-api-ja.md">GObject Signals API</a> -
+<li><a href="./signals-api-ja.html">GObject Signals API</a> -
 イベント通知システム</li>
 </ul>
 <h3 id="チュートリアル">チュートリアル</h3>
 <ul>
 <li><a
-href="../tutorials/settings-tutorial-c-ja.md">C言語チュートリアル</a></li>
+href="../tutorials/settings-tutorial-c-ja.html">C言語チュートリアル</a></li>
 <li><a
-href="../tutorials/settings-tutorial-py-ja.md">Pythonチュートリアル</a></li>
+href="../tutorials/settings-tutorial-py-ja.html">Pythonチュートリアル</a></li>
 <li><a
-href="../tutorials/settings-tutorial-rs-ja.md">Rustチュートリアル</a></li>
+href="../tutorials/settings-tutorial-rs-ja.html">Rustチュートリアル</a></li>
 </ul>
 <h3 id="移行ガイド">移行ガイド</h3>
 <ul>
 <li><a
-href="../migration/webkitgtk-to-blinkgtk-ja.md">WebKitGTK移行ガイド</a></li>
+href="../migration/webkitgtk-to-blinkgtk-ja.html">WebKitGTK移行ガイド</a></li>
 </ul>
 <hr />
 <h2 id="バージョン履歴">バージョン履歴</h2>
@@ -545,6 +555,7 @@ href="../migration/webkitgtk-to-blinkgtk-ja.md">WebKitGTK移行ガイド</a></li
 </tr>
 </tbody>
 </table>
+<hr />
 <p><strong>ライセンス</strong>: BSD-3-Clause<br />
 <strong>プロジェクト</strong>: BlinkGTK<br />
 <strong>メンテナー</strong>: BlinkGTK Lead <a

@@ -101,7 +101,7 @@ id="cef--webkitgtk--blinkgtk-technical-requirements-and-performance-comparison">
 Comparison</h1>
 <p><strong>Author</strong>: BlinkGTK Development Team<br />
 <strong>Created</strong>: 2026-03-26<br />
-<strong>Last Updated</strong>: 2026-03-26 (as of Build 699)<br />
+<strong>Last Updated</strong>: 2026-03-26<br />
 <strong>Target Versions</strong>: CEF 127+, WebKitGTK 2.44+, BlinkGTK
 v1.0.0-rc2</p>
 <hr />
@@ -150,7 +150,7 @@ v1.0.0-rc2</p>
 <td><strong>Latest Stable</strong></td>
 <td>CEF 127 (Chromium 127)</td>
 <td>2.44.x (as of March 2026)</td>
-<td>v1.0.0-rc2 (Build 699)</td>
+<td>v1.0.0-rc2</td>
 </tr>
 <tr>
 <td><strong>Developed By</strong></td>
@@ -381,13 +381,13 @@ class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#c
 <td><strong>wl_subsurface</strong></td>
 <td>Via Ozone</td>
 <td>Internal to WebKitWebProcess</td>
-<td>Implemented (Build 689-694)</td>
+<td>Implemented</td>
 </tr>
 <tr>
 <td><strong>dmabuf</strong></td>
 <td>Via Ozone</td>
 <td>Via WPE/libwpe</td>
-<td>Implemented (Build 695-696, zero-copy)</td>
+<td>Implemented (zero-copy)</td>
 </tr>
 </tbody>
 </table>
@@ -407,7 +407,7 @@ Support</h3>
 <td><strong>GObject Type System</strong></td>
 <td>None (C++ API)</td>
 <td>Full support</td>
-<td>Supported (Build 635: included in v1.0)</td>
+<td>Supported</td>
 </tr>
 <tr>
 <td><strong>GIR / typelib</strong></td>
@@ -425,13 +425,13 @@ Support</h3>
 <td><strong>GJS (JavaScript)</strong></td>
 <td>Not supported</td>
 <td>Supported</td>
-<td>Supported (Build 670: ESM tested)</td>
+<td>Supported</td>
 </tr>
 <tr>
 <td><strong>Vala</strong></td>
 <td>Not supported</td>
 <td>Supported</td>
-<td>Supported (Build 670: .vapi generated)</td>
+<td>Supported</td>
 </tr>
 <tr>
 <td><strong>Rust (gtk-rs)</strong></td>
@@ -576,7 +576,7 @@ Basic Operations</h3>
 <td><strong>Locale Support</strong></td>
 <td>Built into Chromium</td>
 <td>Built into WebKit</td>
-<td><code>blink_gtk_set_devtools_locale()</code> (Build 637)</td>
+<td><code>blink_gtk_set_devtools_locale()</code></td>
 </tr>
 </tbody>
 </table>
@@ -644,7 +644,7 @@ Basic Operations</h3>
 <td><strong>IME Integration</strong></td>
 <td>OS IME auto-linked</td>
 <td>GtkIMContext integration</td>
-<td>GtkIMContext integration (Build 632)</td>
+<td>GtkIMContext integration</td>
 </tr>
 <tr>
 <td><strong>Composition Text</strong></td>
@@ -725,13 +725,13 @@ Basic Operations</h3>
 <td><strong>dmabuf / Zero-Copy</strong></td>
 <td>Via Ozone</td>
 <td>Via WPE libwpe</td>
-<td>Supported (GdkDmabufTextureBuilder, Build 695-696)</td>
+<td>Supported (GdkDmabufTextureBuilder)</td>
 </tr>
 <tr>
 <td><strong>EGLSync Fence Synchronization</strong></td>
 <td>Built into Chromium</td>
 <td>Built into WebKit</td>
-<td>Supported (Build 696)</td>
+<td>Supported</td>
 </tr>
 <tr>
 <td><strong>Software Rendering</strong></td>
@@ -756,25 +756,25 @@ Basic Operations</h3>
 <td><strong>GPU Accelerated</strong></td>
 <td>60fps (estimated)</td>
 <td>60fps (estimated)</td>
-<td>39.5fps stable (Build 658, measured)</td>
+<td>39.5fps stable (measured)</td>
 </tr>
 <tr>
 <td><strong>dmabuf Mode</strong></td>
 <td>60fps (estimated)</td>
 <td>60fps (estimated)</td>
-<td>62.5fps stable (Build 696, measured)</td>
+<td>62.5fps stable (measured)</td>
 </tr>
 <tr>
 <td><strong>Software Mode</strong></td>
 <td>30-60fps (estimated)</td>
 <td>30-60fps (estimated)</td>
-<td>39.5fps (Build 658, measured)</td>
+<td>39.5fps (measured)</td>
 </tr>
 <tr>
 <td><strong>Initial Display Latency</strong></td>
 <td>1-3s (estimated)</td>
 <td>1-2s (estimated)</td>
-<td>2.0s (Build 658, measured)</td>
+<td>2.0s (measured)</td>
 </tr>
 </tbody>
 </table>
@@ -809,19 +809,19 @@ environment with SwiftShader / dmabuf.</p>
 <td><strong>RPM Support</strong></td>
 <td>None (self-bundled)</td>
 <td>Yes (system package)</td>
-<td>Yes (blinkgtk-bin RPM, Build 669)</td>
+<td>Yes (blinkgtk-bin RPM)</td>
 </tr>
 <tr>
 <td><strong>DEB Support</strong></td>
 <td>None (self-bundled)</td>
 <td>Yes (system package)</td>
-<td>Yes (libblinkgtk-0.1-0 DEB, Build 669)</td>
+<td>Yes (libblinkgtk-0.1-0 DEB)</td>
 </tr>
 <tr>
 <td><strong>Tarball Support</strong></td>
 <td>Yes (official distribution)</td>
 <td>Source tarball</td>
-<td>Yes (tar.gz / tar.bz2, Build 669)</td>
+<td>Yes (tar.gz / tar.bz2)</td>
 </tr>
 </tbody>
 </table>
@@ -850,11 +850,11 @@ etc.</p>
 </tr>
 <tr>
 <td>tar.gz</td>
-<td><code>blinkgtk-1.1.0-build5-linux-x86_64.tar.gz</code></td>
+<td><code>blinkgtk-1.1.0-build6-linux-x86_64.tar.gz</code></td>
 </tr>
 <tr>
 <td>tar.bz2</td>
-<td><code>blinkgtk-1.1.0-build5-linux-x86_64.tar.bz2</code></td>
+<td><code>blinkgtk-1.1.0-build6-linux-x86_64.tar.bz2</code></td>
 </tr>
 </tbody>
 </table>
@@ -1119,8 +1119,7 @@ and Chrome DevTools compatibility.</p>
 </tr>
 </tbody>
 </table>
-<h3 id="74-known-limitations-as-of-build-699">7.4 Known Limitations (as
-of Build 699)</h3>
+<h3 id="74-known-limitations">7.4 Known Limitations</h3>
 <ul>
 <li>Wayland exclusive: Does not operate in X11 environments</li>
 <li>Component Build: Requires approximately 30-40 shared libraries
