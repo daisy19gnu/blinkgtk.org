@@ -94,13 +94,11 @@
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK Settings API リファレンス — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-settings-api-リファレンス">BlinkGTK Settings API
 リファレンス</h1>
-<p><strong>バージョン</strong>: v0.9.28-dev <strong>最終更新</strong>:
-2026-01-01 <strong>言語</strong>: 日本語 | <a
+<p><strong>バージョン</strong>: v0.9.28-dev<br />
+<strong>最終更新</strong>: 2026-01-01<br />
+<strong>言語</strong>: 日本語 | <a
 href="./settings-api-en.md">English</a></p>
 <hr />
 <h2 id="概要">概要</h2>
@@ -158,11 +156,13 @@ id="blink_web_view_set_javascript_enabled">blink_web_view_set_javascript_enabled
 <p>JavaScriptの有効/無効を設定します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView（<code>BLINK_WEB_VIEW()</code>
-でキャスト） | | <code>enabled</code> | <code>gboolean</code> | TRUE =
-有効、FALSE = 無効 |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> |
+BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |<br />
+| <code>enabled</code> | <code>gboolean</code> | TRUE = 有効、FALSE =
+無効 |</p>
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>デフォルト値</strong>: TRUE（有効）</p>
 <p><strong>使用例</strong>:</p>
@@ -186,10 +186,11 @@ id="blink_web_view_get_javascript_enabled">blink_web_view_get_javascript_enabled
 <p>JavaScriptが有効かどうかを取得します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView（<code>BLINK_WEB_VIEW()</code>
-でキャスト） |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> |
+BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <p><strong>戻り値</strong>: <code>gboolean</code> - TRUE = 有効、FALSE =
 無効</p>
 <p><strong>使用例</strong>:</p>
@@ -206,18 +207,20 @@ id="blink_web_view_set_user_agent">blink_web_view_set_user_agent()</h3>
 <p>カスタムUser-Agent文字列を設定します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> user_agent<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView（<code>BLINK_WEB_VIEW()</code>
-でキャスト） | | <code>user_agent</code> | <code>const char*</code> |
-User-Agent 文字列。<code>NULL</code> または空文字を渡すと
-<strong>override を解除</strong>し Chromium 既定の User-Agent に戻る
-|</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> |
+BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |<br />
+| <code>user_agent</code> | <code>const char*</code> | User-Agent
+文字列。<code>NULL</code> または空文字を渡すと <strong>override
+を解除</strong>し Chromium 既定の User-Agent に戻る |</p>
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>デフォルト値</strong>: Chromium のデフォルト
 User-Agent（override 未設定の状態）</p>
 <p><strong>注意</strong>: 値は HTTP
-ヘッダ値として妥当である必要があります。CR / LF / NUL を含む文字列は
+ヘッダ値として妥当である必要があります。CR / LF / NUL
+を含む文字列は<br />
 無視され、override
 は変更されません（不正なヘッダの送出を防ぐため）。</p>
 <p>設定は以後に起動する Renderer
@@ -246,16 +249,17 @@ id="blink_web_view_get_user_agent">blink_web_view_get_user_agent()</h3>
 <p>現在のUser-Agent文字列を取得します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView（<code>BLINK_WEB_VIEW()</code>
-でキャスト） |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> |
+BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <p><strong>戻り値</strong>: <code>gchar*</code> -
 <code>blink_web_view_set_user_agent()</code> で設定した override
-文字列。 <strong>override 未設定時は
-<code>NULL</code></strong>（Chromium 既定の User-Agent
-を使用中であることを意味する）。 非 NULL の場合、呼び出し側で
-<code>g_free()</code> が必要。</p>
+文字列。<br />
+<strong>override 未設定時は <code>NULL</code></strong>（Chromium 既定の
+User-Agent を使用中であることを意味する）。<br />
+非 NULL の場合、呼び出し側で <code>g_free()</code> が必要。</p>
 <p><strong>使用例</strong>:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> user_agent <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">));</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>user_agent<span class="op">)</span> <span class="op">{</span></span>
@@ -264,7 +268,8 @@ id="blink_web_view_get_user_agent">blink_web_view_get_user_agent()</h3>
 <span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> <span class="cf">else</span> <span class="op">{</span></span>
 <span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;override なし (Chromium 既定の User-Agent を使用中)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
 <span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p><strong>メモリ管理</strong>: 注意 <strong>重要</strong>:
+<p><strong>メモリ管理</strong>:<br />
+注意 <strong>重要</strong>:
 戻り値は呼び出し側で<code>g_free()</code>により解放する必要があります。</p>
 <p><strong>利用可能バージョン</strong>: Build 171以降</p>
 <hr />
@@ -274,10 +279,12 @@ id="blink_web_view_set_images_enabled">blink_web_view_set_images_enabled()</h3>
 <p>画像の自動読み込みを制御します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView（<code>BLINK_WEB_VIEW()</code>
-でキャスト） | | <code>enabled</code> | <code>gboolean</code> | TRUE =
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> |
+BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |<br />
+| <code>enabled</code> | <code>gboolean</code> | TRUE =
 自動読み込み、FALSE = 無効 |</p>
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>デフォルト値</strong>: TRUE（自動読み込み有効）</p>
@@ -305,10 +312,11 @@ id="blink_web_view_get_images_enabled">blink_web_view_get_images_enabled()</h3>
 <p>画像の自動読み込み設定を取得します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView（<code>BLINK_WEB_VIEW()</code>
-でキャスト） |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> |
+BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <p><strong>戻り値</strong>: <code>gboolean</code> - TRUE =
 自動読み込み有効、FALSE = 無効</p>
 <p><strong>使用例</strong>:</p>
@@ -325,11 +333,13 @@ id="blink_web_view_set_local_storage_enabled">blink_web_view_set_local_storage_e
 <p>HTML5 LocalStorageの有効/無効を設定します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView（<code>BLINK_WEB_VIEW()</code>
-でキャスト） | | <code>enabled</code> | <code>gboolean</code> | TRUE =
-有効、FALSE = 無効 |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> |
+BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |<br />
+| <code>enabled</code> | <code>gboolean</code> | TRUE = 有効、FALSE =
+無効 |</p>
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>デフォルト値</strong>: TRUE（有効）</p>
 <p><strong>使用例</strong>:</p>
@@ -356,10 +366,11 @@ id="blink_web_view_get_local_storage_enabled">blink_web_view_get_local_storage_e
 <p>LocalStorage設定を取得します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView（<code>BLINK_WEB_VIEW()</code>
-でキャスト） |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> |
+BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 <p><strong>戻り値</strong>: <code>gboolean</code> - TRUE = 有効、FALSE =
 無効</p>
 <p><strong>使用例</strong>:</p>
@@ -474,8 +485,8 @@ id="blink_web_view_get_local_storage_enabled">blink_web_view_get_local_storage_e
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
 <p>同梱サンプル <code>blinkgtk_browser</code>
-は設定を変更しない最小構成です。設定を試す
-場合は、上記のように呼び出しを足してビルドし直してください
+は設定を変更しない最小構成です。設定を試す<br />
+場合は、上記のように呼び出しを足してビルドし直してください<br />
 (<code>examples/</code> の <code>Makefile</code>
 でそのままビルドできます)。</p>
 <hr />
@@ -534,9 +545,9 @@ href="../migration/webkitgtk-to-blinkgtk-ja.md">WebKitGTK移行ガイド</a></li
 </tr>
 </tbody>
 </table>
-<p><strong>ライセンス</strong>: BSD-3-Clause
-<strong>プロジェクト</strong>: BlinkGTK <strong>メンテナー</strong>:
-BlinkGTK Lead <a
+<p><strong>ライセンス</strong>: BSD-3-Clause<br />
+<strong>プロジェクト</strong>: BlinkGTK<br />
+<strong>メンテナー</strong>: BlinkGTK Lead <a
 href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
 </body>
 </html>

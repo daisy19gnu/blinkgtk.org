@@ -94,14 +94,12 @@
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK Navigation API Reference — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-navigation-api-reference">BlinkGTK Navigation API
 Reference</h1>
-<p><strong>Version</strong>: v0.9.28-dev <strong>Last updated</strong>:
-2026-01-01 <strong>Language</strong>: <a
-href="./navigation-api-ja.md">日本語</a> | English</p>
+<p><strong>Version</strong>: v0.9.28-dev<br />
+<strong>Last updated</strong>: 2026-01-01<br />
+<strong>Language</strong>: <a href="./navigation-api-ja.md">日本語</a> |
+English</p>
 <hr />
 <h2 id="overview">Overview</h2>
 <p>The Navigation API provides functions for browser history navigation
@@ -169,9 +167,11 @@ and page control.</p>
 <p>Goes back one entry in history.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_go_back<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> | BlinkWebView widget
+|</p>
 <p><strong>Return value</strong>: None</p>
 <p><strong>Behavior</strong>:</p>
 <ul>
@@ -201,9 +201,11 @@ and page control.</p>
 <p>Goes forward one entry in history.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_go_forward<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> | BlinkWebView widget
+|</p>
 <p><strong>Return value</strong>: None</p>
 <p><strong>Behavior</strong>:</p>
 <ul>
@@ -234,9 +236,11 @@ and page control.</p>
 <p>Reloads the current page.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_reload<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> | BlinkWebView widget
+|</p>
 <p><strong>Return value</strong>: None</p>
 <p><strong>Behavior</strong>:</p>
 <ul>
@@ -276,9 +280,11 @@ change</strong>:</p>
 <p>Stops the page load.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_stop<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> | BlinkWebView widget
+|</p>
 <p><strong>Return value</strong>: None</p>
 <p><strong>Behavior</strong>:</p>
 <ul>
@@ -329,9 +335,11 @@ shortened to <code>stop()</code>.</p>
 <p>Checks whether it is possible to go back in history.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_can_go_back<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> | BlinkWebView widget
+|</p>
 <p><strong>Return value</strong>: <code>gboolean</code> - TRUE = can go
 back, FALSE = cannot go back</p>
 <p><strong>Example</strong>:</p>
@@ -377,9 +385,11 @@ id="blink_web_view_can_go_forward">blink_web_view_can_go_forward()</h3>
 <p>Checks whether forward history exists.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_can_go_forward<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> | BlinkWebView widget
+|</p>
 <p><strong>Return value</strong>: <code>gboolean</code> - TRUE = can go
 forward, FALSE = cannot go forward</p>
 <p><strong>Example</strong>:</p>
@@ -542,8 +552,9 @@ Tutorial</a> - Event handling</li>
 </tr>
 </tbody>
 </table>
-<p><strong>License</strong>: BSD-3-Clause <strong>Project</strong>:
-BlinkGTK <strong>Maintainer</strong>: BlinkGTK Project <a
+<p><strong>License</strong>: BSD-3-Clause<br />
+<strong>Project</strong>: BlinkGTK<br />
+<strong>Maintainer</strong>: BlinkGTK Project <a
 href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
 </body>
 </html>

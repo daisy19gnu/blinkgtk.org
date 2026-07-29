@@ -94,15 +94,13 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK Portable Application Guide — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-portable-application-guide">BlinkGTK Portable
 Application Guide</h1>
-<p><strong>Author</strong>: BlinkGTK Project <strong>Last
-updated</strong>: 2026-07-03 <strong>Audience</strong>: Developers who
-want to build a self-contained (portable) application from the BlinkGTK
-binary distribution that runs from a single directory</p>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Last updated</strong>: 2026-07-03<br />
+<strong>Audience</strong>: Developers who want to build a self-contained
+(portable) application from the BlinkGTK binary distribution that runs
+from a single directory</p>
 <hr />
 <h2 id="1-what-is-a-portable-build">1. What is a portable build?</h2>
 <p>A portable BlinkGTK application bundles your application executable
@@ -301,7 +299,7 @@ includes it automatically). Without the shim, page loads fail and you
 get a black screen.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> myapp myapp.c <span class="dt">\</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1 gtk4<span class="va">)</span></span></code></pre></div>
-<p>If you link manually without pkg-config, you must add
+<p>If you link manually without pkg-config, you must add<br />
 <code>-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</code>
 in addition to <code>-lblinkgtk-0.1</code>.</p>
 <h3 id="42-setting-rpath-the-core-of-portability">4.2 Setting RPATH (the

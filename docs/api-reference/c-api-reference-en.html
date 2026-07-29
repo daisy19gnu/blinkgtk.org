@@ -94,39 +94,42 @@
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK C API Reference — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-c-api-reference">BlinkGTK C API Reference</h1>
-<p><strong>Author</strong>: BlinkGTK Development Team
-<strong>Date</strong>: 2026-03-07 <strong>Target Version</strong>: Build
-612 and later <strong>Changelog</strong>: Build 612 - Initial version
-(input event API added)</p>
+<p><strong>Author</strong>: BlinkGTK Development Team<br />
+<strong>Date</strong>: 2026-03-07<br />
+<strong>Target Version</strong>: Build 612 and later<br />
+<strong>Changelog</strong>: Build 612 - Initial version (input event API
+added)</p>
 <hr />
 <blockquote>
 <p><strong>Note This document is outdated (noted
 2026-07-27)</strong></p>
 <p>A mechanical cross-check found that this document covers <strong>32
-functions</strong>, while the shipped header <code>blink_gtk.h</code>
-declares <strong>80</strong> (roughly 40% coverage). It also still
-documents two functions that have since been removed:</p>
+functions</strong>, while the shipped header<br />
+<code>blink_gtk.h</code> declares <strong>80</strong> (roughly 40%
+coverage). It also still documents two functions that have<br />
+since been removed:</p>
 <ul>
 <li>two internal GObject-to-C++ mapping helpers</li>
 </ul>
-<p>For accurate information on the current API, treat the shipped header
+<p>For accurate information on the current API, treat the shipped
+header<br />
 <code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code> as the primary
-source. For environment variables, <a
+source. For environment variables,<br />
+<a
 href="./environment-variables-en.md"><code>environment-variables-en.md</code></a>
 is authoritative.</p>
 <p>This document will be fully revised as the basis for Chapter 11 of
-the API reference under construction in #121 (see <a
+the API reference under<br />
+construction in #121 (see <a
 href="./00-index-en.md"><code>00-index-en.md</code></a>). Once that
-revision lands, this file will be reduced to a pointer to the new
-chapter.</p>
+revision lands, this file<br />
+will be reduced to a pointer to the new chapter.</p>
 </blockquote>
 <hr />
 <h2 id="overview">Overview</h2>
-<p>The BlinkGTK C API is defined in <code>blink_gtk/blink_gtk.h</code>.
+<p>The BlinkGTK C API is defined in
+<code>blink_gtk/blink_gtk.h</code>.<br />
 Following the same design philosophy as WebKitGTK, it provides APIs that
 can be used directly from C.</p>
 <p>Include path setup:</p>
@@ -269,7 +272,8 @@ pages</li>
 </ul>
 <p><strong>Loading inline HTML</strong>:</p>
 <p>To display inline HTML, use <code>blink_web_view_load_html()</code>
-instead of data: URLs (CP-308: data:URL to load_html() migration).</p>
+instead of data: URLs<br />
+(CP-308: data:URL to load_html() migration).</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://www.google.com&quot;</span><span class="op">);</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* CP-308: data:URL to load_html() migration — use load_html() for inline HTML */</span></span>
@@ -278,8 +282,9 @@ instead of data: URLs (CP-308: data:URL to load_html() migration).</p>
 <span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;div style=&#39;display:block;background:#0000ff;width:800px;height:200px&#39;&gt;BLUE&lt;/div&gt;&quot;</span></span>
 <span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
 <p><strong>Note</strong>: With <code>blink_web_view_load_html()</code>,
-plain HTML can be passed directly without data: URL encoding (e.g.,
-<code>%23</code>). CSS color values like <code>#ffe</code> work as-is.
+plain HTML can be passed directly without<br />
+data: URL encoding (e.g., <code>%23</code>). CSS color values like
+<code>#ffe</code> work as-is.<br />
 Always include DOCTYPE. Without it, the browser enters quirks mode and
 div elements are treated as inline elements (confirmed in Build
 609-610).</p>
@@ -365,8 +370,9 @@ successfully.</p>
 <p><strong>Note</strong>: This is asynchronous. The file may not be
 written immediately.</p>
 <p><strong>Recommended timing</strong>: Wait at least 30 seconds after
-navigation before capturing. Renderer initialization takes approximately
-25 seconds (confirmed in Build 549).</p>
+navigation before capturing.<br />
+Renderer initialization takes approximately 25 seconds (confirmed in
+Build 549).</p>
 <p><strong>Example</strong>:</p>
 <div class="sourceCode" id="cb26"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Take screenshot 30 seconds after navigation */</span></span>
 <span id="cb26-2"><a href="#cb26-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean take_screenshot<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
@@ -385,7 +391,8 @@ id="blink_web_view_inject_test_input">blink_web_view_inject_test_input()</h3>
 <p><strong>Build 612 and later</strong> — Injects test input events
 directly into the Renderer.</p>
 <p>Sends a mouse click (left button Down/Up) and keyboard event ('A'
-Down/Up) to the Renderer via <code>ForwardMouseEvent()</code> /
+Down/Up)<br />
+to the Renderer via <code>ForwardMouseEvent()</code> /
 <code>ForwardKeyboardEvent()</code>.</p>
 <table>
 <thead>
@@ -414,8 +421,8 @@ Down/Up) to the Renderer via <code>ForwardMouseEvent()</code> /
 </tbody>
 </table>
 <p><strong>Note</strong>: This API is for debugging and testing only. It
-bypasses the GTK gesture event pipeline to test Chromium's input routing
-directly.</p>
+bypasses the GTK gesture<br />
+event pipeline to test Chromium's input routing directly.</p>
 <p><strong>Example</strong>:</p>
 <div class="sourceCode" id="cb28"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb28-1"><a href="#cb28-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Test input 10 seconds after page load */</span></span>
 <span id="cb28-2"><a href="#cb28-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean test_input<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
@@ -506,7 +513,8 @@ Development Team.</em></p>
 <hr />
 <h2 id="cookie-api">Cookie API</h2>
 <p>Three functions that exist in the shipped header
-<code>blink_gtk.h</code> (mechanically verified as of 2026-07-28).</p>
+<code>blink_gtk.h</code> (mechanically<br />
+verified as of 2026-07-28).</p>
 <h3 id="blink_web_view_get_cookies">blink_web_view_get_cookies()</h3>
 <div class="sourceCode" id="cb30"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb30-1"><a href="#cb30-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkCookieCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> cookies<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
 <span id="cb30-2"><a href="#cb30-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -515,7 +523,8 @@ Development Team.</em></p>
 <span id="cb30-5"><a href="#cb30-5" aria-hidden="true" tabindex="-1"></a>                                BlinkCookieCallback callback<span class="op">,</span></span>
 <span id="cb30-6"><a href="#cb30-6" aria-hidden="true" tabindex="-1"></a>                                gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p>Asynchronously retrieves the cookies for a URL. The callback receives
-a string in <code>"a=1; b=2"</code> form.</p>
+a string in<br />
+<code>"a=1; b=2"</code> form.</p>
 <h3 id="blink_web_view_set_cookie">blink_web_view_set_cookie()</h3>
 <div class="sourceCode" id="cb31"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb31-1"><a href="#cb31-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkSetCookieCallback<span class="op">)(</span>gboolean success<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
 <span id="cb31-2"><a href="#cb31-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -525,11 +534,12 @@ a string in <code>"a=1; b=2"</code> form.</p>
 <span id="cb31-6"><a href="#cb31-6" aria-hidden="true" tabindex="-1"></a>                               BlinkSetCookieCallback callback<span class="op">,</span></span>
 <span id="cb31-7"><a href="#cb31-7" aria-hidden="true" tabindex="-1"></a>                               gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p><code>cookie_line</code> uses the same syntax as the
-<code>Set-Cookie</code> header, for example
+<code>Set-Cookie</code> header, for example<br />
 <code>"session=abc123; Path=/; Max-Age=3600"</code>.</p>
 <p>The cookie is validated before being stored. <strong>If the line
-cannot be parsed, or the cookie store rejects it, the callback receives
-<code>FALSE</code>.</strong> <code>callback</code> may be
+cannot be parsed, or<br />
+the cookie store rejects it, the callback receives
+<code>FALSE</code>.</strong> <code>callback</code> may be<br />
 <code>NULL</code>.</p>
 <div class="sourceCode" id="cb32"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb32-1"><a href="#cb32-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_set<span class="op">(</span>gboolean success<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb32-2"><a href="#cb32-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;cookie: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> success <span class="op">?</span> <span class="st">&quot;OK&quot;</span> <span class="op">:</span> <span class="st">&quot;rejected&quot;</span><span class="op">);</span></span>

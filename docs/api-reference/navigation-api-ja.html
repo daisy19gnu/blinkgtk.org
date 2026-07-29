@@ -94,13 +94,11 @@
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK Navigation API リファレンス — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-navigation-api-リファレンス">BlinkGTK Navigation API
 リファレンス</h1>
-<p><strong>バージョン</strong>: v0.9.28-dev <strong>最終更新</strong>:
-2026-01-01 <strong>言語</strong>: 日本語 | <a
+<p><strong>バージョン</strong>: v0.9.28-dev<br />
+<strong>最終更新</strong>: 2026-01-01<br />
+<strong>言語</strong>: 日本語 | <a
 href="./navigation-api-en.md">English</a></p>
 <hr />
 <h2 id="概要">概要</h2>
@@ -169,9 +167,11 @@ APIは、ブラウザの履歴移動とページ制御を行うためのAPIで�
 <p>履歴を1つ戻ります。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_go_back<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebViewウィジェット |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> |
+BlinkWebViewウィジェット |</p>
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>動作</strong>:</p>
 <ul>
@@ -201,9 +201,11 @@ APIは、ブラウザの履歴移動とページ制御を行うためのAPIで�
 <p>履歴を1つ進みます。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_go_forward<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebViewウィジェット |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> |
+BlinkWebViewウィジェット |</p>
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>動作</strong>:</p>
 <ul>
@@ -234,9 +236,11 @@ APIは、ブラウザの履歴移動とページ制御を行うためのAPIで�
 <p>現在のページを再読み込みします。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_reload<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebViewウィジェット |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> |
+BlinkWebViewウィジェット |</p>
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>動作</strong>:</p>
 <ul>
@@ -275,9 +279,11 @@ APIは、ブラウザの履歴移動とページ制御を行うためのAPIで�
 <p>ページの読み込みを停止します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_stop<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebViewウィジェット |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> |
+BlinkWebViewウィジェット |</p>
 <p><strong>戻り値</strong>: なし</p>
 <p><strong>動作</strong>:</p>
 <ul>
@@ -327,9 +333,11 @@ WebKitGTKの<code>webkit_web_view_stop_loading()</code>に対応しますが、�
 <p>履歴を戻れるかどうかを確認します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_can_go_back<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebViewウィジェット |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> |
+BlinkWebViewウィジェット |</p>
 <p><strong>戻り値</strong>: <code>gboolean</code> - TRUE = 戻れる、FALSE
 = 戻れない</p>
 <p><strong>使用例</strong>:</p>
@@ -375,9 +383,11 @@ id="blink_web_view_can_go_forward">blink_web_view_can_go_forward()</h3>
 <p>前方履歴があるかどうかを確認します。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_can_go_forward<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>パラメータ</strong>: | パラメータ | 型 | 説明 |
-|-----------|---|------| | <code>web_view</code> |
-<code>GtkWidget*</code> | BlinkWebViewウィジェット |</p>
+<p><strong>パラメータ</strong>:<br />
+| パラメータ | 型 | 説明 |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>GtkWidget*</code> |
+BlinkWebViewウィジェット |</p>
 <p><strong>戻り値</strong>: <code>gboolean</code> - TRUE = 進める、FALSE
 = 進めない</p>
 <p><strong>使用例</strong>:</p>
@@ -540,9 +550,9 @@ href="../tutorials/events-tutorial-c-ja.md">イベント処理チュートリア
 </tr>
 </tbody>
 </table>
-<p><strong>ライセンス</strong>: BSD-3-Clause
-<strong>プロジェクト</strong>: BlinkGTK <strong>メンテナー</strong>:
-BlinkGTK Lead <a
+<p><strong>ライセンス</strong>: BSD-3-Clause<br />
+<strong>プロジェクト</strong>: BlinkGTK<br />
+<strong>メンテナー</strong>: BlinkGTK Lead <a
 href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
 </body>
 </html>

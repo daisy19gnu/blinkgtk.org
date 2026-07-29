@@ -94,27 +94,27 @@
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK サンプル / BlinkGTK examples — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-サンプル--blinkgtk-examples">BlinkGTK サンプル /
 BlinkGTK examples</h1>
 <h2 id="blinkgtk_browserc">blinkgtk_browser.c</h2>
 <p>ウィンドウを 1 つ開き、<code>https://google.com/</code>
-を表示するだけの最小構成の サンプルです。BlinkGTK
-を組み込むのに必要なものだけを示しています。</p>
+を表示するだけの最小構成の<br />
+サンプルです。BlinkGTK を組み込むのに必要なものだけを示しています。</p>
 <p>A minimal sample that opens a single window and displays
-<code>https://google.com/</code>. It shows only what is required to
-embed BlinkGTK.</p>
+<code>https://google.com/</code>.<br />
+It shows only what is required to embed BlinkGTK.</p>
 <h3 id="ビルド--build">ビルド / Build</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span></span></code></pre></div>
 <p><code>pkg-config</code> から <code>blinkgtk-0.1</code>
-が見えている必要があります。RPM / DEB で
+が見えている必要があります。RPM / DEB で<br />
 インストールした場合は設定不要です。tarball
-を展開して使う場合は次のように 指定してください。</p>
+を展開して使う場合は次のように<br />
+指定してください。</p>
 <p><code>blinkgtk-0.1</code> must be visible to <code>pkg-config</code>.
-Nothing is needed if you installed the RPM or DEB. If you extracted the
-tarball, point it at the extraction directory:</p>
+Nothing is needed if you<br />
+installed the RPM or DEB. If you extracted the tarball, point it at
+the<br />
+extraction directory:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=&lt;</span>展開先 / extraction dir<span class="op">&gt;</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span></code></pre></div>
 <h3 id="実行--run">実行 / Run</h3>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./blinkgtk_browser</span>                      <span class="co"># https://google.com/ を開く / opens https://google.com/</span></span>
@@ -161,10 +161,12 @@ returns a <code>GtkWidget *</code>; cast with
 </tr>
 </tbody>
 </table>
-<p>より詳しい手順とつまずきやすい点は、同梱の
+<p>より詳しい手順とつまずきやすい点は、同梱の<br />
 <code>building-with-blinkgtk-ja.md</code> /
-<code>building-with-blinkgtk-en.md</code> を参照して ください。</p>
-<p>For a fuller walkthrough and the common pitfalls, see the bundled
+<code>building-with-blinkgtk-en.md</code> を参照して<br />
+ください。</p>
+<p>For a fuller walkthrough and the common pitfalls, see the
+bundled<br />
 <code>building-with-blinkgtk-ja.md</code> /
 <code>building-with-blinkgtk-en.md</code>.</p>
 </body>

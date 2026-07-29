@@ -94,17 +94,15 @@
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK イベント処理チュートリアル (C言語) —
-BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-イベント処理チュートリアル-c言語">BlinkGTK
 イベント処理チュートリアル (C言語)</h1>
-<p><strong>最終更新</strong>: 2026-01-01
-<strong>対象バージョン</strong>: BlinkGTK v0.9.28-dev以降
+<p><strong>最終更新</strong>: 2026-01-01<br />
+<strong>対象バージョン</strong>: BlinkGTK v0.9.28-dev以降<br />
 <strong>Phase</strong>: Phase 5 (Performance Optimization &amp; User
-API) <strong>レベル</strong>: 初級〜上級 <strong>言語</strong>: 日本語 |
-<a href="./events-tutorial-c-en.md">English</a></p>
+API)<br />
+<strong>レベル</strong>: 初級〜上級<br />
+<strong>言語</strong>: 日本語 | <a
+href="./events-tutorial-c-en.md">English</a></p>
 <hr />
 <h2 id="目次">目次</h2>
 <ol type="1">
@@ -157,12 +155,14 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="
 <li><strong>型安全</strong>: コンパイル時に型チェック</li>
 <li><strong>柔軟</strong>: 複数のハンドラを同一シグナルに接続可能</li>
 </ul>
-<p><strong>BlinkGTKのシグナル</strong>: | シグナル名 | 発火タイミング |
-用途 | |-----------|--------------|------| | <code>load-changed</code> |
-ロード状態変化 | プログレス表示 | | <code>load-failed</code> |
-ロード失敗 | エラー処理 | | <code>title-changed</code> | タイトル変更 |
-ウィンドウタイトル更新 | | <code>uri-changed</code> | URI変更 |
-アドレスバー更新 |</p>
+<p><strong>BlinkGTKのシグナル</strong>:<br />
+| シグナル名 | 発火タイミング | 用途 |<br />
+|-----------|--------------|------|<br />
+| <code>load-changed</code> | ロード状態変化 | プログレス表示 |<br />
+| <code>load-failed</code> | ロード失敗 | エラー処理 |<br />
+| <code>title-changed</code> | タイトル変更 | ウィンドウタイトル更新
+|<br />
+| <code>uri-changed</code> | URI変更 | アドレスバー更新 |</p>
 <h3 id="最初のシグナルハンドラ">最初のシグナルハンドラ</h3>
 <p>最もシンプルな例から始めましょう：</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
@@ -1418,8 +1418,8 @@ APIリファレンス</a> - シグナルの詳細</li>
 <li><code>complete-browser.c</code> - 完全な機能を持つブラウザ</li>
 </ul>
 <hr />
-<p><strong>作成者</strong>: BlinkGTK開発チーム
-<strong>ライセンス</strong>: BSD 3-Clause
+<p><strong>作成者</strong>: BlinkGTK開発チーム<br />
+<strong>ライセンス</strong>: BSD 3-Clause<br />
 <strong>フィードバック</strong>: <a
 href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
 </body>

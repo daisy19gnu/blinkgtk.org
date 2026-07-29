@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK Consumer Application Integration Guide (Linking and Runtime Requirements) — BlinkGTK</title>
+  <title>BlinkGTK Consumer Application Integration Guide (Linking and
+Runtime Requirements) — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -94,36 +95,38 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK Consumer Application Integration Guide
-(Linking and Runtime Requirements) — BlinkGTK</h1>
-</header>
 <h1
 id="blinkgtk-consumer-application-integration-guide-linking-and-runtime-requirements">BlinkGTK
 Consumer Application Integration Guide (Linking and Runtime
 Requirements)</h1>
-<p><strong>Author</strong>: BlinkGTK Project <strong>Audience</strong>:
-Developers building their own applications (C / Python / Rust, etc.) on
-top of BlinkGTK (<code>libblinkgtk.so</code>) <strong>Last
-updated</strong>: 2026-06-21</p>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Audience</strong>: Developers building their own applications (C
+/ Python / Rust, etc.) on top of BlinkGTK
+(<code>libblinkgtk.so</code>)<br />
+<strong>Last updated</strong>: 2026-06-21</p>
 <p>This guide collects the linking requirements, runtime requirements,
-and API usage notes a consumer application needs to avoid common
-failures such as a black screen at startup or navigation that never
-completes. The relationship between <code>libblinkgtk.so</code> and the
-PartitionAlloc allocator shim is especially important: missing it leads
-to no rendering at all, so it is covered first.</p>
+and API usage notes a consumer<br />
+application needs to avoid common failures such as a black screen at
+startup or navigation that<br />
+never completes. The relationship between <code>libblinkgtk.so</code>
+and the PartitionAlloc allocator shim is<br />
+especially important: missing it leads to no rendering at all, so it is
+covered first.</p>
 <hr />
 <h2 id="1-why-this-guide-exists">1. Why this guide exists</h2>
 <p>BlinkGTK binds the Chromium Blink rendering engine to GTK4. Because
-it embeds Chromium's content layer, it carries <strong>link-time and
-run-time prerequisites</strong> that differ from ordinary GTK libraries.
-If these are not met, the build and launch may appear to succeed while
-no web content is rendered (black or white screen).</p>
+it embeds Chromium's content<br />
+layer, it carries <strong>link-time and run-time prerequisites</strong>
+that differ from ordinary GTK<br />
+libraries. If these are not met, the build and launch may appear to
+succeed while no web content<br />
+is rendered (black or white screen).</p>
 <p>The bundled <code>blinkgtk_browser</code> sample satisfies these
-prerequisites by linking through <code>pkg-config</code>. When an
-external consumer application links manually, those prerequisites can be
-dropped. This guide makes the difference explicit so developers do not
-lose time to the same pitfalls.</p>
+prerequisites by linking through <code>pkg-config</code>. When<br />
+an external consumer application links manually, those prerequisites can
+be dropped. This guide<br />
+makes the difference explicit so developers do not lose time to the same
+pitfalls.</p>
 <hr />
 <h2
 id="2-relationship-between-libblinkgtkso-and-the-partitionalloc-allocator-shim-most-important">2.
@@ -131,31 +134,34 @@ Relationship between libblinkgtk.so and the PartitionAlloc allocator
 shim (most important)</h2>
 <h3 id="21-what-the-shim-is">2.1 What the shim is</h3>
 <p>Chromium uses its own <strong>PartitionAlloc</strong> allocator for
-memory. To route process-wide allocation through PartitionAlloc, the
-standard allocator functions (<code>malloc</code> / <code>free</code>,
-etc.) must be <strong>interposed</strong>. That is the job of the
-<strong>allocator shim</strong>
+memory. To route process-wide allocation<br />
+through PartitionAlloc, the standard allocator functions
+(<code>malloc</code> / <code>free</code>, etc.) must be<br />
+<strong>interposed</strong>. That is the job of the <strong>allocator
+shim</strong><br />
 (<code>libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so</code>).</p>
 <h3 id="22-why-it-must-be-linked-directly">2.2 Why it must be linked
 directly</h3>
 <p><code>libblinkgtk.so</code> itself declares the shim as a NEEDED
-dependency. However, if a consumer application links only
-<code>-lblinkgtk</code>, the shim is loaded
-<strong>transitively</strong> (through <code>libblinkgtk.so</code>).
-Transitive loading happens too late in process startup for the early
-<code>malloc</code> interposition setup to take effect.</p>
+dependency. However, if a consumer<br />
+application links only <code>-lblinkgtk</code>, the shim is loaded
+<strong>transitively</strong> (through<br />
+<code>libblinkgtk.so</code>). Transitive loading happens too late in
+process startup for the early <code>malloc</code><br />
+interposition setup to take effect.</p>
 <p>The allocator shim interposition must be established <strong>at
-process start</strong>. Therefore the shim must be linked as a
-<strong>direct dependency (direct NEEDED) of the executable</strong>.
-The bundled <code>blinkgtk_browser</code> links with
+process start</strong>. Therefore the shim must<br />
+be linked as a <strong>direct dependency (direct NEEDED) of the
+executable</strong>. The bundled<br />
+<code>blinkgtk_browser</code> links with
 <code>pkg-config --libs blinkgtk-0.1</code>, and the <code>Libs</code>
 line of <code>blinkgtk-0.1.pc</code> includes the shim, so it ends up as
-a direct NEEDED of the executable, so interposition is established at
-process start and rendering works.</p>
+a direct NEEDED of the executable, so<br />
+interposition is established at process start and rendering works.</p>
 <h3 id="23-symptoms-when-not-linked">2.3 Symptoms when not linked</h3>
 <p>Without direct linking, the renderer's <strong>navigation commit
-fails</strong> on Chromium 148 and later, producing a black screen at
-startup. The logs show signs such as:</p>
+fails</strong> on Chromium 148 and later,<br />
+producing a black screen at startup. The logs show signs such as:</p>
 <ul>
 <li><code>HasCommitted=0</code> (navigation never commits)</li>
 <li><code>set_dmabuf_pixels=0</code> (no frame is ever delivered)</li>
@@ -163,16 +169,19 @@ startup. The logs show signs such as:</p>
 </ul>
 <h3 id="24-version-dependency">2.4 Version dependency</h3>
 <p>On Chromium 147, transitive loading of the shim still worked. On
-Chromium 148, PartitionAlloc became more deeply integrated into the
-renderer commit path, making early interposition mandatory. This
-requirement is expected to continue on Chromium 150.</p>
+Chromium 148, PartitionAlloc<br />
+became more deeply integrated into the renderer commit path, making
+early interposition mandatory.<br />
+This requirement is expected to continue on Chromium 150.</p>
 <hr />
 <h2 id="3-how-to-link">3. How to link</h2>
 <h3 id="30-package-layout-runtime--devel--gir-v110">3.0 Package layout
 (runtime / devel / gir, v1.1.0+)</h3>
 <p>From v1.1.0, BlinkGTK ships as <strong>three split packages</strong>
-like WebKitGTK (binary-only, GitHub Releases). For consumer development,
-install the runtime plus devel (and gir if needed).</p>
+like WebKitGTK<br />
+(binary-only, GitHub Releases). For consumer development, install the
+runtime<br />
+plus devel (and gir if needed).</p>
 <table>
 <thead>
 <tr>
@@ -237,12 +246,12 @@ pkg-config therefore makes the shim a direct dependency of the executable automa
 ```sh
 cc your_app.c $(pkg-config --cflags --libs blinkgtk-0.1) -o your_app</code></pre>
 <p>When using BlinkGTK through a Python / Rust FFI binding, the shim is
-likewise included as long as the build metadata references
-pkg-config.</p>
+likewise included as long as<br />
+the build metadata references pkg-config.</p>
 <h3 id="32-manual-linking-when-hardcoding-in-a-makefile-etc">3.2 Manual
 linking (when hardcoding in a Makefile, etc.)</h3>
 <p>If you hardcode the link line instead of using pkg-config,
-<strong>add the shim explicitly</strong> after
+<strong>add the shim explicitly</strong> after<br />
 <code>-lblinkgtk</code>.</p>
 <pre class="make"><code>BLINKGTK_LIBS = -L$(BLINKGTK_LIBDIR) \
                 -lblinkgtk \
@@ -252,8 +261,8 @@ the SDK's <code>lib/chromium/</code>).</p>
 <h3 id="33-verification-check-the-needed-difference">3.3 Verification:
 check the NEEDED difference</h3>
 <p>After linking, verify that the executable lists the shim as a direct
-NEEDED. This is also the <strong>first step</strong> for diagnosing
-rendering failures.</p>
+NEEDED. This is also the<br />
+<strong>first step</strong> for diagnosing rendering failures.</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your_app <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># -&gt; one line means it is a direct NEEDED. No line means it is not linked (cause of black screen).</span></span></code></pre></div>
 <p>Comparing against the bundled sample is also effective.</p>
@@ -285,15 +294,16 @@ loop.</li>
 <li><code>void blink_gtk_shutdown(void)</code> -- call on close.</li>
 </ul>
 <p><strong>Always call shutdown.</strong> If you end the process without
-calling <code>blink_gtk_shutdown()</code>, Chromium's teardown runs
-after <code>AtExitManager</code> is destroyed and may abort with
-NOTREACHED at exit (observed in a past issue). An auto-shutdown safety
-net is registered for the not-shut-down case, but consumers are advised
-to call <code>blink_gtk_shutdown()</code> explicitly.</p>
+calling <code>blink_gtk_shutdown()</code>, Chromium's<br />
+teardown runs after <code>AtExitManager</code> is destroyed and may
+abort with NOTREACHED at exit (observed in<br />
+a past issue). An auto-shutdown safety net is registered for the
+not-shut-down case, but consumers<br />
+are advised to call <code>blink_gtk_shutdown()</code> explicitly.</p>
 <h3 id="42-creating-and-embedding-the-webview">4.2 Creating and
 embedding the WebView</h3>
 <p>Create a WebView with <code>blink_web_view_new()</code>. It returns a
-<code>GtkWidget*</code>, which you can cast to
+<code>GtkWidget*</code>, which you can cast to<br />
 <code>BlinkWebView*</code> with <code>BLINK_WEB_VIEW()</code>.</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span>          <span class="co">// self-rendering WebView</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
@@ -302,16 +312,18 @@ embedding the WebView</h3>
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> overlay <span class="op">=</span> gtk_overlay_new<span class="op">();</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>gtk_overlay_set_child<span class="op">(</span>GTK_OVERLAY<span class="op">(</span>overlay<span class="op">),</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong><code>blink_web_view_new_container()</code> is
-deprecated.</strong> The old container-creating API does not render on
-Chromium 148 and later (related to #90). Use
-<code>blink_web_view_new()</code> (self-rendering) and, if you need a
-container, put it in your own <strong><code>GtkOverlay</code> /
+deprecated.</strong> The old container-creating API does not
+render<br />
+on Chromium 148 and later (related to #90). Use
+<code>blink_web_view_new()</code> (self-rendering) and, if you<br />
+need a container, put it in your own <strong><code>GtkOverlay</code> /
 <code>GtkBox</code></strong>.</p>
 <h3 id="43-repeated-load_uri">4.3 Repeated load_uri</h3>
 <p>Calling <code>blink_web_view_load_uri()</code> repeatedly on the same
-WebView is safe. The internal renderer view is reused, and repeated
-navigations do not accumulate resources (a past leak has been resolved).
-There is no need to recreate the WebView each time.</p>
+WebView is safe. The internal renderer<br />
+view is reused, and repeated navigations do not accumulate resources (a
+past leak has been<br />
+resolved). There is no need to recreate the WebView each time.</p>
 <hr />
 <h2 id="5-rendering-and-display-pitfalls">5. Rendering and display
 pitfalls</h2>
@@ -399,42 +411,49 @@ scripts / stylesheets</h3>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                                  TRUE <span class="co">/* inject_at_document_start */</span><span class="op">);</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_inject_user_stylesheet<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> css_source<span class="op">);</span></span></code></pre></div>
 <p>A script with <code>inject_at_document_start=TRUE</code> runs at the
-document_start timing <strong>after the navigation commits</strong>. If
-the allocator shim from Section 2 is not linked and the commit never
+document_start timing <strong>after the<br />
+navigation commits</strong>. If the allocator shim from Section 2 is not
+linked and the commit never<br />
 succeeds, the injected script will not run even though a 'Stored' log
-appears (a past issue). If injection does not run, check the linking
-requirement in Section 2 first.</p>
+appears (a past issue). If<br />
+injection does not run, check the linking requirement in Section 2
+first.</p>
 <h3 id="63-getting-the-version-do-not-hardcode">6.3 Getting the version
 (do not hardcode)</h3>
 <p>The BlinkGTK / Chromium version shown in a subtitle, etc., should be
-obtained via the runtime API rather than hardcoded, so it automatically
-tracks updates to <code>libblinkgtk.so</code>.</p>
+obtained via the runtime API<br />
+rather than hardcoded, so it automatically tracks updates to
+<code>libblinkgtk.so</code>.</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blinkgtk_ver <span class="op">=</span> blink_gtk_get_version<span class="op">();</span>           <span class="co">/* BlinkGTK version */</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> chromium_ver <span class="op">=</span> blink_gtk_get_chromium_version<span class="op">();</span>  <span class="co">/* Chromium version */</span></span></code></pre></div>
 <p>These APIs are declared in the public header
 <code>&lt;blink_gtk/blink_gtk.h&gt;</code> (no <code>extern</code>
-declaration needed). The return value is an internal static string -- do
-not free it. You must link against a <code>libblinkgtk.so</code> that
-exports the symbols (builds from CP-1046 onward).</p>
+declaration<br />
+needed). The return value is an internal static string -- do not free
+it. You must link against a<br />
+<code>libblinkgtk.so</code> that exports the symbols (builds from
+CP-1046 onward).</p>
 <h3 id="64-content-protection-policy">6.4 Content protection policy</h3>
 <p>For e-book or kiosk terminals, you can restrict copy / save / print,
 etc.</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_content_policy<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                                  BLINK_CONTENT_POLICY_EBOOK_READER<span class="op">);</span></span></code></pre></div>
 <p>Presets: <code>BLINK_CONTENT_POLICY_ALLOW_ALL</code> (default),
-<code>BLINK_CONTENT_POLICY_EBOOK_READER</code>,
+<code>BLINK_CONTENT_POLICY_EBOOK_READER</code>,<br />
 <code>BLINK_CONTENT_POLICY_KIOSK</code>. You can also combine individual
-flags (<code>NO_COPY</code> / <code>NO_SAVE</code> /
+flags (<code>NO_COPY</code> / <code>NO_SAVE</code> /<br />
 <code>NO_PRINT</code> / <code>NO_CONTEXT_MENU</code> /
 <code>NO_DEVTOOLS</code>, etc.) as a bitmask. The policy applies
-immediately and can be changed at any time.</p>
+immediately<br />
+and can be changed at any time.</p>
 <h3 id="65-web-fullscreen-api-requestfullscreen">6.5 Web Fullscreen API
 (requestFullscreen)</h3>
 <p>To make web content's <code>element.requestFullscreen()</code> /
-<code>document.exitFullscreen()</code> work, <strong>register a
+<code>document.exitFullscreen()</code> work, <strong>register a<br />
 fullscreen handler</strong> that reflects the request onto the top-level
-window. If you do not register one, the fullscreen element only expands
-within the WebView's viewport and the window itself does not go
+window. If you do not register one,<br />
+the fullscreen element only expands within the WebView's viewport and
+the window itself does not go<br />
 fullscreen (this is the main reason an e-reader's fullscreen button
 appears to "do nothing").</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_fullscreen<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> gboolean enter<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
@@ -452,20 +471,22 @@ appears to "do nothing").</p>
 <p>Notes:</p>
 <ul>
 <li><p>Per the web standard, <code>requestFullscreen()</code> is only
-granted from a <strong>user gesture (a real click or key
-press)</strong>. It is rejected from synthetic events such as a
-programmatic <code>element.click()</code>
+granted from a <strong>user gesture (a real click or<br />
+key press)</strong>. It is rejected from synthetic events such as a
+programmatic <code>element.click()</code><br />
 (<code>API can only be initiated by a user gesture</code>). Bind your
 fullscreen button to a real click.</p></li>
 <li><p>Call <code>blink_web_view_exit_fullscreen(view)</code> to exit
-from the app side, and <code>blink_web_view_is_fullscreen(view)</code>
-to query the current state.</p></li>
+from the app side, and<br />
+<code>blink_web_view_is_fullscreen(view)</code> to query the current
+state.</p></li>
 <li><p><strong>Exiting with the ESC key is not automatic</strong> (HTML
-fullscreen requires browser-side ESC coordination). Attach a
-CAPTURE-phase key controller to the top-level window and, while in
+fullscreen requires browser-side ESC<br />
+coordination). Attach a CAPTURE-phase key controller to the top-level
+window and, while in<br />
 fullscreen, call <code>blink_web_view_exit_fullscreen()</code> on ESC
-(this uses the same coordinated path as
-<code>document.exitFullscreen()</code>, so Blink's state is updated
+(this uses the same coordinated path<br />
+as <code>document.exitFullscreen()</code>, so Blink's state is updated
 too).</p>
 <div class="sourceCode" id="cb12"><pre
 class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_key<span class="op">(</span>GtkEventControllerKey<span class="op">*</span> c<span class="op">,</span> guint keyval<span class="op">,</span> guint kc<span class="op">,</span></span>
@@ -489,29 +510,33 @@ environment</h2>
 <h3 id="71-shared-library-search-path-ld_library_path--rpath">7.1 Shared
 library search path (LD_LIBRARY_PATH / rpath)</h3>
 <p>Set <code>rpath</code> or <code>LD_LIBRARY_PATH</code> so that
-<code>libblinkgtk.so</code> and the Chromium shared libraries can be
+<code>libblinkgtk.so</code> and the Chromium shared libraries can
+be<br />
 resolved. The pkg-config <code>Libs:</code> already contains an
 <code>-rpath</code> setting.</p>
 <p>In configurations where <code>LD_LIBRARY_PATH</code> must be set at
-run time, the path must be settled <strong>before</strong> the Chromium
-libraries are loaded. A pattern that works is to reset
-<code>LD_LIBRARY_PATH</code> at the very start of the process and
-<strong>re-exec yourself</strong> (set the environment variable, then
-<code>execv</code> your own binary; from then on it loads with the
-correct search path).</p>
+run time, the path must be settled<br />
+<strong>before</strong> the Chromium libraries are loaded. A pattern
+that works is to reset <code>LD_LIBRARY_PATH</code> at<br />
+the very start of the process and <strong>re-exec yourself</strong> (set
+the environment variable, then <code>execv</code><br />
+your own binary; from then on it loads with the correct search
+path).</p>
 <h3
 id="711-resolving-the-resource-path-icu--pak--snapshot-important">7.1.1
 Resolving the resource path (ICU / pak / snapshot) (important)</h3>
 <p>By default, BlinkGTK / Chromium resolve <code>icudtl.dat</code> /
-<code>content_shell.pak</code> / <code>v8_context_snapshot.bin</code> /
-<code>snapshot_blob.bin</code> / <code>locales/*.pak</code> from the
-<strong>executable's directory</strong> (<code>base::DIR_MODULE</code>).
-If these resources are <strong>not next to the executable</strong> (e.g.
-the WebKitGTK-parity FHS split where the executable is in
-<code>/usr/libexec/blinkgtk-0.1/</code> and resources in
-<code>/usr/lib64/blinkgtk-0.1/chromium/</code>, or a consumer app in
-<code>/usr/bin/</code> with resources elsewhere), point the resource
-directory explicitly <strong>before</strong>
+<code>content_shell.pak</code> /<br />
+<code>v8_context_snapshot.bin</code> / <code>snapshot_blob.bin</code> /
+<code>locales/*.pak</code> from the <strong>executable's<br />
+directory</strong> (<code>base::DIR_MODULE</code>). If these resources
+are <strong>not next to the executable</strong><br />
+(e.g. the WebKitGTK-parity FHS split where the executable is in
+<code>/usr/libexec/blinkgtk-0.1/</code><br />
+and resources in <code>/usr/lib64/blinkgtk-0.1/chromium/</code>, or a
+consumer app in <code>/usr/bin/</code> with<br />
+resources elsewhere), point the resource directory explicitly
+<strong>before</strong>
 <code>blink_gtk_init(&amp;argc, &amp;argv)</code>.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Call before blink_gtk_init(&amp;argc, &amp;argv). If both are set, resources_path takes precedence.</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_resources_path<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path<span class="op">);</span>   <span class="co">// dir of .pak / snapshot files</span></span>
@@ -522,32 +547,36 @@ directory explicitly <strong>before</strong>
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_icu_data_path<span class="op">(</span><span class="st">&quot;/usr/lib64/blinkgtk-0.1/chromium&quot;</span><span class="op">);</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span>  <span class="co">/* GTK4 は引数なし */</span></span></code></pre></div>
 <p>Without this you get
-<code>Invalid file descriptor to ICU data received</code>
+<code>Invalid file descriptor to ICU data received</code><br />
 (<code>base/i18n/icu_util.cc</code>) and a startup crash. The bundled
-<code>blinkgtk_browser</code> (<code>/usr/libexec/blinkgtk-0.1/</code>)
-satisfies DIR_MODULE resolution by placing relative symlinks to those
-resources next to the executable (if your consumer app cannot place
-resources next to the executable, use the APIs above).</p>
+<code>blinkgtk_browser</code><br />
+(<code>/usr/libexec/blinkgtk-0.1/</code>) satisfies DIR_MODULE
+resolution by placing relative symlinks to<br />
+those resources next to the executable (if your consumer app cannot
+place resources next to the<br />
+executable, use the APIs above).</p>
 <h3 id="72-sandbox-and-single-process">7.2 Sandbox and single
 process</h3>
 <p>During development, passing <code>--no-sandbox</code> in
-<code>argv</code> makes things easier. BlinkGTK runs in a single-process
-configuration.</p>
+<code>argv</code> makes things easier. BlinkGTK runs in a<br />
+single-process configuration.</p>
 <h3 id="73-thread-affinity">7.3 Thread affinity</h3>
 <p>The BlinkGTK / GTK APIs, including
 <code>blink_gtk_init(&amp;argc, &amp;argv)</code>, should as a rule be
-called <strong>from the main thread</strong> (the GTK main loop thread).
-Avoid UI operations from other threads.</p>
+called <strong>from the main<br />
+thread</strong> (the GTK main loop thread). Avoid UI operations from
+other threads.</p>
 <h3 id="74-wayland-only">7.4 Wayland only</h3>
 <p>BlinkGTK supports Wayland only (X11 is not used). The Ozone platform
-is forced to Wayland at startup.</p>
+is forced to Wayland at<br />
+startup.</p>
 <hr />
 <h2 id="8-runtime-data-files">8. Runtime data files</h2>
 <h3 id="81-v8-three-file-version-consistency">8.1 V8 three-file version
 consistency</h3>
 <p>The three V8-related files must come from the <strong>same build and
-have matching versions</strong>. Mixing them causes a fatal V8 error at
-startup that prevents launch.</p>
+have matching versions</strong>. Mixing<br />
+them causes a fatal V8 error at startup that prevents launch.</p>
 <ul>
 <li><code>libv8.so</code></li>
 <li><code>snapshot_blob.bin</code></li>
@@ -571,16 +600,18 @@ resources)</li>
 <h3 id="83-data-file-search-path-and-working-directory">8.3 Data file
 search path and working directory</h3>
 <p>Chromium data files are resolved relative to the executable.
-Launching with data files in a directory different from the executable
-can fail with errors such as
+Launching with data files in a<br />
+directory different from the executable can fail with errors such
+as<br />
 <code>Invalid file descriptor to ICU data</code>. Place data files in
-the same directory as the executable (or the expected relative
-path).</p>
+the same directory as the executable<br />
+(or the expected relative path).</p>
 <hr />
 <h2 id="9-troubleshooting-navigation--rendering-failures">9.
 Troubleshooting navigation / rendering failures</h2>
 <p>When nothing is rendered (black or white screen), check the following
-in order before forming more complex hypotheses.</p>
+in order before forming more<br />
+complex hypotheses.</p>
 <table>
 <thead>
 <tr>
@@ -639,7 +670,8 @@ bundled</td>
 </tbody>
 </table>
 <p>nothing renders, the cause is usually a missing link or missing data
-file -- a fundamental rather than a deep issue.</p>
+file -- a fundamental rather<br />
+than a deep issue.</p>
 <hr />
 <h2 id="10-appendix-minimal-check-commands">10. Appendix: minimal check
 commands</h2>

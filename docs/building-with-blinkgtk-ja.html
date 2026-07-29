@@ -94,9 +94,6 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK を使ったアプリのビルド — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-を使ったアプリのビルド">BlinkGTK
 を使ったアプリのビルド</h1>
 <p>BlinkGTK
@@ -104,9 +101,11 @@
 <h2 id="前提-blinkgtk-本体はソースからビルドしません">前提: BlinkGTK
 本体はソースからビルドしません</h2>
 <p>BlinkGTK は Chromium を組み込んでいるため、本体のビルドには Chromium
-の ソースツリー (100 GB 超) と数時間から十数時間のビルド時間を要します。
+の<br />
+ソースツリー (100 GB 超)
+と数時間から十数時間のビルド時間を要します。<br />
 <strong>利用者は配布されているパッケージを使ってください。</strong>
-本ページは
+本ページは<br />
 「配布パッケージを使ってアプリをビルドする」手順を説明します。</p>
 <p>配布形態は 3 つに分かれています。</p>
 <table>
@@ -149,14 +148,18 @@
 <p><strong>これが最も間違えやすく、最も分かりにくい失敗を招く点です。</strong></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> myapp myapp.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
 <p><code>-lblinkgtk</code>
-だけを手で書いてリンクしないでください。BlinkGTK は Chromium の
+だけを手で書いてリンクしないでください。BlinkGTK は Chromium の<br />
 <strong>PartitionAlloc allocator shim</strong>
-を必要とし、これは実行ファイルの直接依存 (<code>DT_NEEDED</code>)
+を必要とし、これは実行ファイルの直接依存<br />
+(<code>DT_NEEDED</code>)
 として早期にロードされなければなりません。<code>blinkgtk-0.1.pc</code>
-の <code>Libs</code> にはこの shim が含まれています。</p>
+の<br />
+<code>Libs</code> にはこの shim が含まれています。</p>
 <p>shim を落とすと、ビルドもリンクも通り、起動もするのに
-<strong>ページの読み込みが 完了しない</strong> (ナビゲーションが commit
-しない = 白いまま) という、原因の分かり にくい症状になります。</p>
+<strong>ページの読み込みが<br />
+完了しない</strong> (ナビゲーションが commit しない = 白いまま)
+という、原因の分かり<br />
+にくい症状になります。</p>
 <p>確認方法:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 行以上出れば OK。何も出なければ pkg-config を経由していない</span></span></code></pre></div>
@@ -165,7 +168,7 @@
 <div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span></code></pre></div>
 <p>公開 API
-はこのヘッダに集約されています。内部ヘッダを直接インクルードしないで
+はこのヘッダに集約されています。内部ヘッダを直接インクルードしないで<br />
 ください (バージョン間で変わります)。</p>
 <h2 id="4-最小構成のアプリ">4. 最小構成のアプリ</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
@@ -192,9 +195,9 @@
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>注意</strong>: <code>blink_web_view_new()</code> は
-<code>GtkWidget *</code> を返しますが、BlinkGTK の API は
-<code>BlinkWebView *</code> を取ります。<code>BLINK_WEB_VIEW()</code>
-でキャストしてください。</p>
+<code>GtkWidget *</code> を返しますが、BlinkGTK の<br />
+API は <code>BlinkWebView *</code>
+を取ります。<code>BLINK_WEB_VIEW()</code> でキャストしてください。</p>
 <h2 id="5-makefile-の例">5. Makefile の例</h2>
 <pre class="make"><code>CC      ?= cc
 PKGS     = blinkgtk-0.1
@@ -206,26 +209,28 @@ myapp: myapp.c
 <h2 id="6-実行時に必要なもの">6. 実行時に必要なもの</h2>
 <h3 id="wayland-が必要です">Wayland が必要です</h3>
 <p>BlinkGTK は <strong>Wayland 専用</strong>です。X11
-では動作しません。Wayland セッションで 実行するか、ヘッドレス検証には
-Weston の headless バックエンドを使ってください。</p>
+では動作しません。Wayland セッションで<br />
+実行するか、ヘッドレス検証には Weston の headless
+バックエンドを使ってください。</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">weston</span> <span class="at">--backend</span><span class="op">=</span>headless-backend.so <span class="at">--width</span><span class="op">=</span>1024 <span class="at">--height</span><span class="op">=</span>768 <span class="kw">&amp;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">WAYLAND_DISPLAY</span><span class="op">=</span>wayland-1</span></code></pre></div>
 <h3 id="chromium-のリソースファイルの位置">Chromium
 のリソースファイルの位置</h3>
-<p>Chromium は ICU データ (<code>icudtl.dat</code>)、V8 スナップショット
+<p>Chromium は ICU データ (<code>icudtl.dat</code>)、V8
+スナップショット<br />
 (<code>snapshot_blob.bin</code> /
-<code>v8_context_snapshot.bin</code>)、リソースパック
-(<code>content_shell.pak</code>) を必要とします。これらは
-<strong>カレントディレクトリではなく実行ファイルのあるディレクトリを基準に</strong>
+<code>v8_context_snapshot.bin</code>)、リソースパック<br />
+(<code>content_shell.pak</code>) を必要とします。これらは<br />
+<strong>カレントディレクトリではなく実行ファイルのあるディレクトリを基準に</strong><br />
 探索されます。</p>
 <p>RPM / DEB
-でインストールした場合は正しい場所に配置されるため、通常は何もする
+でインストールした場合は正しい場所に配置されるため、通常は何もする<br />
 必要はありません。tarball
-を展開して使う場合や、実行ファイルを別の場所に置いた
+を展開して使う場合や、実行ファイルを別の場所に置いた<br />
 場合は次のエラーになります。</p>
 <pre><code>ERROR:base/i18n/icu_util.cc: Invalid file descriptor to ICU data received.
 FATAL:base/i18n/icu_util.cc: Check failed: result.</code></pre>
-<p>このときは、実行ファイルをリソースと同じディレクトリに置くか、ライブラリ
+<p>このときは、実行ファイルをリソースと同じディレクトリに置くか、ライブラリ<br />
 探索パスを合わせてください。</p>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/blinkgtk-0.1:<span class="dt">\</span></span>
@@ -266,9 +271,10 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#
 </table>
 <h2 id="8-gtk4-の使い方について">8. GTK4 の使い方について</h2>
 <p>BlinkGTK は <strong>GTK4 のウィジェットを 1
-つ提供するライブラリ</strong>です。ウィンドウ、
+つ提供するライブラリ</strong>です。ウィンドウ、<br />
 レイアウト、ボタン、メニュー、イベント処理といった GTK4
-そのものの使い方は、 GTK4
+そのものの使い方は、<br />
+GTK4
 の公式ドキュメントを参照してください。本ドキュメントでは扱いません。</p>
 <ul>
 <li>GTK4 API リファレンス: <a
@@ -283,17 +289,19 @@ href="https://docs.gtk.org/glib/">https://docs.gtk.org/glib/</a></li>
 href="https://docs.gtk.org/gtk4/migrating-3to4.html">https://docs.gtk.org/gtk4/migrating-3to4.html</a></li>
 </ul>
 <p><code>BlinkWebView</code> は <code>GtkWidget</code>
-を継承しているため、他の GTK4 ウィジェットと 同じように扱えます
+を継承しているため、他の GTK4 ウィジェットと<br />
+同じように扱えます
 (コンテナに入れる、サイズ要求を設定する、シグナルを繋ぐ等)。</p>
 <p><strong>ただしメインループだけは例外です。</strong> GTK の
-<code>g_application_run()</code> や <code>g_main_loop_run()</code>
-ではなく、<code>blink_gtk_run_main_loop()</code> を使ってください (第 4
-節)。</p>
+<code>g_application_run()</code> や<br />
+<code>g_main_loop_run()</code>
+ではなく、<code>blink_gtk_run_main_loop()</code> を使ってください<br />
+(第 4 節)。</p>
 <h3 id="python--rust-など他言語から使う場合">Python / Rust
 など他言語から使う場合</h3>
 <p>BlinkGTK は GObject Introspection に対応しているため、PyGObject や
-gtk-rs
-から利用できます。各言語バインディングの使い方はそれぞれのドキュメントを
+gtk-rs<br />
+から利用できます。各言語バインディングの使い方はそれぞれのドキュメントを<br />
 参照してください。</p>
 <ul>
 <li>PyGObject: <a

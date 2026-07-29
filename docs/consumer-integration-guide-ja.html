@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK Consumer アプリ統合ガイド (リンク・ランタイム要件) — BlinkGTK</title>
+  <title>BlinkGTK Consumer アプリ統合ガイド (リンク・ランタイム要件) —
+BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -94,33 +95,32 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK Consumer アプリ統合ガイド
-(リンク・ランタイム要件) — BlinkGTK</h1>
-</header>
 <h1
 id="blinkgtk-consumer-アプリ統合ガイド-リンクランタイム要件">BlinkGTK
 Consumer アプリ統合ガイド (リンク・ランタイム要件)</h1>
-<p><strong>作成者</strong>: BlinkGTK Project <strong>対象</strong>:
-BlinkGTK (<code>libblinkgtk.so</code>) を利用して独自アプリ (C / Python
-/ Rust 等) を構築する開発者 <strong>最終更新</strong>: 2026-06-21</p>
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>対象</strong>: BlinkGTK (<code>libblinkgtk.so</code>)
+を利用して独自アプリ (C / Python / Rust 等) を構築する開発者<br />
+<strong>最終更新</strong>: 2026-06-21</p>
 <p>本ガイドは、BlinkGTK を組み込んだ consumer
-アプリケーションが、起動直後の黒画面や
-ナビゲーション未完了といった典型的な不具合を避けるために必要な、リンク要件・ランタイム
+アプリケーションが、起動直後の黒画面や<br />
+ナビゲーション未完了といった典型的な不具合を避けるために必要な、リンク要件・ランタイム<br />
 要件・API 利用上の注意点をまとめたものです。とくに
-<code>libblinkgtk.so</code> と PartitionAlloc アロケータ shim
-の関係は、見落とすと描画が一切行われない深刻な症状につながるため、最初の
+<code>libblinkgtk.so</code> と PartitionAlloc<br />
+アロケータ shim
+の関係は、見落とすと描画が一切行われない深刻な症状につながるため、最初の<br />
 章で詳しく説明します。</p>
 <hr />
 <h2 id="1-なぜこのガイドが必要か">1. なぜこのガイドが必要か</h2>
 <p>BlinkGTK は Chromium の Blink レンダリングエンジンを GTK4
-にバインドするライブラリです。 内部に Chromium の content
-層を含むため、一般的な GTK ライブラリとは異なる<strong>リンク時・
-実行時の前提条件</strong>があります。これらを満たさないと、ビルドや起動は一見成功しても、Web
+にバインドするライブラリです。<br />
+内部に Chromium の content 層を含むため、一般的な GTK
+ライブラリとは異なる<strong>リンク時・<br />
+実行時の前提条件</strong>があります。これらを満たさないと、ビルドや起動は一見成功しても、Web<br />
 ページが描画されない（黒画面 / 白画面）という症状になります。</p>
 <p>同梱サンプル <code>blinkgtk_browser</code> は <code>pkg-config</code>
-経由でリンクすることでこれらの前提を
-満たしています。手動でリンク指定を書くと前提が抜け落ちることがあります。本ガイドはその差分を
+経由でリンクすることでこれらの前提を<br />
+満たしています。手動でリンク指定を書くと前提が抜け落ちることがあります。本ガイドはその差分を<br />
 明示し、開発者が同じ落とし穴で時間を失わないようにすることを目的とします。</p>
 <hr />
 <h2
@@ -128,34 +128,36 @@ id="2-libblinkgtkso-と-partitionalloc-アロケータ-shim-の関係最重要">
 libblinkgtk.so と PartitionAlloc アロケータ shim の関係（最重要）</h2>
 <h3 id="21-shim-とは何か">2.1 shim とは何か</h3>
 <p>Chromium はメモリ確保に独自の <strong>PartitionAlloc</strong>
-アロケータを使用します。プロセス全体で メモリ確保を PartitionAlloc
-に振り向けるため、<code>malloc</code> / <code>free</code>
-等の標準アロケータ関数を <strong>インターポーズ（横取り）</strong>
-する仕組みが必要で、その役割を担うのが <strong>アロケータ shim</strong>
-(<code>libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so</code>)
+アロケータを使用します。プロセス全体で<br />
+メモリ確保を PartitionAlloc に振り向けるため、<code>malloc</code> /
+<code>free</code> 等の標準アロケータ関数を<br />
+<strong>インターポーズ（横取り）</strong>
+する仕組みが必要で、その役割を担うのが<br />
+<strong>アロケータ shim</strong>
+(<code>libbase_allocator_partition_allocator_src_partition_alloc_allocator_shim.so</code>)<br />
 です。</p>
 <h3 id="22-直接リンクが必須である理由">2.2
 「直接リンク」が必須である理由</h3>
 <p><code>libblinkgtk.so</code> 自体はこの shim を
-NEEDED（依存）として宣言しています。しかし consumer アプリが
-<code>-lblinkgtk</code> だけをリンクすると、shim は
-<code>libblinkgtk.so</code> を経由した
+NEEDED（依存）として宣言しています。しかし consumer<br />
+アプリが <code>-lblinkgtk</code> だけをリンクすると、shim は
+<code>libblinkgtk.so</code> を経由した<br />
 <strong>transitive（間接）ロード</strong> になります。間接ロードでは
-shim の読み込みがプロセス起動後の
+shim の読み込みがプロセス起動後の<br />
 遅いタイミングになり、<code>malloc</code>
 インターポーズの早期セットアップに間に合いません。</p>
 <p>アロケータ shim
-のインターポーズは<strong>プロセス開始時点</strong>で確立されている必要があります。
+のインターポーズは<strong>プロセス開始時点</strong>で確立されている必要があります。<br />
 そのため shim は <strong>実行ファイルの直接依存（直接 NEEDED）</strong>
-としてリンクしなければなりません。 同梱サンプル
-<code>blinkgtk_browser</code> は
-<code>pkg-config --libs blinkgtk-0.1</code> でリンクしており、
+としてリンクしなければなりません。<br />
+同梱サンプル <code>blinkgtk_browser</code> は
+<code>pkg-config --libs blinkgtk-0.1</code> でリンクしており、<br />
 <code>blinkgtk-0.1.pc</code> の <code>Libs</code> に shim
-が含まれるため直接 NEEDED になります。これにより
+が含まれるため直接 NEEDED になります。これにより<br />
 プロセス開始時にインターポーズが成立し、正常に描画します。</p>
 <h3 id="23-未リンク時の症状">2.3 未リンク時の症状</h3>
 <p>shim を直接リンクしないと、Chromium 148 以降ではレンダラの
-<strong>navigation commit が失敗</strong> し、
+<strong>navigation commit が失敗</strong> し、<br />
 起動直後に黒画面になります。ログには次のような兆候が現れます。</p>
 <ul>
 <li><code>HasCommitted=0</code>（ナビゲーションがコミットされない）</li>
@@ -164,17 +166,19 @@ shim の読み込みがプロセス起動後の
 </ul>
 <h3 id="24-バージョン依存">2.4 バージョン依存</h3>
 <p>Chromium 147 では shim が間接ロードでも成立していました。Chromium 148
-で PartitionAlloc が レンダラの commit
-経路により深く統合され、早期インターポーズが必須になったと考えられます。
+で PartitionAlloc が<br />
+レンダラの commit
+経路により深く統合され、早期インターポーズが必須になったと考えられます。<br />
 この要件は Chromium 150 でも継続する見込みです。</p>
 <hr />
 <h2 id="3-リンク方法">3. リンク方法</h2>
 <h3 id="30-パッケージ構成runtime--devel--girv110-以降">3.0
 パッケージ構成（runtime / devel / gir、v1.1.0 以降）</h3>
 <p>v1.1.0 以降、BlinkGTK は WebKitGTK と同等に <strong>runtime / devel /
-gir の 3 分割</strong>で 配布されます（バイナリのみ、GitHub
-Releases）。consumer 開発では runtime に加えて devel（+ 必要なら
-gir）を導入します。</p>
+gir の 3 分割</strong>で<br />
+配布されます（バイナリのみ、GitHub Releases）。consumer 開発では runtime
+に加えて<br />
+devel（+ 必要なら gir）を導入します。</p>
 <table>
 <thead>
 <tr>
@@ -239,21 +243,23 @@ pkg-config 経由でリンクすれば、shim は自動的に実行ファイル�
 ```sh
 cc your_app.c $(pkg-config --cflags --libs blinkgtk-0.1) -o your_app</code></pre>
 <p>Python / Rust などの FFI
-バインディング経由で利用する場合も、ビルドメタデータが pkg-config
-を参照していれば同様に shim が含まれます。</p>
+バインディング経由で利用する場合も、ビルドメタデータが<br />
+pkg-config を参照していれば同様に shim が含まれます。</p>
 <h3 id="32-手動リンクmakefile-等でハードコードする場合">3.2
 手動リンク（Makefile 等でハードコードする場合）</h3>
 <p>pkg-config
 を使わずリンク行をハードコードする場合は、<code>-lblinkgtk</code> の後に
-shim を<strong>明示的に 追加</strong>してください。</p>
+shim を<strong>明示的に<br />
+追加</strong>してください。</p>
 <pre class="make"><code>BLINKGTK_LIBS = -L$(BLINKGTK_LIBDIR) \
                 -lblinkgtk \
                 -lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</code></pre>
 <p>shim ライブラリは BlinkGTK のライブラリディレクトリ（SDK の
-<code>lib/chromium/</code> 等）に同梱 されています。</p>
+<code>lib/chromium/</code> 等）に同梱<br />
+されています。</p>
 <h3 id="33-検証-needed-差分の確認">3.3 検証: NEEDED 差分の確認</h3>
 <p>リンク後、実行ファイルが shim を直接 NEEDED
-しているかを確認します。これは描画不具合の
+しているかを確認します。これは描画不具合の<br />
 <strong>第一手</strong>としても有効です。</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your_app <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → 1 行出れば直接 NEEDED 済み。出なければ未リンク（黒画面の原因）。</span></span></code></pre></div>
@@ -286,16 +292,18 @@ WebView の埋め込み</h2>
 </ul>
 <p><strong>終了処理を必ず呼ぶこと。</strong>
 <code>blink_gtk_shutdown()</code> を呼ばずにプロセスを終えると、Chromium
-の teardown が <code>AtExitManager</code> 破棄後に走り、終了時に
-NOTREACHED で異常終了することがあります （過去 issue
+の<br />
+teardown が <code>AtExitManager</code> 破棄後に走り、終了時に NOTREACHED
+で異常終了することがあります<br />
+（過去 issue
 で観測）。安全網として未終了検出時の自動終了処理も登録されますが、consumer
-は 明示的に <code>blink_gtk_shutdown()</code>
-を呼ぶことを推奨します。</p>
+は<br />
+明示的に <code>blink_gtk_shutdown()</code> を呼ぶことを推奨します。</p>
 <h3 id="42-webview-の生成と-ui-への埋め込み">4.2 WebView の生成と UI
 への埋め込み</h3>
 <p>WebView は <code>blink_web_view_new()</code> で生成します。返り値は
-<code>GtkWidget*</code> で、<code>BLINK_WEB_VIEW()</code> で
-<code>BlinkWebView*</code> にキャストできます。</p>
+<code>GtkWidget*</code> で、<code>BLINK_WEB_VIEW()</code><br />
+で <code>BlinkWebView*</code> にキャストできます。</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span>          <span class="co">// 自己描画する WebView</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -303,15 +311,15 @@ NOTREACHED で異常終了することがあります （過去 issue
 <span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> overlay <span class="op">=</span> gtk_overlay_new<span class="op">();</span></span>
 <span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>gtk_overlay_set_child<span class="op">(</span>GTK_OVERLAY<span class="op">(</span>overlay<span class="op">),</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong><code>blink_web_view_new_container()</code>
-は非推奨（deprecated）です。</strong> 旧コンテナ生成 API は Chromium 148
-以降で描画されません（#90
-関連）。<code>blink_web_view_new()</code>（自己描画）を使い、
+は非推奨（deprecated）です。</strong> 旧コンテナ生成 API は<br />
+Chromium 148 以降で描画されません（#90
+関連）。<code>blink_web_view_new()</code>（自己描画）を使い、<br />
 コンテナが必要なら <strong>自前の <code>GtkOverlay</code> /
 <code>GtkBox</code></strong> に載せてください。</p>
 <h3 id="43-繰り返しの-load_uri">4.3 繰り返しの load_uri</h3>
 <p>同一 WebView に対して <code>blink_web_view_load_uri()</code>
-を繰り返し呼ぶことは安全です。内部の
-レンダラビューは再利用され、ページ遷移を繰り返してもリソースが累積しません（過去のリーク
+を繰り返し呼ぶことは安全です。内部の<br />
+レンダラビューは再利用され、ページ遷移を繰り返してもリソースが累積しません（過去のリーク<br />
 は解消済み）。アプリ側で WebView を毎回作り直す必要はありません。</p>
 <hr />
 <h2 id="5-描画表示の落とし穴">5. 描画・表示の落とし穴</h2>
@@ -396,23 +404,26 @@ g_signal_connect(web_view, &quot;title-changed&quot;, G_CALLBACK(on_title_change
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                                  TRUE <span class="co">/* inject_at_document_start */</span><span class="op">);</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_inject_user_stylesheet<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> css_source<span class="op">);</span></span></code></pre></div>
 <p><code>inject_at_document_start=TRUE</code>
-のスクリプトは、<strong>ナビゲーションが commit された後</strong>の
+のスクリプトは、<strong>ナビゲーションが commit
+された後</strong>の<br />
 document_start タイミングで実行されます。2 章のアロケータ shim
-が未リンクで commit が成立 しないと、'Stored'
-ログは出ても注入スクリプトが実行されません（過去 issue）。注入が走らない
+が未リンクで commit が成立<br />
+しないと、'Stored' ログは出ても注入スクリプトが実行されません（過去
+issue）。注入が走らない<br />
 場合は、まず 2 章のリンク要件を確認してください。</p>
 <h3 id="63-バージョン取得ハードコード禁止">6.3
 バージョン取得（ハードコード禁止）</h3>
 <p>サブタイトル等に表示する BlinkGTK / Chromium
-バージョンは、<strong>ハードコードせず</strong>ランタイム API
-で取得してください。これにより <code>libblinkgtk.so</code>
+バージョンは、<strong>ハードコードせず</strong>ランタイム<br />
+API で取得してください。これにより <code>libblinkgtk.so</code>
 の更新に自動追従します。</p>
 <div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blinkgtk_ver <span class="op">=</span> blink_gtk_get_version<span class="op">();</span>           <span class="co">/* BlinkGTK バージョン */</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> chromium_ver <span class="op">=</span> blink_gtk_get_chromium_version<span class="op">();</span>  <span class="co">/* Chromium バージョン */</span></span></code></pre></div>
 <p>これらの API は公開ヘッダ <code>&lt;blink_gtk/blink_gtk.h&gt;</code>
-に宣言されています（<code>extern</code> 宣言は
+に宣言されています（<code>extern</code> 宣言は<br />
 不要）。返り値は内部の静的文字列のため free しないでください。シンボルを
-export する <code>libblinkgtk.so</code>（CP-1046
+export する<br />
+<code>libblinkgtk.so</code>（CP-1046
 以降のビルド）とリンクする必要があります。</p>
 <h3 id="64-コンテンツ保護ポリシー">6.4 コンテンツ保護ポリシー</h3>
 <p>電子書籍端末・キオスク端末向けに、コピー / 保存 /
@@ -420,19 +431,19 @@ export する <code>libblinkgtk.so</code>（CP-1046
 <div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_content_policy<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                                  BLINK_CONTENT_POLICY_EBOOK_READER<span class="op">);</span></span></code></pre></div>
 <p>プリセット:
-<code>BLINK_CONTENT_POLICY_ALLOW_ALL</code>（既定）、<code>BLINK_CONTENT_POLICY_EBOOK_READER</code>、
+<code>BLINK_CONTENT_POLICY_ALLOW_ALL</code>（既定）、<code>BLINK_CONTENT_POLICY_EBOOK_READER</code>、<br />
 <code>BLINK_CONTENT_POLICY_KIOSK</code>。個別フラグ（<code>NO_COPY</code>
-/ <code>NO_SAVE</code> / <code>NO_PRINT</code> /
+/ <code>NO_SAVE</code> / <code>NO_PRINT</code> /<br />
 <code>NO_CONTEXT_MENU</code> / <code>NO_DEVTOOLS</code>
-等）のビットマスク組み合わせも可能です。ポリシーは即時
+等）のビットマスク組み合わせも可能です。ポリシーは即時<br />
 適用され、いつでも変更できます。</p>
 <h3 id="65-web-fullscreen-apirequestfullscreen">6.5 Web Fullscreen
 API（requestFullscreen）</h3>
 <p>Web コンテンツの <code>element.requestFullscreen()</code> /
-<code>document.exitFullscreen()</code> を機能させるに
-は、<strong>フルスクリーンハンドラを登録</strong>してトップレベルウィンドウの全画面化に反映します。登録
+<code>document.exitFullscreen()</code> を機能させるに<br />
+は、<strong>フルスクリーンハンドラを登録</strong>してトップレベルウィンドウの全画面化に反映します。登録<br />
 しない場合、フルスクリーン要素は WebView
-の表示領域内で拡大するだけで、ウィンドウ自体は全画面
+の表示領域内で拡大するだけで、ウィンドウ自体は全画面<br />
 化されません（電子書籍リーダーの全画面ボタンが「効かない」ように見える主因です）。</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_fullscreen<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> gboolean enter<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>user_data<span class="op">;</span></span>
@@ -449,20 +460,23 @@ API（requestFullscreen）</h3>
 <p>補足:</p>
 <ul>
 <li><p><code>requestFullscreen()</code> は Web
-標準の要件により<strong>ユーザージェスチャ（実際のクリック / キー操作）
+標準の要件により<strong>ユーザージェスチャ（実際のクリック /
+キー操作）<br />
 起点</strong>でのみ許可されます。プログラム的な
-<code>element.click()</code> 等の合成イベントからは拒否されます
-（<code>API can only be initiated by a user gesture</code>）。全画面ボタンは実際のクリックに紐付けてくだ
+<code>element.click()</code> 等の合成イベントからは拒否されます<br />
+（<code>API can only be initiated by a user gesture</code>）。全画面ボタンは実際のクリックに紐付けてくだ<br />
 さい。</p></li>
 <li><p><code>blink_web_view_exit_fullscreen(view)</code>
-でアプリ側から明示的に解除できます。
+でアプリ側から明示的に解除できます。<br />
 <code>blink_web_view_is_fullscreen(view)</code>
 で現在の状態を照会できます。</p></li>
 <li><p><strong>ESC キーでの解除</strong>は自動では行われません（HTML
-fullscreen は browser 側の ESC 協調が 必要）。トップレベルウィンドウに
-CAPTURE phase のキーコントローラを付け、全画面中の ESC で
+fullscreen は browser 側の ESC 協調が<br />
+必要）。トップレベルウィンドウに CAPTURE phase
+のキーコントローラを付け、全画面中の ESC で<br />
 <code>blink_web_view_exit_fullscreen()</code>
-を呼んでください（<code>document.exitFullscreen()</code> と同じ協調
+を呼んでください（<code>document.exitFullscreen()</code>
+と同じ協調<br />
 経路で Blink 側の状態も更新されます）。</p>
 <div class="sourceCode" id="cb12"><pre
 class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_key<span class="op">(</span>GtkEventControllerKey<span class="op">*</span> c<span class="op">,</span> guint keyval<span class="op">,</span> guint kc<span class="op">,</span></span>
@@ -485,28 +499,34 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12
 <h3 id="71-共有ライブラリ探索パスld_library_path--rpath">7.1
 共有ライブラリ探索パス（LD_LIBRARY_PATH / rpath）</h3>
 <p><code>libblinkgtk.so</code> および Chromium
-の共有ライブラリ群が解決できるよう、<code>rpath</code> または
+の共有ライブラリ群が解決できるよう、<code>rpath</code> または<br />
 <code>LD_LIBRARY_PATH</code> を設定してください。pkg-config の
-<code>Libs:</code> には <code>-rpath</code> 指定が含まれて います。</p>
+<code>Libs:</code> には <code>-rpath</code> 指定が含まれて<br />
+います。</p>
 <p><code>LD_LIBRARY_PATH</code>
-を実行時に設定する必要がある構成では、Chromium ライブラリがロードされる
+を実行時に設定する必要がある構成では、Chromium
+ライブラリがロードされる<br />
 <strong>前</strong>にパスを確定させる必要があります。プロセス先頭で
-<code>LD_LIBRARY_PATH</code> を設定し直して <strong>自プロセスを re-exec
+<code>LD_LIBRARY_PATH</code> を設定し直して<br />
+<strong>自プロセスを re-exec
 する</strong>パターンが有効です（環境変数設定 → <code>execv</code>
-で自分自身を再起動 → 以降は正しい探索パスでロード）。</p>
+で自分自身を再起動<br />
+→ 以降は正しい探索パスでロード）。</p>
 <h3 id="711-リソースパスicu--pak--snapshotの解決重要">7.1.1
 リソースパス（ICU / pak / snapshot）の解決（重要）</h3>
 <p>BlinkGTK / Chromium は既定で <code>icudtl.dat</code> /
-<code>content_shell.pak</code> / <code>v8_context_snapshot.bin</code> /
-<code>snapshot_blob.bin</code> / <code>locales/*.pak</code> を
-<strong>実行ファイルのディレクトリ</strong>
-（<code>base::DIR_MODULE</code>）から解決します。これらのリソースが<strong>実行ファイルの隣にない</strong>構成
+<code>content_shell.pak</code> /
+<code>v8_context_snapshot.bin</code><br />
+/ <code>snapshot_blob.bin</code> / <code>locales/*.pak</code> を
+<strong>実行ファイルのディレクトリ</strong><br />
+（<code>base::DIR_MODULE</code>）から解決します。これらのリソースが<strong>実行ファイルの隣にない</strong>構成<br />
 （例: WebKitGTK 同等 FHS 分割で実行ファイルが
-<code>/usr/libexec/blinkgtk-0.1/</code>、リソースが
+<code>/usr/libexec/blinkgtk-0.1/</code>、リソースが<br />
 <code>/usr/lib64/blinkgtk-0.1/chromium/</code> にある場合や、consumer
-アプリが <code>/usr/bin/</code> にあり
+アプリが <code>/usr/bin/</code> にあり<br />
 リソースが別ディレクトリにある場合）では、<code>blink_gtk_init(&amp;argc, &amp;argv)</code>
-の<strong>前</strong>にリソースディレクトリを 明示指定してください。</p>
+の<strong>前</strong>にリソースディレクトリを<br />
+明示指定してください。</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">// blink_gtk_init(&amp;argc, &amp;argv) の前に呼ぶ。両方指定した場合は resources_path が優先。</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_resources_path<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path<span class="op">);</span>   <span class="co">// .pak / snapshot 群のディレクトリ</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_icu_data_path<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path<span class="op">);</span>    <span class="co">// icudtl.dat のディレクトリ（or ファイル）</span></span>
@@ -516,33 +536,33 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12
 <span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_icu_data_path<span class="op">(</span><span class="st">&quot;/usr/lib64/blinkgtk-0.1/chromium&quot;</span><span class="op">);</span></span>
 <span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span>  <span class="co">/* GTK4 は引数なし */</span></span></code></pre></div>
 <p>これを怠ると
-<code>Invalid file descriptor to ICU data received</code>（<code>base/i18n/icu_util.cc</code>）で
+<code>Invalid file descriptor to ICU data received</code>（<code>base/i18n/icu_util.cc</code>）で<br />
 起動時にクラッシュします。同梱の
-<code>blinkgtk_browser</code>（<code>/usr/libexec/blinkgtk-0.1/</code>）は、
+<code>blinkgtk_browser</code>（<code>/usr/libexec/blinkgtk-0.1/</code>）は、<br />
 実行ファイルの隣に上記リソースへの相対 symlink を配置することで
-DIR_MODULE 解決を成立させて います（consumer
-アプリでリソースを実行ファイルの隣に置けない場合は上記 API
-を使用）。</p>
+DIR_MODULE 解決を成立させて<br />
+います（consumer アプリでリソースを実行ファイルの隣に置けない場合は上記
+API を使用）。</p>
 <h3 id="72-サンドボックス単一プロセス">7.2
 サンドボックス・単一プロセス</h3>
 <p>開発時はサンドボックスを無効化する <code>--no-sandbox</code> を
-<code>argv</code> に渡すと取り回しが容易です。 BlinkGTK
-は単一プロセス構成で動作します。</p>
+<code>argv</code> に渡すと取り回しが容易です。<br />
+BlinkGTK は単一プロセス構成で動作します。</p>
 <h3 id="73-スレッド-affinity">7.3 スレッド affinity</h3>
 <p><code>blink_gtk_init(&amp;argc, &amp;argv)</code> を含む BlinkGTK /
-GTK の API は、原則として<strong>メインスレッド（GTK メイン
+GTK の API は、原則として<strong>メインスレッド（GTK メイン<br />
 ループのスレッド）から</strong>呼び出してください。別スレッドからの UI
 操作は避けてください。</p>
 <h3 id="74-wayland-専用">7.4 Wayland 専用</h3>
 <p>BlinkGTK は Wayland のみをサポートします（X11
-は使用しません）。起動時に Ozone プラット フォームは Wayland
-に強制されます。</p>
+は使用しません）。起動時に Ozone プラット<br />
+フォームは Wayland に強制されます。</p>
 <hr />
 <h2 id="8-ランタイムデータファイル">8. ランタイムデータファイル</h2>
 <h3 id="81-v8-三点ファイルのバージョン整合">8.1 V8
 三点ファイルのバージョン整合</h3>
 <p>V8 関連の 3
-ファイルは<strong>同一ビルド由来でバージョンが一致</strong>していなければなりません。混在
+ファイルは<strong>同一ビルド由来でバージョンが一致</strong>していなければなりません。混在<br />
 すると起動時に V8 の致命的エラーで起動不能になります。</p>
 <ul>
 <li><code>libv8.so</code></li>
@@ -569,9 +589,9 @@ GTK の API は、原則として<strong>メインスレッド（GTK メイン
 <h3 id="83-データファイルの探索パスと実行ディレクトリ">8.3
 データファイルの探索パスと実行ディレクトリ</h3>
 <p>Chromium
-のデータファイルは実行ファイルからの相対位置で解決されます。データファイルを
-実行ファイルと異なるディレクトリに置いて起動すると、<code>Invalid file descriptor to ICU data</code>
-等のエラーで起動に失敗することがあります。データファイルは実行ファイルと同じディレクトリ
+のデータファイルは実行ファイルからの相対位置で解決されます。データファイルを<br />
+実行ファイルと異なるディレクトリに置いて起動すると、<code>Invalid file descriptor to ICU data</code><br />
+等のエラーで起動に失敗することがあります。データファイルは実行ファイルと同じディレクトリ<br />
 （または規定の相対パス）に配置してください。</p>
 <hr />
 <h2 id="9-ナビゲーション--描画不具合のトラブルシュート">9.

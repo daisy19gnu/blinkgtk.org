@@ -94,9 +94,6 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK インストールガイド — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-インストールガイド">BlinkGTK インストールガイド</h1>
 <p><strong>作成者</strong>: BlinkGTK Project</p>
 <p>各パッケージは <a
@@ -217,7 +214,7 @@ Fedora <code>dnf provides '*/libasound.so.2'</code> / Debian
 <div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk                  <span class="co"># ライブラリ登録確認 (ルート展開時)</span></span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1         <span class="co"># devel 導入時</span></span></code></pre></div>
 <h2 id="6-アップデート">6. アップデート</h2>
-<p>同じ形式でインストールしたものを上書きします。<strong>先に古い版を削除する必要は
+<p>同じ形式でインストールしたものを上書きします。<strong>先に古い版を削除する必要は<br />
 ありません</strong>(パッケージマネージャが置き換えます)。</p>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RPM (Fedora)</span></span>
@@ -229,7 +226,7 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#
 <span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.1.0-build5_amd64.deb <span class="dt">\</span></span>
 <span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.1.0-build5_amd64.deb</span></code></pre></div>
 <p>tarball
-の場合は、<strong>展開先を一度削除してから</strong>展開し直してください。上書き展開
+の場合は、<strong>展開先を一度削除してから</strong>展開し直してください。上書き展開<br />
 すると、旧版にあって新版に無いファイルが残り、混在した状態になります。</p>
 <div class="sourceCode" id="cb11"><pre
 class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /opt/blinkgtk</span>
@@ -239,7 +236,8 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#
 <div class="sourceCode" id="cb12"><pre
 class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1   <span class="co"># 新しい版数が返るか</span></span></code></pre></div>
 <p>アプリを再ビルドする必要は通常ありません(SONAME
-<code>libblinkgtk-0.1.so.0</code> は 維持されます)。SONAME
+<code>libblinkgtk-0.1.so.0</code> は<br />
+維持されます)。SONAME
 が変わる変更を行う場合は、リリースノートに明記します。</p>
 <h2 id="7-アンインストール">7. アンインストール</h2>
 <div class="sourceCode" id="cb13"><pre
@@ -250,7 +248,7 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#
 <span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt remove libblinkgtk-0.1-0 libblinkgtk-0.1-dev</span>
 <span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 設定ごと消す場合は apt purge</span></span></code></pre></div>
 <p>tarball
-の場合は展開先を削除します。ルートに展開した場合は、同梱されていた
+の場合は展開先を削除します。ルートに展開した場合は、同梱されていた<br />
 ファイルのみを削除してください。</p>
 <div class="sourceCode" id="cb14"><pre
 class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 任意の場所に展開した場合</span></span>
@@ -271,7 +269,7 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#
 <span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig</span></code></pre></div>
 <h3 id="残るもの">残るもの</h3>
 <p>BlinkGTK は Chromium
-と同様に、<strong>利用者のホームにプロファイルを作ります</strong>。
+と同様に、<strong>利用者のホームにプロファイルを作ります</strong>。<br />
 パッケージを削除しても残るため、不要なら手動で削除してください。</p>
 <div class="sourceCode" id="cb15"><pre
 class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> ~/.blink_gtk</span></code></pre></div>

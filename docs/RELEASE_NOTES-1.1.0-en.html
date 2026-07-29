@@ -29,62 +29,68 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK 1.1.0-build5 Release Notes — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-110-build5-release-notes">BlinkGTK 1.1.0-build5 Release
 Notes</h1>
-<p><strong>Date</strong>: 2026-07-29 <strong>Chromium</strong>:
-150.0.7871.46 (stable) <strong>Status</strong>: Development build
-(1.1.0-dev). This distribution includes verification use.</p>
+<p><strong>Date</strong>: 2026-07-29<br />
+<strong>Chromium</strong>: 150.0.7871.46 (stable)<br />
+<strong>Status</strong>: Development build (1.1.0-dev). This
+distribution includes verification use.</p>
 <h2 id="new-distribution-layout-webkitgtk-parity">New Distribution
 Layout (WebKitGTK parity)</h2>
 <p>From this version, BlinkGTK ships as <strong>three split
-packages</strong> like WebKitGTK (binary-only, GitHub Releases):</p>
+packages</strong> like WebKitGTK<br />
+(binary-only, GitHub Releases):</p>
 <ul>
 <li><strong>runtime</strong> (<code>blinkgtk-bin</code> /
-<code>libblinkgtk-0.1-0</code>): Shared library + Chromium runtime
+<code>libblinkgtk-0.1-0</code>): Shared library + Chromium runtime<br />
 (private dir <code>/usr/lib64/blinkgtk-0.1/</code>) + resources.
 Required to run apps.</li>
 <li><strong>devel</strong> (<code>blinkgtk-bin-devel</code> /
 <code>libblinkgtk-0.1-dev</code>): Headers +
-<code>blinkgtk-0.1.pc</code> + <code>.so</code> symlink. Required to
-build against it.</li>
+<code>blinkgtk-0.1.pc</code> +<br />
+<code>.so</code> symlink. Required to build against it.</li>
 <li><strong>gir</strong> (<code>blinkgtk-bin-gir</code>): GObject
 Introspection typelib (for Python / GJS).</li>
 </ul>
 <p>The shared library SONAME is now versioned to
-<code>libblinkgtk-0.1.so.0</code>. Each release ships
+<code>libblinkgtk-0.1.so.0</code>. Each release ships<br />
 <code>THIRD_PARTY_NOTICES.html</code> (third-party license credits) and
 <code>SHA256SUMS</code>.</p>
 <h2 id="highlights">Highlights</h2>
 <ul>
 <li><strong>Chromium 150 baseline</strong>: Migrated to Chromium
-150.0.7871.46 (stable). V8 snapshot integrity, render smoke, and
-on-device vertical rendering (including the EGL path) verified.</li>
+150.0.7871.46 (stable). V8 snapshot<br />
+integrity, render smoke, and on-device vertical rendering (including the
+EGL path) verified.</li>
 <li><strong>Vertical multicol column-break fix (Issue #110)</strong>:
-For CSS multicol + <code>writing-mode: vertical-rl</code> (orthogonal
-root), lines crossing a column boundary were clipped into the adjacent
-column. This is fixed so column advance is "line-moves-whole".
+For CSS multicol +<br />
+<code>writing-mode: vertical-rl</code> (orthogonal root), lines crossing
+a column boundary were<br />
+clipped into the adjacent column. This is fixed so column advance is
+"line-moves-whole".<br />
 Implemented as the Blink RuntimeEnabledFeature
-<strong><code>CJKVerticalColumnFragmentation</code></strong>, enabled
-with <code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
-(off by default).</li>
+<strong><code>CJKVerticalColumnFragmentation</code></strong>,<br />
+enabled with
+<code>--enable-blink-features=CJKVerticalColumnFragmentation</code> (off
+by default).</li>
 <li><strong>Input fixes</strong>:
 <ul>
 <li><strong>Wheel coordinate fix (Issue #112)</strong>: When the pointer
-was not at the viewport center, wheel-event coordinates were pinned to
-the center, making off-center UI unscrollable. Fixed.</li>
+was not at the viewport center,<br />
+wheel-event coordinates were pinned to the center, making off-center UI
+unscrollable. Fixed.</li>
 <li><strong>Scrollbar drag</strong>: Dragging the scrollbar thumb did
 not scroll. Fixed.</li>
 <li><strong>Input after top-level navigation (Issue #114)</strong>: On
-top-level navigation (e.g. reader &lt;-&gt; library) where the
-RenderWidgetHostView is recreated, mouse input kept being forwarded to
-the destroyed old host (requiring a restart). Fixed.</li>
+top-level navigation (e.g. reader<br />
+&lt;-&gt; library) where the RenderWidgetHostView is recreated, mouse
+input kept being forwarded<br />
+to the destroyed old host (requiring a restart). Fixed.</li>
 </ul></li>
 <li><strong>GObject type system</strong>: GType registration for four
-enum/flag types (LoadEvent / LoadError / GpuMode / ContentPolicy),
-property notifications (notify::), and <code>uri-changed</code> signal
+enum/flag types (LoadEvent / LoadError /<br />
+GpuMode / ContentPolicy), property notifications (notify::), and
+<code>uri-changed</code> signal<br />
 emission on real navigation. Verified from PyGObject / GJS.</li>
 </ul>
 <h2 id="changes-in-build5-2026-07-29">Changes in build5
@@ -92,36 +98,43 @@ emission on real navigation. Verified from PyGObject / GJS.</li>
 <h3 id="the-bundled-sample-has-been-replaced">The bundled sample has
 been replaced</h3>
 <p>The bundle now contains a single minimal sample,
-<strong><code>blinkgtk_browser</code></strong>, which does nothing but
+<strong><code>blinkgtk_browser</code></strong>, which does nothing
+but<br />
 display <code>https://google.com/</code>. The development browser
-shipped previously contained a great deal of development-only machinery
-(render-path switching, typesetting overlays, and so on) and was too
-large to serve as an example of how to embed BlinkGTK.</p>
+shipped previously contained a great deal of<br />
+development-only machinery (render-path switching, typesetting overlays,
+and so on) and was too large<br />
+to serve as an example of how to embed BlinkGTK.</p>
 <p><code>examples/</code> now contains just three files:
-<code>blinkgtk_browser.c</code> (105 lines), <code>Makefile</code>, and
+<code>blinkgtk_browser.c</code> (105 lines), <code>Makefile</code>,
+and<br />
 <code>README.md</code>. <code>make</code> alone builds it.</p>
 <h3 id="fixes">Fixes</h3>
 <ul>
 <li>Fixed <code>blink_gtk_set_resources_path()</code> not taking effect
-for some resources. The ICU data and the V8 snapshots honoured it, but
-the resource pack (<code>content_shell.pak</code>) was still resolved
-relative to the directory containing the executable, so an application
-placed away from the resources failed to start with
+for some resources. The ICU data and the<br />
+V8 snapshots honoured it, but the resource pack
+(<code>content_shell.pak</code>) was still resolved relative<br />
+to the directory containing the executable, so an application placed
+away from the resources<br />
+failed to start with
 <code>Check failed: data_pack-&gt;LoadFromPath(path)</code>.</li>
 <li>Fixed the bundled sample executable having the build machine's
-absolute path embedded as an <code>rpath</code>.</li>
+absolute path embedded as an<br />
+<code>rpath</code>.</li>
 </ul>
 <h3 id="documentation">Documentation</h3>
 <ul>
 <li><strong>For GTK4 itself, the documentation now points to the
-official GTK4 documentation</strong> (<code>docs.gtk.org</code>).
-BlinkGTK is a library that provides one GTK4 widget. The main loop is
-the one exception: you must use <code>blink_gtk_run_main_loop()</code>,
-since GTK's <code>g_application_run()</code> leaves the window
-blank.</li>
+official GTK4 documentation</strong><br />
+(<code>docs.gtk.org</code>). BlinkGTK is a library that provides one
+GTK4 widget. The main loop is the one<br />
+exception: you must use <code>blink_gtk_run_main_loop()</code>, since
+GTK's <code>g_application_run()</code> leaves the<br />
+window blank.</li>
 <li>Removed examples of command-line options that the bundled sample
-does not have from the settings API documentation, replacing them with
-API usage.</li>
+does not have from the settings<br />
+API documentation, replacing them with API usage.</li>
 </ul>
 <h2 id="changes-in-build4-2026-07-29">Changes in build4
 (2026-07-29)</h2>
@@ -130,59 +143,70 @@ and the bundled binary.</strong></p>
 <h3 id="documentation-corrections-the-point-of-this-build">Documentation
 corrections (the point of this build)</h3>
 <p>The documentation bundled with build2 and build3 referenced
-<strong>20 APIs that do not exist in the bundled binary</strong>.
-Following it as written would not build. The affected documents were
+<strong>20 APIs that do not exist in the<br />
+bundled binary</strong>. Following it as written would not build. The
+affected documents were<br />
 <code>settings-api</code>, <code>c-api-reference</code>,
 <code>navigation-api</code>, <code>signals-api</code>, the settings and
-events tutorials, and <code>ENGINE_COMPARISON_DETAILED</code>.</p>
+events<br />
+tutorials, and <code>ENGINE_COMPARISON_DETAILED</code>.</p>
 <p>This build corrects them as follows:</p>
 <ul>
 <li><strong>Corrected to the real names</strong> where the documentation
-disagreed with the implementation (for example
-<code>blink_web_view_set_enable_javascript</code> -&gt;
-<code>blink_web_view_set_javascript_enabled</code>, and
-<code>blink_web_view_set_auto_load_images</code> -&gt;
+disagreed with the implementation<br />
+(for example <code>blink_web_view_set_enable_javascript</code> -&gt;
+<code>blink_web_view_set_javascript_enabled</code>,<br />
+and <code>blink_web_view_set_auto_load_images</code> -&gt;
 <code>blink_web_view_set_images_enabled</code>)</li>
 <li><strong>Implemented what was missing</strong>: user-agent get/set
 and cookie setting (see below)</li>
 <li><strong>Withdrew documentation for unimplemented features</strong>:
-<code>blink-settings-quickstart</code> (an INI-based settings-file API)
-has no implementation and has been removed from the bundle. The
-accessibility API documentation has been withdrawn for the same reason.
-Both will be provided again once implemented.</li>
+<code>blink-settings-quickstart</code> (an INI-based<br />
+settings-file API) has no implementation and has been removed from the
+bundle. The accessibility<br />
+API documentation has been withdrawn for the same reason. Both will be
+provided again once<br />
+implemented.</li>
 </ul>
 <p>A gate that extracts the distributed artifact itself and mechanically
-verifies that every API named in the bundled documentation exists in the
-bundled binary is now a precondition for publishing.</p>
+verifies that every API named<br />
+in the bundled documentation exists in the bundled binary is now a
+precondition for publishing.</p>
 <h3 id="new-apis">New APIs</h3>
 <ul>
 <li><code>blink_web_view_set_user_agent()</code> /
-<code>blink_web_view_get_user_agent()</code> - override and read the
+<code>blink_web_view_get_user_agent()</code> - override and read
+the<br />
 User-Agent</li>
 <li><code>blink_web_view_set_cookie()</code> - set a cookie
 (asynchronous; the result arrives via a callback)</li>
 <li>The <code>permission-request</code> signal and
-<code>BlinkPermissionRequest</code> - lets the application decide on
+<code>BlinkPermissionRequest</code> - lets the application decide
+on<br />
 permission requests such as geolocation and notifications. <strong>The
-default is to deny</strong>: if the signal is not handled, every request
-is denied. Use <code>blink_permission_request_get_type_name()</code> to
-obtain the request type and
+default is to deny</strong>: if the<br />
+signal is not handled, every request is denied. Use<br />
+<code>blink_permission_request_get_type_name()</code> to obtain the
+request type and<br />
 <code>blink_permission_request_allow()</code> /
 <code>blink_permission_request_deny()</code> to respond.</li>
 </ul>
 <h3 id="changes-to-the-bundle">Changes to the bundle</h3>
 <ul>
 <li><code>api_check.c</code> and <code>api_tester.c</code>, which used
-to accompany <code>examples/</code>, are no longer bundled: they are old
-checking programs with no maintained source in the repository.</li>
+to accompany <code>examples/</code>, are no longer bundled:<br />
+they are old checking programs with no maintained source in the
+repository.</li>
 <li><code>examples/Makefile</code> has been replaced with a concise
-pkg-config based one. The Makefile bundled previously was generated by
-autotools, contained absolute paths from the build machine, and did not
-work as-is on the user's system.</li>
+pkg-config based one. The Makefile bundled<br />
+previously was generated by autotools, contained absolute paths from the
+build machine, and did<br />
+not work as-is on the user's system.</li>
 </ul>
 <h3 id="distribution">Distribution</h3>
 <p>build3 replaced only the RPMs. In build4, <strong>the tarballs, RPMs,
-and DEBs are all regenerated as build4</strong>.</p>
+and DEBs are all regenerated as<br />
+build4</strong>.</p>
 <h2 id="changes-in-build2-2026-07-21">Changes in build2
 (2026-07-21)</h2>
 <p><strong>build2 is the first public release of the BlinkGTK v1.1
@@ -192,50 +216,62 @@ publicly released).</p>
 baseline, adding:</p>
 <ul>
 <li><strong>Idle CPU consumption eliminated (Issue #115)</strong>: The
-main loop now uses fd-based watching and the capture damage gate is
-enabled by default, reducing steady-state CPU usage (previously ~1 core)
-to near zero. Troubleshooting switches:
+main loop now uses fd-based<br />
+watching and the capture damage gate is enabled by default, reducing
+steady-state<br />
+CPU usage (previously ~1 core) to near zero. Troubleshooting
+switches:<br />
 <code>BLINKGTK_PUMP_LEGACY=1</code> /
 <code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code>.</li>
 <li><strong>Root fix for persistent blank pages after large font-size
-changes (Issue #120)</strong>: The root cause — during heavy reflow, a
-recording update could be computed with an empty invalidation region,
-leaving stale blank tiles valid forever — was identified and fixed with
-a two-part change (invalidation fallback + activation-time re-damage),
+changes (Issue #120)</strong>:<br />
+The root cause — during heavy reflow, a recording update could be
+computed with an<br />
+empty invalidation region, leaving stale blank tiles valid forever — was
+identified<br />
+and fixed with a two-part change (invalidation fallback +
+activation-time re-damage),<br />
 both enabled by default. A deterministic fault-injection regression
-harness is included; the fix is machine-verified. Switches:
-<code>BLINKGTK_120_INVAL_FALLBACK=0</code> /
+harness is<br />
+included; the fix is machine-verified. Switches:
+<code>BLINKGTK_120_INVAL_FALLBACK=0</code> /<br />
 <code>BLINKGTK_120_ACT_REDRAW=0</code>.</li>
 <li><strong>Main-loop wakeup guarantee (with Issue #120)</strong>: A 100
-ms wakeup heartbeat bounds posted-task latency (measured idle overhead
-below +0.5%). Switch: <code>BLINKGTK_PUMP_RESCUE=0</code>.</li>
+ms wakeup heartbeat bounds<br />
+posted-task latency (measured idle overhead below +0.5%). Switch:
+<code>BLINKGTK_PUMP_RESCUE=0</code>.</li>
 <li><strong>EGL fractional scaling made opt-in (Issue #117)</strong>:
-The default returns to integer scaling; experimental fractional support
-now requires explicit <code>BLINKGTK_EGL_FRACTIONAL=1</code>.</li>
+The default returns to integer<br />
+scaling; experimental fractional support now requires explicit
+<code>BLINKGTK_EGL_FRACTIONAL=1</code>.</li>
 <li><strong>Environment variables reference</strong>: The canonical list
-of publicly supported environment variables
-(<code>environment-variables-{ja,en}.md</code>) is now bundled.</li>
+of publicly supported<br />
+environment variables (<code>environment-variables-{ja,en}.md</code>) is
+now bundled.</li>
 <li>Diagnostic infrastructure (frame inspection, fault injection, etc.)
-ships behind environment-variable gates (disabled by default) and does
-not affect normal operation.</li>
+ships behind<br />
+environment-variable gates (disabled by default) and does not affect
+normal operation.</li>
 </ul>
 <h2 id="compatibility">Compatibility</h2>
 <ul>
 <li>Consumers must link the PartitionAlloc allocator shim directly (the
-bundled pkg-config <code>blinkgtk-0.1.pc</code> handles this; Issue
-#90).</li>
+bundled pkg-config<br />
+<code>blinkgtk-0.1.pc</code> handles this; Issue #90).</li>
 <li>No breaking changes to the C API.</li>
 <li>With the versioned SONAME (<code>libblinkgtk-0.1.so.0</code>),
-newly-linked consumers get a versioned dependency; building via the
-devel package's pkg-config resolves it automatically.</li>
+newly-linked consumers get a versioned<br />
+dependency; building via the devel package's pkg-config resolves it
+automatically.</li>
 </ul>
 <h2 id="known-limitations">Known Limitations</h2>
 <ul>
 <li><code>CJKVerticalColumnFragmentation</code> is a staged
-implementation assuming column-width 600px / column-gap 0 /
-orthogonal-root border-padding 0 (experimental, off by default).</li>
+implementation assuming column-width 600px /<br />
+column-gap 0 / orthogonal-root border-padding 0 (experimental, off by
+default).</li>
 <li>For tarball (FHS) runs, resolve the private dir
-(<code>/usr/lib64/blinkgtk-0.1/</code>) via the runtime
+(<code>/usr/lib64/blinkgtk-0.1/</code>) via the runtime<br />
 <code>ld.so.conf.d</code> fragment or <code>LD_LIBRARY_PATH</code>.</li>
 <li>Idle CPU consumption (Issue #115) is under continued
 investigation.</li>

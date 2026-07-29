@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK ポータブルアプリケーション作成ガイド — BlinkGTK</title>
+  <title>BlinkGTK ポータブルアプリケーション作成ガイド —
+BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -94,14 +95,11 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK ポータブルアプリケーション作成ガイド —
-BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-ポータブルアプリケーション作成ガイド">BlinkGTK
 ポータブルアプリケーション作成ガイド</h1>
-<p><strong>作成者</strong>: BlinkGTK Project <strong>最終更新</strong>:
-2026-07-03 <strong>対象</strong>: BlinkGTK
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>最終更新</strong>: 2026-07-03<br />
+<strong>対象</strong>: BlinkGTK
 バイナリ配布物を使い、単一ディレクトリで動作する自己完結型 (ポータブル)
 アプリケーションを作成する開発者</p>
 <hr />
@@ -297,7 +295,7 @@ allocator shim の直接リンクが必須</strong>です (pkg-config
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> myapp myapp.c <span class="dt">\</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1 gtk4<span class="va">)</span></span></code></pre></div>
 <p>pkg-config を使わず手動リンクする場合は、<code>-lblinkgtk-0.1</code>
-に加えて必ず
+に加えて必ず<br />
 <code>-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</code>
 を明示してください。</p>
 <h3 id="42-rpath-の設定-ポータブル化の核心">4.2 RPATH の設定

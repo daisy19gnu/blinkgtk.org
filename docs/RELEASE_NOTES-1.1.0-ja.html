@@ -29,97 +29,110 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK 1.1.0-build5 リリースノート — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-110-build5-リリースノート">BlinkGTK 1.1.0-build5
 リリースノート</h1>
-<p><strong>日付</strong>: 2026-07-29 <strong>Chromium</strong>:
-150.0.7871.46 (stable) <strong>状態</strong>: 開発版
+<p><strong>日付</strong>: 2026-07-29<br />
+<strong>Chromium</strong>: 150.0.7871.46 (stable)<br />
+<strong>状態</strong>: 開発版
 (1.1.0-dev)。本配布物は検証用途を含みます。</p>
 <h2 id="配布形態の刷新-webkitgtk-同等構成">配布形態の刷新 (WebKitGTK
 同等構成)</h2>
 <p>本バージョンから、WebKitGTK と同等に <strong>runtime / devel / gir の
-3 分割</strong> (バイナリのみ、 GitHub Releases) で配布します。</p>
+3 分割</strong> (バイナリのみ、<br />
+GitHub Releases) で配布します。</p>
 <ul>
 <li><strong>runtime</strong> (<code>blinkgtk-bin</code> /
-<code>libblinkgtk-0.1-0</code>): 共有ライブラリ + Chromium ランタイム
+<code>libblinkgtk-0.1-0</code>): 共有ライブラリ + Chromium
+ランタイム<br />
 (private dir <code>/usr/lib64/blinkgtk-0.1/</code>) +
 リソース。アプリの実行に必要。</li>
 <li><strong>devel</strong> (<code>blinkgtk-bin-devel</code> /
 <code>libblinkgtk-0.1-dev</code>): ヘッダ + <code>blinkgtk-0.1.pc</code>
-+ <code>.so</code> symlink。ビルドに必要。</li>
++<br />
+<code>.so</code> symlink。ビルドに必要。</li>
 <li><strong>gir</strong> (<code>blinkgtk-bin-gir</code>): GObject
 Introspection typelib (Python / GJS 用)。</li>
 </ul>
 <p>共有ライブラリの SONAME は <code>libblinkgtk-0.1.so.0</code>
-に版数付けされました。各リリースは <code>THIRD_PARTY_NOTICES.html</code>
-(第三者ライセンス表記) と <code>SHA256SUMS</code> を同梱します。</p>
+に版数付けされました。各リリースは<br />
+<code>THIRD_PARTY_NOTICES.html</code> (第三者ライセンス表記) と
+<code>SHA256SUMS</code> を同梱します。</p>
 <h2 id="ハイライト">ハイライト</h2>
 <ul>
 <li><strong>Chromium 150 ベースライン</strong>: Chromium 150.0.7871.46
-(stable) へ移行。 V8 スナップショット整合・描画スモーク・実機縦組み描画
-(EGL 経路含む) を検証済み。</li>
+(stable) へ移行。<br />
+V8 スナップショット整合・描画スモーク・実機縦組み描画 (EGL 経路含む)
+を検証済み。</li>
 <li><strong>縦書き multicol 列境界の改善 (Issue #110)</strong>: CSS
 multicol + <code>writing-mode: vertical-rl</code> (直交ルート)
-で列境界をまたぐ行が隣接列に欠けて描画される問題に対し、 「列送り軸の
-line-moves-whole」を成立させる修正を追加。Blink の RuntimeEnabledFeature
+で列境界をまたぐ行が隣接列に欠けて描画される問題に対し、<br />
+「列送り軸の line-moves-whole」を成立させる修正を追加。Blink の
+RuntimeEnabledFeature<br />
 <strong><code>CJKVerticalColumnFragmentation</code></strong>
-として実装され、起動フラグ
+として実装され、起動フラグ<br />
 <code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
 で有効化 (既定は無効 = 従来動作)。</li>
 <li><strong>入力系の修正</strong>:
 <ul>
 <li><strong>ホイールスクロールの座標修正 (Issue #112)</strong>:
-ポインタが画面中央以外にある時、
+ポインタが画面中央以外にある時、<br />
 ホイールイベントの座標がビューポート中央に固定され中央以外の UI
-をスクロールできない 問題を修正。</li>
+をスクロールできない<br />
+問題を修正。</li>
 <li><strong>スクロールバードラッグ (Issue に関連)</strong>:
-スクロールバーのつまみドラッグでスクロール できない問題を修正。</li>
+スクロールバーのつまみドラッグでスクロール<br />
+できない問題を修正。</li>
 <li><strong>top-level ナビゲーション後の入力 (Issue #114)</strong>:
-リーダ⇔ライブラリのような top-level ナビゲーションで
-RenderWidgetHostView が再作成された際、マウス入力が破棄済みの旧 host へ
+リーダ⇔ライブラリのような top-level<br />
+ナビゲーションで RenderWidgetHostView
+が再作成された際、マウス入力が破棄済みの旧 host へ<br />
 転送され続ける問題 (要再起動) を修正。</li>
 </ul></li>
 <li><strong>GObject 型システム整備</strong>: 4 つの列挙/フラグ型
-(LoadEvent / LoadError / GpuMode / ContentPolicy) の GType
-登録、プロパティ通知 (notify::) の発火、 <code>uri-changed</code>
-シグナルの実ナビゲーション発火に対応。PyGObject / GJS
-から機械検証済み。</li>
+(LoadEvent / LoadError /<br />
+GpuMode / ContentPolicy) の GType 登録、プロパティ通知 (notify::)
+の発火、<br />
+<code>uri-changed</code> シグナルの実ナビゲーション発火に対応。PyGObject
+/ GJS から機械検証済み。</li>
 </ul>
 <h2 id="build5-での変更-2026-07-29">build5 での変更 (2026-07-29)</h2>
 <h3 id="同梱サンプルの入れ替え">同梱サンプルの入れ替え</h3>
 <p>同梱するサンプルを、<code>https://google.com/</code>
-を表示するだけの最小構成 <strong><code>blinkgtk_browser</code></strong>
-1 本にしました。従来同梱していた開発用ブラウザは、
-描画経路の切り替えや組版オーバーレイなど開発時にしか使わない機能を多数含み、
+を表示するだけの最小構成<br />
+<strong><code>blinkgtk_browser</code></strong> 1
+本にしました。従来同梱していた開発用ブラウザは、<br />
+描画経路の切り替えや組版オーバーレイなど開発時にしか使わない機能を多数含み、<br />
 BlinkGTK の組み込み方を知るための例としては大きすぎたためです。</p>
 <p><code>examples/</code> には <code>blinkgtk_browser.c</code> (105
-行)、<code>Makefile</code>、<code>README.md</code> の 3
-つだけが入ります。<code>make</code> だけでビルドできます。</p>
+行)、<code>Makefile</code>、<code>README.md</code> の<br />
+3 つだけが入ります。<code>make</code> だけでビルドできます。</p>
 <h3 id="修正">修正</h3>
 <ul>
 <li><strong><code>blink_gtk_set_resources_path()</code>
-が一部のリソースに効いていなかった問題</strong>を 修正しました。ICU
-データと V8 スナップショットは指定が反映される一方、 リソースパック
-(<code>content_shell.pak</code>) だけが実行ファイルのあるディレクトリ
-基準のままで、実行ファイルをリソースと別の場所に置いたアプリケーションが
+が一部のリソースに効いていなかった問題</strong>を<br />
+修正しました。ICU データと V8
+スナップショットは指定が反映される一方、<br />
+リソースパック (<code>content_shell.pak</code>)
+だけが実行ファイルのあるディレクトリ<br />
+基準のままで、実行ファイルをリソースと別の場所に置いたアプリケーションが<br />
 <code>Check failed: data_pack-&gt;LoadFromPath(path)</code>
 で起動できませんでした。</li>
 <li>同梱サンプルの実行ファイルに、ビルド環境の絶対パスが
-<code>rpath</code> として 埋め込まれていた問題を修正しました。</li>
+<code>rpath</code> として<br />
+埋め込まれていた問題を修正しました。</li>
 </ul>
 <h3 id="ドキュメント">ドキュメント</h3>
 <ul>
 <li><strong>GTK4 自体の使い方については GTK4
-公式ドキュメントへ誘導</strong>するようにしました
+公式ドキュメントへ誘導</strong>するようにしました<br />
 (<code>docs.gtk.org</code>)。BlinkGTK は GTK4 ウィジェットを 1
-つ提供するライブラリです。
+つ提供するライブラリです。<br />
 ただしメインループだけは例外で、<code>blink_gtk_run_main_loop()</code>
-を使う必要が あります (GTK の <code>g_application_run()</code>
+を使う必要が<br />
+あります (GTK の <code>g_application_run()</code>
 では画面が白いままになります)。</li>
 <li>設定 API
-のドキュメントから、同梱サンプルには存在しないコマンドライン
+のドキュメントから、同梱サンプルには存在しないコマンドライン<br />
 オプションの例を削除し、API での設定例に置き換えました。</li>
 </ul>
 <h2 id="build4-での変更-2026-07-29">build4 での変更 (2026-07-29)</h2>
@@ -129,57 +142,63 @@ BlinkGTK の組み込み方を知るための例としては大きすぎたた�
 (本 build の主眼)</h3>
 <p>build2 / build3
 の同梱ドキュメントには、<strong>同梱バイナリに存在しない API
-を記載した箇所が 20
-種</strong>ありました。記載どおりに書くとビルドできない状態で、影響したのは
+を記載した箇所が<br />
+20
+種</strong>ありました。記載どおりに書くとビルドできない状態で、影響したのは<br />
 <code>settings-api</code> / <code>c-api-reference</code> /
-<code>navigation-api</code> / <code>signals-api</code> および
+<code>navigation-api</code> / <code>signals-api</code> および<br />
 設定・イベントの各チュートリアル、<code>ENGINE_COMPARISON_DETAILED</code>
 です。</p>
 <p>本 build4 で以下のとおり是正しました。</p>
 <ul>
-<li><strong>実名への修正</strong>: 記載名が実装と食い違っていたもの (例
+<li><strong>実名への修正</strong>: 記載名が実装と食い違っていたもの
+(例<br />
 <code>blink_web_view_set_enable_javascript</code> →
-<code>blink_web_view_set_javascript_enabled</code>、
+<code>blink_web_view_set_javascript_enabled</code>、<br />
 <code>blink_web_view_set_auto_load_images</code> →
 <code>blink_web_view_set_images_enabled</code>)</li>
 <li><strong>実装の追加</strong>: ユーザーエージェント設定・取得と Cookie
 設定を実装 (下記)</li>
 <li><strong>未実装ドキュメントの取り下げ</strong>:
-<code>blink-settings-quickstart</code> (INI 形式の設定ファイル API)
-は実装が存在しないため同梱から外しました。アクセシビリティ API
-のドキュメントも 同様に取り下げています。実装後に改めて提供します。</li>
+<code>blink-settings-quickstart</code> (INI 形式の設定ファイル<br />
+API) は実装が存在しないため同梱から外しました。アクセシビリティ API
+のドキュメントも<br />
+同様に取り下げています。実装後に改めて提供します。</li>
 </ul>
-<p>利用者が同梱ドキュメントどおりに書いてビルドできることを、配布物そのものを展開して
+<p>利用者が同梱ドキュメントどおりに書いてビルドできることを、配布物そのものを展開して<br />
 機械検証するゲートを追加し、本 build
 から公開の前提条件としています。</p>
 <h3 id="追加-api">追加 API</h3>
 <ul>
 <li><code>blink_web_view_set_user_agent()</code> /
-<code>blink_web_view_get_user_agent()</code> — User-Agent
-の上書きと取得</li>
+<code>blink_web_view_get_user_agent()</code> —<br />
+User-Agent の上書きと取得</li>
 <li><code>blink_web_view_set_cookie()</code> — Cookie の設定
 (非同期、コールバックで結果通知)</li>
 <li><code>permission-request</code> シグナルと
-<code>BlinkPermissionRequest</code> —
-位置情報・通知などの権限要求をアプリ側で判断できます。
-<strong>既定は拒否</strong>で、シグナルを処理しない場合はすべて拒否されます。
-<code>blink_permission_request_get_type_name()</code> で要求種別を得て、
+<code>BlinkPermissionRequest</code> —<br />
+位置情報・通知などの権限要求をアプリ側で判断できます。<br />
+<strong>既定は拒否</strong>で、シグナルを処理しない場合はすべて拒否されます。<br />
+<code>blink_permission_request_get_type_name()</code>
+で要求種別を得て、<br />
 <code>blink_permission_request_allow()</code> /
 <code>blink_permission_request_deny()</code> で応答します。</li>
 </ul>
 <h3 id="同梱物の変更">同梱物の変更</h3>
 <ul>
 <li><code>examples/</code> に付属していた <code>api_check.c</code> /
-<code>api_tester.c</code> は、保守されている
+<code>api_tester.c</code> は、保守されている<br />
 ソースがリポジトリに存在しない古い検査用プログラムのため同梱を終了しました。</li>
 <li><code>examples/Makefile</code> を pkg-config
-ベースの簡潔なものに差し替えました。従来同梱 されていた Makefile は
-autotools が生成したもので、生成環境の絶対パスを含み、
+ベースの簡潔なものに差し替えました。従来同梱<br />
+されていた Makefile は autotools
+が生成したもので、生成環境の絶対パスを含み、<br />
 配布先ではそのまま動作しませんでした。</li>
 </ul>
 <h3 id="配布形態">配布形態</h3>
 <p>build3 は RPM のみの差し替えでしたが、本 build4 では <strong>tarball
-/ RPM / DEB のすべてを build4 として再生成</strong>しています。</p>
+/ RPM / DEB のすべてを<br />
+build4 として再生成</strong>しています。</p>
 <h2 id="build2-での変更-2026-07-21">build2 での変更 (2026-07-21)</h2>
 <p><strong>本 build2 は BlinkGTK v1.1
 系の初回一般公開版です</strong>(build1
@@ -188,50 +207,61 @@ autotools が生成したもので、生成環境の絶対パスを含み、
 のまま、以下の修正を収録します。</p>
 <ul>
 <li><strong>アイドル時 CPU 消費の解消 (Issue #115)</strong>:
-メインループの fd 監視化と capture damage gate を既定有効化し、静止時の
-CPU 常時消費 (約 1 コア) をほぼゼロにしました。 切り分け用スイッチ:
-<code>BLINKGTK_PUMP_LEGACY=1</code> /
+メインループの fd 監視化と capture damage<br />
+gate を既定有効化し、静止時の CPU 常時消費 (約 1 コア)
+をほぼゼロにしました。<br />
+切り分け用スイッチ: <code>BLINKGTK_PUMP_LEGACY=1</code> /
 <code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code>。</li>
 <li><strong>フォントサイズ大変更後の永続白紙の根本修正 (Issue
-#120)</strong>: 大規模リフロー直後に ページが白紙のまま固定される事象
-(見開き縦書き等) の真因 — リフロー過渡の recording
-更新で差分領域が空計算され、白タイルが有効なまま固定される — を特定し、
+#120)</strong>: 大規模リフロー直後に<br />
+ページが白紙のまま固定される事象 (見開き縦書き等) の真因 —
+リフロー過渡の<br />
+recording 更新で差分領域が空計算され、白タイルが有効なまま固定される —
+を特定し、<br />
 二段の修正 (invalidation フォールバック + activation 時再 damage)
-を既定有効で 収録しました。fault injection
-による決定的な回帰検証系を同梱し、修正の効力は
+を既定有効で<br />
+収録しました。fault injection
+による決定的な回帰検証系を同梱し、修正の効力は<br />
 機械検証済みです。切り分け用: <code>BLINKGTK_120_INVAL_FALLBACK=0</code>
 / <code>BLINKGTK_120_ACT_REDRAW=0</code>。</li>
 <li><strong>メインループ起床保証 (Issue #120 併設)</strong>: 100ms
-の起床ハートビートにより、posted task の滞留を有界化 (アイドル負荷は実測
-+0.5% 未満)。切り分け用: <code>BLINKGTK_PUMP_RESCUE=0</code>。</li>
+の起床ハートビートにより、posted<br />
+task の滞留を有界化 (アイドル負荷は実測 +0.5% 未満)。切り分け用:
+<code>BLINKGTK_PUMP_RESCUE=0</code>。</li>
 <li><strong>EGL 分数スケーリングの opt-in 化 (Issue #117)</strong>:
-既定を整数スケールに戻し、実験的な 分数対応は
-<code>BLINKGTK_EGL_FRACTIONAL=1</code> の明示 opt-in に変更
+既定を整数スケールに戻し、実験的な<br />
+分数対応は <code>BLINKGTK_EGL_FRACTIONAL=1</code> の明示 opt-in に変更
 (描画退行の回避)。</li>
 <li><strong>環境変数リファレンスの整備</strong>: 公開サポート env
-の正リスト (<code>environment-variables-{ja,en}.md</code>)
+の正リスト<br />
+(<code>environment-variables-{ja,en}.md</code>)
 を同梱ドキュメントに追加しました。</li>
 <li>診断基盤 (フレーム検査・fault injection 等) は環境変数ゲート
-(既定無効) で同梱され、 通常運用の挙動には影響しません。</li>
+(既定無効) で同梱され、<br />
+通常運用の挙動には影響しません。</li>
 </ul>
 <h2 id="互換性">互換性</h2>
 <ul>
 <li>利用側 (consumer) は PartitionAlloc allocator shim
-の直接リンクが必要です (同梱の pkg-config <code>blinkgtk-0.1.pc</code>
-が処理します。Issue #90)。</li>
+の直接リンクが必要です<br />
+(同梱の pkg-config <code>blinkgtk-0.1.pc</code> が処理します。Issue
+#90)。</li>
 <li>C API に互換性を壊す変更はありません。</li>
 <li>SONAME 版数付け (<code>libblinkgtk-0.1.so.0</code>) により、consumer
-は再リンクで versioned な 依存を持ちます。devel パッケージの pkg-config
+は再リンクで versioned な<br />
+依存を持ちます。devel パッケージの pkg-config
 経由でビルドすれば自動的に整合します。</li>
 </ul>
 <h2 id="既知の制限">既知の制限</h2>
 <ul>
 <li><code>CJKVerticalColumnFragmentation</code> は列幅 600px /
-column-gap 0 / 直交ルートの border·padding 0 を前提とした段階の実装です
+column-gap 0 / 直交ルートの<br />
+border·padding 0 を前提とした段階の実装です
 (experimental、既定無効)。</li>
 <li>tarball (FHS) 実行時は runtime の <code>ld.so.conf.d</code>
-断片または <code>LD_LIBRARY_PATH</code> で private dir
-(<code>/usr/lib64/blinkgtk-0.1/</code>) を解決してください。</li>
+断片または <code>LD_LIBRARY_PATH</code> で<br />
+private dir (<code>/usr/lib64/blinkgtk-0.1/</code>)
+を解決してください。</li>
 <li>アイドル時の CPU 消費 (Issue #115) は継続調査中です。</li>
 </ul>
 </body>

@@ -94,18 +94,16 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">Building an application with BlinkGTK — BlinkGTK</h1>
-</header>
 <h1 id="building-an-application-with-blinkgtk">Building an application
 with BlinkGTK</h1>
 <p>A minimal guide to building an application that embeds BlinkGTK.</p>
 <h2 id="first-you-do-not-build-blinkgtk-itself-from-source">First: you
 do not build BlinkGTK itself from source</h2>
 <p>BlinkGTK embeds Chromium, so building it requires a Chromium source
-tree (over 100 GB) and anywhere from several to well over ten hours of
-build time. <strong>Use the distributed packages.</strong> This page
-describes how to build <em>your application</em> against those
+tree (over 100 GB) and<br />
+anywhere from several to well over ten hours of build time. <strong>Use
+the distributed packages.</strong><br />
+This page describes how to build <em>your application</em> against those
 packages.</p>
 <p>The distribution is split into three packages:</p>
 <table>
@@ -151,14 +149,17 @@ pkg-config</h2>
 most confusing failure.</strong></p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> myapp myapp.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
 <p>Do not hand-write <code>-lblinkgtk</code> on its own. BlinkGTK
-requires Chromium's <strong>PartitionAlloc allocator shim</strong>, and
-that shim must be a <em>direct</em> dependency (<code>DT_NEEDED</code>)
-of the executable so that it is loaded early. The <code>Libs</code> line
-of <code>blinkgtk-0.1.pc</code> already includes it.</p>
+requires Chromium's<br />
+<strong>PartitionAlloc allocator shim</strong>, and that shim must be a
+<em>direct</em> dependency<br />
+(<code>DT_NEEDED</code>) of the executable so that it is loaded early.
+The <code>Libs</code> line of<br />
+<code>blinkgtk-0.1.pc</code> already includes it.</p>
 <p>If the shim is missing, the program builds, links, and starts — but
-<strong>page loads never complete</strong> (navigation does not commit,
-and the window stays blank). The cause is hard to spot from the symptom
-alone.</p>
+<strong>page loads never<br />
+complete</strong> (navigation does not commit, and the window stays
+blank). The cause is hard to<br />
+spot from the symptom alone.</p>
 <p>To check:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># One or more lines: good. Nothing: you are not going through pkg-config</span></span></code></pre></div>
@@ -167,7 +168,8 @@ alone.</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span></code></pre></div>
 <p>The public API is collected in this one header. Do not include
-internal headers directly; they change between versions.</p>
+internal headers directly;<br />
+they change between versions.</p>
 <h2 id="4-a-minimal-application">4. A minimal application</h2>
 <div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
@@ -193,7 +195,7 @@ internal headers directly; they change between versions.</p>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>Note</strong>: <code>blink_web_view_new()</code> returns a
-<code>GtkWidget *</code>, but the BlinkGTK API takes a
+<code>GtkWidget *</code>, but the BlinkGTK API takes a<br />
 <code>BlinkWebView *</code>. Cast with
 <code>BLINK_WEB_VIEW()</code>.</p>
 <h2 id="5-example-makefile">5. Example Makefile</h2>
@@ -207,25 +209,28 @@ myapp: myapp.c
 <h2 id="6-what-is-needed-at-run-time">6. What is needed at run time</h2>
 <h3 id="wayland-is-required">Wayland is required</h3>
 <p>BlinkGTK is <strong>Wayland only</strong>; it does not run on X11.
-Run it in a Wayland session, or use Weston's headless backend for
-automated verification:</p>
+Run it in a Wayland session, or use<br />
+Weston's headless backend for automated verification:</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">weston</span> <span class="at">--backend</span><span class="op">=</span>headless-backend.so <span class="at">--width</span><span class="op">=</span>1024 <span class="at">--height</span><span class="op">=</span>768 <span class="kw">&amp;</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">WAYLAND_DISPLAY</span><span class="op">=</span>wayland-1</span></code></pre></div>
 <h3 id="where-chromiums-resource-files-must-be">Where Chromium's
 resource files must be</h3>
 <p>Chromium needs its ICU data (<code>icudtl.dat</code>), V8 snapshots
-(<code>snapshot_blob.bin</code> and
+(<code>snapshot_blob.bin</code> and<br />
 <code>v8_context_snapshot.bin</code>), and resource packs
-(<code>content_shell.pak</code>). These are looked up <strong>relative
-to the directory containing the executable, not the current working
-directory</strong>.</p>
+(<code>content_shell.pak</code>). These are looked up<br />
+<strong>relative to the directory containing the executable, not the
+current working directory</strong>.</p>
 <p>With an RPM or DEB installation everything is already in the right
-place, so there is normally nothing to do. If you extracted the tarball,
-or moved your executable elsewhere, you will see:</p>
+place, so there is<br />
+normally nothing to do. If you extracted the tarball, or moved your
+executable elsewhere,<br />
+you will see:</p>
 <pre><code>ERROR:base/i18n/icu_util.cc: Invalid file descriptor to ICU data received.
 FATAL:base/i18n/icu_util.cc: Check failed: result.</code></pre>
 <p>Put the executable in the same directory as the resources, or set the
-library search path to match:</p>
+library search path<br />
+to match:</p>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/blinkgtk-0.1:<span class="dt">\</span></span>
 <span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>/opt/blinkgtk/usr/lib64/blinkgtk-0.1/chromium</span></code></pre></div>
@@ -266,8 +271,9 @@ a direct dependency? (section 2)</td>
 </table>
 <h2 id="8-about-using-gtk4-itself">8. About using GTK4 itself</h2>
 <p>BlinkGTK is <strong>a library that provides one GTK4 widget</strong>.
-How to use GTK4 itself — windows, layout, buttons, menus, event handling
-— is covered by the GTK4 documentation, not here.</p>
+How to use GTK4 itself — windows,<br />
+layout, buttons, menus, event handling — is covered by the GTK4
+documentation, not here.</p>
 <ul>
 <li>GTK4 API reference: <a
 href="https://docs.gtk.org/gtk4/">https://docs.gtk.org/gtk4/</a></li>
@@ -281,17 +287,17 @@ href="https://docs.gtk.org/glib/">https://docs.gtk.org/glib/</a></li>
 href="https://docs.gtk.org/gtk4/migrating-3to4.html">https://docs.gtk.org/gtk4/migrating-3to4.html</a></li>
 </ul>
 <p><code>BlinkWebView</code> derives from <code>GtkWidget</code>, so it
-behaves like any other GTK4 widget: put it in a container, set size
-requests, connect signals.</p>
+behaves like any other GTK4 widget: put it in a<br />
+container, set size requests, connect signals.</p>
 <p><strong>The main loop is the one exception.</strong> Use
-<code>blink_gtk_run_main_loop()</code> rather than GTK's
+<code>blink_gtk_run_main_loop()</code> rather than GTK's<br />
 <code>g_application_run()</code> or <code>g_main_loop_run()</code> (see
 section 4).</p>
 <h3 id="using-it-from-python-rust-and-other-languages">Using it from
 Python, Rust, and other languages</h3>
 <p>BlinkGTK supports GObject Introspection, so it can be used from
-PyGObject and gtk-rs. Refer to the documentation of each binding for how
-to use them.</p>
+PyGObject and gtk-rs. Refer to the<br />
+documentation of each binding for how to use them.</p>
 <ul>
 <li>PyGObject: <a
 href="https://pygobject.gnome.org/">https://pygobject.gnome.org/</a></li>

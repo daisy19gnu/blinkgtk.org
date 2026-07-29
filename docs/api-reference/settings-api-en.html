@@ -94,14 +94,12 @@
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK Settings API Reference — BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-settings-api-reference">BlinkGTK Settings API
 Reference</h1>
-<p><strong>Version</strong>: v0.9.28-dev <strong>Last updated</strong>:
-2026-01-01 <strong>Language</strong>: <a
-href="./settings-api-ja.md">日本語</a> | English</p>
+<p><strong>Version</strong>: v0.9.28-dev<br />
+<strong>Last updated</strong>: 2026-01-01<br />
+<strong>Language</strong>: <a href="./settings-api-ja.md">日本語</a> |
+English</p>
 <hr />
 <h2 id="overview">Overview</h2>
 <p>The Settings API provides functions for customizing the behavior of a
@@ -158,10 +156,12 @@ id="blink_web_view_set_javascript_enabled">blink_web_view_set_javascript_enabled
 <p>Enables or disables JavaScript.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView widget | |
-<code>enabled</code> | <code>gboolean</code> | TRUE = enabled, FALSE =
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> | BlinkWebView
+widget |<br />
+| <code>enabled</code> | <code>gboolean</code> | TRUE = enabled, FALSE =
 disabled |</p>
 <p><strong>Return value</strong>: None</p>
 <p><strong>Default value</strong>: TRUE (enabled)</p>
@@ -186,9 +186,11 @@ id="blink_web_view_get_javascript_enabled">blink_web_view_get_javascript_enabled
 <p>Gets whether JavaScript is enabled.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_javascript_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> | BlinkWebView
+widget |</p>
 <p><strong>Return value</strong>: <code>gboolean</code> - TRUE =
 enabled, FALSE = disabled</p>
 <p><strong>Example</strong>:</p>
@@ -205,10 +207,12 @@ id="blink_web_view_set_user_agent">blink_web_view_set_user_agent()</h3>
 <p>Sets a custom User-Agent string.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> user_agent<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView widget | |
-<code>user_agent</code> | <code>const char*</code> | User-Agent string
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> | BlinkWebView
+widget |<br />
+| <code>user_agent</code> | <code>const char*</code> | User-Agent string
 |</p>
 <p><strong>Return value</strong>: None</p>
 <p><strong>Default value</strong>: Chromium's default User-Agent</p>
@@ -236,17 +240,20 @@ id="blink_web_view_get_user_agent">blink_web_view_get_user_agent()</h3>
 <p>Gets the current User-Agent string.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> blink_web_view_get_user_agent<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> | BlinkWebView
+widget |</p>
 <p><strong>Return value</strong>: <code>char*</code> - User-Agent string
 (the caller must free it with <code>g_free()</code>)</p>
 <p><strong>Example</strong>:</p>
 <div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> user_agent <span class="op">=</span> blink_web_view_get_user_agent<span class="op">(</span>web_view<span class="op">);</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>g_print<span class="op">(</span><span class="st">&quot;Current User-Agent: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> user_agent<span class="op">);</span></span>
 <span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>user_agent<span class="op">);</span>  <span class="co">// Important: free the memory</span></span></code></pre></div>
-<p><strong>Memory management</strong>: Important: The return value must
-be freed by the caller with <code>g_free()</code>.</p>
+<p><strong>Memory management</strong>:<br />
+Important: The return value must be freed by the caller with
+<code>g_free()</code>.</p>
 <p><strong>Available since</strong>: Build 171</p>
 <hr />
 <h2 id="image-loading-control">Image Loading Control</h2>
@@ -255,11 +262,13 @@ id="blink_web_view_set_images_enabled">blink_web_view_set_images_enabled()</h3>
 <p>Controls automatic image loading.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView widget | |
-<code>enabled</code> | <code>gboolean</code> | TRUE = auto-load, FALSE =
-disabled |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> | BlinkWebView
+widget |<br />
+| <code>enabled</code> | <code>gboolean</code> | TRUE = auto-load, FALSE
+= disabled |</p>
 <p><strong>Return value</strong>: None</p>
 <p><strong>Default value</strong>: TRUE (auto-loading enabled)</p>
 <p><strong>Example</strong>:</p>
@@ -286,9 +295,11 @@ id="blink_web_view_get_images_enabled">blink_web_view_get_images_enabled()</h3>
 <p>Gets the automatic image loading setting.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_images_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> | BlinkWebView
+widget |</p>
 <p><strong>Return value</strong>: <code>gboolean</code> - TRUE =
 auto-loading enabled, FALSE = disabled</p>
 <p><strong>Example</strong>:</p>
@@ -305,10 +316,12 @@ id="blink_web_view_set_local_storage_enabled">blink_web_view_set_local_storage_e
 <p>Enables or disables HTML5 LocalStorage.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> gboolean enabled<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView widget | |
-<code>enabled</code> | <code>gboolean</code> | TRUE = enabled, FALSE =
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> | BlinkWebView
+widget |<br />
+| <code>enabled</code> | <code>gboolean</code> | TRUE = enabled, FALSE =
 disabled |</p>
 <p><strong>Return value</strong>: None</p>
 <p><strong>Default value</strong>: TRUE (enabled)</p>
@@ -336,9 +349,11 @@ id="blink_web_view_get_local_storage_enabled">blink_web_view_get_local_storage_e
 <p>Gets the LocalStorage setting.</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb22"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_web_view_get_local_storage_enabled<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong>Parameters</strong>: | Parameter | Type | Description |
-|-----------|---|------| | <code>web_view</code> |
-<code>BlinkWebView*</code> | BlinkWebView widget |</p>
+<p><strong>Parameters</strong>:<br />
+| Parameter | Type | Description |<br />
+|-----------|---|------|<br />
+| <code>web_view</code> | <code>BlinkWebView*</code> | BlinkWebView
+widget |</p>
 <p><strong>Return value</strong>: <code>gboolean</code> - TRUE =
 enabled, FALSE = disabled</p>
 <p><strong>Example</strong>:</p>
@@ -454,9 +469,9 @@ loading a URL.</p>
 <span id="cb29-7"><a href="#cb29-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb29-8"><a href="#cb29-8" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
 <p>The bundled <code>blinkgtk_browser</code> sample is minimal and
-changes no settings. To try these out, add the calls above and rebuild
-it (the <code>Makefile</code> in <code>examples/</code> builds it as
-is).</p>
+changes no settings. To try these out, add the<br />
+calls above and rebuild it (the <code>Makefile</code> in
+<code>examples/</code> builds it as is).</p>
 <hr />
 <h2 id="related-documentation">Related Documentation</h2>
 <h3 id="api-reference">API Reference</h3>
@@ -512,8 +527,9 @@ Migration Guide</a></li>
 </tr>
 </tbody>
 </table>
-<p><strong>License</strong>: BSD-3-Clause <strong>Project</strong>:
-BlinkGTK <strong>Maintainer</strong>: BlinkGTK Project <a
+<p><strong>License</strong>: BSD-3-Clause<br />
+<strong>Project</strong>: BlinkGTK<br />
+<strong>Maintainer</strong>: BlinkGTK Project <a
 href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
 </body>
 </html>

@@ -94,15 +94,12 @@
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<header id="title-block-header">
-<h1 class="title">BlinkGTK C API リファレンス（日本語版） —
-BlinkGTK</h1>
-</header>
 <h1 id="blinkgtk-c-api-リファレンス日本語版">BlinkGTK C API
 リファレンス（日本語版）</h1>
-<p><strong>作成者</strong>: BlinkGTK Development Team
-<strong>作成日</strong>: 2026-03-07 <strong>対象バージョン</strong>:
-Build 699 以降 <strong>更新履歴</strong>:</p>
+<p><strong>作成者</strong>: BlinkGTK Development Team<br />
+<strong>作成日</strong>: 2026-03-07<br />
+<strong>対象バージョン</strong>: Build 699 以降<br />
+<strong>更新履歴</strong>:</p>
 <ul>
 <li>Build 699 (2026-03-25) - CP-204〜210 新API追加（load_html, Getter群,
 非同期スクリーンショット, load-failedシグナル, NULLガード,
@@ -114,34 +111,37 @@ Build 699 以降 <strong>更新履歴</strong>:</p>
 <p><strong>注意 この文書は陳腐化しています（2026-07-27
 追記）</strong></p>
 <p>機械照合の結果、本文書が言及する関数は <strong>32
-個</strong>に対し、配布ヘッダ <code>blink_gtk.h</code> の実在関数は
+個</strong>に対し、配布ヘッダ <code>blink_gtk.h</code>
+の実在関数は<br />
 <strong>80 個</strong>です（カバー率約 4
 割）。さらに、既に削除された以下 2 関数の記載が残っています。</p>
 <ul>
 <li>GObjectC++ マッピング管理の内部 2 関数</li>
 </ul>
 <p>現行 API の正確な情報は、配布ヘッダ
-<code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code> を一次情報として
+<code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code>
+を一次情報として<br />
 ご参照ください。環境変数については <a
 href="./environment-variables-ja.md"><code>environment-variables-ja.md</code></a>
 が正本です。</p>
 <p>本文書は #121 で整備中の API リファレンス（<a
 href="./00-index-ja.md"><code>00-index-ja.md</code></a> の第 11
-章）の母体として
+章）の母体として<br />
 全面改訂予定です。改訂完了時に本文書は新章への移行注記のみを残して整理します。</p>
 </blockquote>
 <hr />
 <h2 id="概要">概要</h2>
 <p>BlinkGTK の C API は <code>blink_gtk/blink_gtk.h</code>
-で定義されています。 WebKitGTK と同様の設計思想で、C
-言語から直接使用できる API を提供します。</p>
+で定義されています。<br />
+WebKitGTK と同様の設計思想で、C 言語から直接使用できる API
+を提供します。</p>
 <h3
 id="スレッド安全性ポリシーcp-210">スレッド安全性ポリシー（CP-210）</h3>
 <p>全ての BlinkGTK 公開 API 関数は <strong>GTK
-メインスレッドからのみ呼び出し可能</strong> です。
-ワーカースレッドやバックグラウンドスレッドから呼び出した場合の動作は未定義です。
+メインスレッドからのみ呼び出し可能</strong> です。<br />
+ワーカースレッドやバックグラウンドスレッドから呼び出した場合の動作は未定義です。<br />
 GTK メインスレッド外から操作を行う必要がある場合は
-<code>g_idle_add()</code> を使用して
+<code>g_idle_add()</code> を使用して<br />
 メインスレッドにディスパッチしてください。</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* ワーカースレッドからの安全な呼び出し例 */</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean load_on_main_thread<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
@@ -154,9 +154,9 @@ GTK メインスレッド外から操作を行う必要がある場合は
 <span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>g_idle_add<span class="op">(</span>load_on_main_thread<span class="op">,</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span></code></pre></div>
 <h3 id="null-ガードポリシーcp-207">NULL ガードポリシー（CP-207）</h3>
 <p>Build 699 以降、全ての公開 API 関数は <code>g_return_if_fail()</code>
-/ <code>g_return_val_if_fail()</code> による NULL
-チェックを行います。NULL ポインタを渡した場合、GLib
-の警告メッセージが出力され、
+/ <code>g_return_val_if_fail()</code> による<br />
+NULL チェックを行います。NULL ポインタを渡した場合、GLib
+の警告メッセージが出力され、<br />
 関数は安全にリターンします（クラッシュしません）。</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* NULL を渡した場合の動作 */</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>NULL<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
@@ -300,8 +300,8 @@ Web コンテンツ表示ウィジェットを表します。</p>
 </ul>
 <p><strong>インライン HTML の読み込み</strong>:</p>
 <p>インライン HTML を表示する場合は
-<code>blink_web_view_load_html()</code> を使用してください （CP-308:
-data:URL→load_html()移行）。</p>
+<code>blink_web_view_load_html()</code> を使用してください<br />
+（CP-308: data:URL→load_html()移行）。</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://www.google.com&quot;</span><span class="op">);</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* CP-308: data:URL→load_html()移行 — インライン HTML は load_html() を使用 */</span></span>
@@ -310,18 +310,19 @@ data:URL→load_html()移行）。</p>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;div style=&#39;display:block;background:#0000ff;width:800px;height:200px&#39;&gt;BLUE&lt;/div&gt;&quot;</span></span>
 <span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
 <p><strong>注意</strong>: <code>blink_web_view_load_html()</code>
-ではプレーン HTML をそのまま渡せるため、 <code>data:</code> URL
-のエンコーディング（<code>%23</code> 等）は不要です。<code>#ffe</code>
-等の CSS 色指定もそのまま使用可能です。 DOCTYPE を含めてください。ないと
-quirks モードになり、div がインライン要素として扱われます（Build 609-610
-で確認）。</p>
+ではプレーン HTML をそのまま渡せるため、<br />
+<code>data:</code> URL のエンコーディング（<code>%23</code>
+等）は不要です。<code>#ffe</code> 等の CSS
+色指定もそのまま使用可能です。<br />
+DOCTYPE を含めてください。ないと quirks モードになり、div
+がインライン要素として扱われます（Build 609-610 で確認）。</p>
 <hr />
 <h3 id="blink_web_view_load_html">blink_web_view_load_html()</h3>
 <div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_load_html<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a>                              <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> html<span class="op">,</span></span>
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                              <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> base_uri<span class="op">);</span></span></code></pre></div>
 <p><strong>Build 699 以降（CP-204）</strong> -- HTML
-文字列を直接読み込みます。WebKitGTK の
+文字列を直接読み込みます。WebKitGTK の<br />
 <code>webkit_web_view_load_html()</code> と互換性のある API です。</p>
 <table>
 <thead>
@@ -428,7 +429,8 @@ id="blink_web_view_get_estimated_load_progress">blink_web_view_get_estimated_loa
 <h2 id="webpreferences-getter-apicp-204">WebPreferences Getter
 API（CP-204）</h2>
 <p>Build 699 以降、現在の WebPreferences 設定値を取得する Getter API
-が追加されました。 対応する Setter
+が追加されました。<br />
+対応する Setter
 API（<code>blink_web_view_set_javascript_enabled()</code>
 等）と対で使用します。</p>
 <h3
@@ -506,8 +508,8 @@ id="blink_web_view_capture_screenshot">blink_web_view_capture_screenshot()</h3>
 <p><strong>注意</strong>:
 非同期処理です。ファイルが書き込まれるまでに時間がかかる場合があります。</p>
 <p><strong>推奨タイミング</strong>: ナビゲーション完了後 30
-秒以上待機してからキャプチャしてください。 Renderer 初期化に約 25
-秒かかります（Build 549 で確認）。</p>
+秒以上待機してからキャプチャしてください。<br />
+Renderer 初期化に約 25 秒かかります（Build 549 で確認）。</p>
 <p><strong>使用例</strong>:</p>
 <div class="sourceCode" id="cb36"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb36-1"><a href="#cb36-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 30秒後にスクリーンショット撮影 */</span></span>
 <span id="cb36-2"><a href="#cb36-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean take_screenshot<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
@@ -529,7 +531,7 @@ id="blink_web_view_capture_screenshot_async">blink_web_view_capture_screenshot_a
 <span id="cb37-8"><a href="#cb37-8" aria-hidden="true" tabindex="-1"></a>                                             BlinkScreenshotCallback callback<span class="op">,</span></span>
 <span id="cb37-9"><a href="#cb37-9" aria-hidden="true" tabindex="-1"></a>                                             gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p><strong>Build 699 以降</strong> --
-非同期スクリーンショットをコールバック方式で取得します。
+非同期スクリーンショットをコールバック方式で取得します。<br />
 <code>blink_web_view_capture_screenshot()</code>
 の非同期版で、完了時にコールバックが呼ばれます。</p>
 <table>
@@ -622,8 +624,9 @@ id="blink_web_view_inject_test_input">blink_web_view_inject_test_input()</h3>
 <p><strong>Build 612 以降</strong> — テスト用の入力イベントを Renderer
 に直接インジェクトします。</p>
 <p>マウスクリック（左ボタン Down/Up）と キーボードイベント（'A'
-Down/Up）を <code>ForwardMouseEvent()</code> /
-<code>ForwardKeyboardEvent()</code> 経由で Renderer に送信します。</p>
+Down/Up）を<br />
+<code>ForwardMouseEvent()</code> / <code>ForwardKeyboardEvent()</code>
+経由で Renderer に送信します。</p>
 <table>
 <thead>
 <tr>
@@ -651,8 +654,8 @@ Down/Up）を <code>ForwardMouseEvent()</code> /
 </tbody>
 </table>
 <p><strong>注意</strong>: このAPIはデバッグ・テスト専用です。GTK
-ジェスチャイベントパイプラインを バイパスして Chromium
-の入力ルーティングを直接テストします。</p>
+ジェスチャイベントパイプラインを<br />
+バイパスして Chromium の入力ルーティングを直接テストします。</p>
 <p><strong>使用例</strong>:</p>
 <div class="sourceCode" id="cb40"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb40-1"><a href="#cb40-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* ページロード後 10 秒で入力テスト */</span></span>
 <span id="cb40-2"><a href="#cb40-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean test_input<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
@@ -665,7 +668,7 @@ Down/Up）を <code>ForwardMouseEvent()</code> /
 <hr />
 <h2 id="シグナル">シグナル</h2>
 <p>BlinkWebView は GObject
-シグナルを使用して非同期イベントを通知します。
+シグナルを使用して非同期イベントを通知します。<br />
 <code>g_signal_connect()</code> で接続してください。</p>
 <h3 id="load-changed-シグナル">"load-changed" シグナル</h3>
 <div class="sourceCode" id="cb41"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb41-1"><a href="#cb41-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
@@ -747,7 +750,8 @@ Down/Up）を <code>ForwardMouseEvent()</code> /
 <span id="cb46-5"><a href="#cb46-5" aria-hidden="true" tabindex="-1"></a>                                BlinkCookieCallback callback<span class="op">,</span></span>
 <span id="cb46-6"><a href="#cb46-6" aria-hidden="true" tabindex="-1"></a>                                gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p>指定 URL の Cookie を非同期で取得します。<code>callback</code> には
-<code>"a=1; b=2"</code> 形式の 文字列が渡されます。</p>
+<code>"a=1; b=2"</code> 形式の<br />
+文字列が渡されます。</p>
 <h3 id="blink_web_view_set_cookie">blink_web_view_set_cookie()</h3>
 <div class="sourceCode" id="cb47"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkSetCookieCallback<span class="op">)(</span>gboolean success<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
 <span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a></span>
@@ -757,12 +761,12 @@ Down/Up）を <code>ForwardMouseEvent()</code> /
 <span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a>                               BlinkSetCookieCallback callback<span class="op">,</span></span>
 <span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a>                               gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p><code>cookie_line</code> は <code>Set-Cookie</code>
-ヘッダと同じ書式です（例:
+ヘッダと同じ書式です（例:<br />
 <code>"session=abc123; Path=/; Max-Age=3600"</code>）。</p>
 <p>保存前に妥当性が検証され、<strong>書式を解釈できない場合や Cookie
-ストアが拒否した 場合は <code>callback</code> に
-<code>FALSE</code></strong> が渡ります。<code>callback</code> は
-<code>NULL</code> 可。</p>
+ストアが拒否した<br />
+場合は <code>callback</code> に <code>FALSE</code></strong>
+が渡ります。<code>callback</code> は <code>NULL</code> 可。</p>
 <div class="sourceCode" id="cb48"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_set<span class="op">(</span>gboolean success<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;cookie: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> success <span class="op">?</span> <span class="st">&quot;OK&quot;</span> <span class="op">:</span> <span class="st">&quot;rejected&quot;</span><span class="op">);</span></span>
 <span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
@@ -781,21 +785,21 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 <h3 id="削除済gobjectc-マッピング管理-api">（削除済）GObjectC++
 マッピング管理 API</h3>
 <p>かつて内部管理用に存在した 2 関数は
-<strong>既に削除済</strong>で、公開ヘッダにも
+<strong>既に削除済</strong>で、公開ヘッダにも<br />
 <code>libblinkgtk.so</code> にも存在しません（2026-07-28
-機械照合で確認）。呼び出すと リンクエラーになります。利用者が使うべき
-API ではありませんでした。</p>
+機械照合で確認）。呼び出すと<br />
+リンクエラーになります。利用者が使うべき API ではありませんでした。</p>
 <h3 id="blink_web_view_load_url">blink_web_view_load_url()</h3>
 <p><strong>廃止</strong> --
 <code>G_DEPRECATED_FOR(blink_web_view_load_uri)</code>
-が付与されています。 <code>blink_web_view_load_uri()</code>
-を使用してください。</p>
+が付与されています。<br />
+<code>blink_web_view_load_uri()</code> を使用してください。</p>
 <p>Build 699 以降、コンパイル時に廃止警告が出力されます。</p>
 <h3 id="blink_web_view_get_url">blink_web_view_get_url()</h3>
 <p><strong>廃止</strong> --
 <code>G_DEPRECATED_FOR(blink_web_view_get_uri)</code>
-が付与されています。 <code>blink_web_view_get_uri()</code>
-を使用してください。</p>
+が付与されています。<br />
+<code>blink_web_view_get_uri()</code> を使用してください。</p>
 <p>Build 699 以降、コンパイル時に廃止警告が出力されます。</p>
 <h3 id="blink_web_view_queue_draw">blink_web_view_queue_draw()</h3>
 <p>ウィジェットの再描画をキューに入れます（内部使用）。</p>
@@ -904,7 +908,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb51-1"><a href=
 <span id="cb51-7"><a href="#cb51-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ネイティブ EGL（実 GPU 必要）</span></span>
 <span id="cb51-8"><a href="#cb51-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./blinkgtk_browser</span></span></code></pre></div>
 <p><strong>注意</strong>: <code>egl</code> モードは実際の GPU
-ハードウェアが必要です。仮想環境や Weston headless では
+ハードウェアが必要です。仮想環境や Weston headless では<br />
 <code>software</code> または <code>swiftshader</code>
 を使用してください。</p>
 <hr />
@@ -925,8 +929,8 @@ href="../../../docs/03-current-phase/checkpoints/CHECKPOINTS.md">CHECKPOINTS.md<
 </ul>
 <hr />
 <p><em>このドキュメントは BlinkGTK Development Team
-が作成・管理しています。</em> <em>最終更新: Build 699
-(2026-03-25)</em></p>
+が作成・管理しています。</em><br />
+<em>最終更新: Build 699 (2026-03-25)</em></p>
 </body>
 </html>
 </div></div>
