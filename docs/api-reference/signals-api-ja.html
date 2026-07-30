@@ -200,7 +200,7 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 </tr>
 <tr>
 <td><code>load-failed</code></td>
-<td>URL, error_code</td>
+<td>error_code, failing_uri (<strong>この順</strong>)</td>
 <td>ロード失敗</td>
 <td>エラーハンドリング</td>
 </tr>
@@ -215,6 +215,19 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 <td>uri</td>
 <td>URI変更</td>
 <td>アドレスバー更新</td>
+</tr>
+<tr>
+<td><code>new-window-requested</code></td>
+<td>url</td>
+<td><code>window.open()</code> / <code>target="_blank"</code></td>
+<td>新規ウィンドウ・タブの扱いを決める</td>
+</tr>
+<tr>
+<td><code>message-received</code></td>
+<td>message</td>
+<td>ページ JS からの <code>postMessage</code></td>
+<td>JS→C 連携 (<a href="./app-integration-api-ja.html">アプリ連携
+API</a>)</td>
 </tr>
 <tr>
 <td><code>permission-request</code></td>
@@ -391,9 +404,13 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 <p><strong>概要</strong>: ページのロードが失敗したときに発火します。</p>
 <h4 id="シグネチャ-1">シグネチャ</h4>
 <div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> user_function<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                   gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p><strong>引数は (error_code, failing_uri) の順です</strong> (URL
+が先ではありません)。<br />
+逆順で書いたコールバックは、ポインタを整数として読むためクラッシュや<br />
+文字化けの原因になります。</p>
 <h4 id="パラメータ-1">パラメータ</h4>
 <table>
 <thead>
@@ -410,14 +427,14 @@ id="blinkgtkのシグナルアーキテクチャ">BlinkGTKのシグナルアー�
 <td>WebViewウィジェット</td>
 </tr>
 <tr>
-<td><code>failing_url</code></td>
-<td><code>const char*</code></td>
-<td>失敗したURL</td>
-</tr>
-<tr>
 <td><code>error_code</code></td>
 <td><code>int</code></td>
 <td>Chromiumのエラーコード（負の値）</td>
+</tr>
+<tr>
+<td><code>failing_uri</code></td>
+<td><code>const char*</code></td>
+<td>失敗したURL</td>
 </tr>
 <tr>
 <td><code>user_data</code></td>
@@ -478,8 +495,8 @@ href="https://source.chromium.org/chromium/chromium/src/+/main:net/base/net_erro
 net_error_list.h</a> を参照してください。</p>
 <h4 id="使用例1-エラーメッセージ表示">使用例1: エラーメッセージ表示</h4>
 <div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> error_message <span class="op">=</span> <span class="st">&quot;不明なエラー&quot;</span><span class="op">;</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
@@ -513,7 +530,7 @@ net_error_list.h</a> を参照してください。</p>
 <span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    gtk_message_dialog_format_secondary_text<span class="op">(</span></span>
 <span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        GTK_MESSAGE_DIALOG<span class="op">(</span>dialog<span class="op">),</span></span>
 <span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;</span><span class="sc">%s\n\n</span><span class="st">URL: </span><span class="sc">%s\n</span><span class="st">エラーコード: </span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        error_message<span class="op">,</span> failing_url<span class="op">,</span> error_code</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        error_message<span class="op">,</span> failing_uri<span class="op">,</span> error_code</span>
 <span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
 <span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>dialog<span class="op">,</span> <span class="st">&quot;response&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>gtk_window_destroy<span class="op">),</span> NULL<span class="op">);</span></span>
@@ -522,8 +539,8 @@ net_error_list.h</a> を参照してください。</p>
 <h4 id="使用例2-カスタムエラーページ表示">使用例2:
 カスタムエラーページ表示</h4>
 <div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// カスタムエラーページのHTML</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> error_html <span class="op">=</span> g_strdup_printf<span class="op">(</span></span>
@@ -547,7 +564,7 @@ net_error_list.h</a> を参照してください。</p>
 <span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;button class=&#39;retry-button&#39; onclick=&#39;location.href=</span><span class="sc">\&quot;%s\&quot;</span><span class="st">&#39;&gt;再試行&lt;/button&gt;&quot;</span></span>
 <span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/body&gt;&quot;</span></span>
 <span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/html&gt;&quot;</span><span class="op">,</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        failing_url<span class="op">,</span> error_code<span class="op">,</span> failing_url</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        failing_uri<span class="op">,</span> error_code<span class="op">,</span> failing_uri</span>
 <span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
 <span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">// エラーページを表示</span></span>
@@ -837,10 +854,16 @@ WebKitGTKは<code>notify::uri</code>プロパティ変更通知を使用しま�
 <li>戻り値の文字列はハンドルが所有し、allow/deny を呼ぶまで有効です</li>
 <li>ハンドラが <code>TRUE</code> を返さなければ要求は拒否されます
 (deny-by-default)</li>
-<li>ユーザーに確認ダイアログを出す場合は、ハンドラで <code>TRUE</code>
-を返して<br />
-ダイアログを表示し、応答が決まってから allow/deny を呼べます
-(非同期可)</li>
+<li><strong>allow/deny
+はシグナルハンドラ内で同期的に呼ぶ必要があります。</strong><br />
+<code>BlinkPermissionRequest</code>
+はハンドラから戻ると無効になり、後から<br />
+allow/deny を呼ぶ非同期応答はできません (<code>TRUE</code>
+を返して未応答のまま<br />
+戻ると拒否として扱われます。無効になったハンドルに触れる動作は未定義<br />
+です)。ユーザー確認が必要な場合は「今回は deny
+してアプリの設定画面へ<br />
+誘導し、設定変更後の要求で allow する」構成にしてください</li>
 </ul>
 <h3 id="api">API</h3>
 <div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_permission_request_get_type_name<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span>
@@ -903,10 +926,10 @@ WebKitGTKは<code>notify::uri</code>プロパティ変更通知を使用しま�
 <span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
 <span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-failed: エラー表示 */</span></span>
+<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-failed: エラー表示 (引数は error_code, failing_uri の順) */</span></span>
 <span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
 <span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a></span>
@@ -1094,8 +1117,8 @@ WebKitGTKは<code>notify::uri</code>プロパティ変更通知を使用しま�
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Error code: </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">);</span></span>
 <span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>

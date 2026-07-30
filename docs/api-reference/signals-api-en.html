@@ -202,7 +202,7 @@ Architecture</h3>
 </tr>
 <tr>
 <td><code>load-failed</code></td>
-<td>URL, error_code</td>
+<td>error_code, failing_uri (<strong>in this order</strong>)</td>
 <td>Load failure</td>
 <td>Error handling</td>
 </tr>
@@ -217,6 +217,19 @@ Architecture</h3>
 <td>uri</td>
 <td>URI change</td>
 <td>Address bar update</td>
+</tr>
+<tr>
+<td><code>new-window-requested</code></td>
+<td>url</td>
+<td><code>window.open()</code> / <code>target="_blank"</code></td>
+<td>Decide how to handle new windows/tabs</td>
+</tr>
+<tr>
+<td><code>message-received</code></td>
+<td>message</td>
+<td><code>postMessage</code> from page JS</td>
+<td>JS-to-C bridge (<a href="./app-integration-api-en.html">App
+Integration API</a>)</td>
 </tr>
 <tr>
 <td><code>permission-request</code></td>
@@ -394,9 +407,14 @@ Enabling/Disabling Navigation Buttons</h4>
 <p><strong>Overview</strong>: Emitted when the page load fails.</p>
 <h4 id="signature-1">Signature</h4>
 <div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> user_function<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>                   gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p><strong>The arguments come in (error_code, failing_uri)
+order</strong> (the URL is not<br />
+first). A callback written in the reverse order reads a pointer as
+an<br />
+integer, causing crashes or garbage.</p>
 <h4 id="parameters-1">Parameters</h4>
 <table>
 <thead>
@@ -413,14 +431,14 @@ Enabling/Disabling Navigation Buttons</h4>
 <td>The WebView widget</td>
 </tr>
 <tr>
-<td><code>failing_url</code></td>
-<td><code>const char*</code></td>
-<td>The URL that failed</td>
-</tr>
-<tr>
 <td><code>error_code</code></td>
 <td><code>int</code></td>
 <td>Chromium error code (negative value)</td>
+</tr>
+<tr>
+<td><code>failing_uri</code></td>
+<td><code>const char*</code></td>
+<td>The URL that failed</td>
 </tr>
 <tr>
 <td><code>user_data</code></td>
@@ -482,8 +500,8 @@ net_error_list.h</a>.</p>
 <h4 id="example-1-displaying-an-error-message">Example 1: Displaying an
 Error Message</h4>
 <div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> error_message <span class="op">=</span> <span class="st">&quot;Unknown error&quot;</span><span class="op">;</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a></span>
@@ -517,7 +535,7 @@ Error Message</h4>
 <span id="cb8-34"><a href="#cb8-34" aria-hidden="true" tabindex="-1"></a>    gtk_message_dialog_format_secondary_text<span class="op">(</span></span>
 <span id="cb8-35"><a href="#cb8-35" aria-hidden="true" tabindex="-1"></a>        GTK_MESSAGE_DIALOG<span class="op">(</span>dialog<span class="op">),</span></span>
 <span id="cb8-36"><a href="#cb8-36" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;</span><span class="sc">%s\n\n</span><span class="st">URL: </span><span class="sc">%s\n</span><span class="st">Error code: </span><span class="sc">%d</span><span class="st">&quot;</span><span class="op">,</span></span>
-<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        error_message<span class="op">,</span> failing_url<span class="op">,</span> error_code</span>
+<span id="cb8-37"><a href="#cb8-37" aria-hidden="true" tabindex="-1"></a>        error_message<span class="op">,</span> failing_uri<span class="op">,</span> error_code</span>
 <span id="cb8-38"><a href="#cb8-38" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
 <span id="cb8-39"><a href="#cb8-39" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-40"><a href="#cb8-40" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>dialog<span class="op">,</span> <span class="st">&quot;response&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>gtk_window_destroy<span class="op">),</span> NULL<span class="op">);</span></span>
@@ -526,8 +544,8 @@ Error Message</h4>
 <h4 id="example-2-displaying-a-custom-error-page">Example 2: Displaying
 a Custom Error Page</h4>
 <div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">// HTML for the custom error page</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> error_html <span class="op">=</span> g_strdup_printf<span class="op">(</span></span>
@@ -551,7 +569,7 @@ a Custom Error Page</h4>
 <span id="cb9-24"><a href="#cb9-24" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  &lt;button class=&#39;retry-button&#39; onclick=&#39;location.href=</span><span class="sc">\&quot;%s\&quot;</span><span class="st">&#39;&gt;Retry&lt;/button&gt;&quot;</span></span>
 <span id="cb9-25"><a href="#cb9-25" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/body&gt;&quot;</span></span>
 <span id="cb9-26"><a href="#cb9-26" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/html&gt;&quot;</span><span class="op">,</span></span>
-<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        failing_url<span class="op">,</span> error_code<span class="op">,</span> failing_url</span>
+<span id="cb9-27"><a href="#cb9-27" aria-hidden="true" tabindex="-1"></a>        failing_uri<span class="op">,</span> error_code<span class="op">,</span> failing_uri</span>
 <span id="cb9-28"><a href="#cb9-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">);</span></span>
 <span id="cb9-29"><a href="#cb9-29" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-30"><a href="#cb9-30" aria-hidden="true" tabindex="-1"></a>    <span class="co">// Display the error page</span></span>
@@ -855,9 +873,17 @@ until<br />
 allow()/deny() is called</li>
 <li>If no handler returns <code>TRUE</code>, the request is denied
 (deny-by-default)</li>
-<li>To ask the user first, return <code>TRUE</code> from the handler,
-show your dialog, and<br />
-call allow/deny once they answer (asynchronous is fine)</li>
+<li><strong>allow/deny must be called synchronously inside the signal
+handler.</strong><br />
+The <code>BlinkPermissionRequest</code> becomes invalid once the handler
+returns;<br />
+deferred (asynchronous) responses are not possible (returning
+<code>TRUE</code><br />
+without answering counts as a denial, and touching the handle
+afterwards<br />
+is undefined). If you need user confirmation, deny this request,
+direct<br />
+the user to your settings UI, and allow on a later request</li>
 </ul>
 <h3 id="api">API</h3>
 <div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_permission_request_get_type_name<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span>
@@ -923,8 +949,8 @@ multiple signals.</p>
 <span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a><span class="co">/* load-failed: show the error */</span></span>
 <span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb20-56"><a href="#cb20-56" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb20-57"><a href="#cb20-57" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb20-58"><a href="#cb20-58" aria-hidden="true" tabindex="-1"></a>    BrowserUI<span class="op">*</span> ui <span class="op">=</span> <span class="op">(</span>BrowserUI<span class="op">*)</span>user_data<span class="op">;</span></span>
 <span id="cb20-59"><a href="#cb20-59" aria-hidden="true" tabindex="-1"></a></span>
@@ -1111,8 +1137,8 @@ Disconnecting Signal Handlers</h3>
 <span id="cb24-11"><a href="#cb24-11" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb24-12"><a href="#cb24-12" aria-hidden="true" tabindex="-1"></a><span class="co">/* BlinkGTK */</span></span>
 <span id="cb24-13"><a href="#cb24-13" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>GtkWidget<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_url<span class="op">,</span></span>
-<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb24-14"><a href="#cb24-14" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb24-15"><a href="#cb24-15" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
 <span id="cb24-16"><a href="#cb24-16" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb24-17"><a href="#cb24-17" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;Error code: </span><span class="sc">%d\n</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">);</span></span>
 <span id="cb24-18"><a href="#cb24-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
