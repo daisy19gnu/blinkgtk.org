@@ -100,8 +100,7 @@ id="blinkgtk-アプリ連携-api-リファレンス--カスタムスキームメ
 アプリ連携 API リファレンス —
 カスタムスキーム・メッセージング・スクリプト注入</h1>
 <p><strong>バージョン</strong>: v1.1.0<br />
-<strong>最終更新</strong>: 2026-07-29<br />
-<strong>言語</strong>: 日本語 |</p>
+<strong>最終更新</strong>: 2026-07-30</p>
 <p><a href="./app-integration-api-en.html">English</a></p>
 <hr />
 <h2 id="このページについて">このページについて</h2>
@@ -120,6 +119,12 @@ JavaScript から C の<br />
 ページ側を書き換えずに<br />
 アプリ側の JavaScript や独自スタイルを差し込む</li>
 </ul>
+<p>各 API の説明には、シグネチャに加えて<strong>動作の詳細</strong>
+(どのスレッドで・いつ・<br />
+誰がメモリを解放するか・エッジケースで何が起きるか)
+を記します。これらは<br />
+現行バージョンの実装を確認して書かれた記述で、将来のバージョンで改善される<br />
+可能性のある点は「現在の実装では」と明示しています。</p>
 <h3 id="使い方">使い方</h3>
 <div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* &quot;app&quot; スキームを登録。app://... へのアクセスにアプリが応答する */</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_app_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
@@ -150,12 +155,20 @@ JavaScript から C の<br />
 <td><code>blink_web_view_register_message_handler()</code></td>
 </tr>
 <tr>
+<td>メッセージを GObject シグナルで受け取る (多重購読)</td>
+<td><code>message-received</code> シグナル</td>
+</tr>
+<tr>
 <td>メッセージハンドラを解除</td>
 <td><code>blink_web_view_unregister_message_handler()</code></td>
 </tr>
 <tr>
 <td>C → JS へメッセージを送る</td>
 <td><code>blink_web_view_send_message_to_page()</code></td>
+</tr>
+<tr>
+<td>C から JavaScript を実行する</td>
+<td><code>blink_web_view_execute_javascript()</code></td>
 </tr>
 <tr>
 <td>スクリプトを注入</td>
@@ -175,11 +188,38 @@ JavaScript から C の<br />
 <h2 id="カスタム-url-スキーム">カスタム URL スキーム</h2>
 <p><img src="./assets/fig-custom-scheme-ja.svg"
 alt="独自 URL スキームの流れ。ページの遷移を BlinkGTK が登録済みスキームと照合し、C コールバックの返した内容がページとして表示される。" /></p>
+<h3 id="まず知っておく-3-つの事実">まず知っておく 3 つの事実</h3>
+<ol type="1">
+<li><strong>スキーム名は事前登録制です。</strong> 使えるのは組み込みの 5
+つ —<br />
+<code>app</code> / <code>blinkgtk</code> / <code>res</code> /
+<code>resource</code> / <code>ebook</code> — と、起動前に環境変数<br />
+<code>BLINKGTK_EXTRA_SCHEMES</code> (カンマ区切り)
+で追加した名前だけです。<br />
+URL のスキーム分類はエンジン起動シーケンスの早期に確定するため、<br />
+<code>register_custom_scheme()</code>
+で任意の名前を後から増やすことはできません<br />
+(詳細は後述の「使えるスキーム名」)</li>
+<li><strong>あらゆる読み込みで発火します。</strong>
+トップレベルのナビゲーションだけでなく、<br />
+ページ内の <code>&lt;img src="app://..."&gt;</code>
+などのサブリソース、そして JavaScript の<br />
+<code>fetch()</code> / XHR
+でもコールバックが呼ばれます。だからカスタムスキームの上で<br />
+SPA (単一ページアプリ) を丸ごと動かせます</li>
+<li><strong>コールバックは GTK
+メインスレッドで同期実行されます。</strong> ハンドラが返る<br />
+まで UI
+は止まります。大きなファイルの復号やネットワーク待ちをハンドラ内で<br />
+行うと、その間ウィンドウが固まります。重い準備は事前に済ませ、ハンドラでは<br />
+メモリ上のデータを返すだけにするのが定石です</li>
+</ol>
 <h3
 id="blink_web_view_register_custom_scheme">blink_web_view_register_custom_scheme()</h3>
 <p>URI スキームを登録します。登録したスキームの URL
-に遷移すると、ページの<br />
-読み込みの代わりにコールバックが呼ばれ、返した文字列がページになります。</p>
+への読み込みが発生すると、<br />
+ネットワークアクセスの代わりにコールバックが呼ばれ、返した文字列が応答に<br />
+なります。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">char</span><span class="op">*</span> <span class="op">(*</span>BlinkCustomSchemeCallback<span class="op">)(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
@@ -189,16 +229,29 @@ id="blink_web_view_register_custom_scheme">blink_web_view_register_custom_scheme
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> scheme<span class="op">,</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>                                           BlinkCustomSchemeCallback callback<span class="op">,</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>                                           gpointer user_data<span class="op">);</span></span></code></pre></div>
-<p>コールバックは HTML / テキスト / JSON を <code>g_strdup()</code>
-などで確保して返します<br />
-(BlinkGTK 側が解放します)。<code>NULL</code> を返すと 404
-になります。</p>
+<ul>
+<li>返す文字列は <code>g_strdup()</code>
+などで確保します。<strong>所有権はエンジンに移り</strong>、<br />
+エンジン側が <code>g_free()</code>
+します。応答本文は内部でコピーされるため、<br />
+コールバックから返った後にアプリ側のバッファを再利用しても安全です</li>
+<li>応答は C 文字列なので <strong>最初の <code>0x00</code>
+で切れます</strong>。画像などのバイナリは<br />
+<code>register_custom_scheme_full()</code> を使ってください</li>
+<li><code>NULL</code> を返すと <strong>空のページ (HTTP 200・本文 0
+バイト) になります</strong>。<br />
+現在の実装に 404 などのステータスコードを返す手段はありません。<br />
+「見つからない」をページとして表現したい場合は、エラー内容を書いた HTML
+を<br />
+返してください</li>
+<li><code>callback</code> に <code>NULL</code>
+を渡すと、そのスキームの登録を解除します</li>
+</ul>
 <h3
 id="blink_web_view_register_custom_scheme_full">blink_web_view_register_custom_scheme_full()</h3>
 <p>バイナリを返せる版です。画像・音声・フォントなど、<code>0x00</code>
-を含むデータは<br />
-こちらを使ってください (テキスト版は最初の <code>0x00</code>
-で切れます)。</p>
+を含みうるデータは<br />
+こちらを使います。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> GBytes<span class="op">*</span> <span class="op">(*</span>BlinkCustomSchemeBytesCallback<span class="op">)(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                                                  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
@@ -211,11 +264,15 @@ id="blink_web_view_register_custom_scheme_full">blink_web_view_register_custom_s
 <span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>                                                gpointer user_data<span class="op">);</span></span></code></pre></div>
 <ul>
 <li>応答は <code>GBytes</code> で返します
-(長さを自身で持つためバイナリ安全)</li>
-<li><code>out_mime</code> に <code>g_strdup("image/jpeg")</code>
-のように Content-Type を設定できます。<br />
-設定しなければ URI の拡張子から推定されます</li>
-<li><code>NULL</code> を返すと 404 になります</li>
+(長さを自身で持つためバイナリ安全)。<br />
+エンジンが <code>g_bytes_unref()</code> します</li>
+<li><code>out_mime</code> には <code>g_strdup("image/jpeg")</code>
+のように Content-Type を設定します。<br />
+エンジンが <code>g_free()</code> します。<code>NULL</code>
+のままにすると URI の拡張子から推定<br />
+されます (下記の推定表)</li>
+<li><code>NULL</code> を返した場合はテキスト版と同じく空ページ (200)
+です</li>
 </ul>
 <p><strong>例: 画像をアプリから供給する</strong></p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> GBytes<span class="op">*</span> on_ebook_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span></span>
@@ -228,11 +285,198 @@ id="blink_web_view_register_custom_scheme_full">blink_web_view_register_custom_s
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>            <span class="cf">return</span> g_bytes_new_take<span class="op">(</span>bytes<span class="op">,</span> len<span class="op">);</span></span>
 <span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
 <span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> NULL<span class="op">;</span>  <span class="co">/* 404 */</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> NULL<span class="op">;</span>  <span class="co">/* 空ページ (200) になる */</span></span>
 <span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="uri-はどう渡ってくるか--パースはハンドラの責務">URI
+はどう渡ってくるか — パースはハンドラの責務</h3>
+<p>コールバックには <code>ebook://book/chapter1.xhtml?page=2</code>
+のような <strong>URI 全体</strong>が<br />
+渡ります。ホスト部・パス部の分解、クエリの解釈はハンドラの責務です。<br />
+実アプリで踏みやすい点が 3 つあります。</p>
+<ol type="1">
+<li><strong>percent-decode が必要です。</strong> 日本語などの非 ASCII
+ファイル名は<br />
+<code>%E8%A1%A8%E7%B4%99.xhtml</code>
+のようにエンコードされて届きます。<br />
+<code>g_uri_unescape_string()</code>
+で復元しないと、実ファイルと突き合わせたときに<br />
+「あるはずのファイルが 404」になります</li>
+<li><strong>パストラバーサルを拒否してください。</strong>
+ファイルシステムと対応づける場合、<br />
+<code>..</code>
+を含むパスをそのまま通すと配信ルートの外を読まれます。<br />
+判定は <strong>percent-decode の後</strong>で行います
+(<code>%2e%2e</code> 対策)</li>
+<li><strong>クエリとフラグメントの扱いを決めてから削ってください。</strong>
+パスだけで<br />
+ルーティングするなら <code>?</code>
+以降は除去しますが、検索などクエリを使う機能が<br />
+あるなら先に保存しておきます</li>
+</ol>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> path_from_uri<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>p <span class="op">=</span> strstr<span class="op">(</span>uri<span class="op">,</span> <span class="st">&quot;://&quot;</span><span class="op">);</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>p<span class="op">)</span> <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>slash <span class="op">=</span> strchr<span class="op">(</span>p <span class="op">+</span> <span class="dv">3</span><span class="op">,</span> <span class="ch">&#39;/&#39;</span><span class="op">);</span>          <span class="co">/* ホスト部を飛ばす */</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>path <span class="op">=</span> g_strdup<span class="op">(</span>slash <span class="op">?</span> slash <span class="op">+</span> <span class="dv">1</span> <span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">);</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>q <span class="op">=</span> strpbrk<span class="op">(</span>path<span class="op">,</span> <span class="st">&quot;?#&quot;</span><span class="op">);</span>                    <span class="co">/* クエリ・フラグメント除去 */</span></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>q<span class="op">)</span> <span class="op">*</span>q <span class="op">=</span> <span class="ch">&#39;</span><span class="sc">\0</span><span class="ch">&#39;</span><span class="op">;</span></span>
+<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>decoded <span class="op">=</span> g_uri_unescape_string<span class="op">(</span>path<span class="op">,</span> NULL<span class="op">);</span> <span class="co">/* 1: percent-decode */</span></span>
+<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>path<span class="op">);</span></span>
+<span id="cb5-10"><a href="#cb5-10" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>decoded <span class="op">&amp;&amp;</span> strstr<span class="op">(</span>decoded<span class="op">,</span> <span class="st">&quot;..&quot;</span><span class="op">))</span> <span class="op">{</span>           <span class="co">/* 2: traversal 拒否 */</span></span>
+<span id="cb5-11"><a href="#cb5-11" aria-hidden="true" tabindex="-1"></a>        g_free<span class="op">(</span>decoded<span class="op">);</span></span>
+<span id="cb5-12"><a href="#cb5-12" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb5-13"><a href="#cb5-13" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb5-14"><a href="#cb5-14" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> decoded<span class="op">;</span>  <span class="co">/* 配信ルートからの相対パス */</span></span>
+<span id="cb5-15"><a href="#cb5-15" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="使えるスキーム名">使えるスキーム名</h3>
+<table>
+<thead>
+<tr>
+<th>スキーム</th>
+<th>由来</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>app</code></td>
+<td>汎用 (アプリ本体のコンテンツ)</td>
+</tr>
+<tr>
+<td><code>ebook</code></td>
+<td>電子書籍リーダー向け</td>
+</tr>
+<tr>
+<td><code>res</code> / <code>resource</code></td>
+<td>汎用リソース</td>
+</tr>
+<tr>
+<td><code>blinkgtk</code></td>
+<td>内部リソース参照</td>
+</tr>
+<tr>
+<td>(任意の名前)</td>
+<td>起動前に <code>BLINKGTK_EXTRA_SCHEMES=myapp,plugin</code>
+で追加</td>
+</tr>
+</tbody>
+</table>
+<p><strong>なぜ事前登録制か</strong>: スキームを「standard scheme
+(<code>scheme://host/path</code> の<br />
+構造を持ち、相対 URL が解決できる)」「secure context (HTTPS
+相当)」として<br />
+扱うための分類は、エンジン起動シーケンスの早い段階でしか登録できません。<br />
+<code>register_custom_scheme()</code>
+は起動後に呼ばれるため、名前の追加はできず、<br />
+事前登録済みの名前に<strong>ハンドラを割り当てる</strong>操作になっています。</p>
+<p><strong><code>BLINKGTK_EXTRA_SCHEMES</code> の制限
+(現在の実装)</strong>: 環境変数で追加した<br />
+スキームは、ページ内の <code>fetch()</code> からの利用が renderer
+側の制限で<br />
+弾かれます (<code>&lt;img&gt;</code>
+などのサブリソースとナビゲーションは動きます)。<br />
+<code>fetch()</code> を使う SPA を配信する場合は組み込み 5
+種のいずれかを<br />
+使ってください。</p>
+<h3 id="なぜ-file-ではなくカスタムスキームか">なぜ file://
+ではなくカスタムスキームか</h3>
+<p>ローカルコンテンツは <code>file://</code>
+でも表示できますが、<code>file://</code> のページでは<br />
+<code>fetch()</code> が使えず、origin
+も特殊です。カスタムスキームは<br />
+<strong>secure context (HTTPS 相当) の実 origin</strong>
+として扱われるため、<br />
+<code>fetch()</code>・Service Worker・secure context 限定の Web API
+がそのまま動きます。<br />
+実際に、EPUB リーダー BlinkGTK-Readium は Readium の SPA
+と書籍データ全体を<br />
+<code>ebook://</code> で配信することで、<code>file://</code>
+では動かなかった <code>fetch()</code> ベースの<br />
+アプリケーションをそのまま動かしています。</p>
+<h3 id="動作の詳細">動作の詳細</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>現在の実装</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>発火する読み込み</td>
+<td>ナビゲーション / サブリソース (<code>&lt;img&gt;</code> 等) /
+<code>fetch()</code> / XHR</td>
+</tr>
+<tr>
+<td>コールバックのスレッド</td>
+<td>GTK メインスレッド。<strong>同期実行</strong> (返るまで UI
+が止まる)</td>
+</tr>
+<tr>
+<td>呼ばれるプロセス</td>
+<td>アプリ (ブラウザ) プロセス。レンダラは別プロセスのまま</td>
+</tr>
+<tr>
+<td>戻り値の所有権</td>
+<td>エンジンに移る (<code>g_free()</code> / <code>g_bytes_unref()</code>
+される)</td>
+</tr>
+<tr>
+<td>Content-Type</td>
+<td><code>out_mime</code> 指定が最優先。無指定なら拡張子から推定</td>
+</tr>
+<tr>
+<td>拡張子推定</td>
+<td><code>.html/.htm</code>→text/html、<code>.css</code>、<code>.js/.mjs</code>、<code>.json</code>、<code>.svg</code>、<code>.png</code>、<code>.jpg/.jpeg</code>、<code>.webp</code>、<code>.txt</code>。<strong>未知の拡張子は
+text/html</strong></td>
+</tr>
+<tr>
+<td>charset</td>
+<td>テキスト系 MIME には常に <code>utf-8</code> が付く
+(変更手段なし)</td>
+</tr>
+<tr>
+<td><code>NULL</code> 返却</td>
+<td>空ページ (HTTP 200・0 バイト)。404 にはならない</td>
+</tr>
+<tr>
+<td>ステータスコード</td>
+<td>常に 200。指定手段なし</td>
+</tr>
+<tr>
+<td>リダイレクト</td>
+<td>不可 (3xx を返す手段なし)。誘導したい場合は本文の HTML/JS
+で行う</td>
+</tr>
+<tr>
+<td>同一スキームの再登録</td>
+<td>黙って上書き (後勝ち)</td>
+</tr>
+<tr>
+<td>登録の範囲</td>
+<td><strong>プロセス全体</strong>。複数 WebView
+が同じスキームを登録すると最後の登録が全 WebView に適用される</td>
+</tr>
+</tbody>
+</table>
+<p><strong>複数 WebView での注意</strong>: 登録の実体はプロセス全体で 1
+つです。WebView ごとに<br />
+違う内容を返したい場合は、コールバック第 1 引数の <code>web_view</code>
+で分岐するか、<br />
+スキーム名を分けてください。また、現在の実装では WebView
+を破棄しても登録は<br />
+自動解除されません。<strong>破棄する前に <code>callback=NULL</code>
+で解除</strong>してください<br />
+(解除しないと、破棄済み WebView を指すハンドラが残ります)。</p>
+<p><strong>セキュリティの注意</strong>: 現在の実装は、要求の発行元
+(どのページからの<br />
+サブリソース要求か)
+を検査しません。秘匿性の高いデータを返すハンドラでは、<br />
+外部コンテンツを同じ WebView に表示しない設計にするか、URI
+を厳密に検査して<br />
+ください。</p>
 <hr />
 <h2 id="js--c-メッセージング">JS ↔︎ C メッセージング</h2>
-<p>ページ内の JavaScript には <code>window.blinkgtk</code>
+<p>ページ内の JavaScript に <code>window.blinkgtk</code>
 オブジェクトが用意されます。</p>
 <p><img src="./assets/fig-js-bridge-ja.svg"
 alt="ページの JavaScript と C アプリのメッセージング。postMessage を C のハンドラで受け、send_message_to_page を addMessageHandler で受ける双方向。" /></p>
@@ -258,130 +502,486 @@ alt="ページの JavaScript と C アプリのメッセージング。postMessa
 </tr>
 </tbody>
 </table>
+<h3 id="まず知っておく-3-つの事実-1">まず知っておく 3 つの事実</h3>
+<ol type="1">
+<li><strong><code>window.blinkgtk</code> はページの読み込み完了 (onload)
+後に現れます。</strong><br />
+ページ先頭のインラインスクリプトが実行される時点ではまだ存在しません。<br />
+ページ側の初期化は <code>window.addEventListener('load', ...)</code>
+の後、または<br />
+存在確認をしてから行ってください</li>
+<li><strong>JS 側のハンドラ登録はページ遷移で消えます</strong>
+(新しいドキュメントでは<br />
+<code>window</code>
+が作り直されるため)。ページ側は<strong>遷移のたびに</strong><br />
+<code>addMessageHandler</code> を呼び直します。一方 <strong>C
+側のハンドラは WebView に<br />
+属し、ナビゲーションを跨いで生存</strong>します — 再登録は不要です</li>
+<li><strong>C 側に届く <code>data</code> は Base64
+のバイト列です。</strong> <code>g_base64_decode()</code> で<br />
+復元してください。逆方向 (C → JS) は Base64 化されず生文字列が渡る<br />
+非対称な設計です</li>
+</ol>
 <h3
 id="blink_web_view_register_message_handler">blink_web_view_register_message_handler()</h3>
 <p>JS → C のメッセージ受信ハンドラを登録します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkMessageCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="dt">const</span> guint8<span class="op">*</span> data<span class="op">,</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>                                     gsize length<span class="op">,</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>                                     gpointer user_data<span class="op">);</span></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_register_message_handler<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>                                             <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
-<span id="cb5-8"><a href="#cb5-8" aria-hidden="true" tabindex="-1"></a>                                             BlinkMessageCallback callback<span class="op">,</span></span>
-<span id="cb5-9"><a href="#cb5-9" aria-hidden="true" tabindex="-1"></a>                                             gpointer user_data<span class="op">);</span></span></code></pre></div>
-<p><code>name</code> は英数字のハンドラ名です。ページ側で<br />
-<code>window.blinkgtk.postMessage('name', data)</code>
-が呼ばれると、<code>data</code> が<br />
-<strong>Base64
-エンコードされたバイト列</strong>としてコールバックに渡ります。<br />
-文字列に戻すには <code>g_base64_decode()</code> を使います。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkMessageCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                                     <span class="dt">const</span> guint8<span class="op">*</span> data<span class="op">,</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>                                     gsize length<span class="op">,</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>                                     gpointer user_data<span class="op">);</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_register_message_handler<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>                                             <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
+<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>                                             BlinkMessageCallback callback<span class="op">,</span></span>
+<span id="cb6-9"><a href="#cb6-9" aria-hidden="true" tabindex="-1"></a>                                             gpointer user_data<span class="op">);</span></span></code></pre></div>
+<ul>
+<li><code>name</code>
+はチャネル名です。<strong>英数字のみ</strong>を使ってください
+(区切りに使われる<br />
+文字を含む名前は正しく配送されません)</li>
+<li>コールバックは GTK メインスレッドで呼ばれます。GTK API
+を直接呼べます</li>
+<li>同名チャネルへの再登録は<strong>上書き</strong>です (C 側・JS 側とも
+1 チャネル<br />
+1 ハンドラ)。複数箇所で受けたい場合は下記の
+<code>message-received</code><br />
+シグナルを使ってください</li>
+<li><code>user_data</code> の寿命管理はアプリの責務です
+(解放通知はありません)。<br />
+WebView より長生きするデータを渡すか、<code>unregister</code>
+時に自分で解放して<br />
+ください</li>
+</ul>
+<p><strong>JavaScript 側から渡せるデータ</strong>
+(<code>postMessage(name, data)</code> の <code>data</code>):</p>
+<table>
+<thead>
+<tr>
+<th>JS 側の型</th>
+<th>挙動</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>文字列</td>
+<td>UTF-8 として Base64 化。日本語も安全</td>
+</tr>
+<tr>
+<td><code>ArrayBuffer</code></td>
+<td>バイナリのまま Base64 化 (バイト列が透過)</td>
+</tr>
+<tr>
+<td><code>Uint8Array</code> などの TypedArray</td>
+<td><strong><code>ArrayBuffer</code> と見なされず</strong>、JSON
+文字列化 (<code>{"0":72,...}</code>) になります。<code>.buffer</code>
+を渡してください</td>
+</tr>
+<tr>
+<td>object / 配列 / 数値</td>
+<td><code>JSON.stringify</code> して Base64 化。ただし <strong>JSON に非
+ASCII 文字が含まれると例外</strong>になり届きません。日本語を含む object
+は自分で <code>JSON.stringify</code> して文字列として渡してください</td>
+</tr>
+<tr>
+<td><code>null</code> / <code>undefined</code></td>
+<td>空データ (length 0)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="message-received-シグナル-多重購読">message-received シグナル
+(多重購読)</h3>
+<p>チャネル別コールバックとは別に、<strong>全メッセージ</strong>が
+GObject シグナル<br />
+<code>message-received</code>
+としても発火します。<code>g_signal_connect()</code> は何個でも<br />
+接続できるため、ログ記録のような横断的な購読に向きます。</p>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* name: チャネル名、data: Base64 文字列 */</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_any_message<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                           <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>data<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;message on channel &#39;</span><span class="sc">%s</span><span class="st">&#39;</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">);</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;message-received&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_any_message<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<p>シグナルはチャネル名でフィルタされません。購読側で <code>name</code>
+を判定して<br />
+ください。</p>
 <h3
 id="blink_web_view_unregister_message_handler">blink_web_view_unregister_message_handler()</h3>
 <p>登録したハンドラを解除します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_unregister_message_handler<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>                                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_unregister_message_handler<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>                                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">);</span></span></code></pre></div>
+<p><strong>解除後の挙動に注意</strong>: 解除したチャネル
+(および最初から未登録のチャネル)<br />
+へのメッセージは、エラーにならず<strong>黙って捨てられます</strong>。開発中に<br />
+「メッセージが届かない」ように見えたら、まずチャネル名の一致と登録の有無を<br />
+疑ってください。なお <code>message-received</code>
+シグナルは解除の影響を受けず<br />
+発火し続けます。</p>
 <h3
 id="blink_web_view_send_message_to_page">blink_web_view_send_message_to_page()</h3>
 <p>C からページ内の JavaScript へメッセージを送ります。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_send_message_to_page<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>                                         <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> data<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_send_message_to_page<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                         <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> data<span class="op">);</span></span></code></pre></div>
 <p>ページ側は先にハンドラを登録しておきます。</p>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode html"><code class="sourceCode html"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">blinkgtk</span><span class="op">.</span><span class="fu">addMessageHandler</span>(<span class="st">&#39;page-turn&#39;</span><span class="op">,</span> <span class="kw">function</span> (data) {</span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;アプリからの指示:&#39;</span><span class="op">,</span> data)<span class="op">;</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">script</span><span class="dt">&gt;</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="fu">addEventListener</span>(<span class="st">&#39;load&#39;</span><span class="op">,</span> <span class="kw">function</span> () {</span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">window</span><span class="op">.</span><span class="at">blinkgtk</span><span class="op">.</span><span class="fu">addMessageHandler</span>(<span class="st">&#39;page-turn&#39;</span><span class="op">,</span> <span class="kw">function</span> (data) {</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>    <span class="bu">console</span><span class="op">.</span><span class="fu">log</span>(<span class="st">&#39;アプリからの指示:&#39;</span><span class="op">,</span> data)<span class="op">;</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>  })<span class="op">;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>})<span class="op">;</span></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">script</span><span class="dt">&gt;</span></span></code></pre></div>
+<p><strong>届かない条件に注意</strong>:
+この関数は<strong>キューを持ちません</strong>。ページの読み込みが<br />
+完了する前、またはページ側が <code>addMessageHandler</code>
+を呼ぶ前に送ったメッセージは<br />
+<strong>黙って捨てられます</strong>
+(戻り値もエラーもありません)。確実に届けるには、<br />
+<strong>ページ側から準備完了を通知させてから送る</strong>のが定石です:</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* ページ側: 準備ができたら ready を送る</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="co"> *   window.blinkgtk.postMessage(&#39;ready&#39;, &#39;&#39;);</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * C 側: ready を受けてから送信を始める */</span></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_ready<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span> <span class="dt">const</span> guint8 <span class="op">*</span>data<span class="op">,</span></span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                     gsize length<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>    BlinkWebView <span class="op">*</span>view <span class="op">=</span> BLINK_WEB_VIEW<span class="op">(</span>user_data<span class="op">);</span></span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    blink_web_view_send_message_to_page<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;config&quot;</span><span class="op">,</span></span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>                                        <span class="st">&quot;{</span><span class="sc">\&quot;</span><span class="st">theme</span><span class="sc">\&quot;</span><span class="st">:</span><span class="sc">\&quot;</span><span class="st">dark</span><span class="sc">\&quot;</span><span class="st">}&quot;</span><span class="op">);</span></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;ready&quot;</span><span class="op">,</span></span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>                                        on_ready<span class="op">,</span> view<span class="op">);</span></span></code></pre></div>
+<h3 id="動作の詳細-1">動作の詳細</h3>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>現在の実装</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>window.blinkgtk</code> の出現時期</td>
+<td>各ページの onload 完了後 (ナビゲーションごとに再注入)</td>
+</tr>
+<tr>
+<td>C コールバックのスレッド</td>
+<td>GTK メインスレッド</td>
+</tr>
+<tr>
+<td>C ハンドラの寿命</td>
+<td>WebView と同じ。ナビゲーションを跨いで生存</td>
+</tr>
+<tr>
+<td>JS ハンドラの寿命</td>
+<td>ドキュメントと同じ。<strong>遷移ごとに再登録が必要</strong></td>
+</tr>
+<tr>
+<td>JS → C の符号化</td>
+<td>Base64 (C 側で <code>g_base64_decode()</code>)</td>
+</tr>
+<tr>
+<td>C → JS の符号化</td>
+<td>なし (生文字列が渡る)</td>
+</tr>
+<tr>
+<td>ロード完了前の送信 (C → JS)</td>
+<td>黙って破棄 (キューなし)</td>
+</tr>
+<tr>
+<td>未登録チャネルへの送信 (JS → C)</td>
+<td>黙って破棄</td>
+</tr>
+<tr>
+<td>同名チャネルの再登録</td>
+<td>上書き (両方向とも)</td>
+</tr>
+<tr>
+<td>サイズ制限</td>
+<td>エンジン側の明示的な制限なし。Base64 で約 1.33
+倍に膨らむため、大きなデータはカスタムスキームでの配信を検討</td>
+</tr>
+<tr>
+<td>iframe</td>
+<td><code>window.blinkgtk</code> はメインフレームにのみ注入。same-origin
+の iframe からは <code>parent.blinkgtk</code> で到達可能</td>
+</tr>
+</tbody>
+</table>
+<p><strong>セキュリティの注意</strong>: <code>postMessage</code>
+はページ内の<strong>あらゆる</strong>スクリプトから<br />
+呼べます
+(発行元の検証はありません)。外部のコンテンツや第三者スクリプトを<br />
+表示する WebView では、受信データを信頼せず、C
+側で必ず検証してください。</p>
 <hr />
 <h2 id="スクリプトcss-の注入">スクリプト・CSS の注入</h2>
 <h3
 id="blink_web_view_inject_user_script">blink_web_view_inject_user_script()</h3>
 <p>JavaScript をページに注入します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_user_script<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> script<span class="op">,</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>                                       gboolean inject_at_document_start<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_user_script<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> script<span class="op">,</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                       gboolean inject_at_document_start<span class="op">);</span></span></code></pre></div>
 <ul>
-<li><code>inject_at_document_start=TRUE</code>:
-保存され、<strong>以後の全ページ読み込みの冒頭</strong><br />
-(ページ自身のスクリプトより先) に実行されます。ページの API
-を差し替える<br />
-用途はこちら</li>
-<li><code>FALSE</code>: 現在のページで即時実行されます<br />
-(<code>blink_web_view_execute_javascript()</code> と同等)</li>
+<li><code>inject_at_document_start=FALSE</code>:
+現在のページで<strong>即時に 1 回</strong>実行されます<br />
+(<code>blink_web_view_execute_javascript()</code>
+と同等)。以後のページには適用され<br />
+ません</li>
+<li><code>inject_at_document_start=TRUE</code>: <strong>既知の問題 —
+現在のバージョンでは<br />
+機能しません</strong>
+(スクリプトは登録されますが実行されません)。修正を予定して<br />
+います。「全ページに適用」が必要な場合は、当面 <code>load-changed</code>
+シグナルの<br />
+<code>BLINK_LOAD_FINISHED</code> を受けて
+<code>execute_javascript()</code> を呼ぶ方法で代替して<br />
+ください:</li>
+</ul>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">int</span> ev<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>ev <span class="op">==</span> BLINK_LOAD_FINISHED<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>        blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;document.title = &#39;[MyApp] &#39; + document.title;&quot;</span><span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<ul>
+<li>実行はページ本体と同じ変数空間 (main world)
+で行われます。ページの変数を<br />
+読み書きできる反面、ページ側からも注入スクリプトの変数に触れます。<br />
+名前空間の衝突を避けたい場合は即時関数で包んでください</li>
 </ul>
 <h3
 id="blink_web_view_inject_user_stylesheet">blink_web_view_inject_user_stylesheet()</h3>
 <p>CSS を現在のページと以後のページに注入します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_user_stylesheet<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> css<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_user_stylesheet<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> css<span class="op">);</span></span></code></pre></div>
 <p>読書アプリの「ダークテーマ」「行間の調整」のように、コンテンツ側を<br />
-書き換えずに見た目を変える用途に使えます。</p>
+書き換えずに見た目を変える用途に使えます。動作の詳細:</p>
+<ul>
+<li>現在のページには即時、以後のページには <strong>onload
+完了後</strong>に適用されます。<br />
+そのため新しいページでは、<strong>適用前のスタイルが一瞬見える</strong>ことがあります<br />
+(構造上避けられません。初期表示から効かせたいスタイルは、コンテンツ側の<br />
+CSS か、カスタムスキームで配信する HTML に直接書くのが確実です)</li>
+<li>実装はページへの <code>&lt;style&gt;</code>
+要素の追加です。ページ自身のスタイルより<br />
+<strong>後に追加される</strong>ため、同じ詳細度ならこちらが勝ちます</li>
+<li>同じ CSS を 2 回 inject すると 2 回追加されます
+(重複判定はありません)。<br />
+設定変更のたびに呼ぶ用途では、古いものを取り除くスクリプトと組み合わせて<br />
+ください:</li>
+</ul>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 冪等な差し替え: 前回の注入分を取り除いてから注入し直す */</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;var e = document.getElementById(&#39;myapp-style&#39;); if (e) e.remove();&quot;</span><span class="op">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    NULL<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>js <span class="op">=</span> g_strdup_printf<span class="op">(</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;var s = document.createElement(&#39;style&#39;);&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;s.id = &#39;myapp-style&#39;; s.textContent = &#39;</span><span class="sc">%s</span><span class="st">&#39;;&quot;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;document.head.appendChild(s);&quot;</span><span class="op">,</span> escaped_css<span class="op">);</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span> js<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>js<span class="op">);</span></span></code></pre></div>
 <h3
 id="blink_web_view_remove_all_user_scripts">blink_web_view_remove_all_user_scripts()</h3>
-<p>注入したスクリプトとスタイルシートをすべて解除します。</p>
+<p>登録済みのスクリプトとスタイルシートを<strong>すべて</strong>
+(関数名は scripts ですが<br />
+CSS も対象) 解除します。</p>
 <p><strong>シグネチャ</strong>:</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_remove_all_user_scripts<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_remove_all_user_scripts<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<p><strong>効果は「以後のページに適用しない」ことです。</strong>
+現在表示中のページに<br />
+既に注入された <code>&lt;style&gt;</code>
+は取り除かれません。即時に外したい場合は、上の<br />
+冪等パターンのように <code>id</code>
+を付けて注入しておき、<code>execute_javascript()</code> で<br />
+<code>remove()</code> してください。</p>
 <hr />
-<h2 id="完全な例-独自スキーム--ページからの通知">完全な例: 独自スキーム
-+ ページからの通知</h2>
-<p><code>app://home/</code> をアプリが供給し、ページ内のボタンから C
-側へ通知を送ります。</p>
-<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_app_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g_strdup<span class="op">(</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;html&gt;&lt;body&gt;&quot;</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;h1&gt;アプリ供給ページ&lt;/h1&gt;&quot;</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;button onclick=</span><span class="sc">\&quot;</span><span class="st">window.blinkgtk.postMessage(&#39;clicked&#39;,&#39;hello&#39;)</span><span class="sc">\&quot;</span><span class="st">&gt;&quot;</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;C 側へ通知&lt;/button&gt;&quot;</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">);</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_message<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span> <span class="dt">const</span> guint8 <span class="op">*</span>data<span class="op">,</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>                       gsize length<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    gsize out_len <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    guchar <span class="op">*</span>decoded <span class="op">=</span> g_base64_decode<span class="op">((</span><span class="dt">const</span> gchar <span class="op">*)</span>data<span class="op">,</span> <span class="op">&amp;</span>out_len<span class="op">);</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;ページから &#39;</span><span class="sc">%s</span><span class="st">&#39;: </span><span class="sc">%.*s\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>out_len<span class="op">,</span> decoded<span class="op">);</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>decoded<span class="op">);</span></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">**</span>argv<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>win <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> view<span class="op">);</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_custom_scheme<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app&quot;</span><span class="op">,</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>                                          on_app_scheme<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;clicked&quot;</span><span class="op">,</span></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>                                            on_message<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">));</span></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app://home/&quot;</span><span class="op">);</span></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h2 id="c-から-javascript-を実行する">C から JavaScript を実行する</h2>
+<h3
+id="blink_web_view_execute_javascript">blink_web_view_execute_javascript()</h3>
+<p>現在のページのメインフレームで JavaScript を実行します。</p>
+<p><strong>シグネチャ</strong>:</p>
+<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkJavaScriptCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> result<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_execute_javascript<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> script<span class="op">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                                       BlinkJavaScriptCallback callback<span class="op">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                                       gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p>動作の詳細:</p>
+<ul>
+<li><code>callback</code>
+を渡すと、式の評価結果が文字列で返ります。<code>NULL</code> なら<br />
+実行しっぱなし (fire-and-forget) です</li>
+<li>結果が<strong>文字列の場合はその生の値</strong>が渡ります (JSON
+の引用符は付きません)。<br />
+数値・object
+などの場合はデバッグ用の文字列表現になります。<strong>構造化された<br />
+結果を受け取りたいときは、スクリプト側で <code>JSON.stringify()</code>
+した文字列を<br />
+返すのが確実です</strong>:</li>
+</ul>
+<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;JSON.stringify({title: document.title, y: window.scrollY})&quot;</span><span class="op">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    on_result<span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
+<ul>
+<li><strong>Promise は解決されません。</strong> <code>async</code>
+関数や <code>fetch()</code> の結果を返り値では<br />
+受け取れません。非同期の結果は、完了時にページ側から<br />
+<code>window.blinkgtk.postMessage()</code> で送ってください</li>
+<li>実行はメインフレームのみ、変数空間はページ本体と同じ (main world)
+です</li>
+<li>ページの読み込みが始まっていれば、<code>load-changed</code> の<br />
+<code>BLINK_LOAD_COMMITTED</code> 以降いつでも呼べます。エラー時
+(WebView 破棄後など)<br />
+は結果に空文字列が渡ります</li>
+</ul>
+<hr />
+<h2 id="完全な例-独自スキーム--双方向メッセージング">完全な例:
+独自スキーム + 双方向メッセージング</h2>
+<p><code>app://home/</code> をアプリが供給し、ページの準備完了 (ready)
+を受けてから設定を<br />
+送り、ボタン押下の通知を受け取ります。</p>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_app_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g_strdup<span class="op">(</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;html&gt;&lt;body&gt;&quot;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;h1&gt;アプリ供給ページ&lt;/h1&gt;&quot;</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;button onclick=</span><span class="sc">\&quot;</span><span class="st">window.blinkgtk.postMessage(&#39;clicked&#39;,&#39;hello&#39;)</span><span class="sc">\&quot;</span><span class="st">&gt;&quot;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;C 側へ通知&lt;/button&gt;&quot;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;script&gt;&quot;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;window.addEventListener(&#39;load&#39;, function () {&quot;</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  window.blinkgtk.addMessageHandler(&#39;config&#39;, function (d) {&quot;</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;    document.body.style.background = d;&quot;</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  });&quot;</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  window.blinkgtk.postMessage(&#39;ready&#39;, &#39;&#39;);&quot;</span>  <span class="co">/* 準備完了を通知 */</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;});&quot;</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/script&gt;&quot;</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">);</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_message<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span> <span class="dt">const</span> guint8 <span class="op">*</span>data<span class="op">,</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>                       gsize length<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_strcmp0<span class="op">(</span>name<span class="op">,</span> <span class="st">&quot;ready&quot;</span><span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">/* ページの準備ができた — ここからは send が確実に届く */</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>        blink_web_view_send_message_to_page<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>user_data<span class="op">),</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">&quot;config&quot;</span><span class="op">,</span> <span class="st">&quot;#fffbe6&quot;</span><span class="op">);</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    gsize out_len <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>    guchar <span class="op">*</span>decoded <span class="op">=</span> g_base64_decode<span class="op">((</span><span class="dt">const</span> gchar <span class="op">*)</span>data<span class="op">,</span> <span class="op">&amp;</span>out_len<span class="op">);</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;ページから &#39;</span><span class="sc">%s</span><span class="st">&#39;: </span><span class="sc">%.*s\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>out_len<span class="op">,</span> decoded<span class="op">);</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>decoded<span class="op">);</span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">**</span>argv<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>    blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>win <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_custom_scheme<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app&quot;</span><span class="op">,</span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>                                          on_app_scheme<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;ready&quot;</span><span class="op">,</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>                                            on_message<span class="op">,</span> view<span class="op">);</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;clicked&quot;</span><span class="op">,</span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>                                            on_message<span class="op">,</span> view<span class="op">);</span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">));</span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app://home/&quot;</span><span class="op">);</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>ビルド:</p>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> app-integration app-integration.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> app-integration app-integration.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<hr />
+<h2 id="実戦での構成例-epub-リーダー">実戦での構成例: EPUB リーダー</h2>
+<p>EPUB リーダー BlinkGTK-Readium は、このページの API だけで<br />
+「Web アプリを GTK
+アプリの中で製品として動かす」構成を実現しています。<br />
+設計の参考になる要点:</p>
+<ul>
+<li><strong>アプリ全体を 1 つのスキームで配信</strong> — リーダー UI
+(SPA) も書籍データ<br />
+(XHTML・画像・音声) も <code>ebook://</code> のハンドラが返します。SPA
+からの<br />
+<code>fetch()</code> が同一 origin として動くため、Web
+アプリ側の変更はほぼ不要です</li>
+<li><strong>バイナリは
+<code>register_custom_scheme_full()</code></strong> —
+表紙画像や朗読音声は<br />
+<code>GBytes</code> + MIME 指定で返します</li>
+<li><strong>URI 処理は「decode → 検証 → ルーティング」の順</strong> —
+percent-decode<br />
+してから <code>..</code> を拒否し、パスの先頭セグメントで機能
+(本文・本棚・書店) に<br />
+振り分けます</li>
+<li><strong>メッセージチャネルは機能ごとに分割</strong> —
+<code>readium</code> (リーダー操作)・<br />
+<code>shelf</code> (本棚)・<code>store</code> (書店)
+のようにチャネルを分けると、C 側の<br />
+ハンドラが単機能に保たれ、追加・削除も安全になります</li>
+</ul>
+<hr />
+<h2 id="制限事項-現在のバージョン">制限事項 (現在のバージョン)</h2>
+<table>
+<thead>
+<tr>
+<th>制限</th>
+<th>回避策</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>inject_user_script(document_start=TRUE)</code>
+が機能しない</td>
+<td><code>load-changed</code> + <code>execute_javascript()</code> で代替
+(上記)</td>
+</tr>
+<tr>
+<td>カスタムスキームのステータスコードは常に 200</td>
+<td>エラーは本文の HTML で表現</td>
+</tr>
+<tr>
+<td>リダイレクト不可</td>
+<td>本文の HTML / JS で誘導</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EXTRA_SCHEMES</code> のスキームで
+<code>fetch()</code> 不可</td>
+<td>組み込み 5 スキームを使う</td>
+</tr>
+<tr>
+<td>C → JS 送信はロード完了前は破棄</td>
+<td>ready ハンドシェイク (上記)</td>
+</tr>
+<tr>
+<td>スキーム登録がプロセス全体で共有</td>
+<td>WebView ごとに内容を変えるなら <code>web_view</code>
+引数で分岐、破棄前に解除</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="関連">関連</h2>
 <ul>
-<li>JavaScript の即時実行と結果の取得: <a
-href="./c-api-reference-ja.html">C API リファレンス</a></li>
-<li>設定 (JavaScript の有効/無効など): <a
-href="./settings-api-ja.html">Settings API</a></li>
+<li><a href="./howto-index-ja.html">逆引きリファレンス</a> —
+目的から関数を探す</li>
+<li><a href="./signals-api-ja.html">Signals API</a> —
+<code>load-changed</code> などのシグナル</li>
+<li><a href="./settings-api-ja.html">Settings API</a> — JavaScript
+の有効/無効など</li>
+<li><a href="./c-api-reference-ja.html">C API リファレンス</a> —
+全関数索引</li>
 </ul>
 <h2 id="変更履歴">変更履歴</h2>
 <table>
@@ -392,6 +992,13 @@ href="./settings-api-ja.html">Settings API</a></li>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>v1.1.0 (2026-07-30)</td>
+<td>実装検証に基づき全面加筆 —
+スレッド・タイミング・所有権・エッジケースの「動作の詳細」、ready
+ハンドシェイク等の実践パターン、既知の制限を明記。旧版の「NULL で
+404」は実装と異なっていたため是正 (実際は空ページ 200)</td>
+</tr>
 <tr>
 <td>v1.1.0</td>
 <td>本ページ初版 (バイナリ対応スキームは v1.1.0、他は v1.0
