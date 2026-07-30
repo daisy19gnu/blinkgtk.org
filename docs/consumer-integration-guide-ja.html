@@ -414,23 +414,30 @@ Aji、Noto CJK 等）が<br />
 <h3 id="61-シグナルロード状態タイトル-ほか">6.1
 シグナル（ロード状態・タイトル ほか）</h3>
 <p><code>BlinkWebView</code> は GObject
-シグナルでイベントを通知します。利用可能なシグナルは次の 6 つです。</p>
+シグナルでイベントを通知します。利用可能なシグナルは次の 7 つです。</p>
 <ul>
 <li><code>load-changed</code> — ロード状態の変化（引数は
 <code>BlinkLoadEvent</code> 列挙型）</li>
-<li><code>load-failed</code> — ロード失敗（引数は
-<code>BlinkLoadError</code> 列挙型 + 失敗 URI）</li>
-<li><code>title-changed</code> — タイトル変化</li>
-<li><code>uri-changed</code> — URI
-変化。<code>blink_web_view_load_uri()</code>
-呼び出し時に加え、リンククリック・リダイレクト等の実ナビゲーションで URI
-が実際に変わったコミット時にも発火します（1.1.0 以降。同一 URI
-への遷移では二重発火しません）</li>
+<li><code>load-failed</code> — ロード失敗（引数は error_code (int) +
+失敗 URI、この順）</li>
+<li><code>title-changed</code> —
+タイトル変化（<strong>追加引数なし</strong> — 値は
+<code>blink_web_view_get_title()</code> で取得）</li>
+<li><code>uri-changed</code> — URI 変化（<strong>追加引数なし</strong> —
+値は <code>blink_web_view_get_uri()</code>
+で取得）。<code>blink_web_view_load_uri()</code> 呼び出し時と、URI
+が変わるナビゲーションのコミット時に発火します</li>
 <li><code>new-window-requested</code> —
-新規ウィンドウ要求（<code>target="_blank"</code> 等）</li>
+新規ウィンドウ要求（<code>window.open()</code> /
+<code>target="_blank"</code>。通知のみ）</li>
 <li><code>message-received</code> — ページ内 JavaScript
-からのメッセージ受信</li>
+からのメッセージ受信（引数は name, data の 2 つ）</li>
+<li><code>permission-request</code> —
+位置情報・通知等の権限要求（既定は拒否・ハンドラ内で同期応答）</li>
 </ul>
+<p>各シグナルの正確な発火条件と落とし穴は <a
+href="api-reference/signals-api-ja.html">Signals API リファレンス</a>
+を参照してください。</p>
 <p>あわせて、<code>uri</code> / <code>title</code> /
 <code>is-loading</code> / <code>zoom-level</code>
 の各プロパティは値の変化時に<br />

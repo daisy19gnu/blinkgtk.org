@@ -410,21 +410,36 @@ include a CJK font package in your dependencies.</p>
 <h3 id="61-signals-load-state-title-and-more">6.1 Signals (load state,
 title, and more)</h3>
 <p><code>BlinkWebView</code> reports events via GObject signals. The
-available signals are the following six:</p>
+available signals are the following seven:</p>
 <ul>
-<li><code>load-changed</code> -- load state changes (argument is a
+<li><code>load-changed</code> — load state changes (argument: the
 <code>BlinkLoadEvent</code> enum)</li>
-<li><code>load-failed</code> -- load failure (arguments are a
-<code>BlinkLoadError</code> enum and the failing URI)</li>
-<li><code>title-changed</code> -- title changes</li>
-<li><code>uri-changed</code> -- URI change. Emitted on
-<code>blink_web_view_load_uri()</code> calls and, since 1.1.0, also when
-a real navigation (link click, redirect, etc.) commits with an
-actually-changed URI (no double emission for same-URI commits).<br />
+<li><code>load-failed</code> — load failure (arguments: error_code (int)
++ failing URI, in this order)</li>
+<li><code>title-changed</code> — title changes (<strong>no extra
+argument</strong> — read the value with
+<code>blink_web_view_get_title()</code>)</li>
+<li><code>uri-changed</code> — URI changes (<strong>no extra
+argument</strong> — read the value with
+<code>blink_web_view_get_uri()</code>); fires on
+<code>blink_web_view_load_uri()</code> and on commits that change the
+URI</li>
+<li><code>new-window-requested</code> — new-window requests
+(<code>window.open()</code> / <code>target="_blank"</code>; notification
+only)</li>
+<li><code>message-received</code> — messages from page JavaScript (two
+arguments: name, data)</li>
+<li><code>permission-request</code> — permission requests such as
+geolocation and notifications (default deny; respond synchronously
+inside the handler)</li>
+</ul>
+<p>See the <a href="api-reference/signals-api-en.html">Signals API
+reference</a> for exact firing conditions and pitfalls.<br />
 <code>blink_web_view_load_uri()</code> is called (it does not fire for
 in-page link<br />
 navigation or redirects; full navigation tracking is planned for a
-future version)</li>
+future version)</p>
+<ul>
 <li><code>new-window-requested</code> -- new window request
 (<code>target="_blank"</code> etc.)</li>
 <li><code>message-received</code> -- message from in-page
