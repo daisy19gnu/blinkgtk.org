@@ -1,0 +1,618 @@
+<!DOCTYPE html>
+<html xmlns="http://www.w3.org/1999/xhtml" lang="" xml:lang="">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Migrating from WebKitGTK — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="migrating-from-webkitgtk">Migrating from WebKitGTK</h1>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Last updated</strong>: 2026-07-30</p>
+<p><a href="./webkitgtk-to-blinkgtk-ja.html">日本語</a></p>
+<p>A guide for moving a WebKitGTK 6.0 (GTK4) application to BlinkGTK.
+The shortest<br />
+migration path comes first, followed by a mechanical replacement
+checklist, the<br />
+API mapping tables, the design differences, and an honest list of what
+WebKitGTK<br />
+has that BlinkGTK does not. Every BlinkGTK API named here is
+mechanically<br />
+verified to exist in the bundled header and shared library.</p>
+<h2 id="get-it-running-first">Get it running first</h2>
+<p>Migrating a typical WebKitGTK app changes only a handful of lines of
+code. In<br />
+addition there are <strong>two BlinkGTK-specific preparations</strong>
+that WebKitGTK does<br />
+not have:</p>
+<ol type="1">
+<li><strong>Linking must go through pkg-config</strong> —
+<code>pkg-config --cflags --libs blinkgtk-0.1</code>.<br />
+Hand-written link lines miss required libraries and the app crashes
+right<br />
+after startup</li>
+<li><strong>Chromium runtime resources must be in place</strong> — files
+such as <code>icudtl.dat</code><br />
+and <code>locales/</code> are needed at run time. Use the bundled
+<code>run-with-resources</code><br />
+wrapper, or point at them with
+<code>blink_gtk_set_resources_path()</code></li>
+</ol>
+<p>Both are covered step by step in<br />
+<a href="../building-with-blinkgtk-en.html">Building your
+application</a>.</p>
+<h3 id="before--webkitgtk-60">Before — WebKitGTK 6.0</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;webkit/webkit.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>    gtk_init<span class="op">();</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="st">&quot;WebKitGTK Browser&quot;</span><span class="op">);</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    WebKitWebView <span class="op">*</span>web_view <span class="op">=</span> WEBKIT_WEB_VIEW<span class="op">(</span>webkit_web_view_new<span class="op">());</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> GTK_WIDGET<span class="op">(</span>web_view<span class="op">));</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    webkit_web_view_load_uri<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>    GMainLoop <span class="op">*</span>loop <span class="op">=</span> g_main_loop_new<span class="op">(</span>NULL<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>    g_main_loop_run<span class="op">(</span>loop<span class="op">);</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="after--blinkgtk">After — BlinkGTK</h3>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="op">{</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Change 1: initialize the engine before GTK */</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>        g_printerr<span class="op">(</span><span class="st">&quot;blink_gtk_init() failed</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    gtk_init<span class="op">();</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="st">&quot;BlinkGTK Browser&quot;</span><span class="op">);</span></span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Change 2: create the WebView. It returns GtkWidget*, so no cast is</span></span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a><span class="co">     * needed to make it a child */</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb2-21"><a href="#cb2-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-22"><a href="#cb2-22" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Change 3: cast with BLINK_WEB_VIEW() when calling BlinkGTK APIs */</span></span>
+<span id="cb2-23"><a href="#cb2-23" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span>
+<span id="cb2-24"><a href="#cb2-24" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb2-25"><a href="#cb2-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-26"><a href="#cb2-26" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Change 4: use the BlinkGTK main loop */</span></span>
+<span id="cb2-27"><a href="#cb2-27" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb2-28"><a href="#cb2-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-29"><a href="#cb2-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* Change 5: shut down */</span></span>
+<span id="cb2-30"><a href="#cb2-30" aria-hidden="true" tabindex="-1"></a>    blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb2-31"><a href="#cb2-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
+<span id="cb2-32"><a href="#cb2-32" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="build-command-change">Build command change</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Before</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> app.c <span class="at">-o</span> app <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> gtk4 webkitgtk-6.0<span class="va">)</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># After</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> app.c <span class="at">-o</span> app <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<h2 id="mechanical-replacements-checklist">Mechanical replacements
+(checklist)</h2>
+<ul class="task-list">
+<li><label><input
+type="checkbox" /><code>#include &lt;webkit/webkit.h&gt;</code> →
+<code>#include &lt;blink_gtk/blink_gtk.h&gt;</code></label></li>
+<li><label><input type="checkbox" />Add
+<code>blink_gtk_init(&amp;argc, &amp;argv)</code>
+<strong>before</strong> <code>gtk_init()</code></label></li>
+<li><label><input type="checkbox" />Switch the main loop to
+<code>blink_gtk_run_main_loop()</code> /
+<code>blink_gtk_quit_main_loop()</code></label></li>
+<li><label><input type="checkbox" />Add
+<code>blink_gtk_shutdown()</code> on exit</label></li>
+<li><label><input type="checkbox" /><code>webkit_web_view_new()</code> →
+<code>blink_web_view_new()</code> (returns
+<code>GtkWidget*</code>)</label></li>
+<li><label><input type="checkbox" /><code>WEBKIT_WEB_VIEW(x)</code> →
+<code>BLINK_WEB_VIEW(x)</code></label></li>
+<li><label><input
+type="checkbox" /><code>webkit_web_view_load_uri()</code> →
+<code>blink_web_view_load_uri()</code></label></li>
+<li><label><input type="checkbox" />Remove
+<code>webkit_web_view_get_settings()</code> calls (settings go directly
+on the WebView; see below)</label></li>
+<li><label><input type="checkbox" />pkg-config package name:
+<code>webkitgtk-6.0</code> → <code>blinkgtk-0.1</code></label></li>
+<li><label><input type="checkbox" />Put the runtime resources in place
+(see <a href="../building-with-blinkgtk-en.html">Building your
+application</a>)</label></li>
+</ul>
+<h2 id="api-mapping">API mapping</h2>
+<h3 id="settings-webkitsettings-equivalent">Settings (WebKitSettings
+equivalent)</h3>
+<p>BlinkGTK has no Settings object. Settings are applied directly to the
+WebView.</p>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>webkit_settings_set_enable_javascript()</code></td>
+<td><code>blink_web_view_set_javascript_enabled()</code></td>
+<td>No Settings lookup needed</td>
+</tr>
+<tr>
+<td><code>webkit_settings_set_auto_load_images()</code></td>
+<td><code>blink_web_view_set_images_enabled()</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>webkit_settings_set_enable_html5_local_storage()</code></td>
+<td><code>blink_web_view_set_local_storage_enabled()</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>webkit_settings_set_default_font_size()</code></td>
+<td><code>blink_web_view_set_default_font_size()</code></td>
+<td>Same name</td>
+</tr>
+<tr>
+<td><code>webkit_settings_set_default_charset()</code></td>
+<td><code>blink_web_view_set_default_encoding()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>webkit_settings_set_user_agent()</code></td>
+<td><code>blink_web_view_set_user_agent()</code></td>
+<td>Supported</td>
+</tr>
+</tbody>
+</table>
+<p>Each <code>set_*</code> has a matching <code>get_*</code>.
+Details:<br />
+<a href="../api-reference/settings-api-en.html">Settings API</a></p>
+<h3 id="navigation">Navigation</h3>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>webkit_web_view_load_uri()</code></td>
+<td><code>blink_web_view_load_uri()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>webkit_web_view_load_html()</code></td>
+<td><code>blink_web_view_load_html()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>webkit_web_view_go_back()</code> /
+<code>go_forward()</code></td>
+<td><code>blink_web_view_go_back()</code> /
+<code>go_forward()</code></td>
+<td>Same names</td>
+</tr>
+<tr>
+<td><code>webkit_web_view_can_go_back()</code> /
+<code>can_go_forward()</code></td>
+<td><code>blink_web_view_can_go_back()</code> /
+<code>can_go_forward()</code></td>
+<td>Same names</td>
+</tr>
+<tr>
+<td><code>webkit_web_view_reload()</code></td>
+<td><code>blink_web_view_reload()</code></td>
+<td>Same name</td>
+</tr>
+<tr>
+<td><code>webkit_web_view_stop_loading()</code></td>
+<td><code>blink_web_view_stop()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>webkit_web_view_get_uri()</code> /
+<code>get_title()</code></td>
+<td><code>blink_web_view_get_uri()</code> /
+<code>get_title()</code></td>
+<td>Returned strings need <code>g_free()</code></td>
+</tr>
+<tr>
+<td><code>webkit_web_view_get_estimated_load_progress()</code></td>
+<td><code>blink_web_view_get_estimated_load_progress()</code></td>
+<td>Same name</td>
+</tr>
+<tr>
+<td><code>webkit_web_view_is_loading()</code></td>
+<td><code>blink_web_view_is_loading()</code></td>
+<td>Same name</td>
+</tr>
+</tbody>
+</table>
+<p>Details: <a href="../api-reference/navigation-api-en.html">Navigation
+API</a></p>
+<h3 id="signals">Signals</h3>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>load-changed</code></td>
+<td><code>load-changed</code></td>
+<td>Same name; the event value is <code>BlinkLoadEvent</code></td>
+</tr>
+<tr>
+<td><code>load-failed</code></td>
+<td><code>load-failed</code></td>
+<td>Same name</td>
+</tr>
+<tr>
+<td><code>notify::title</code></td>
+<td><code>title-changed</code></td>
+<td>Dedicated signal</td>
+</tr>
+<tr>
+<td><code>notify::uri</code></td>
+<td><code>uri-changed</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>permission-request</code></td>
+<td><code>permission-request</code></td>
+<td>Same name. Default is deny; respond with
+<code>blink_permission_request_allow()</code> / <code>deny()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Details: <a href="../api-reference/signals-api-en.html">Signals
+API</a></p>
+<h3 id="talking-to-the-page">Talking to the page</h3>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>webkit_web_view_evaluate_javascript()</code></td>
+<td><code>blink_web_view_execute_javascript()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>webkit_user_content_manager_add_script()</code></td>
+<td><code>blink_web_view_inject_user_script()</code></td>
+<td>No ContentManager lookup</td>
+</tr>
+<tr>
+<td><code>webkit_user_content_manager_add_style_sheet()</code></td>
+<td><code>blink_web_view_inject_user_stylesheet()</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td>Script message handlers (<code>script-message-received</code>)</td>
+<td><code>blink_web_view_register_message_handler()</code></td>
+<td>Page side: <code>window.blinkgtk.postMessage()</code></td>
+</tr>
+<tr>
+<td>(WebKitGTK sends C → page via JS evaluation)</td>
+<td><code>blink_web_view_send_message_to_page()</code></td>
+<td>Page side: <code>window.blinkgtk.addMessageHandler()</code></td>
+</tr>
+<tr>
+<td><code>webkit_web_context_register_uri_scheme()</code></td>
+<td><code>blink_web_view_register_custom_scheme()</code> /
+<code>register_custom_scheme_full()</code></td>
+<td>No WebContext; per WebView</td>
+</tr>
+</tbody>
+</table>
+<p>Details: <a href="../api-reference/app-integration-api-en.html">App
+integration API</a></p>
+<h3 id="customizing-the-ui">Customizing the UI</h3>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>script-dialog</code> signal</td>
+<td><code>blink_web_view_set_javascript_dialog_handler()</code></td>
+<td>alert / confirm / prompt</td>
+</tr>
+<tr>
+<td><code>run-file-chooser</code> signal</td>
+<td><code>blink_web_view_set_file_chooser_handler()</code></td>
+<td>Respond with <code>file_chooser_response()</code></td>
+</tr>
+<tr>
+<td><code>WebKitDownload</code> (<code>decide-policy</code> etc.)</td>
+<td><code>blink_web_view_set_download_handler()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>authenticate</code> signal</td>
+<td><code>blink_web_view_set_auth_handler()</code></td>
+<td>Respond with <code>auth_response()</code></td>
+</tr>
+<tr>
+<td>TLS error policy</td>
+<td><code>blink_web_view_set_certificate_error_handler()</code></td>
+<td></td>
+</tr>
+<tr>
+<td><code>enter-fullscreen</code> / <code>leave-fullscreen</code></td>
+<td><code>blink_web_view_set_fullscreen_handler()</code></td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<p>Details: <a href="../api-reference/ui-handlers-api-en.html">UI handlers
+API</a></p>
+<h3 id="everything-else">Everything else</h3>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>webkit_web_view_set_zoom_level()</code></td>
+<td><code>blink_web_view_set_zoom_level()</code></td>
+<td>Same name</td>
+</tr>
+<tr>
+<td><code>WebKitFindController</code></td>
+<td><code>blink_web_view_find_in_page()</code> /
+<code>stop_finding()</code></td>
+<td>No controller lookup</td>
+</tr>
+<tr>
+<td><code>WebKitPrintOperation</code></td>
+<td><code>blink_web_view_print_to_pdf()</code></td>
+<td>PDF output only (no print dialog)</td>
+</tr>
+<tr>
+<td><code>webkit_web_view_get_snapshot()</code></td>
+<td><code>blink_web_view_capture_screenshot()</code> /
+<code>_async()</code></td>
+<td>Saves PNG</td>
+</tr>
+<tr>
+<td><code>WebKitCookieManager</code></td>
+<td><code>blink_web_view_get_cookies()</code> /
+<code>set_cookie()</code> / <code>delete_all_cookies()</code></td>
+<td>No manager lookup</td>
+</tr>
+<tr>
+<td><code>WebKitWebInspector</code></td>
+<td><code>blink_web_view_open_devtools()</code></td>
+<td>Opens <strong>Chrome DevTools</strong></td>
+</tr>
+</tbody>
+</table>
+<p>To find a function by goal, see <a
+href="../api-reference/howto-index-en.html">How do I…?</a>.</p>
+<h2 id="where-the-thinking-changes">Where the thinking changes</h2>
+<ol type="1">
+<li><strong>No Settings / Manager / Controller objects</strong> —
+WebKitGTK hands you helper<br />
+objects via <code>webkit_web_view_get_settings()</code> and friends;
+BlinkGTK puts every<br />
+API directly on the WebView</li>
+<li><strong>The type is <code>GtkWidget*</code></strong> —
+<code>blink_web_view_new()</code> returns <code>GtkWidget*</code>.<br />
+Pass it to GTK as is; cast with <code>BLINK_WEB_VIEW()</code> for
+BlinkGTK APIs</li>
+<li><strong>Strict initialization order</strong> — call
+<code>blink_gtk_init()</code> before GTK<br />
+(see the <a href="../building-with-blinkgtk-en.html">lifecycle
+figure</a>)</li>
+<li><strong>Runtime resources must be deployed</strong> — Chromium data
+files are required at<br />
+run time. WebKitGTK has no such step, so check this first when
+migrating</li>
+<li><strong>A Wayland session is required</strong> — BlinkGTK is
+Wayland-only and does not run<br />
+in X11-only environments (WebKitGTK does, so this is a real
+difference)</li>
+<li><strong>The developer tools are Chrome DevTools</strong> — instead
+of WebInspector you get<br />
+Chrome DevTools, including remote debugging<br />
+(<a href="../api-reference/devtools-api-en.html">DevTools API</a>)</li>
+</ol>
+<h2 id="what-webkitgtk-has-that-blinkgtk-does-not-yet">What WebKitGTK
+has that BlinkGTK does not (yet)</h2>
+<p>Being honest here. The following currently have no equivalent:</p>
+<ul>
+<li><strong>WebExtensions</strong> (in-WebProcess extension
+mechanism)</li>
+<li><strong>Direct control equivalent to WebKitWebContext /
+WebKitNetworkSession</strong> —<br />
+proxy settings, cache control, custom data directories</li>
+<li><strong>A print dialog</strong> — only PDF output via
+<code>blink_web_view_print_to_pdf()</code></li>
+<li><strong>Editing commands</strong>
+(<code>webkit_web_view_execute_editing_command()</code> equivalent)</li>
+</ul>
+<p>If any of these block your migration, please tell us at<br />
+<a href="https://github.com/daisy19gnu/blinkgtk-dist/issues">bug reports
+&amp; requests</a> or<br />
+<a href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a>.</p>
+<h2 id="frequently-asked-questions">Frequently asked questions</h2>
+<h3 id="can-i-use-webkitgtk-and-blinkgtk-in-the-same-process">Can I use
+WebKitGTK and BlinkGTK in the same process?</h3>
+<p>Not recommended. Both carry large runtimes; memory usage grows and
+unexpected<br />
+interference (symbols, main-loop contention) is possible.</p>
+<h3 id="how-is-the-performance">How is the performance?</h3>
+<p>JavaScript runs on V8 and rendering uses Chromium's pipeline. The
+engine is<br />
+designed to consume almost no CPU while a page is idle. On the other
+hand,<br />
+Chromium-based engines tend to use more memory than WebKit. Evaluate
+against<br />
+your own workload (see the<br />
+<a href="../ENGINE_COMPARISON_DETAILED-en.html">engine
+comparison</a>).</p>
+<h3 id="does-it-run-on-x11">Does it run on X11?</h3>
+<p>No. A Wayland session is required.</p>
+<h3 id="where-should-i-start">Where should I start?</h3>
+<p>Build and run the "After" code above by following<br />
+<a href="../building-with-blinkgtk-en.html">Building your application</a>
+first, then move on<br />
+to replacing calls in your own app.</p>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="../building-with-blinkgtk-en.html">Building your
+application</a> — the complete linking and resource walkthrough</li>
+<li><a href="../api-reference/howto-index-en.html">How do I…?</a> — find
+the function by goal</li>
+<li><a href="../api-reference/00-index-en.html">API index</a></li>
+<li><a href="../ENGINE_COMPARISON_DETAILED-en.html">Engine comparison</a>
+— detailed comparison with WebKitGTK and CEF</li>
+</ul>
+<h2 id="history">History</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>Complete revision — standardized on WebKitGTK 6.0 (GTK4), corrected
+the User-Agent API entry to "supported" (the previous edition said "not
+provided"), extended the mapping tables to current features (page
+interaction, UI handlers, DevTools), added the missing-features
+section</td>
+</tr>
+<tr>
+<td>2026-01-01</td>
+<td>First edition</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>

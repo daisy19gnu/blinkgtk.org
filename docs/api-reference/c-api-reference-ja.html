@@ -101,6 +101,8 @@
 <strong>対象バージョン</strong>: BlinkGTK v1.1.0 以降<br />
 <strong>更新履歴</strong>:</p>
 <ul>
+<li>全関数索引 (機械生成・90 種)
+と機能別ページへの分冊化。陳腐化注記を撤去 (2026-07-30)</li>
 <li>新API追加（load_html, Getter群, 非同期スクリーンショット,
 load-failedシグナル, NULLガード, スレッド安全性ポリシー, deprecated
 API整理）</li>
@@ -108,26 +110,17 @@ API整理）</li>
 </ul>
 <hr />
 <blockquote>
-<p><strong>注意 この文書は陳腐化しています（2026-07-27
-追記）</strong></p>
-<p>機械照合の結果、本文書が言及する関数は <strong>32
-個</strong>に対し、配布ヘッダ <code>blink_gtk.h</code>
-の実在関数は<br />
-<strong>80 個</strong>です（カバー率約 4
-割）。さらに、既に削除された以下 2 関数の記載が残っています。</p>
-<ul>
-<li>GObjectC++ マッピング管理の内部 2 関数</li>
-</ul>
-<p>現行 API の正確な情報は、配布ヘッダ
-<code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code>
-を一次情報として<br />
-ご参照ください。環境変数については <a
-href="./environment-variables-ja.html"><code>environment-variables-ja.md</code></a>
-が正本です。</p>
-<p>本文書は #121 で整備中の API リファレンス（<a
-href="./00-index-ja.html"><code>00-index-ja.md</code></a> の第 11
-章）の母体として<br />
-全面改訂予定です。改訂完了時に本文書は新章への移行注記のみを残して整理します。</p>
+<p><strong>このページの位置づけ（2026-07-30 更新）</strong></p>
+<p>スレッド安全性・NULL
+ガード・メモリ管理などの<strong>共通ポリシー</strong>と、公開ヘッダの<br />
+<strong>全関数索引</strong>（ヘッダから機械生成、全 90
+種）をまとめたページです。<br />
+個々の API の使い方と完全なコード例は<a
+href="./00-index-ja.html">機能別のページ</a>に、<br />
+目的から関数を探すには<a
+href="./howto-index-ja.html">逆引きリファレンス</a>にあります。<br />
+記載されている API
+が配布物のヘッダと共有ライブラリに実在することは機械検証されています。</p>
 </blockquote>
 <hr />
 <h2 id="概要">概要</h2>
