@@ -61,6 +61,18 @@
   .hero-fig { margin: 0; }
   .hero-fig img { max-width: 100%; height: auto; border: 1px solid rgba(128,128,128,.35); border-radius: 6px; display: block; }
   .hero-fig figcaption { font-size: .85rem; color: #6b7680; margin-top: .55em; }
+  .gal-main { cursor: zoom-in; }
+  .gal-thumbs { display: flex; gap: 8px; margin-top: 8px; }
+  .gal-thumbs img { width: calc(25% - 6px); height: auto; border: 1px solid rgba(128,128,128,.35); border-radius: 4px; cursor: zoom-in; display: block; }
+  .gal-thumbs img:hover { opacity: .8; }
+  #lb { position: fixed; inset: 0; background: rgba(10,13,16,.94); display: none; z-index: 50; flex-direction: column; align-items: center; justify-content: center; padding: 3vh 4vw; }
+  #lb.open { display: flex; }
+  #lb img { max-width: 92vw; max-height: 82vh; width: auto; height: auto; border-radius: 4px; background: #fff; }
+  #lb figcaption { color: #cfd6dc; font-size: .9rem; margin-top: .9em; text-align: center; max-width: 60em; line-height: 1.6; }
+  .lb-btn { position: fixed; top: 50%; transform: translateY(-50%); font-size: 2.4rem; color: #e6e9ec; background: none; border: none; cursor: pointer; padding: .2em .45em; line-height: 1; }
+  .lb-btn:hover { color: #ffc078; }
+  #lb-prev { left: 1vw; } #lb-next { right: 1vw; }
+  #lb-close { position: fixed; top: 2vh; right: 2vw; font-size: 1.9rem; color: #e6e9ec; background: none; border: none; cursor: pointer; }
   pre.code { background: rgba(128,128,128,.10); padding: 1em 1.2em; overflow-x: auto; border-radius: 6px; font-size: .82rem; line-height: 1.55; margin: .4em 0 .6em; }
   .cap-list { margin: .2em 0 .3em; padding-left: 1.3em; }
   .cap-list li { margin: .34em 0; }
@@ -87,17 +99,36 @@
     <main>
       <div class="card">
         <figure class="hero-fig">
-          <img src="assets/hero_kusamakura.png" width="1600" height="1024"
+          <img class="gal-main" src="assets/gallery/g1-kusamakura-opening.png" width="1600" height="1024"
+               data-full="assets/gallery/g1-kusamakura-opening.png"
+               data-cap="夏目漱石『草枕』一章冒頭 — 縦書き見開き・ルビ・圏点 / Kusamakura ch. 1 opening — vertical spread, ruby, emphasis dots"
                alt="BlinkGTK で作られた EPUB リーダー BlinkGTK-Readium が、夏目漱石『草枕』の冒頭を縦書きの見開きで表示しているところ。ルビと赤い圏点を含む / BlinkGTK-Readium, an EPUB reader built with BlinkGTK, showing the opening of Natsume Soseki's Kusamakura in a vertical-writing two-page spread with ruby and red emphasis dots">
+          <div class="gal-thumbs">
+            <img src="assets/gallery/t2.png" data-full="assets/gallery/g2-kusamakura-shelley.png"
+                 data-cap="縦組みの中の欧文 — シェリーの詩 (『草枕』一章) / Latin verse inside vertical text — Shelley, Kusamakura ch. 1"
+                 alt="縦書き本文の中でシェリーの英詩が回転して組まれた見開き / A spread where Shelley's English verse is rotated within the vertical Japanese text">
+            <img src="assets/gallery/t3.png" data-full="assets/gallery/g3-kusamakura-cover.png"
+                 data-cap="『草枕』表紙 — 画像と縦組みのキャプション / The Kusamakura cover page with a vertically-set caption"
+                 alt="『草枕』の表紙ページ。漱石の肖像写真と縦組みの紹介文 / The Kusamakura cover page with Soseki's portrait and a vertical introduction">
+            <img src="assets/gallery/t4.png" data-full="assets/gallery/g4-kusamakura-toc.png"
+                 data-cap="縦書きの目次 — 章番号は縦中横 / The vertical table of contents; chapter numbers in tate-chu-yoko"
+                 alt="縦書きで組まれた目次。一から十三までの章リンク / The vertical table of contents with links for chapters one through thirteen">
+            <img src="assets/gallery/t5.png" data-full="assets/gallery/g5-tategumi-column.png"
+                 data-cap="自作コラム「描画の新しい地平」 — 傍点・縦中横。blink_web_view_capture_screenshot() による実出力 / A column with emphasis dots and tate-chu-yoko, captured via blink_web_view_capture_screenshot()"
+                 alt="縦書きコラム。ルビ・傍点・縦中横を含む / A vertical-writing column with ruby, emphasis dots and tate-chu-yoko">
+          </div>
           <figcaption>
             BlinkGTK を使うと、こういうソフトウェアが作れます — EPUB リーダー
-            <strong>BlinkGTK-Readium</strong> が夏目漱石『草枕』の冒頭を縦書き見開きで表示。
-            ルビも圏点も Blink がそのまま描画します。<br>
+            <strong>BlinkGTK-Readium</strong> が夏目漱石『草枕』を縦書き見開きで表示。
+            ルビも圏点も Blink がそのまま描画します。画像はクリックで拡大できます。<br>
             <span class="muted">This is the kind of software you can build with BlinkGTK:
-            <strong>BlinkGTK-Readium</strong>, an EPUB reader, showing the opening of Natsume Soseki's
-            <em>Kusamakura</em> in a vertical-writing two-page spread — ruby and emphasis dots rendered by Blink.</span><br>
-            <span class="muted">Readium (Readium Foundation) を基に日本語組版拡張を BlinkGTK プロジェクトが実装 /
-            Based on Readium (Readium Foundation) with Japanese-typography extensions by the BlinkGTK project.
+            <strong>BlinkGTK-Readium</strong>, an EPUB reader, showing Natsume Soseki's
+            <em>Kusamakura</em> in vertical-writing two-page spreads — ruby and emphasis dots rendered by Blink.
+            Click any image to enlarge.</span><br>
+            <span class="muted">Readium (Copyright Readium Foundation、BSD-3-Clause。EDRLab が主要開発元) を基に、
+            日本語組版拡張を BlinkGTK プロジェクトが実装 /
+            Based on Readium (Copyright Readium Foundation, BSD-3-Clause; principally developed by EDRLab)
+            with Japanese-typography extensions by the BlinkGTK project.
             表示コンテンツ: 夏目漱石『草枕』(底本: 青空文庫、パブリックドメイン。EPUB は総務省事業で制作された
             縦書きサンプル) / Content: <em>Kusamakura</em> by Natsume Soseki (Aozora Bunko text, public domain;
             EPUB sample produced by an MIC project).</span>
@@ -226,6 +257,48 @@ int main(int argc, char **argv)
       <p>FUSEe Project / BlinkGTK Project</p>
     </footer>
   </div>
+
+  <div id="lb" role="dialog" aria-modal="true" aria-label="スクリーンショット拡大表示 / Screenshot viewer">
+    <button id="lb-close" aria-label="閉じる / Close">×</button>
+    <button id="lb-prev" class="lb-btn" aria-label="前へ / Previous">‹</button>
+    <figure style="margin:0;display:flex;flex-direction:column;align-items:center">
+      <img id="lb-img" src="" alt="">
+      <figcaption id="lb-cap"></figcaption>
+    </figure>
+    <button id="lb-next" class="lb-btn" aria-label="次へ / Next">›</button>
+  </div>
+<script>
+/* 依存ゼロの最小 lightbox (data-full を持つ画像を DOM 順にギャラリー化) */
+(function () {
+  var items = Array.prototype.slice.call(document.querySelectorAll('img[data-full]'));
+  if (!items.length) return;
+  var lb = document.getElementById('lb');
+  var img = document.getElementById('lb-img');
+  var cap = document.getElementById('lb-cap');
+  var idx = 0;
+  function show(i) {
+    idx = (i + items.length) % items.length;
+    img.src = items[idx].getAttribute('data-full');
+    img.alt = items[idx].alt || '';
+    cap.textContent = items[idx].getAttribute('data-cap') || '';
+    lb.classList.add('open');
+  }
+  function close() { lb.classList.remove('open'); img.src = ''; }
+  items.forEach(function (el, i) {
+    el.addEventListener('click', function () { show(i); });
+  });
+  document.getElementById('lb-close').addEventListener('click', close);
+  document.getElementById('lb-prev').addEventListener('click', function (e) { e.stopPropagation(); show(idx - 1); });
+  document.getElementById('lb-next').addEventListener('click', function (e) { e.stopPropagation(); show(idx + 1); });
+  lb.addEventListener('click', function (e) { if (e.target === lb) close(); });
+  document.addEventListener('keydown', function (e) {
+    if (!lb.classList.contains('open')) return;
+    if (e.key === 'Escape') close();
+    else if (e.key === 'ArrowLeft') show(idx - 1);
+    else if (e.key === 'ArrowRight') show(idx + 1);
+  });
+})();
+</script>
 <script>
 (function () {
   var el = document.getElementById('dl-count');
