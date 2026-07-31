@@ -299,30 +299,36 @@ int main(int argc, char **argv)
   });
 })();
 </script>
+<!-- BLINKGTK_DLCOUNT_START (update-download-counter.sh が生成。手で編集しない) -->
 <script>
 (function () {
   var el = document.getElementById('dl-count');
   if (!el) return;
+  // 公開時に焼き込んだ実績。GitHub API が使えなくても必ず表示する
+  // (未認証 API は 60 req/時・IP 単位で枯渇するため、表示を API に依存させない)。
+  var withdrawn = 106;   // 取り下げ済み build の実績 (公開 API からは見えない)
+  var baseline  = 144;       // 公開時点の総計
+  var show = function (n) {
+    el.textContent = 'ダウンロード数 / Downloads: ' + n.toLocaleString('en-US');
+    el.hidden = false;
+  };
+  show(baseline);
+  // 以降は「取れたら新しい値に差し替える」だけの上乗せ処理。失敗しても表示は残る。
   fetch('https://api.github.com/repos/daisy19gnu/blinkgtk-dist/releases?per_page=100')
     .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function (rels) {
       var pkg = /\.(rpm|deb|tar\.gz|tar\.bz2)$/;
-      // 取り下げ済み (draft 化) build のダウンロード実績。公開 API は draft を
-      // 返さないため、ここに固定値で引き継ぐ。取り下げのたびに更新する。
-      // 内訳 (package 資産のみ、2026-07-29 時点):
-      //   build2: 27 / build3: 55 / build4: 8 / build5: 16
-      var withdrawn = 106;
       var n = withdrawn;
       rels.forEach(function (rel) {
         (rel.assets || []).forEach(function (a) {
           if (pkg.test(a.name)) n += a.download_count || 0;
         });
       });
-      el.textContent = 'ダウンロード数 / Downloads: ' + n.toLocaleString('en-US');
-      el.hidden = false;
+      if (n > baseline) show(n);
     })
-    .catch(function () { /* rate-limited or offline: leave hidden */ });
+    .catch(function () { /* 焼き込んだ baseline のまま表示を維持 */ });
 })();
 </script>
+<!-- BLINKGTK_DLCOUNT_END -->
 </body>
 </html>
