@@ -1,0 +1,31 @@
+# BlinkGTK
+
+> BlinkGTK は、CEF を介さずに Chromium の Blink レンダリングエンジンを GTK4 へ
+> 直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から利用でき、
+> 日本語の縦組み・ルビ・圏点といった JLReq 準拠の組版と EPUB 表示に強みがあります。
+> Linux (Wayland) デスクトップ向けで、WebKitGTK の代替として使えます。
+
+現在のバージョン: 1.1.0-build6 (Chromium ベース)
+
+## はじめる
+- [インストール](https://blinkgtk.org/docs/INSTALL.html)
+- [目的別 逆引き索引](https://blinkgtk.org/docs/howto-index-ja.html)
+- [ドキュメント索引](https://blinkgtk.org/docs/index.html)
+
+## 作る
+- [BlinkGTK でアプリを作る](https://blinkgtk.org/docs/building-with-blinkgtk-ja.html)
+- [組み込み・統合ガイド](https://blinkgtk.org/docs/consumer-integration-guide-ja.html)
+- [ポータブルアプリの作り方](https://blinkgtk.org/docs/portable-app-guide-ja.html)
+
+## リファレンス
+- [API リファレンス索引](https://blinkgtk.org/docs/api-reference/)
+- [GObject シグナル](https://blinkgtk.org/docs/api-reference/signals-api-ja.html)
+- [UI ハンドラ (ダイアログ/ダウンロード/権限)](https://blinkgtk.org/docs/api-reference/ui-handlers-api-ja.html)
+
+## 深く知る
+- [エンジン比較 (WebKitGTK / CEF / Electron との違い)](https://blinkgtk.org/docs/ENGINE_COMPARISON_DETAILED-ja.html)
+- [リリースノート](https://blinkgtk.org/docs/RELEASE_NOTES-1.1.0-ja.html)
+
+## 連絡先
+- 不具合・要望: https://github.com/daisy19gnu/blinkgtk-dist/issues
+- 問い合わせ: contact@blinkgtk.org

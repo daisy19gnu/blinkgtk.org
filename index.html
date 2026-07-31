@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BlinkGTK</title>
-<meta name="description" content="BlinkGTK — a Chromium/Blink-based WebView engine for GTK4. GTK4 のための Chromium/Blink ベース WebView エンジン。">
+<meta name="description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として Linux デスクトップ アプリに Chromium 品質の Web 描画を組み込めます。">
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
@@ -85,6 +85,49 @@
   .compat-wrap { overflow-x: auto; margin-bottom: .3em; }
   .card p.sec { margin-top: 1.6em; }
 </style>
+<!-- BLINKGTK_SEO_START (release/scripts で管理。手で編集しない) -->
+<link rel="canonical" href="https://blinkgtk.org/">
+<meta property="og:type" content="website">
+<meta property="og:title" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン">
+<meta property="og:description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として Linux デスクトップ アプリに Chromium 品質の Web 描画を組み込めます。">
+<meta property="og:url" content="https://blinkgtk.org/">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta property="og:image:alt" content="BlinkGTK で描画した日本語縦組みの見開き表示">
+<meta name="twitter:card" content="summary_large_image">
+<meta name="twitter:title" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン">
+<meta name="twitter:description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として Linux デスクトップ アプリに Chromium 品質の Web 描画を組み込めます。">
+<meta name="twitter:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/">
+<script type="application/ld+json">
+{
+  "@context": "https://schema.org",
+  "@graph": [
+    {
+      "@type": "SoftwareApplication",
+      "name": "BlinkGTK",
+      "alternateName": "Blink GTK4 binding",
+      "applicationCategory": "DeveloperApplication",
+      "operatingSystem": "Linux (Wayland)",
+      "url": "https://blinkgtk.org/",
+      "description": "CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリ。C / Python (PyGObject) / Rust から利用でき、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に対応する。",
+      "programmingLanguage": ["C", "C++", "Python", "Rust"],
+      "softwareVersion": "1.1.0",
+      "license": "https://blinkgtk.org/docs/README.html",
+      "downloadUrl": "https://blinkgtk.org/#download",
+      "keywords": "GTK4, WebView, Chromium, Blink, WebKitGTK alternative, EPUB, 日本語縦書き, JLReq, GObject Introspection"
+    },
+    {
+      "@type": "WebSite",
+      "name": "BlinkGTK",
+      "url": "https://blinkgtk.org/",
+      "inLanguage": "ja"
+    }
+  ]
+}
+</script>
+<!-- BLINKGTK_SEO_END -->
 </head>
 <body>
   <div class="wrap">
@@ -307,7 +350,7 @@ int main(int argc, char **argv)
   // 公開時に焼き込んだ実績。GitHub API が使えなくても必ず表示する
   // (未認証 API は 60 req/時・IP 単位で枯渇するため、表示を API に依存させない)。
   var withdrawn = 106;   // 取り下げ済み build の実績 (公開 API からは見えない)
-  var baseline  = 144;       // 公開時点の総計
+  var baseline  = 146;       // 公開時点の総計
   var show = function (n) {
     el.textContent = 'ダウンロード数 / Downloads: ' + n.toLocaleString('en-US');
     el.hidden = false;
