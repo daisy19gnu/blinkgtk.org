@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 改版履歴 — BlinkGTK の版と Chromium の版 —
+BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="BlinkGTK のどの版が、Chromium のどの版を土台にしているかの一覧です。 「この機能はいつから使えるのか」を調べるときは、まず目的の機能が Chromium の どの版で入ったかを Chromium 147 → 151 の新機能 で確認し、この表で対応する BlinkGTK の版を引いてください。">
+<link rel="canonical" href="https://blinkgtk.org/docs/version-history-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 改版履歴 — BlinkGTK の版と Chromium の版 — BlinkGTK">
+<meta property="og:description" content="BlinkGTK のどの版が、Chromium のどの版を土台にしているかの一覧です。 「この機能はいつから使えるのか」を調べるときは、まず目的の機能が Chromium の どの版で入ったかを Chromium 147 → 151 の新機能 で確認し、この表で対応する BlinkGTK の版を引いてください。">
+<meta property="og:url" content="https://blinkgtk.org/docs/version-history-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/version-history-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/version-history-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/version-history-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
+改版履歴 — BlinkGTK の版と Chromium の版</h1>
+<p>バージョン: 1.1.0-build6 / 言語: 日本語 | <a
+href="version-history-en.html">English</a></p>
+<p>BlinkGTK のどの版が、Chromium
+のどの版を土台にしているかの一覧です。<br />
+「この機能はいつから使えるのか」を調べるときは、まず目的の機能が
+Chromium の<br />
+どの版で入ったかを <a href="chromium-feature-history-ja.html">Chromium 147
+→ 151 の新機能</a><br />
+で確認し、この表で対応する BlinkGTK の版を引いてください。</p>
+<hr />
+<h2 id="対応表">対応表</h2>
+<!-- VERSION_HISTORY_TABLE_START (gen-version-history.sh が生成。手で編集しない) -->
+
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>公開日</th>
+<th>Chromium</th>
+<th>この版で何が起きたか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v1.1.0-build6</strong> ← 公開中</td>
+<td>2026-07-29</td>
+<td><strong>150.0.7871.46</strong></td>
+<td>同梱ドキュメントを全面是正し、記載と実装の一致を機械検査する仕組みを導入</td>
+</tr>
+<tr>
+<td>v1.1.0-build5</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>同梱サンプルを 1 本に整理。build6 で置換 (取り下げ)</td>
+</tr>
+<tr>
+<td>v1.1.0-build4</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>UA / Cookie / 権限まわりの API 追加。build5 で置換 (取り下げ)</td>
+</tr>
+<tr>
+<td>v1.1.0-build3</td>
+<td>2026-07-23</td>
+<td>150.0.7871.46</td>
+<td>RPM の依存パッケージ名を Fedora の名前に修正
+(利用者からの報告による)</td>
+</tr>
+<tr>
+<td>v1.1.0-build2</td>
+<td>2026-07-21</td>
+<td>150.0.7871.46</td>
+<td>静止時の CPU
+使用率をゼロに。文字サイズ変更で白紙になる不具合を解消</td>
+</tr>
+<tr>
+<td><strong>v1.1.0-build1</strong></td>
+<td>2026-07-07</td>
+<td><strong>150.0.7871.46</strong></td>
+<td>配布形態を刷新 (runtime / 開発用 / GObject Introspection
+の分割)。縦組み多段の分割、ホイールスクロール、ナビゲーション後の入力</td>
+</tr>
+<tr>
+<td><strong>v1.0.11-dev</strong></td>
+<td>2026-06</td>
+<td><strong>148.0.7778.167</strong></td>
+<td>Chromium 148 へ移行 (149
+も追従)。組み込みアプリのリンク要件を確定</td>
+</tr>
+<tr>
+<td><strong>v1.0.10-build16</strong></td>
+<td>2026-05-16</td>
+<td><strong>147.0.7727.55</strong></td>
+<td>描画の退行を排除し、実機での品質を確認した版</td>
+</tr>
+<tr>
+<td>v1.0.10</td>
+<td>2026-04-21</td>
+<td>147.0.7727.55</td>
+<td>安定化</td>
+</tr>
+<tr>
+<td>v1.0.9</td>
+<td>2026-04-18</td>
+<td>147.0.7727.55</td>
+<td>利用者向けの整備。報告されていた不具合を一括で解消</td>
+</tr>
+<tr>
+<td>v1.0.8</td>
+<td>2026-04-14</td>
+<td>147.0.7727.55</td>
+<td>言語バインディングの統合、API 強化</td>
+</tr>
+<tr>
+<td>v1.0.7</td>
+<td>2026-04-13</td>
+<td>147.0.7727.55</td>
+<td>日本語入力 (IME) まわりの修正</td>
+</tr>
+<tr>
+<td><strong>v1.0.6</strong></td>
+<td>2026-04-12</td>
+<td><strong>147.0.7727.55</strong></td>
+<td>Chromium 147 へ移行</td>
+</tr>
+<tr>
+<td>v1.0.5</td>
+<td>2026-04-10</td>
+<td>146.0.7680.177</td>
+<td>Chromium 146 の更新版へ追従</td>
+</tr>
+<tr>
+<td>v1.0.3</td>
+<td>2026-04-07</td>
+<td>146.0.7680.71</td>
+<td>HiDPI 環境でのフォント描画を改善</td>
+</tr>
+<tr>
+<td>v1.0.2</td>
+<td>2026-04-07</td>
+<td>146.0.7680.71</td>
+<td>WebView ごとに GPU モードを選べる API</td>
+</tr>
+<tr>
+<td>v1.0.1</td>
+<td>2026-04-03</td>
+<td>146.0.7680.71</td>
+<td>不具合修正 (パッケージ配布なし)</td>
+</tr>
+<tr>
+<td><strong>v1.0.0</strong></td>
+<td>2026-04-03</td>
+<td><strong>146.0.7680.71</strong></td>
+<td>最初の正式リリース</td>
+</tr>
+<tr>
+<td>v1.0.0-rc1</td>
+<td>2026-03-18</td>
+<td>145 (推定)</td>
+<td>リリース候補</td>
+</tr>
+</tbody>
+</table>
+<!-- VERSION_HISTORY_TABLE_END -->
+
+<p>補足を 2 つ。<strong>v1.0.4 は欠番</strong>です(v1.0.3 の次が
+v1.0.5)。また <strong>v1.1.0-build4 / build5 は<br />
+取り下げ済み</strong>で、後続の build6
+に置き換わっています。取り下げた版も履歴からは消していません。<br />
+どの版を使っていたかを利用者が後から追えることを優先しています。</p>
+<hr />
+<h2 id="chromium-の版から引く">Chromium の版から引く</h2>
+<table>
+<thead>
+<tr>
+<th>Chromium</th>
+<th>BlinkGTK</th>
+<th>期間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>145</td>
+<td>v1.0.0-rc1</td>
+<td>2026-03</td>
+</tr>
+<tr>
+<td>146</td>
+<td>v1.0.0 〜 v1.0.5</td>
+<td>2026-04-03 〜 04-10</td>
+</tr>
+<tr>
+<td><strong>147</strong></td>
+<td>v1.0.6 〜 v1.0.10-build16</td>
+<td>2026-04-12 〜 05-16</td>
+</tr>
+<tr>
+<td><strong>148 / 149</strong></td>
+<td>v1.0.11-dev</td>
+<td>2026-06</td>
+</tr>
+<tr>
+<td><strong>150</strong></td>
+<td>v1.1.0-build1 〜 build6</td>
+<td>2026-07-07 〜 07-29</td>
+</tr>
+<tr>
+<td><strong>151</strong></td>
+<td>移行作業中</td>
+<td>2026-08 〜</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="版番号の読み方">版番号の読み方</h2>
+<p><code>v1.1.0-build6</code> は 2 つの部分でできています。</p>
+<ul>
+<li><strong><code>1.1.0</code></strong> —
+製品としての版。機能の追加や互換性のない変更があるときに上がります</li>
+<li><strong><code>build6</code></strong> —
+同じ製品版のなかでの作り直しの回数。不具合修正やパッケージの是正で増えます</li>
+</ul>
+<p>同じ <code>1.1.0</code> でも build
+番号が違えば中身は違います。不具合の報告をいただくときは、<br />
+<strong>build 番号まで</strong>お知らせください。</p>
+<p>なお、パッケージ名やパスに出てくる
+<strong><code>0.1</code></strong>(<code>libblinkgtk-0.1.so.0</code>
+や<br />
+<code>/usr/share/doc/blinkgtk-0.1/</code> など)は API
+の版で、製品の版とは独立しています。<br />
+GTK4 の <code>gtk-4.0</code>、WebKitGTK の <code>webkitgtk-6.0</code>
+と同じ規約です。API に互換性のない<br />
+変更が入るときだけ上がります。</p>
+<hr />
+<h2 id="関連する文書">関連する文書</h2>
+<ul>
+<li><a href="chromium-feature-history-ja.html">Chromium 147 → 151
+の新機能</a> — 各 Chromium 版で何ができるようになったか</li>
+<li><a href="RELEASE_NOTES-1.1.0-ja.html">リリースノート</a></li>
+<li><a href="INSTALL.html">インストール</a></li>
+</ul>
+</body>
+</html>
+</div></div>

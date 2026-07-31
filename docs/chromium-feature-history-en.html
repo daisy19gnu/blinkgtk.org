@@ -1,0 +1,583 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Chromium 147 → 151 — What BlinkGTK Gained — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="BlinkGTK embeds Chromium&#x27;s rendering engine, Blink, as-is. When Chromium gains a new web capability, moving BlinkGTK to a newer base gives you that capability d">
+<link rel="canonical" href="https://blinkgtk.org/docs/chromium-feature-history-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Chromium 147 → 151 — What BlinkGTK Gained — BlinkGTK">
+<meta property="og:description" content="BlinkGTK embeds Chromium&#x27;s rendering engine, Blink, as-is. When Chromium gains a new web capability, moving BlinkGTK to a newer base gives you that capability d">
+<meta property="og:url" content="https://blinkgtk.org/docs/chromium-feature-history-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/chromium-feature-history-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/chromium-feature-history-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/chromium-feature-history-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="chromium-147--151--what-blinkgtk-gained">Chromium 147 → 151 —
+What BlinkGTK Gained</h1>
+<p>Version: 1.1.0-build6 / Language: English | <a
+href="chromium-feature-history-ja.html">日本語</a></p>
+<p>BlinkGTK embeds Chromium's rendering engine, Blink, as-is. When
+Chromium gains a new<br />
+web capability, <strong>moving BlinkGTK to a newer base gives you that
+capability directly</strong>.<br />
+This document walks through what changed across Chromium 147, 148, 149,
+150 and 151 —<br />
+the versions BlinkGTK has been built on — from the side of what you can
+actually do.</p>
+<p>It is not a digest of specifications. We diffed the engine source
+trees themselves,<br />
+version against version, and selected what matters to you. The exact
+method is at the end.</p>
+<hr />
+<h2 id="how-to-read-this--landed-is-not-usable">How to read this —
+"landed" is not "usable"</h2>
+<p>Web features do not reach every user the moment they are written. In
+Blink, each feature<br />
+carries a <strong>runtime flag</strong>, and its state decides whether
+the feature is on by default.<br />
+This document distinguishes three states. Mixing them up produces the
+worst kind of<br />
+documentation bug — "it's written here but it doesn't work" — so let us
+be explicit.</p>
+<table>
+<thead>
+<tr>
+<th>Label</th>
+<th>Flag state</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>On by default</strong></td>
+<td><code>stable</code></td>
+<td>Works with no action. Available in BlinkGTK as-is</td>
+</tr>
+<tr>
+<td><strong>Experimental</strong></td>
+<td><code>experimental</code></td>
+<td>Off by default; enable explicitly with a launch flag</td>
+</tr>
+<tr>
+<td><strong>In development</strong></td>
+<td><code>test</code></td>
+<td>Test runs only. <strong>The property may parse, but rendering is
+unaffected</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The third one is the trap. <code>hanging-punctuation</code> — hanging
+punctuation at line edges,<br />
+long awaited in Japanese typography — <strong>landed as a CSS property
+in 149</strong>. It parses,<br />
+and <code>getComputedStyle()</code> returns a value. But its
+implementation flag is still <code>test</code><br />
+as of 151, so <strong>it does not affect line layout</strong>. "The
+property exists" and<br />
+"the typesetting changes" are two different events.</p>
+<hr />
+<h2 id="the-shape-of-it">The shape of it</h2>
+<p>Across five versions, the engine's feature flags grew from 1,103 to
+1,214.</p>
+<table>
+<thead>
+<tr>
+<th>Chromium</th>
+<th>Feature flags</th>
+<th>Newly on by default</th>
+<th>Added</th>
+<th>Removed</th>
+<th>CSS properties</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>147</td>
+<td>1,103</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>800</td>
+<td>v1.0.6 – v1.0.10-build16</td>
+</tr>
+<tr>
+<td>148</td>
+<td>1,116</td>
+<td>34</td>
+<td>47</td>
+<td>34</td>
+<td>800</td>
+<td>v1.0.11-dev</td>
+</tr>
+<tr>
+<td>149</td>
+<td>1,140</td>
+<td>39</td>
+<td>52</td>
+<td>28</td>
+<td>803</td>
+<td>(tracked only)</td>
+</tr>
+<tr>
+<td>150</td>
+<td>1,172</td>
+<td>48</td>
+<td>51</td>
+<td>19</td>
+<td>820</td>
+<td>v1.1.0-build1 – build6</td>
+</tr>
+<tr>
+<td>151</td>
+<td>1,214</td>
+<td>44</td>
+<td>64</td>
+<td>22</td>
+<td>822</td>
+<td>migration in progress (2026-08)</td>
+</tr>
+</tbody>
+</table>
+<p>Each version turns on 30–50 features by default and removes 20–35.
+<strong>Removals</strong> are easy<br />
+to overlook, yet they are the more likely reason an upgrade breaks
+something. That is why<br />
+every section below ends with migration notes.</p>
+<hr />
+<h2 id="147--148--underlines-and-container-queries-settle-down">147 →
+148 — Underlines and container queries settle down</h2>
+<p><strong>In one line</strong>: fewer headline features, more CSS
+details brought into agreement.</p>
+<h3 id="text">Text</h3>
+<p><strong>Underlines now skip descenders</strong> (wider application of
+<code>text-decoration-skip-ink</code>).<br />
+When an underline crosses the tail of a <code>g</code> or <code>p</code>
+— or a Japanese <code>ぎ</code> — legibility<br />
+drops visibly. This was experimental in 147 and became the default in
+148.</p>
+<p>Variable-font <code>avar2</code> support also landed: the newer table
+format for varying weight and<br />
+width continuously within a single font file.</p>
+<h3 id="css">CSS</h3>
+<ul>
+<li>The <code>at-rule()</code> function is usable inside
+<code>@supports</code>, so you can branch on<br />
+"does this browser understand this at-rule" from CSS alone</li>
+<li>The <code>revert</code> keyword now works in <code>@rule</code>
+contexts</li>
+<li>Container queries accept a container-name-only form</li>
+</ul>
+<h3 id="elsewhere">Elsewhere</h3>
+<ul>
+<li>Lazy loading (<code>loading="lazy"</code>) for
+<code>&lt;video&gt;</code> and <code>&lt;audio&gt;</code> is on by
+default</li>
+<li>SharedWorker is enabled by default, with extended lifetime
+handling</li>
+<li>Non-breaking spaces are normalised on paste and drag, which reduces
+invisible<br />
+whitespace creeping in from other applications</li>
+</ul>
+<h3 id="migration-notes">Migration notes</h3>
+<p>Remnants of the <code>&lt;command&gt;</code> element were removed.
+Most applications are unaffected,<br />
+but check if you carry old code forward.</p>
+<hr />
+<h2 id="148--149--column-rules-and-a-vessel-for-hanging-punctuation">148
+→ 149 — Column rules, and a vessel for hanging punctuation</h2>
+<p><strong>In one line</strong>: multi-column layout gained
+expressiveness, and Japanese typography<br />
+gained one container.</p>
+<h3 id="for-japanese-typography">For Japanese typography</h3>
+<p><strong><code>hanging-punctuation</code> landed as a CSS
+property</strong> — hanging punctuation and brackets<br />
+outside the text block at line start or end (<code>none</code> /
+<code>first</code> / <code>last</code> / <code>allow-end</code>).<br />
+It maps directly onto what JIS X 4051 and JLReq require. Values parse,
+and<br />
+<code>getComputedStyle()</code> reports them.</p>
+<p>But as noted above, <strong>the implementation flag is still
+<code>test</code> as of 151</strong>. You can write<br />
+it; it does not yet take effect. This is one to watch upstream, and
+BlinkGTK is<br />
+tracking it.</p>
+<p><strong>Caret movement across lines containing ruby was
+fixed.</strong> Pressing up/down in ruby-annotated<br />
+body text no longer behaves differently depending on whether ruby is
+present. Editors<br />
+benefit directly.</p>
+<p><code>text-decoration-skip-spaces</code> was added, controlling
+whether underlines skip inter-word spaces.</p>
+<h3 id="column-rules">Column rules</h3>
+<p>Rules drawn between columns and rows (<code>column-rule</code> /
+<code>row-rule</code>) were substantially<br />
+extended. Where a rule stops, and how it behaves at junctions, is now
+expressible through<br />
+the <code>*-inset-cap</code> and <code>*-inset-junction</code> families.
+Rules running past the end of a column<br />
+can be solved in CSS alone.</p>
+<p>Note that in 148 these were named <code>column-rule-edge-inset</code>
+and <code>column-rule-interior-inset</code>;<br />
+149 <strong>renamed</strong> them to <code>-inset-cap</code> and
+<code>-inset-junction</code> as the specification settled.</p>
+<h3 id="elsewhere-1">Elsewhere</h3>
+<ul>
+<li><code>shape-outside</code> accepts <code>path()</code>,
+<code>shape()</code>, <code>rect()</code> and <code>xywh()</code>, so
+text can wrap<br />
+around arbitrary shapes</li>
+<li>A <code>CSSPseudoElement</code> interface for handling
+pseudo-elements as JavaScript objects</li>
+<li><code>position: sticky</code> tracks overflow per axis</li>
+<li>Layer merging reduces paint cost on pages with many fixed or sticky
+elements</li>
+<li>Default table border colour is now <code>currentColor</code></li>
+</ul>
+<h3 id="migration-notes-1">Migration notes</h3>
+<p>The column-rule renames above mean stylesheets written with the
+pre-149 names<br />
+<strong>stop working</strong>. Rewrite them if you use them.</p>
+<hr />
+<h2 id="149--150--tools-for-tightening-the-text-block">149 → 150 — Tools
+for tightening the text block</h2>
+<p><strong>In one line</strong>: the richest of these five versions, and
+the foundation of BlinkGTK v1.1.0.</p>
+<h3 id="for-japanese-typography-1">For Japanese typography</h3>
+<p><strong><code>text-box-trim</code> now works inside nested
+lists.</strong> This trims the font-derived space<br />
+(half-leading) above and below a line so the text block is built from
+the intended glyph<br />
+height. In Japanese layout you need this to bring the gap between a
+heading and body text<br />
+down to the designed value.</p>
+<p><strong>Full-width space handling was fixed.</strong> Reusing the
+offset mapping between text and<br />
+layout no longer breaks on full-width spaces, so selection ranges and
+break positions stay<br />
+correct in text that mixes them in.</p>
+<p><strong>Grapheme cluster bounds checking</strong> landed, making it
+harder to split emoji ligatures<br />
+and combining sequences when moving the caret or deleting.</p>
+<p><code>text-transform</code> now applies to <code>::first-line</code>,
+and line-breaker abort handling improved.</p>
+<h3 id="css-1">CSS</h3>
+<ul>
+<li><strong>Corners were extended wholesale</strong>: 18 properties
+rooted at <code>corner</code>, including<br />
+logical directions such as <code>corner-block-start</code></li>
+<li><code>text-fit</code> — automatically size text to fit a given
+box</li>
+<li>The <code>image()</code> function, and image support in
+<code>light-dark()</code> for light/dark variants</li>
+<li><code>background-clip: border-area</code></li>
+<li>Comma-separated container queries</li>
+<li><code>balance</code> for even line distribution under
+<code>flex-wrap</code></li>
+<li><code>scroll-axis-lock</code></li>
+</ul>
+<h3 id="elsewhere-2">Elsewhere</h3>
+<ul>
+<li><code>focusgroup</code> — declare arrow-key focus movement as a
+group</li>
+<li>Programmatic scrolling returns a Promise, so "measure after the
+scroll finishes"<br />
+becomes straightforward</li>
+<li>SVG text decoration is stylable from CSS</li>
+<li>WebGPU gained immediates</li>
+</ul>
+<h3 id="migration-notes-2">Migration notes</h3>
+<ul>
+<li>The <code>corners</code> property was <strong>renamed</strong> to
+<code>corner</code></li>
+<li>Popover <code>hint</code> behaviour changed</li>
+</ul>
+<hr />
+<h2 id="150--151--ruby-and-emphasis-marks-come-into-their-own">150 → 151
+— Ruby and emphasis marks come into their own</h2>
+<p><strong>In one line</strong>: for Japanese typography, the most
+direct gain in these five versions.</p>
+<h3 id="for-japanese-typography-2">For Japanese typography</h3>
+<p><strong>Ruby overhang (<code>ruby-overhang</code>) is on by
+default.</strong> Experimental since 147, it finally<br />
+becomes the default in 151. It controls how far ruby text may extend
+over neighbouring<br />
+base characters when the annotation is longer than what it annotates. A
+<code>none</code> value<br />
+arrived alongside it. This is the engine meeting JLReq head-on on how
+ruby may be placed.</p>
+<p><strong>Emphasis marks (boten) are now processed through the ruby
+path.</strong> This sounds like an<br />
+internal detail, but <strong>the typeset result changes</strong>.
+Previously, adding emphasis marks<br />
+grew the line box itself; in 151 the line box stays at
+<code>line-height</code> and the outer<br />
+container grows instead. In vertical documents that use emphasis marks
+heavily,<br />
+<strong>the number of lines in the text block can change</strong> —
+verify existing layouts.</p>
+<p><strong><code>text-autospace</code> now ignores ruby
+annotations</strong>, so automatic spacing between Latin and<br />
+Japanese is no longer perturbed by ruby text.</p>
+<p><strong>Line breaking is allowed after a space preceding an open
+tag</strong>, which reduces breaks<br />
+landing in unintended places in markup such as
+<code>日本語 &lt;span&gt;語&lt;/span&gt;</code>.</p>
+<p>Experimentally, <code>AnnotationSpaceOnStart</code> (space on the
+start side of an annotation)<br />
+landed. It is off by default, but worth watching as it concerns spacing
+around ruby and<br />
+emphasis marks.</p>
+<h3 id="editing-and-selection">Editing and selection</h3>
+<ul>
+<li>Moving paragraphs preserves inline structure</li>
+<li>Selection no longer jumps unexpectedly</li>
+<li>Tab alignment with floats fixed</li>
+<li>Empty-placeholder line breaking in <code>&lt;textarea&gt;</code>
+fixed</li>
+</ul>
+<h3 id="elsewhere-3">Elsewhere</h3>
+<ul>
+<li>Wheel events carry momentum information, so applications can
+distinguish<br />
+trackpad inertial scrolling</li>
+<li>Soft navigation heuristics (measurable SPA transitions)</li>
+<li><code>TextStream</code> method, <code>UserMediaElement</code></li>
+<li>SVG <code>feImage</code> honours EXIF orientation</li>
+</ul>
+<h3 id="migration-notes--things-may-break-here">Migration notes — things
+may break here</h3>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Emphasis marks via ruby path</strong></td>
+<td>Line height and total line count may change in documents using
+them</td>
+</tr>
+<tr>
+<td><code>readyState</code> of
+<code>document.implementation.createHTMLDocument()</code></td>
+<td>The state right after creation now follows the specification</td>
+</tr>
+<tr>
+<td>Nested popover <code>hint</code></td>
+<td>Showing one nested now throws</td>
+</tr>
+<tr>
+<td><code>getComputedStyle</code> outside the flat tree</td>
+<td>Off by default</td>
+</tr>
+<tr>
+<td>Sub Apps API</td>
+<td>Removed</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2
+id="where-japanese-typography-stands--the-five-versions-at-a-glance">Where
+Japanese typography stands — the five versions at a glance</h2>
+<p>Given that BlinkGTK is used mainly for Japanese vertical-writing
+e-books, here are the<br />
+relevant items alone. <strong>A dash means the item did not exist in
+that version.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>147</th>
+<th>148</th>
+<th>149</th>
+<th>150</th>
+<th>151</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ruby overhang (<code>ruby-overhang</code>)</td>
+<td>exp.</td>
+<td>exp.</td>
+<td>exp.</td>
+<td>exp.</td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td>Emphasis marks via ruby path</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td><code>text-autospace</code> ignores ruby</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td>Break after space before open tag</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td>Annotation space on start</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>exp.</td>
+</tr>
+<tr>
+<td><code>text-box-trim</code> in nested lists</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td>Full-width space offset mapping fix</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td>Caret movement across ruby lines</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td>Underlines skip descenders</td>
+<td>exp.</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td>Hanging punctuation</td>
+<td>—</td>
+<td>—</td>
+<td>property only (in dev.)</td>
+<td>same</td>
+<td>same</td>
+</tr>
+<tr>
+<td>Vertical multi-column fragmentation (BlinkGTK)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>exp.</td>
+<td>exp.</td>
+</tr>
+</tbody>
+</table>
+<p>Two things follow.</p>
+<p>First, <strong>ruby and emphasis marks advanced sharply in
+151</strong>. <code>ruby-overhang</code>, held in<br />
+experimental status for four versions, became the default, and the
+emphasis mark<br />
+implementation was reorganised. If you are building a vertical-writing
+reader, a<br />
+151-based BlinkGTK is distinctly worth having.</p>
+<p>Second, <strong>hanging punctuation has not arrived</strong>. The
+property was provided in 149, but the<br />
+implementation is still in development as of 151. Full JLReq conformance
+needs this one<br />
+move, and BlinkGTK continues to track it.</p>
+<p>The last row is a feature upstream Chromium does not have —
+fragmentation for multi-column<br />
+layout in vertical writing mode, which BlinkGTK adds itself. Receiving
+from Chromium is<br />
+not the whole story; where something is missing, we fill it in.</p>
+<hr />
+<h2 id="sources-and-how-this-diff-was-taken">Sources, and how this diff
+was taken</h2>
+<p>To keep speculation out, everything here was extracted mechanically
+from the engine source<br />
+trees. Anyone can reproduce it.</p>
+<table>
+<thead>
+<tr>
+<th>What we read</th>
+<th>File</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Feature flags and their default state</td>
+<td><code>third_party/blink/renderer/platform/runtime_enabled_features.json5</code></td>
+</tr>
+<tr>
+<td>The CSS property list</td>
+<td><code>third_party/blink/renderer/core/css/css_properties.json5</code></td>
+</tr>
+</tbody>
+</table>
+<p>For each version we parsed these two files into a feature-name →
+state map and diffed<br />
+adjacent versions. Every count quoted above — newly-default, added,
+removed — is an actual<br />
+figure from that diff.</p>
+<p>Inferring meaning from a feature name invites error, so <strong>items
+we could not confirm are<br />
+not in this document</strong>. That is why the counts exceed the number
+of items described.</p>
+<hr />
+<h2 id="related-documents">Related documents</h2>
+<ul>
+<li><a href="version-history-en.html">BlinkGTK version history</a> — which
+BlinkGTK maps to which Chromium</li>
+<li><a href="RELEASE_NOTES-1.1.0-en.html">Release notes</a></li>
+<li><a href="building-with-blinkgtk-en.html">Building with
+BlinkGTK</a></li>
+</ul>
+</body>
+</html>
+</div></div>

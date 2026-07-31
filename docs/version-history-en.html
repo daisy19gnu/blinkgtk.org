@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Version History — BlinkGTK and Chromium Versions —
+BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Which BlinkGTK release is built on which Chromium. To find out when a feature became available, first check which Chromium version introduced it in Chromium 147">
+<link rel="canonical" href="https://blinkgtk.org/docs/version-history-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK Version History — BlinkGTK and Chromium Versions — BlinkGTK">
+<meta property="og:description" content="Which BlinkGTK release is built on which Chromium. To find out when a feature became available, first check which Chromium version introduced it in Chromium 147">
+<meta property="og:url" content="https://blinkgtk.org/docs/version-history-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/version-history-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/version-history-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/version-history-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1
+id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
+Version History — BlinkGTK and Chromium Versions</h1>
+<p>Version: 1.1.0-build6 / Language: English | <a
+href="version-history-ja.html">日本語</a></p>
+<p>Which BlinkGTK release is built on which Chromium. To find out when a
+feature became<br />
+available, first check which Chromium version introduced it in<br />
+<a href="chromium-feature-history-en.html">Chromium 147 → 151</a>, then
+look up the corresponding<br />
+BlinkGTK release here.</p>
+<hr />
+<h2 id="the-table">The table</h2>
+<!-- VERSION_HISTORY_TABLE_START (gen-version-history.sh が生成。手で編集しない) -->
+
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>Released</th>
+<th>Chromium</th>
+<th>What happened in this release</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v1.1.0-build6</strong> ← current</td>
+<td>2026-07-29</td>
+<td><strong>150.0.7871.46</strong></td>
+<td>Bundled documentation corrected throughout, with machine checks that
+documentation matches the implementation</td>
+</tr>
+<tr>
+<td>v1.1.0-build5</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>Bundled samples consolidated into one. Superseded by build6
+(withdrawn)</td>
+</tr>
+<tr>
+<td>v1.1.0-build4</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>UA / cookie / permission APIs added. Superseded by build5
+(withdrawn)</td>
+</tr>
+<tr>
+<td>v1.1.0-build3</td>
+<td>2026-07-23</td>
+<td>150.0.7871.46</td>
+<td>RPM dependency names corrected to Fedora's naming (reported by a
+user)</td>
+</tr>
+<tr>
+<td>v1.1.0-build2</td>
+<td>2026-07-21</td>
+<td>150.0.7871.46</td>
+<td>Idle CPU usage brought to zero; blank-page issue on font-size change
+resolved</td>
+</tr>
+<tr>
+<td><strong>v1.1.0-build1</strong></td>
+<td>2026-07-07</td>
+<td><strong>150.0.7871.46</strong></td>
+<td>Distribution reshaped (runtime / development / GObject Introspection
+split). Vertical multi-column fragmentation, wheel scrolling, input
+after navigation</td>
+</tr>
+<tr>
+<td><strong>v1.0.11-dev</strong></td>
+<td>2026-06</td>
+<td><strong>148.0.7778.167</strong></td>
+<td>Moved to Chromium 148 (also tracking 149). Linking requirements for
+embedding applications settled</td>
+</tr>
+<tr>
+<td><strong>v1.0.10-build16</strong></td>
+<td>2026-05-16</td>
+<td><strong>147.0.7727.55</strong></td>
+<td>Rendering regressions removed; quality confirmed on real
+hardware</td>
+</tr>
+<tr>
+<td>v1.0.10</td>
+<td>2026-04-21</td>
+<td>147.0.7727.55</td>
+<td>Stabilisation</td>
+</tr>
+<tr>
+<td>v1.0.9</td>
+<td>2026-04-18</td>
+<td>147.0.7727.55</td>
+<td>Consumer-facing polish; reported defects resolved in one pass</td>
+</tr>
+<tr>
+<td>v1.0.8</td>
+<td>2026-04-14</td>
+<td>147.0.7727.55</td>
+<td>Language bindings unified, API strengthened</td>
+</tr>
+<tr>
+<td>v1.0.7</td>
+<td>2026-04-13</td>
+<td>147.0.7727.55</td>
+<td>Input method (IME) fixes</td>
+</tr>
+<tr>
+<td><strong>v1.0.6</strong></td>
+<td>2026-04-12</td>
+<td><strong>147.0.7727.55</strong></td>
+<td>Moved to Chromium 147</td>
+</tr>
+<tr>
+<td>v1.0.5</td>
+<td>2026-04-10</td>
+<td>146.0.7680.177</td>
+<td>Tracked the Chromium 146 update</td>
+</tr>
+<tr>
+<td>v1.0.3</td>
+<td>2026-04-07</td>
+<td>146.0.7680.71</td>
+<td>Improved font rendering on HiDPI</td>
+</tr>
+<tr>
+<td>v1.0.2</td>
+<td>2026-04-07</td>
+<td>146.0.7680.71</td>
+<td>Per-WebView GPU mode API</td>
+</tr>
+<tr>
+<td>v1.0.1</td>
+<td>2026-04-03</td>
+<td>146.0.7680.71</td>
+<td>Bug fixes (no packages published)</td>
+</tr>
+<tr>
+<td><strong>v1.0.0</strong></td>
+<td>2026-04-03</td>
+<td><strong>146.0.7680.71</strong></td>
+<td>First stable release</td>
+</tr>
+<tr>
+<td>v1.0.0-rc1</td>
+<td>2026-03-18</td>
+<td>145 (estimated)</td>
+<td>Release candidate</td>
+</tr>
+</tbody>
+</table>
+<!-- VERSION_HISTORY_TABLE_END -->
+
+<p>Two notes. <strong>v1.0.4 was skipped</strong> (v1.0.3 is followed by
+v1.0.5). And <strong>v1.1.0-build4 and<br />
+build5 have been withdrawn</strong>, superseded by build6. Withdrawn
+releases are not deleted from<br />
+this history: being able to trace which release you were running matters
+more.</p>
+<hr />
+<h2 id="looking-up-by-chromium-version">Looking up by Chromium
+version</h2>
+<table>
+<thead>
+<tr>
+<th>Chromium</th>
+<th>BlinkGTK</th>
+<th>Period</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>145</td>
+<td>v1.0.0-rc1</td>
+<td>2026-03</td>
+</tr>
+<tr>
+<td>146</td>
+<td>v1.0.0 – v1.0.5</td>
+<td>2026-04-03 – 04-10</td>
+</tr>
+<tr>
+<td><strong>147</strong></td>
+<td>v1.0.6 – v1.0.10-build16</td>
+<td>2026-04-12 – 05-16</td>
+</tr>
+<tr>
+<td><strong>148 / 149</strong></td>
+<td>v1.0.11-dev</td>
+<td>2026-06</td>
+</tr>
+<tr>
+<td><strong>150</strong></td>
+<td>v1.1.0-build1 – build6</td>
+<td>2026-07-07 – 07-29</td>
+</tr>
+<tr>
+<td><strong>151</strong></td>
+<td>migration in progress</td>
+<td>2026-08 –</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="reading-the-version-number">Reading the version number</h2>
+<p><code>v1.1.0-build6</code> has two parts.</p>
+<ul>
+<li><strong><code>1.1.0</code></strong> — the product version. It rises
+on feature additions or incompatible changes</li>
+<li><strong><code>build6</code></strong> — how many times that product
+version has been rebuilt. It rises on defect<br />
+fixes and packaging corrections</li>
+</ul>
+<p>The same <code>1.1.0</code> with a different build number is
+different code. When reporting a defect,<br />
+please include <strong>the build number</strong>.</p>
+<p>Separately, the <strong><code>0.1</code></strong> that appears in
+package names and paths<br />
+(<code>libblinkgtk-0.1.so.0</code>,
+<code>/usr/share/doc/blinkgtk-0.1/</code>) is the API version and
+is<br />
+independent of the product version — the same convention as GTK4's
+<code>gtk-4.0</code> and<br />
+WebKitGTK's <code>webkitgtk-6.0</code>. It changes only on incompatible
+API revisions.</p>
+<hr />
+<h2 id="related-documents">Related documents</h2>
+<ul>
+<li><a href="chromium-feature-history-en.html">Chromium 147 → 151</a> —
+what each Chromium version brought</li>
+<li><a href="RELEASE_NOTES-1.1.0-en.html">Release notes</a></li>
+<li><a href="INSTALL.html">Installation</a></li>
+</ul>
+</body>
+</html>
+</div></div>
