@@ -1,0 +1,228 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.0-build1 リリースノート — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="リリース日: @RELEASE_DATE@ / Chromium: @CHROMIUM_VERSION@ / 言語: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.0-build1 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: @RELEASE_DATE@ / Chromium: @CHROMIUM_VERSION@ / 言語: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-120-build1-リリースノート">BlinkGTK 1.2.0-build1
+リリースノート</h1>
+<p><strong>リリース日</strong>: @RELEASE_DATE@ /
+<strong>Chromium</strong>: @CHROMIUM_VERSION@ / 言語: 日本語 | <a
+href="RELEASE_NOTES-1.2.0-en.html">English</a></p>
+<p>レンダリングエンジンを <strong>Chromium 151</strong>
+に更新しました。日本語の組版に直接効く変更が<br />
+まとまって入っています。とくに縦組みで圏点を使う文書は、<strong>版面が変わります</strong>。</p>
+<hr />
+<h2
+id="このリリースでできるようになったこと">このリリースでできるようになったこと</h2>
+<h3
+id="圏点を付けても行送りが太らない">圏点を付けても行送りが太らない</h3>
+<p>これまで、圏点(傍点)を付けた行だけ行の高さが広がっていました。JIS X
+4051 と JLReq は<br />
+圏点を行間に置き、行送りを変えないことを求めているので、規格とずれた状態でした。</p>
+<p>151
+で解消しています。縦組み、<code>font-size: 16px</code>、<code>text-emphasis-style: sesame</code>
+で<br />
+段落の実 pitch を測った値です。</p>
+<table>
+<thead>
+<tr>
+<th>行間の余裕</th>
+<th></th>
+<th>圏点なし</th>
+<th>圏点あり</th>
+<th>差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>あり</strong> (<code>line-height: 2.6</code> = 41.59px)</td>
+<td>旧</td>
+<td>41.59</td>
+<td>44.09</td>
+<td>+2.50</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>本版</strong></td>
+<td>41.59</td>
+<td><strong>41.59</strong></td>
+<td><strong>0</strong></td>
+</tr>
+<tr>
+<td><strong>なし</strong> (<code>line-height: 1.75</code> = 28px)</td>
+<td>旧</td>
+<td>28.00</td>
+<td>37.00</td>
+<td>+9.00</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>本版</strong></td>
+<td>28.00</td>
+<td><strong>30.00</strong></td>
+<td><strong>+2.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p>行間に余裕があれば太りません。余裕がない場合も +9.00 から +2.00
+に縮んでいます。</p>
+<p><strong>縦組みで圏点を多用する文書は、総ページ数が減ることがあります。</strong>
+良い方向の変化ですが、<br />
+ページ番号を固定している場合は確認してください。</p>
+<h3
+id="ルビのはみ出しが指定どおりに効く">ルビのはみ出しが指定どおりに効く</h3>
+<p><code>ruby-overhang</code>
+が既定で有効になりました。ルビ文字が親文字より長いとき、隣の文字の上へ<br />
+どこまではみ出してよいかを制御できます。はみ出しを許さない
+<code>none</code> も使えます。<br />
+JLReq
+がルビの掛け方について定めている部分に、エンジンが正面から対応した形です。</p>
+<h3
+id="和欧混植のアキがルビに乱されない">和欧混植のアキがルビに乱されない</h3>
+<p><code>text-autospace</code>
+による日本語と欧文のあいだの自動アキ調整が、ルビのテキストに<br />
+引きずられなくなりました。ルビ付きの本文で字間が不揃いになる問題が減ります。</p>
+<h3
+id="開きタグの直前で改行が寄らない">開きタグの直前で改行が寄らない</h3>
+<p><code>日本語 &lt;span&gt;語&lt;/span&gt;</code>
+のようなマークアップで、スペースの後に改行できるように<br />
+なりました。意図しない位置で行が折れる現象が減ります。</p>
+<h3 id="web-標準が-1-世代進んだ">Web 標準が 1 世代進んだ</h3>
+<p>Chromium 150 から 151 で、<strong>44
+の機能が新たに既定で有効</strong>になりました。角丸の論理方向指定、<br />
+<code>text-fit</code>、<code>focusgroup</code>、ホイールイベントの慣性情報などが含まれます。<br />
+版ごとの内訳は <a href="chromium-feature-history-ja.html">Chromium 147 →
+151 の新機能</a><br />
+にまとめています。</p>
+<hr />
+<h2
+id="移行時に確認していただきたいこと">移行時に確認していただきたいこと</h2>
+<p>Chromium
+側の仕様変更で、<strong>動作が変わる</strong>ものがあります。</p>
+<table>
+<thead>
+<tr>
+<th>変更</th>
+<th>影響</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>圏点の組版</strong></td>
+<td>行送りが変わるため、<strong>総ページ数・行数が変わりうる</strong></td>
+</tr>
+<tr>
+<td><code>document.implementation.createHTMLDocument()</code> の
+<code>readyState</code></td>
+<td>生成直後の状態が仕様準拠に変わりました</td>
+</tr>
+<tr>
+<td>ポップオーバー <code>hint</code> の入れ子表示</td>
+<td>入れ子で表示しようとすると例外を投げます</td>
+</tr>
+<tr>
+<td><code>getComputedStyle</code> のフラットツリー外要素</td>
+<td>既定で無効になりました</td>
+</tr>
+<tr>
+<td>Sub Apps API</td>
+<td>削除されました</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="動かすために必要なもの">動かすために必要なもの</h2>
+<ul>
+<li>Linux (Wayland)</li>
+<li>GTK 4.6 以降 / GLib 2.70 以降</li>
+<li>組み込みアプリは <strong>PartitionAlloc allocator shim
+を直接リンク</strong>してください。<br />
+<code>pkg-config --libs blinkgtk-0.1</code>
+を使えば自動的に含まれます。<br />
+<strong>この要件は 151
+でも継続します</strong>(本版のビルドで確認済み)。<br />
+詳細は <a
+href="consumer-integration-guide-ja.html">組み込み・統合ガイド</a>。</li>
+</ul>
+<hr />
+<h2 id="切り分け用のスイッチ">切り分け用のスイッチ</h2>
+<p>不具合の切り分けに使える環境変数です。<strong>通常の運用では設定しないでください。</strong></p>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_GPU_MODE=software</code> / <code>egl</code></td>
+<td>描画経路を選ぶ</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EMPHASIS_INLINE=0</code></td>
+<td>圏点の行間配置を切る (組版の比較検証用)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="版数について">版数について</h2>
+<p><code>1.2.0</code> は製品の版で、Chromium baseline が 150 から 151
+に変わったことを表します。<br />
+<code>build1</code>
+は同じ製品版のなかでの作り直しの回数です。不具合のご報告には<br />
+<strong>build 番号まで</strong>お知らせください。</p>
+<p>パッケージ名やパスに出てくる
+<code>0.1</code>(<code>libblinkgtk-0.1.so.0</code> など)は API
+の版で、<br />
+製品の版とは独立しています。GTK4 の <code>gtk-4.0</code>
+と同じ規約です。</p>
+<hr />
+<h2 id="連絡先">連絡先</h2>
+<ul>
+<li>不具合・要望: <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">https://github.com/daisy19gnu/blinkgtk-dist/issues</a></li>
+<li>問い合わせ: <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a></li>
+</ul>
+</body>
+</html>
+</div></div>

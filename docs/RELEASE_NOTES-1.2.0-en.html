@@ -1,0 +1,236 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.0-build1 Release Notes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Released: @RELEASE_DATE@ / Chromium: @CHROMIUM_VERSION@ / Language: English | 日本語">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.0-build1 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: @RELEASE_DATE@ / Chromium: @CHROMIUM_VERSION@ / Language: English | 日本語">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-120-build1-release-notes">BlinkGTK 1.2.0-build1 Release
+Notes</h1>
+<p><strong>Released</strong>: @RELEASE_DATE@ /
+<strong>Chromium</strong>: @CHROMIUM_VERSION@ / Language: English | <a
+href="RELEASE_NOTES-1.2.0-ja.html">日本語</a></p>
+<p>The rendering engine moves to <strong>Chromium 151</strong>. This
+release brings a cluster of changes<br />
+that act directly on Japanese typography. In particular, documents that
+use emphasis marks<br />
+in vertical writing mode <strong>will lay out differently</strong>.</p>
+<hr />
+<h2 id="what-you-can-do-now">What you can do now</h2>
+<h3 id="emphasis-marks-no-longer-grow-the-line-pitch">Emphasis marks no
+longer grow the line pitch</h3>
+<p>Until now, a line carrying emphasis marks (boten) grew taller than
+the rest. JIS X 4051<br />
+and JLReq require emphasis marks to sit in the leading without changing
+the line pitch, so<br />
+the behaviour was out of step with the standard.</p>
+<p>151 resolves it. Measured on a 151 build: vertical writing mode,
+<code>font-size: 16px</code>,<br />
+<code>text-emphasis-style: sesame</code>, reading the actual paragraph
+pitch.</p>
+<table>
+<thead>
+<tr>
+<th>Leading available</th>
+<th></th>
+<th>Without marks</th>
+<th>With marks</th>
+<th>Delta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Yes</strong> (<code>line-height: 2.6</code> = 41.59px)</td>
+<td>previous</td>
+<td>41.59</td>
+<td>44.09</td>
+<td>+2.50</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>this release</strong></td>
+<td>41.59</td>
+<td><strong>41.59</strong></td>
+<td><strong>0</strong></td>
+</tr>
+<tr>
+<td><strong>No</strong> (<code>line-height: 1.75</code> = 28px)</td>
+<td>previous</td>
+<td>28.00</td>
+<td>37.00</td>
+<td>+9.00</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>this release</strong></td>
+<td>28.00</td>
+<td><strong>30.00</strong></td>
+<td><strong>+2.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p>With room in the leading there is no growth at all. Without room,
+growth shrinks from<br />
++9.00 to +2.00.</p>
+<p><strong>Vertical documents that use emphasis marks heavily may end up
+with fewer pages.</strong><br />
+The change is for the better, but check anywhere you depend on fixed
+page numbers.</p>
+<h3 id="ruby-overhang-behaves-as-specified">Ruby overhang behaves as
+specified</h3>
+<p><code>ruby-overhang</code> is on by default. It controls how far ruby
+text may extend over<br />
+neighbouring base characters when the annotation is longer than what it
+annotates, and<br />
+<code>none</code> is available to forbid overhang. This is the engine
+meeting JLReq head-on on how<br />
+ruby may be placed.</p>
+<h3 id="automatic-spacing-is-no-longer-perturbed-by-ruby">Automatic
+spacing is no longer perturbed by ruby</h3>
+<p>Automatic spacing between Japanese and Latin text
+(<code>text-autospace</code>) is no longer thrown<br />
+off by ruby text, reducing uneven letter spacing in annotated body
+text.</p>
+<h3 id="line-breaking-no-longer-crowds-before-an-open-tag">Line breaking
+no longer crowds before an open tag</h3>
+<p>In markup such as <code>日本語 &lt;span&gt;語&lt;/span&gt;</code>, a
+break is now allowed after the space,<br />
+reducing breaks landing in unintended places.</p>
+<h3 id="one-generation-forward-on-web-standards">One generation forward
+on web standards</h3>
+<p>Between Chromium 150 and 151, <strong>44 features became enabled by
+default</strong>, including logical<br />
+corner properties, <code>text-fit</code>, <code>focusgroup</code>, and
+momentum information on wheel events.<br />
+A version-by-version breakdown is in<br />
+<a href="chromium-feature-history-en.html">Chromium 147 → 151</a>.</p>
+<hr />
+<h2 id="what-to-check-when-upgrading">What to check when upgrading</h2>
+<p>Some upstream changes <strong>alter behaviour</strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Change</th>
+<th>Impact</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Emphasis mark layout</strong></td>
+<td>Line pitch changes, so <strong>page and line counts can
+change</strong></td>
+</tr>
+<tr>
+<td><code>readyState</code> of
+<code>document.implementation.createHTMLDocument()</code></td>
+<td>The state right after creation now follows the specification</td>
+</tr>
+<tr>
+<td>Nested popover <code>hint</code></td>
+<td>Showing one nested now throws</td>
+</tr>
+<tr>
+<td><code>getComputedStyle</code> outside the flat tree</td>
+<td>Off by default</td>
+</tr>
+<tr>
+<td>Sub Apps API</td>
+<td>Removed</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="requirements">Requirements</h2>
+<ul>
+<li>Linux (Wayland)</li>
+<li>GTK 4.6 or later / GLib 2.70 or later</li>
+<li>Embedding applications must <strong>link the PartitionAlloc
+allocator shim directly</strong>.<br />
+Using <code>pkg-config --libs blinkgtk-0.1</code> includes it
+automatically.<br />
+<strong>This requirement continues on 151</strong> (verified on this
+build).<br />
+See the <a href="consumer-integration-guide-en.html">integration
+guide</a>.</li>
+</ul>
+<hr />
+<h2 id="switches-for-diagnosis">Switches for diagnosis</h2>
+<p>Environment variables useful for isolating a problem. <strong>Do not
+set these in normal use.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_GPU_MODE=software</code> / <code>egl</code></td>
+<td>Selects the rendering path</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EMPHASIS_INLINE=0</code></td>
+<td>Turns off in-leading placement of emphasis marks (for layout
+comparison)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="about-the-version-number">About the version number</h2>
+<p><code>1.2.0</code> is the product version; it reflects the Chromium
+baseline moving from 150 to 151.<br />
+<code>build1</code> counts rebuilds within that product version. When
+reporting a defect, please<br />
+include <strong>the build number</strong>.</p>
+<p>The <code>0.1</code> in package names and paths
+(<code>libblinkgtk-0.1.so.0</code> and so on) is the API version<br />
+and is independent of the product version — the same convention as
+GTK4's <code>gtk-4.0</code>.</p>
+<hr />
+<h2 id="contact">Contact</h2>
+<ul>
+<li>Defects and requests: <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">https://github.com/daisy19gnu/blinkgtk-dist/issues</a></li>
+<li>Enquiries: <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a></li>
+</ul>
+</body>
+</html>
+</div></div>
