@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>What BlinkGTK Is For — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="BlinkGTK is a component for building screens with web technology. Screens written in HTML, CSS and JavaScript are embedded in, and run inside, a Linux applicati">
+<link rel="canonical" href="https://blinkgtk.org/docs/use-cases-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="What BlinkGTK Is For — BlinkGTK">
+<meta property="og:description" content="BlinkGTK is a component for building screens with web technology. Screens written in HTML, CSS and JavaScript are embedded in, and run inside, a Linux applicati">
+<meta property="og:url" content="https://blinkgtk.org/docs/use-cases-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/use-cases-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/use-cases-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/use-cases-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="what-blinkgtk-is-for">What BlinkGTK Is For</h1>
+<p>Version: 1.1.0-build6 / Language: English | <a
+href="use-cases-ja.html">日本語</a></p>
+<p>BlinkGTK is a component for <strong>building screens with web
+technology</strong>. Screens written in<br />
+HTML, CSS and JavaScript are embedded in, and run inside, a Linux
+application.</p>
+<p>The screenshots we publish are of an e-book reader, which may make
+this look like a<br />
+library for reading Japanese books. That is one use. This document
+explains<br />
+<strong>which properties lead to which uses</strong>, working from
+features that actually exist.</p>
+<hr />
+<h2 id="four-properties-that-apply-regardless-of-use">Four properties
+that apply regardless of use</h2>
+<p>Before the use-by-use section, here is what applies across all of
+them. These four are<br />
+more useful for deciding "does this fit my case" than any list of
+markets.</p>
+<h3 id="1-it-works-without-a-network">1. It works without a network</h3>
+<p><code>blink_web_view_register_custom_scheme()</code> registers
+<strong>your own URL scheme</strong>. A URL like<br />
+<code>myapp://screen/main</code> is handed to a function in your
+application, which returns the<br />
+content — so <strong>content already on the device is served
+directly</strong>.</p>
+<p>No web server, no outbound connection. This matters for devices on
+closed networks, for<br />
+equipment operating out of radio coverage, and for environments where
+connectivity is<br />
+not permitted.</p>
+<h3 id="2-you-can-narrow-what-users-are-able-to-do">2. You can narrow
+what users are able to do</h3>
+<p><code>blink_web_view_set_content_policy()</code> disables individual
+operations on the page.</p>
+<table>
+<thead>
+<tr>
+<th>Constant</th>
+<th>Disables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_COPY</code></td>
+<td>Copying to the clipboard</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_SAVE</code></td>
+<td>Saving the page</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_PRINT</code></td>
+<td>Printing</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_CONTEXT_MENU</code></td>
+<td>The context menu</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_DEVTOOLS</code></td>
+<td>Developer tools</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_SELECTION</code></td>
+<td>Text selection</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_SCREENSHOT</code></td>
+<td>Screen capture</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_DRAG</code></td>
+<td>Extraction by dragging</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>BLINK_CONTENT_POLICY_KIOSK</code></strong> applies them
+together. It answers the problem of<br />
+"browser features" surfacing on a device the general public touches.</p>
+<p><code>blink_web_view_set_javascript_dialog_handler()</code> lets the
+application <strong>intercept and<br />
+replace</strong> <code>alert()</code> and <code>confirm()</code> raised
+by the page — so an unattended device does not<br />
+stall behind a dialog nobody can dismiss.</p>
+<h3 id="3-it-can-own-the-screen-and-adapt-to-viewing-distance">3. It can
+own the screen, and adapt to viewing distance</h3>
+<p><code>blink_web_view_set_fullscreen_handler()</code> and
+<code>blink_web_view_is_fullscreen()</code> control<br />
+fullscreen presentation. <code>blink_web_view_set_zoom_level()</code>
+changes the display scale, so<br />
+<strong>the same content can serve both a screen read from a distance
+and one operated by hand</strong>.</p>
+<h3 id="4-use-it-from-the-language-you-already-use">4. Use it from the
+language you already use</h3>
+<p>The C API is exposed as GObject, and GObject Introspection typelibs
+(<code>.gir</code> / <code>.typelib</code>)<br />
+ship with the distribution. <strong>Python (PyGObject), Rust, C++,
+JavaScript (GJS), Vala and<br />
+Go</strong> can call the same API with no extra binding layer.</p>
+<hr />
+<h2 id="by-use">By use</h2>
+<h3 id="wayfinding-signage-ticketing-terminals">Wayfinding, signage,
+ticketing terminals</h3>
+<p>On a device the public touches, the requirement is that <strong>the
+screen does not leave the<br />
+state you intended</strong>. Close operations off with
+<code>BLINK_CONTENT_POLICY_KIOSK</code>, take the<br />
+screen fullscreen, and serve on-device content through a custom scheme —
+the pieces map<br />
+directly.</p>
+<p>Authoring the display in HTML also helps upkeep: changing what is
+shown is a content<br />
+swap, not an application rebuild.</p>
+<h3 id="automotive-infotainment-navigation">Automotive (infotainment,
+navigation)</h3>
+<p>In-vehicle screens must <strong>keep working when connectivity
+drops</strong>. Serving from the device<br />
+through a custom scheme means display still succeeds out of coverage.
+Scale control suits<br />
+switching between at-distance legibility while moving and close-up
+operation when parked.</p>
+<p>Both GPU and software rendering paths exist, which leaves room to run
+on automotive SoCs<br />
+with constrained GPU configurations. <strong>Verification on the actual
+hardware is essential</strong><br />
+— the rendering path depends on the hardware and compositor
+combination.</p>
+<h3 id="iot--wot-control-screens">IoT / WoT control screens</h3>
+<p>Authoring a device's control panel in HTML means <strong>the same
+screen can serve both on the<br />
+device and in a browser at hand</strong>. BlinkGTK covers the on-device
+side.</p>
+<p>There is a path from JavaScript into your C code
+(<code>blink_web_view_execute_javascript()</code><br />
+and script injection), so the web screen can be wired to hardware
+control.</p>
+<h3 id="medical-and-measurement-equipment">Medical and measurement
+equipment</h3>
+<p>To be clear first: <strong>BlinkGTK cannot warrant conformance as a
+medical device</strong>.<br />
+Regulatory compliance belongs to whoever builds the equipment. What
+follows is only<br />
+<strong>which features answer requirements</strong> commonly seen in
+that field.</p>
+<table>
+<thead>
+<tr>
+<th>Common requirement</th>
+<th>Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Never reach an external network</td>
+<td>On-device delivery via custom scheme</td>
+</tr>
+<tr>
+<td>Restrict operations (guard against mistakes)</td>
+<td>Per-operation content policy</td>
+</tr>
+<tr>
+<td>Record what was displayed</td>
+<td><code>blink_web_view_capture_screenshot()</code></td>
+</tr>
+<tr>
+<td>Reproducibility of the display</td>
+<td>Version obtainable at runtime and recordable</td>
+</tr>
+</tbody>
+</table>
+<p>For visualising measurement data or GUIs for research instruments —
+outside regulatory<br />
+scope, where the need is simply "render graphs and tables well" — it is
+straightforward.</p>
+<h3 id="publishing-and-japanese-typography">Publishing and Japanese
+typography</h3>
+<p>This is where we have the most experience today. Vertical writing,
+ruby, emphasis marks,<br />
+combined upright text and line-breaking rules are handled by Chromium's
+rendering engine<br />
+as-is.</p>
+<p>What works and what does not is documented version by version, with
+measurements, in<br />
+<a href="chromium-feature-history-en.html">Chromium 147 → 151</a>. In
+Chromium 151, for instance,<br />
+<strong>emphasis marks no longer grow the line pitch</strong> when the
+leading has room.</p>
+<hr />
+<h2 id="first-public-appearance">First public appearance</h2>
+<p>BlinkGTK was first shown publicly at <strong>Interop Tokyo 2026
+(Makuhari Messe)</strong>.</p>
+<hr />
+<h2 id="tell-us-your-use">Tell us your use</h2>
+<p>The above explains "these features exist, so these uses should fit" —
+it is<br />
+<strong>not a list of deployments</strong>. If you have built something
+with BlinkGTK, please send<br />
+screenshots to the<br />
+<a href="https://github.com/daisy19gnu/blinkgtk-dist/issues/2">call for
+submissions</a>.<br />
+What belongs here is what is actually running, not what we imagine.</p>
+<hr />
+<h2 id="related-documents">Related documents</h2>
+<ul>
+<li><a href="building-with-blinkgtk-en.html">Building with
+BlinkGTK</a></li>
+<li><a href="consumer-integration-guide-en.html">Integration
+guide</a></li>
+<li><a href="ENGINE_COMPARISON_DETAILED-en.html">Engine comparison — vs
+WebKitGTK and CEF</a></li>
+</ul>
+</body>
+</html>
+</div></div>
