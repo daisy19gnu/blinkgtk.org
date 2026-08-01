@@ -24,7 +24,7 @@
 
 ## 深く知る
 - [エンジン比較 (WebKitGTK / CEF / Electron との違い)](https://blinkgtk.org/docs/ENGINE_COMPARISON_DETAILED-ja.html)
-- [リリースノート](https://blinkgtk.org/docs/RELEASE_NOTES-1.1.0-ja.html)
+- [リリースノート](https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html)
 
 ## 連絡先
 - 不具合・要望: https://github.com/daisy19gnu/blinkgtk-dist/issues
