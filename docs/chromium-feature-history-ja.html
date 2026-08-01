@@ -320,8 +320,59 @@ v1.1.0 の土台になった版です。</p>
 話に見えますが、<strong>組版結果が変わります</strong>。従来は圏点を付けると行の高さそのものが<br />
 広がっていましたが、151 では行の高さは <code>line-height</code>
 のまま保たれ、<br />
-必要なぶんは外側のコンテナが伸びます。縦組みで圏点を多用する文書では、<br />
-<strong>版面の行数が変わる</strong>ことがあるので、既存レイアウトの確認をおすすめします。</p>
+必要なぶんは外側のコンテナが伸びます。</p>
+<p>この変更の効き方を、151
+のビルドで実測しました。縦組み、<code>font-size: 16px</code>、<br />
+<code>text-emphasis-style: sesame</code> で、段落の実 pitch
+を測った値です。</p>
+<table>
+<thead>
+<tr>
+<th>行間の余裕</th>
+<th></th>
+<th>圏点なし</th>
+<th>圏点あり</th>
+<th>差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>あり</strong> (<code>line-height: 2.6</code> = 41.59px)</td>
+<td>150</td>
+<td>41.59</td>
+<td>44.09</td>
+<td>+2.50</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>151</strong></td>
+<td>41.59</td>
+<td><strong>41.59</strong></td>
+<td><strong>0</strong></td>
+</tr>
+<tr>
+<td><strong>なし</strong> (<code>line-height: 1.75</code> = 28px)</td>
+<td>150</td>
+<td>28.00</td>
+<td>37.00</td>
+<td>+9.00</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>151</strong></td>
+<td>28.00</td>
+<td><strong>30.00</strong></td>
+<td><strong>+2.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>行間に余裕があれば、圏点で行送りが太らなくなりました。</strong>
+余裕がない場合も、<br />
+150 の +9.00 から +2.00
+へ縮んでいます。縦組みで圏点を多用する日本語文書では、<br />
+<strong>版面の行数が変わり、総ページ数が減る</strong>ことがあります。既存レイアウトの確認を<br />
+おすすめするのはそのためです
+(良い方向の変化ですが、変化は変化です)。</p>
 <p><strong><code>text-autospace</code>
 がルビ注記を無視するようになりました</strong>。和欧混植の自動アキ調整が、<br />
 ルビのテキストに引きずられて本文の字間を乱すことがなくなります。</p>
@@ -527,6 +578,48 @@ BlinkGTK はここを継続課題として追っています。</p>
 </tr>
 </tbody>
 </table>
+<p>さらに、151 については <strong>BlinkGTK
+のビルドで実際にどうなっているか</strong>を確認しています。<br />
+上流の宣言が <code>stable</code>
+でも、ビルド構成によって最終的な既定値は変わりうるためです。<br />
+下表は、生成されたコード (<code>runtime_enabled_features.cc</code>)
+から読んだ実際の初期値です。</p>
+<table>
+<thead>
+<tr>
+<th>機能</th>
+<th>BlinkGTK 151 ビルドの既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ルビのはみ出し (<code>CSSRubyOverhang</code>)</td>
+<td><strong>有効</strong></td>
+</tr>
+<tr>
+<td>圏点をルビ経路で処理 (<code>TextEmphasisAsRuby</code>)</td>
+<td><strong>有効</strong></td>
+</tr>
+<tr>
+<td><code>text-autospace</code> がルビ注記を無視</td>
+<td><strong>有効</strong></td>
+</tr>
+<tr>
+<td>開きタグ前スペース後の改行</td>
+<td><strong>有効</strong></td>
+</tr>
+<tr>
+<td>ぶら下げ (<code>CSSHangingPunctuation</code>)</td>
+<td><strong>無効</strong></td>
+</tr>
+<tr>
+<td>縦組み多段の分割 (BlinkGTK 独自)</td>
+<td>無効 (要求時のみ有効)</td>
+</tr>
+</tbody>
+</table>
+<p>本文の記述はこの実測と一致しています。ぶら下げが使えないと書いたのは、<br />
+上流の宣言だけでなく<strong>実際のビルドでも無効</strong>だからです。</p>
 <p>各版のツリーからこの 2 ファイルを解析して「機能名 →
 状態」の対応表を作り、<br />
 隣り合う版どうしで差を取っています。本文で挙げた件数(既定で有効になった数、<br />

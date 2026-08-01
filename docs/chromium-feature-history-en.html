@@ -341,10 +341,61 @@ internal detail, but <strong>the typeset result changes</strong>.
 Previously, adding emphasis marks<br />
 grew the line box itself; in 151 the line box stays at
 <code>line-height</code> and the outer<br />
-container grows instead. In vertical documents that use emphasis marks
-heavily,<br />
-<strong>the number of lines in the text block can change</strong> —
-verify existing layouts.</p>
+container grows instead.</p>
+<p>We measured the effect on a 151 build: vertical writing mode,
+<code>font-size: 16px</code>,<br />
+<code>text-emphasis-style: sesame</code>, reading the actual paragraph
+pitch.</p>
+<table>
+<thead>
+<tr>
+<th>Leading available</th>
+<th></th>
+<th>Without marks</th>
+<th>With marks</th>
+<th>Delta</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Yes</strong> (<code>line-height: 2.6</code> = 41.59px)</td>
+<td>150</td>
+<td>41.59</td>
+<td>44.09</td>
+<td>+2.50</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>151</strong></td>
+<td>41.59</td>
+<td><strong>41.59</strong></td>
+<td><strong>0</strong></td>
+</tr>
+<tr>
+<td><strong>No</strong> (<code>line-height: 1.75</code> = 28px)</td>
+<td>150</td>
+<td>28.00</td>
+<td>37.00</td>
+<td>+9.00</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>151</strong></td>
+<td>28.00</td>
+<td><strong>30.00</strong></td>
+<td><strong>+2.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Given room in the leading, emphasis marks no longer grow the
+line pitch.</strong> Without<br />
+room, the growth shrinks from +9.00 in 150 to +2.00. In Japanese
+vertical documents that<br />
+use emphasis marks heavily, <strong>the line count of the text block can
+change, and total page<br />
+count can drop</strong>. That is why we suggest verifying existing
+layouts — the change is for<br />
+the better, but it is still a change.</p>
 <p><strong><code>text-autospace</code> now ignores ruby
 annotations</strong>, so automatic spacing between Latin and<br />
 Japanese is no longer perturbed by ruby text.</p>
@@ -560,6 +611,50 @@ trees. Anyone can reproduce it.</p>
 </tr>
 </tbody>
 </table>
+<p>For 151 we went further and checked <strong>what a BlinkGTK build
+actually does</strong>. Upstream may<br />
+declare a feature <code>stable</code> while the final default still
+depends on build configuration.<br />
+The table below is read from the generated code
+(<code>runtime_enabled_features.cc</code>).</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Default in the BlinkGTK 151 build</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Ruby overhang (<code>CSSRubyOverhang</code>)</td>
+<td><strong>on</strong></td>
+</tr>
+<tr>
+<td>Emphasis marks via ruby path (<code>TextEmphasisAsRuby</code>)</td>
+<td><strong>on</strong></td>
+</tr>
+<tr>
+<td><code>text-autospace</code> ignores ruby annotations</td>
+<td><strong>on</strong></td>
+</tr>
+<tr>
+<td>Break after space before open tag</td>
+<td><strong>on</strong></td>
+</tr>
+<tr>
+<td>Hanging punctuation (<code>CSSHangingPunctuation</code>)</td>
+<td><strong>off</strong></td>
+</tr>
+<tr>
+<td>Vertical multi-column fragmentation (BlinkGTK)</td>
+<td>off (opt-in)</td>
+</tr>
+</tbody>
+</table>
+<p>The prose above matches these measurements. We say hanging
+punctuation is unusable<br />
+because it is off <strong>in the actual build</strong>, not merely by
+upstream declaration.</p>
 <p>For each version we parsed these two files into a feature-name →
 state map and diffed<br />
 adjacent versions. Every count quoted above — newly-default, added,
