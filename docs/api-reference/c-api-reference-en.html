@@ -574,6 +574,30 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 
 <!-- generated: regenerate with python3 release/scripts/gen-api-function-index.py -->
 
+<h2 id="internal-and-deprecated-apis">Internal and deprecated APIs</h2>
+<p>The following are for internal use or are being retired.</p>
+<h3 id="removed-gobject-to-c-mapping-helpers">(Removed) GObject-to-C++
+mapping helpers</h3>
+<p>Two functions that once existed for internal bookkeeping have
+<strong>already been<br />
+removed</strong>; they are absent from both the public header and
+<code>libblinkgtk.so</code><br />
+(confirmed by machine comparison on 2026-07-28). Calling them produces a
+link<br />
+error. They were never APIs for consumers to use.</p>
+<h3 id="blink_web_view_load_url">blink_web_view_load_url()</h3>
+<p><strong>Deprecated</strong> — carries
+<code>G_DEPRECATED_FOR(blink_web_view_load_uri)</code>.<br />
+Use <code>blink_web_view_load_uri()</code> instead.</p>
+<p>From v1.1.0 onward the compiler emits a deprecation warning.</p>
+<h3 id="blink_web_view_get_url">blink_web_view_get_url()</h3>
+<p><strong>Deprecated</strong> — carries
+<code>G_DEPRECATED_FOR(blink_web_view_get_uri)</code>.<br />
+Use <code>blink_web_view_get_uri()</code> instead.</p>
+<p>From v1.1.0 onward the compiler emits a deprecation warning.</p>
+<h3 id="blink_web_view_queue_draw">blink_web_view_queue_draw()</h3>
+<p>Queues a redraw of the widget (internal use).</p>
+<hr />
 <h2 id="complete-function-index">Complete function index</h2>
 <p>The complete list of public functions in <code>blink_gtk.h</code> (90
 functions, generated from the header). Functions with a<br />
