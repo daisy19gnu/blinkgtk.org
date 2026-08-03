@@ -43,7 +43,7 @@
 </div><div class="card doc">
 <h1 id="chromium-147--151--what-blinkgtk-gained">Chromium 147 → 151 —
 What BlinkGTK Gained</h1>
-<p>Version: 1.2.0-build1 / Language: English | <a
+<p>Version: 1.2.0-build2 / Language: English | <a
 href="chromium-feature-history-ja.html">日本語</a></p>
 <p>BlinkGTK embeds Chromium's rendering engine, Blink, as-is. When
 Chromium gains a new<br />
@@ -104,6 +104,21 @@ implementation flag is still <code>test</code><br />
 as of 151, so <strong>it does not affect line layout</strong>. "The
 property exists" and<br />
 "the typesetting changes" are two different events.</p>
+<p>Measured, this mismatch shows up in a way that <strong>lies to
+feature detection</strong><br />
+(BlinkGTK v1.2.0 / Chromium 151):</p>
+<pre><code>without the flag                                   -&gt; CSS.supports(...) = false
+with --enable-blink-features=CSSHangingPunctuation -&gt; CSS.supports(...) = true
+                                                      getComputedStyle = &quot;allow-end&quot;</code></pre>
+<p><strong><code>CSS.supports()</code> returns true, yet line layout
+does not change by a single pixel.</strong><br />
+With a container exactly eight characters wide holding "eight characters
++ a full stop",<br />
+hanging would keep it on one line — but both <code>none</code> and
+<code>allow-end</code> produce <strong>two lines</strong>.</p>
+<p>So <code>CSS.supports('hanging-punctuation', ...)</code> is not a
+usable feature check here.<br />
+Design your pages as if the feature does not exist yet.</p>
 <hr />
 <h2 id="the-shape-of-it">The shape of it</h2>
 <p>Across five versions, the engine's feature flags grew from 1,103 to

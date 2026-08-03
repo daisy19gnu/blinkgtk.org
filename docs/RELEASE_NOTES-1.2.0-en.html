@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build1 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.0-build2 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -21,13 +21,78 @@
       vertical-align: middle;
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Released: 2026-08-02 / Chromium: 151.0.7922.71 / Language: English | 日本語">
+<meta name="description" content="Released: 2026-08-04 / Chromium: 151.0.7922.71 / Language: English | 日本語">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build1 Release Notes — BlinkGTK">
-<meta property="og:description" content="Released: 2026-08-02 / Chromium: 151.0.7922.71 / Language: English | 日本語">
+<meta property="og:title" content="BlinkGTK 1.2.0-build2 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-08-04 / Chromium: 151.0.7922.71 / Language: English | 日本語">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -41,9 +106,9 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build1-release-notes">BlinkGTK 1.2.0-build1 Release
+<h1 id="blinkgtk-120-build2-release-notes">BlinkGTK 1.2.0-build2 Release
 Notes</h1>
-<p><strong>Released</strong>: 2026-08-02 / <strong>Chromium</strong>:
+<p><strong>Released</strong>: 2026-08-04 / <strong>Chromium</strong>:
 151.0.7922.71 / Language: English | <a
 href="RELEASE_NOTES-1.2.0-ja.html">日本語</a></p>
 <p>The rendering engine moves to <strong>Chromium 151</strong>. This
@@ -51,6 +116,79 @@ release brings a cluster of changes<br />
 that act directly on Japanese typography. In particular, documents that
 use emphasis marks<br />
 in vertical writing mode <strong>will lay out differently</strong>.</p>
+<hr />
+<h2 id="new-in-build2">New in build2</h2>
+<h3 id="the-engine-reports-its-real-version">The engine reports its real
+version</h3>
+<p><code>navigator.userAgent</code> now reflects the engine actually in
+use.</p>
+<pre><code>before: BlinkGTK/0.1.0 Chrome/143.0.0.0
+now:    BlinkGTK/1.2.0 Chrome/151.0.0.0</code></pre>
+<p>It used to be a fixed string that never followed engine upgrades, so
+the UA<br />
+claimed a version <strong>eight majors old</strong>. That is not
+"claiming an old version to<br />
+be safe" — it is the kind of error that makes sites decide a feature
+is<br />
+<strong>absent when it is present</strong>. Pages that branch on version
+detection could<br />
+behave differently.</p>
+<p>The version now comes from the <strong>same single source</strong>
+as<br />
+<code>blink_gtk_get_version()</code> /
+<code>blink_gtk_get_chromium_version()</code>, so the UA and<br />
+the C API can no longer disagree.</p>
+<h3 id="vertical-layout-metrics-readable-from-javascript">Vertical
+layout metrics readable from JavaScript</h3>
+<p>For vertical multicol layout, page JavaScript can now read
+<strong>the values the<br />
+engine actually used</strong>, instead of inferring line pitch and
+column boundaries<br />
+from client rects.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// -&gt; { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">//      lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
+<p><code>columnIndex</code> is <strong>the engine's own fragmentainer
+index</strong>, not the result of a<br />
+coordinate comparison. A line sitting exactly on a boundary cannot be
+assigned<br />
+to the wrong column.</p>
+<p>Requires
+<code>--enable-blink-features=CJKVerticalColumnFragmentation</code> at
+startup.<br />
+When it is off, <code>window.__blinkgtk</code> is not created at all, so
+<code>typeof</code> works as<br />
+a feature check.</p>
+<p><strong>Current limitation</strong>: the element you pass must itself
+be both vertical<br />
+writing mode and a multicol container. A <strong>two-layer
+structure</strong> — a horizontal<br />
+multicol outer box with a vertical inner box — <strong>returns
+<code>null</code></strong>. Support for<br />
+that shape lands in the next build.</p>
+<h3 id="documentation-samples-work-as-written">Documentation samples
+work as written</h3>
+<p><strong>28 C / C++ samples in the bundled documentation did not
+display a page</strong> when<br />
+written exactly as shown. <code>g_application_run()</code> does not run
+Chromium's browser<br />
+main loop; the code compiles and starts, which is what made it hard to
+notice.</p>
+<p>They are corrected — including the QUICKSTART that readers see first
+— and a<br />
+gate now detects the pattern.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* not g_application_run() */</span></span></code></pre></div>
+<h3 id="the-local-emphasis-mark-patch-is-gone">The local emphasis-mark
+patch is gone</h3>
+<p>The emphasis-mark patch carried in the v1.1 series has been removed,
+and<br />
+behaviour is now <strong>whatever Chromium 151 does</strong>. Upstream
+solved the same<br />
+problem in 151, so carrying a local change no longer helped. See<br />
+"Emphasis marks no longer thicken the line pitch" below.</p>
 <hr />
 <h2 id="what-you-can-do-now">What you can do now</h2>
 <h3 id="emphasis-marks-no-longer-grow-the-line-pitch">Emphasis marks no

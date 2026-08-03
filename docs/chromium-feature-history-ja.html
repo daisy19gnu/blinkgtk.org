@@ -43,7 +43,7 @@
 </div><div class="card doc">
 <h1 id="chromium-147--151--blinkgtk-に何が増えたか">Chromium 147 → 151 —
 BlinkGTK に何が増えたか</h1>
-<p>バージョン: 1.2.0-build1 / 言語: 日本語 | <a
+<p>バージョン: 1.2.0-build2 / 言語: 日本語 | <a
 href="chromium-feature-history-en.html">English</a></p>
 <p>BlinkGTK は Chromium のレンダリングエンジン Blink
 をそのまま載せています。つまり<br />
@@ -98,6 +98,21 @@ href="chromium-feature-history-en.html">English</a></p>
 の時点でも <code>test</code> のままで、<br />
 <strong>実際の行組版には効きません</strong>。「プロパティが存在する」ことと「組版が変わる」ことは<br />
 別の出来事です。</p>
+<p>実際に測ると、この食い違いは
+<strong>機能検出のコードを裏切る形</strong>で出ます<br />
+(BlinkGTK v1.2.0 / Chromium 151 実測):</p>
+<pre><code>フラグなし                                        → CSS.supports(...) = false
+--enable-blink-features=CSSHangingPunctuation で  → CSS.supports(...) = true
+                                                     getComputedStyle = &quot;allow-end&quot;</code></pre>
+<p><strong><code>CSS.supports()</code> が true を返しますが、行組版は
+1px も変わりません。</strong><br />
+版面をちょうど本文 8 字幅にして「本文 8 字 +
+句点」を流すと、ぶら下げが効けば<br />
+1 行に収まるはずのところ、<code>none</code> でも <code>allow-end</code>
+でも <strong>2 行のまま</strong>でした。</p>
+<p>つまり <code>CSS.supports('hanging-punctuation', ...)</code>
+を機能検出に使うと外します。<br />
+現時点では「使えない」前提で版面を組んでください。</p>
 <hr />
 <h2 id="全体像">全体像</h2>
 <p>5 つの版で、エンジンが持つ機能フラグは 1,103 → 1,214
