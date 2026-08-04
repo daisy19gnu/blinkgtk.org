@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="スレッド安全性・NULL ガード・メモリ管理などの共通ポリシーと、公開ヘッダの 全関数索引（ヘッダから機械生成、全 90 種）をまとめたページです。 個々の API の使い方と完全なコード例は機能別のページに、 目的から関数を探すには逆引きリファレンスにあります。 記載されている API が配布物のヘッダと共有ライブラ">
+<meta name="description" content="スレッド安全性・NULL ガード・メモリ管理などの共通ポリシーと、公開ヘッダの 全関数索引（ヘッダから機械生成）をまとめたページです。 個々の API の使い方と完全なコード例は機能別のページに、 目的から関数を探すには逆引きリファレンスにあります。 記載されている API が配布物のヘッダと共有ライブラリに実在するこ">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/c-api-reference-ja.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK C API リファレンス（日本語版） — BlinkGTK">
-<meta property="og:description" content="スレッド安全性・NULL ガード・メモリ管理などの共通ポリシーと、公開ヘッダの 全関数索引（ヘッダから機械生成、全 90 種）をまとめたページです。 個々の API の使い方と完全なコード例は機能別のページに、 目的から関数を探すには逆引きリファレンスにあります。 記載されている API が配布物のヘッダと共有ライブラ">
+<meta property="og:description" content="スレッド安全性・NULL ガード・メモリ管理などの共通ポリシーと、公開ヘッダの 全関数索引（ヘッダから機械生成）をまとめたページです。 個々の API の使い方と完全なコード例は機能別のページに、 目的から関数を探すには逆引きリファレンスにあります。 記載されている API が配布物のヘッダと共有ライブラリに実在するこ">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/c-api-reference-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -125,8 +125,7 @@ API整理）</li>
 <p><strong>このページの位置づけ（2026-07-30 更新）</strong></p>
 <p>スレッド安全性・NULL
 ガード・メモリ管理などの<strong>共通ポリシー</strong>と、公開ヘッダの<br />
-<strong>全関数索引</strong>（ヘッダから機械生成、全 90
-種）をまとめたページです。<br />
+<strong>全関数索引</strong>（ヘッダから機械生成）をまとめたページです。<br />
 個々の API の使い方と完全なコード例は<a
 href="./00-index-ja.html">機能別のページ</a>に、<br />
 目的から関数を探すには<a
@@ -785,33 +784,19 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 <div class="sourceCode" id="cb49"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_delete_all_cookies<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p>ブラウザコンテキスト内の全 Cookie を削除します。</p>
 <hr />
-<h2 id="内部廃止予定-api">内部・廃止予定 API</h2>
-<p>以下の API は内部管理用または廃止予定です。</p>
-<h3 id="削除済gobjectc-マッピング管理-api">（削除済）GObjectC++
-マッピング管理 API</h3>
-<p>かつて内部管理用に存在した 2 関数は
-<strong>既に削除済</strong>で、公開ヘッダにも<br />
-<code>libblinkgtk.so</code> にも存在しません（2026-07-28
-機械照合で確認）。呼び出すと<br />
-リンクエラーになります。利用者が使うべき API ではありませんでした。</p>
+<h2 id="廃止予定の-api">廃止予定の API</h2>
+<p>以下は動作しますが、<strong>新しく書くコードでは使わないでください</strong>。<br />
+コンパイル時に警告が出ます。</p>
 <h3 id="blink_web_view_load_url">blink_web_view_load_url()</h3>
-<p><strong>廃止</strong> --
+<p><code>blink_web_view_load_uri()</code> を使ってください。<br />
 <code>G_DEPRECATED_FOR(blink_web_view_load_uri)</code>
-が付与されています。<br />
-<code>blink_web_view_load_uri()</code> を使用してください。</p>
-<p>v1.1.0 以降、コンパイル時に廃止警告が出力されます。</p>
+が付いています。</p>
 <h3 id="blink_web_view_get_url">blink_web_view_get_url()</h3>
-<p><strong>廃止</strong> --
+<p><code>blink_web_view_get_uri()</code> を使ってください。<br />
 <code>G_DEPRECATED_FOR(blink_web_view_get_uri)</code>
-が付与されています。<br />
-<code>blink_web_view_get_uri()</code> を使用してください。</p>
-<p>v1.1.0 以降、コンパイル時に廃止警告が出力されます。</p>
-<h3 id="blink_web_view_queue_draw">blink_web_view_queue_draw()</h3>
-<p>ウィジェットの再描画をキューに入れます（内部使用）。</p>
-<h3
-id="blink_web_view_set_frame_data">blink_web_view_set_frame_data()</h3>
-<p>フレームデータを直接設定します（RGBA8 形式、内部使用）。</p>
-<hr />
+が付いています。</p>
+<p>既存のコードは急いで書き換える必要はありません。これらを削除する予定が<br />
+立った場合は、事前にリリースノートでお知らせします。</p>
 <h2 id="完全なサンプルプログラム">完全なサンプルプログラム</h2>
 <div class="sourceCode" id="cb50"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
@@ -935,8 +920,8 @@ BlinkWebView ウィジェット詳細</li>
 <!-- generated: python3 release/scripts/gen-api-function-index.py で再生成 -->
 
 <h2 id="全関数索引">全関数索引</h2>
-<p>ヘッダ <code>blink_gtk.h</code> の公開関数の完全な一覧です (全 90
-種、ヘッダから機械生成)。詳細ページがあるものはリンクし、<br />
+<p>ヘッダ <code>blink_gtk.h</code> の公開関数のうち、利用者が使う 79
+種の一覧です。詳細ページがあるものはリンクし、<br />
 本ページで説明しているものは「本ページ」と記します。</p>
 <table>
 <thead>
@@ -949,18 +934,6 @@ BlinkWebView ウィジェット詳細</li>
 <tr>
 <td><code>blink_web_view_new_container()</code></td>
 <td>本ページ</td>
-</tr>
-<tr>
-<td><code>blink_load_event_get_type()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
-</tr>
-<tr>
-<td><code>blink_load_error_get_type()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
-</tr>
-<tr>
-<td><code>blink_gpu_mode_get_type()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
 </tr>
 <tr>
 <td><code>blink_gtk_init()</code></td>
@@ -1015,16 +988,8 @@ href="./app-integration-api-ja.html">app-integration-api-ja.md</a></td>
 href="./app-integration-api-ja.html">app-integration-api-ja.md</a></td>
 </tr>
 <tr>
-<td><code>blink_web_view_attach_to_external_surface()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
-</tr>
-<tr>
 <td><code>blink_web_view_load_html()</code></td>
 <td><a href="./signals-api-ja.html">signals-api-ja.md</a></td>
-</tr>
-<tr>
-<td><code>blink_web_view_set_gl_widget()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_get_uri()</code></td>
@@ -1077,10 +1042,6 @@ href="./app-integration-api-ja.html">app-integration-api-ja.md</a></td>
 <tr>
 <td><code>blink_web_view_inject_test_input()</code></td>
 <td>本ページ</td>
-</tr>
-<tr>
-<td><code>blink_content_policy_get_type()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_set_content_policy()</code></td>
@@ -1298,26 +1259,6 @@ href="./app-integration-api-ja.html">app-integration-api-ja.md</a></td>
 <tr>
 <td><code>blink_gtk_get_chromium_version()</code></td>
 <td>本ページ</td>
-</tr>
-<tr>
-<td><code>blink_web_view_export_handoff_meta()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
-</tr>
-<tr>
-<td><code>blink_web_view_import_handoff_meta()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
-</tr>
-<tr>
-<td><code>blink_handoff_meta_serialize()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
-</tr>
-<tr>
-<td><code>blink_handoff_meta_deserialize()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
-</tr>
-<tr>
-<td><code>blink_handoff_meta_free()</code></td>
-<td>内部・実験的 (doc 対象外)</td>
 </tr>
 </tbody>
 </table>

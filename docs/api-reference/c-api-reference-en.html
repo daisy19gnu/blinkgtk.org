@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="Note This document is outdated (noted 2026-07-27)">
+<meta name="description" content="How this page fits in (updated 2026-07-30)">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/c-api-reference-en.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK C API Reference — BlinkGTK">
-<meta property="og:description" content="Note This document is outdated (noted 2026-07-27)">
+<meta property="og:description" content="How this page fits in (updated 2026-07-30)">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/c-api-reference-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -113,40 +113,14 @@
 <strong>Changelog</strong>: Initial version (input event API added)</p>
 <hr />
 <blockquote>
-<p><strong>Note This document is outdated (noted
-2026-07-27)</strong></p>
-<p>A mechanical cross-check found that this document covers <strong>32
-functions</strong>, while the shipped header<br />
-<code>blink_gtk.h</code> declares <strong>80</strong> (roughly 40%
-coverage). It also still documents two functions that have<br />
-since been removed:</p>
-<ul>
-<li>two internal GObject-to-C++ mapping helpers</li>
-</ul>
-<p>For accurate information on the current API, treat the shipped
-header<br />
-<code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code> as the primary
-source. For environment variables,<br />
-<a
-href="./environment-variables-en.html"><code>environment-variables-en.md</code></a>
-is authoritative.</p>
-<p>This document will be fully revised as the basis for Chapter 11 of
-the API reference under<br />
-construction in #121 (see <a
-href="./00-index-en.html"><code>00-index-en.md</code></a>). Once that
-revision lands, this file<br />
-will be reduced to a pointer to the new chapter.</p>
-</blockquote>
-<hr />
-<blockquote>
 <p><strong>How this page fits in (updated 2026-07-30)</strong></p>
 <p>This page collects the <strong>common policies</strong> (thread
 safety, NULL guards, memory<br />
 management) and the <strong>complete function index</strong> (generated
-from the header, all<br />
-90 functions). Per-API usage and complete examples live in the<br />
-<a href="./00-index-en.html">topic pages</a>; to find a function by goal,
-see<br />
+from the header).<br />
+For how to use each API, with full code examples, see the<br />
+<a href="./00-index-en.html">per-topic pages</a>; to find a function by
+goal, see<br />
 <a href="./howto-index-en.html">How do I…?</a>. Every API named here is
 mechanically<br />
 verified to exist in the bundled header and shared library.</p>
@@ -778,40 +752,23 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 
 <!-- generated: regenerate with python3 release/scripts/gen-api-function-index.py -->
 
-<h2 id="internal-and-deprecated-apis">Internal and deprecated APIs</h2>
-<h3
-id="blink_web_view_set_frame_data">blink_web_view_set_frame_data()</h3>
-<p>Sets frame pixels directly (RGBA8). Internal use — provided for the
-engine's own<br />
-rendering paths and test harnesses, not for application code.</p>
-<p>The following are for internal use or are being retired.</p>
-<h3 id="removed-gobject-to-c-mapping-helpers">(Removed) GObject-to-C++
-mapping helpers</h3>
-<p>Two functions that once existed for internal bookkeeping have
-<strong>already been<br />
-removed</strong>; they are absent from both the public header and
-<code>libblinkgtk.so</code><br />
-(confirmed by machine comparison on 2026-07-28). Calling them produces a
-link<br />
-error. They were never APIs for consumers to use.</p>
+<h2 id="deprecated-apis">Deprecated APIs</h2>
+<p>These still work, but <strong>do not use them in new code</strong>.
+The compiler will warn<br />
+you.</p>
 <h3 id="blink_web_view_load_url">blink_web_view_load_url()</h3>
-<p><strong>Deprecated</strong> — carries
-<code>G_DEPRECATED_FOR(blink_web_view_load_uri)</code>.<br />
-Use <code>blink_web_view_load_uri()</code> instead.</p>
-<p>From v1.1.0 onward the compiler emits a deprecation warning.</p>
+<p>Use <code>blink_web_view_load_uri()</code> instead.<br />
+It carries <code>G_DEPRECATED_FOR(blink_web_view_load_uri)</code>.</p>
 <h3 id="blink_web_view_get_url">blink_web_view_get_url()</h3>
-<p><strong>Deprecated</strong> — carries
-<code>G_DEPRECATED_FOR(blink_web_view_get_uri)</code>.<br />
-Use <code>blink_web_view_get_uri()</code> instead.</p>
-<p>From v1.1.0 onward the compiler emits a deprecation warning.</p>
-<h3 id="blink_web_view_queue_draw">blink_web_view_queue_draw()</h3>
-<p>Queues a redraw of the widget (internal use).</p>
-<hr />
+<p>Use <code>blink_web_view_get_uri()</code> instead.<br />
+It carries <code>G_DEPRECATED_FOR(blink_web_view_get_uri)</code>.</p>
+<p>There is no hurry to rewrite existing code. If we ever schedule their
+removal,<br />
+we will say so in the release notes first.</p>
 <h2 id="complete-function-index">Complete function index</h2>
-<p>The complete list of public functions in <code>blink_gtk.h</code> (90
-functions, generated from the header). Functions with a<br />
-dedicated page are linked; ones explained here are marked "this
-page".</p>
+<p>The 79 functions in <code>blink_gtk.h</code> that you would actually
+call. Where a dedicated page<br />
+exists it is linked; otherwise the entry says "this page".</p>
 <table>
 <thead>
 <tr>
@@ -823,18 +780,6 @@ page".</p>
 <tr>
 <td><code>blink_web_view_new_container()</code></td>
 <td>this page</td>
-</tr>
-<tr>
-<td><code>blink_load_event_get_type()</code></td>
-<td>internal / experimental</td>
-</tr>
-<tr>
-<td><code>blink_load_error_get_type()</code></td>
-<td>internal / experimental</td>
-</tr>
-<tr>
-<td><code>blink_gpu_mode_get_type()</code></td>
-<td>internal / experimental</td>
 </tr>
 <tr>
 <td><code>blink_gtk_init()</code></td>
@@ -889,16 +834,8 @@ href="./app-integration-api-en.html">app-integration-api-en.md</a></td>
 href="./app-integration-api-en.html">app-integration-api-en.md</a></td>
 </tr>
 <tr>
-<td><code>blink_web_view_attach_to_external_surface()</code></td>
-<td>internal / experimental</td>
-</tr>
-<tr>
 <td><code>blink_web_view_load_html()</code></td>
 <td><a href="./signals-api-en.html">signals-api-en.md</a></td>
-</tr>
-<tr>
-<td><code>blink_web_view_set_gl_widget()</code></td>
-<td>internal / experimental</td>
 </tr>
 <tr>
 <td><code>blink_web_view_get_uri()</code></td>
@@ -951,10 +888,6 @@ href="./app-integration-api-en.html">app-integration-api-en.md</a></td>
 <tr>
 <td><code>blink_web_view_inject_test_input()</code></td>
 <td>this page</td>
-</tr>
-<tr>
-<td><code>blink_content_policy_get_type()</code></td>
-<td>internal / experimental</td>
 </tr>
 <tr>
 <td><code>blink_web_view_set_content_policy()</code></td>
@@ -1172,26 +1105,6 @@ href="./app-integration-api-en.html">app-integration-api-en.md</a></td>
 <tr>
 <td><code>blink_gtk_get_chromium_version()</code></td>
 <td>this page</td>
-</tr>
-<tr>
-<td><code>blink_web_view_export_handoff_meta()</code></td>
-<td>internal / experimental</td>
-</tr>
-<tr>
-<td><code>blink_web_view_import_handoff_meta()</code></td>
-<td>internal / experimental</td>
-</tr>
-<tr>
-<td><code>blink_handoff_meta_serialize()</code></td>
-<td>internal / experimental</td>
-</tr>
-<tr>
-<td><code>blink_handoff_meta_deserialize()</code></td>
-<td>internal / experimental</td>
-</tr>
-<tr>
-<td><code>blink_handoff_meta_free()</code></td>
-<td>internal / experimental</td>
 </tr>
 </tbody>
 </table>
