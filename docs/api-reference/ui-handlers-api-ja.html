@@ -122,14 +122,14 @@ UI ハンドラ API リファレンス —
 JavaScript の
 <code>alert()</code>、ファイル選択、証明書エラーの扱いを、アプリ自身の<br />
 ダイアログ・ポリシーで実装できます。</p>
-<p>本ページは v1.1.0
-のエンジン実装を実測して書かれています。ハンドラごとに<br />
+<p>本ページはエンジン実装を実測して書かれています。ハンドラの配線状況は<br />
+1.2.0-build2 時点で再確認しました。ハンドラごとに<br />
 成熟度が異なるため、最初に対応状況を示します。</p>
 <table>
 <thead>
 <tr>
 <th>ハンドラ</th>
-<th>v1.1.0 での状態</th>
+<th>現在の状態</th>
 </tr>
 </thead>
 <tbody>
@@ -193,8 +193,8 @@ UI<br />
 <code>g_strdup()</code> で複製して<br />
 ください。</li>
 </ol>
-<h3 id="ハンドラ未設定時の既定動作-v110-実測">ハンドラ未設定時の既定動作
-(v1.1.0 実測)</h3>
+<h3 id="ハンドラ未設定時の既定動作-実測">ハンドラ未設定時の既定動作
+(実測)</h3>
 <table>
 <thead>
 <tr>
@@ -763,8 +763,7 @@ id="blink_web_view_set_fullscreen_handler">blink_web_view_set_fullscreen_handler
 <h2 id="ダウンロード-現状-未対応">ダウンロード (現状: 未対応)</h2>
 <h3
 id="blink_web_view_set_download_handler">blink_web_view_set_download_handler()</h3>
-<p><strong>このハンドラは v1.1.0
-では配線されておらず、登録しても呼ばれません。</strong></p>
+<p><strong>このハンドラは現在も配線されておらず、登録しても呼ばれません。</strong></p>
 <div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">char</span><span class="op">*</span> <span class="op">(*</span>BlinkDownloadRequestCallback<span class="op">)(</span></span>
 <span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
@@ -776,7 +775,7 @@ id="blink_web_view_set_download_handler">blink_web_view_set_download_handler()</
 <span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a>    BlinkDownloadRequestCallback callback<span class="op">,</span></span>
 <span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>    gpointer user_data<span class="op">);</span></span></code></pre></div>
-<p>v1.1.0 の実際の挙動:</p>
+<p>実際の挙動:</p>
 <ul>
 <li>ページがダウンロードを発生させると
 (<code>&lt;a download&gt;</code>、<br />
@@ -813,8 +812,7 @@ class="sourceCode js"><code class="sourceCode javascript"><span id="cb13-1"><a h
 <h3
 id="blink_web_view_set_auth_handler--blink_web_view_auth_response">blink_web_view_set_auth_handler()
 / blink_web_view_auth_response()</h3>
-<p><strong>このハンドラも v1.1.0
-では配線されておらず、登録しても呼ばれません。</strong><br />
+<p><strong>このハンドラも現在も配線されておらず、登録しても呼ばれません。</strong><br />
 <code>blink_web_view_auth_response()</code>
 は現状、常に何もしません。</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> gboolean <span class="op">(*</span>BlinkAuthRequestCallback<span class="op">)(</span></span>
@@ -832,7 +830,7 @@ id="blink_web_view_set_auth_handler--blink_web_view_auth_response">blink_web_vie
 <span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_auth_response<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
 <span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>                                  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> username<span class="op">,</span></span>
 <span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>                                  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> password<span class="op">);</span></span></code></pre></div>
-<p>v1.1.0 の実際の挙動: HTTP 401 / プロキシ 407
+<p>実際の挙動: HTTP 401 / プロキシ 407
 の認証要求は<strong>常に即キャンセル</strong><br />
 され、サーバの 401 レスポンスボディがそのまま表示されます。</p>
 <p>回避策は限定的です:</p>
@@ -941,7 +939,7 @@ confirm・ファイル選択・証明書ポリシーを引き受ける</h2>
 <div class="sourceCode" id="cb16"><pre
 class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> handlers-demo handlers-demo.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
 <hr />
-<h2 id="制限事項まとめ-v110">制限事項まとめ (v1.1.0)</h2>
+<h2 id="制限事項まとめ">制限事項まとめ</h2>
 <table>
 <thead>
 <tr>

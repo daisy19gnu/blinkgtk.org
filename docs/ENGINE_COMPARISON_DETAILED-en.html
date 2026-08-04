@@ -4,8 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>CEF / WebKitGTK / BlinkGTK Technical Requirements and
-Performance Comparison — BlinkGTK</title>
+  <title>CEF / WebKitGTK / BlinkGTK — choosing between them —
+BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -89,11 +89,11 @@ Performance Comparison — BlinkGTK</title>
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="CEF (C++, approximately 80-120 lines):">
+<meta name="description" content="If you want to embed a web engine in a GTK4 application, there are broadly three options. This document sets out how the three differ structurally.">
 <link rel="canonical" href="https://blinkgtk.org/docs/ENGINE_COMPARISON_DETAILED-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="CEF / WebKitGTK / BlinkGTK Technical Requirements and Performance Comparison — BlinkGTK">
-<meta property="og:description" content="CEF (C++, approximately 80-120 lines):">
+<meta property="og:title" content="CEF / WebKitGTK / BlinkGTK — choosing between them — BlinkGTK">
+<meta property="og:description" content="If you want to embed a web engine in a GTK4 application, there are broadly three options. This document sets out how the three differ structurally.">
 <meta property="og:url" content="https://blinkgtk.org/docs/ENGINE_COMPARISON_DETAILED-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,904 +107,30 @@ Performance Comparison — BlinkGTK</title>
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1
-id="cef--webkitgtk--blinkgtk-technical-requirements-and-performance-comparison">CEF
-/ WebKitGTK / BlinkGTK Technical Requirements and Performance
-Comparison</h1>
-<p><strong>Author</strong>: BlinkGTK Development Team<br />
-<strong>Created</strong>: 2026-03-26<br />
-<strong>Last Updated</strong>: 2026-03-26<br />
-<strong>Target Versions</strong>: CEF 127+, WebKitGTK 2.44+, BlinkGTK
-v1.0.0-rc2</p>
-<hr />
-<h2 id="1-basic-information">1. Basic Information</h2>
+<h1 id="cef--webkitgtk--blinkgtk--choosing-between-them">CEF / WebKitGTK
+/ BlinkGTK — choosing between them</h1>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Version</strong>: 1.2.0-build2</p>
+<p>If you want to embed a web engine in a GTK4 application, there are
+broadly three<br />
+options. This document sets out how the three differ
+<strong>structurally</strong>.</p>
+<p>One thing up front: <strong>there are no performance figures for the
+other engines<br />
+here.</strong> Comparing fairly means rendering the same content under
+the same<br />
+conditions, and we are not able to maintain that continuously. Listing
+estimates<br />
+felt less honest than listing nothing. BlinkGTK's own numbers appear
+only where<br />
+we measured them, together with the conditions.</p>
+<h2 id="the-difference-that-matters-most">The difference that matters
+most</h2>
 <table>
 <thead>
 <tr>
-<th>Item</th>
+<th></th>
 <th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Rendering Engine</strong></td>
-<td>Blink (Chromium)</td>
-<td>WebKit (WebCore)</td>
-<td>Blink (Chromium)</td>
-</tr>
-<tr>
-<td><strong>JavaScript Engine</strong></td>
-<td>V8</td>
-<td>JavaScriptCore (JSC)</td>
-<td>V8</td>
-</tr>
-<tr>
-<td><strong>License</strong></td>
-<td>BSD-3-Clause</td>
-<td>LGPL-2.1 / BSD-2-Clause</td>
-<td>BSD-3-Clause</td>
-</tr>
-<tr>
-<td><strong>Supported OS</strong></td>
-<td>Linux, Windows, macOS</td>
-<td>Linux (GTK environments)</td>
-<td>Linux (Wayland environments)</td>
-</tr>
-<tr>
-<td><strong>GTK Integration</strong></td>
-<td>None (own window management)</td>
-<td>GTK3 / GTK4 native</td>
-<td>GTK4 native</td>
-</tr>
-<tr>
-<td><strong>Latest Stable</strong></td>
-<td>CEF 127 (Chromium 127)</td>
-<td>2.44.x (as of March 2026)</td>
-<td>v1.0.0-rc2</td>
-</tr>
-<tr>
-<td><strong>Developed By</strong></td>
-<td>Marshall Greenblatt et al.</td>
-<td>Apple / GNOME / Igalia</td>
-<td>BlinkGTK Development Team</td>
-</tr>
-<tr>
-<td><strong>Chromium Base Version</strong></td>
-<td>Chromium 127</td>
-<td>N/A</td>
-<td>Chromium 146.0.7680.71</td>
-</tr>
-</tbody>
-</table>
-<h3 id="minimal-code-hello-world-equivalent">Minimal Code (Hello World
-Equivalent)</h3>
-<p><strong>CEF</strong> (C++, approximately 80-120 lines):</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode cpp"><code class="sourceCode cpp"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;include/cef_app.h&quot;</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;include/cef_client.h&quot;</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&quot;include/cef_browser.h&quot;</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> SimpleClient <span class="op">:</span> <span class="kw">public</span> CefClient<span class="op">,</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>                     <span class="kw">public</span> CefLifeSpanHandler <span class="op">{</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Requires overrides for LifeSpanHandler, DisplayHandler, etc.</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  <span class="co">// CefRefPtr reference counting is mandatory</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="op">};</span></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
-<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>  CefMainArgs main_args<span class="op">(</span>argc<span class="op">,</span> argv<span class="op">);</span></span>
-<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  CefSettings settings<span class="op">;</span></span>
-<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  CefInitialize<span class="op">(</span>main_args<span class="op">,</span> settings<span class="op">,</span> <span class="kw">nullptr</span><span class="op">,</span> <span class="kw">nullptr</span><span class="op">);</span></span>
-<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>  <span class="co">// Create window, create browser...</span></span>
-<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  CefRunMessageLoop<span class="op">();</span></span>
-<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>  CefShutdown<span class="op">();</span></span>
-<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p><strong>WebKitGTK</strong> (C, approximately 20-30 lines):</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;webkit/webkit.h&gt;</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> activate<span class="op">(</span>GtkApplication <span class="op">*</span>app<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  GtkWidget <span class="op">*</span>window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  GtkWidget <span class="op">*</span>webview <span class="op">=</span> webkit_web_view_new<span class="op">();</span></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> webview<span class="op">);</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  webkit_web_view_load_uri<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>webview<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
-<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
-<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span> <span class="op">{</span></span>
-<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>  GtkApplication <span class="op">*</span>app <span class="op">=</span> gtk_application_new<span class="op">(</span><span class="st">&quot;org.example.browser&quot;</span><span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
-<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>app<span class="op">,</span> <span class="st">&quot;activate&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>activate<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> g_application_run<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> argc<span class="op">,</span> argv<span class="op">);</span></span>
-<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<p><strong>BlinkGTK</strong> (C, approximately 25-35 lines):</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> activate<span class="op">(</span>GtkApplication <span class="op">*</span>app<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>  blink_gtk_init<span class="op">(</span>NULL<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>  GtkWidget <span class="op">*</span>window <span class="op">=</span> gtk_application_window_new<span class="op">(</span>app<span class="op">);</span></span>
-<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>  GtkWidget <span class="op">*</span>webview <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> webview<span class="op">);</span></span>
-<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a>  blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>webview<span class="op">),</span> <span class="st">&quot;https://example.com&quot;</span><span class="op">);</span></span>
-<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a>  gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
-<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">*</span>argv<span class="op">[])</span> <span class="op">{</span></span>
-<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>  GtkApplication <span class="op">*</span>app <span class="op">=</span> gtk_application_new<span class="op">(</span><span class="st">&quot;org.example.browser&quot;</span><span class="op">,</span> <span class="dv">0</span><span class="op">);</span></span>
-<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>app<span class="op">,</span> <span class="st">&quot;activate&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>activate<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* Use BlinkGTK&#39;s main loop, not g_application_run() */</span></span>
-<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>  g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a>  g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
-<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span>
-<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
-<hr />
-<h2 id="2-technical-requirements">2. Technical Requirements</h2>
-<h3 id="21-build-requirements">2.1 Build Requirements</h3>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Chromium Source Required</strong></td>
-<td>No (binary distribution available)</td>
-<td>No</td>
-<td>Yes (source build required)</td>
-</tr>
-<tr>
-<td><strong>Full Build Time</strong></td>
-<td>2-4 hours (Chromium full build)</td>
-<td>1-2 hours</td>
-<td>3-5 hours (Chromium full build)</td>
-</tr>
-<tr>
-<td><strong>Incremental Build</strong></td>
-<td>Minutes to hours</td>
-<td>Minutes</td>
-<td>Tier 1: 30s / Tier 2: 8min / Tier 3: 2-3h</td>
-</tr>
-<tr>
-<td><strong>Disk Space (Build)</strong></td>
-<td>80-120GB</td>
-<td>15-25GB</td>
-<td>80-120GB</td>
-</tr>
-<tr>
-<td><strong>RAM (Build)</strong></td>
-<td>16GB+ recommended</td>
-<td>8GB+</td>
-<td>16GB+ recommended</td>
-</tr>
-<tr>
-<td><strong>Build System</strong></td>
-<td>CMake / GN</td>
-<td>CMake</td>
-<td>GN (ninja)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="22-runtime-dependencies">2.2 Runtime Dependencies</h3>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Shared Libraries</strong></td>
-<td>1-3 (libcef.so, etc.)</td>
-<td>2-4 (libwebkitgtk, etc.)</td>
-<td>~30-40 (Component Build)</td>
-</tr>
-<tr>
-<td><strong>Runtime Disk Usage</strong></td>
-<td>150-200MB</td>
-<td>30-50MB</td>
-<td>~65MB (libblinkgtk.so + dependent .so files)</td>
-</tr>
-<tr>
-<td><strong>GTK Version</strong></td>
-<td>Any (self-managed)</td>
-<td>GTK 3.24+ / GTK 4.6+</td>
-<td>GTK 4.6+</td>
-</tr>
-<tr>
-<td><strong>GLib Version</strong></td>
-<td>Not required</td>
-<td>GLib 2.70+</td>
-<td>GLib 2.70+</td>
-</tr>
-</tbody>
-</table>
-<h3 id="23-platform-support">2.3 Platform Support</h3>
-<table>
-<thead>
-<tr>
-<th>Platform</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Linux (X11)</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Not supported</td>
-</tr>
-<tr>
-<td><strong>Linux (Wayland)</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (exclusive)</td>
-</tr>
-<tr>
-<td><strong>Windows</strong></td>
-<td>Supported</td>
-<td>Not supported</td>
-<td>Not supported</td>
-</tr>
-<tr>
-<td><strong>macOS</strong></td>
-<td>Supported</td>
-<td>Not supported</td>
-<td>Not supported</td>
-</tr>
-<tr>
-<td><strong>Android</strong></td>
-<td>Not supported</td>
-<td>Not supported</td>
-<td>Not supported (under consideration after GTK4 Android matures)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="24-wayland-support">2.4 Wayland Support</h3>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Approach</strong></td>
-<td>XWayland / Native (Ozone)</td>
-<td>Native</td>
-<td>Native (exclusive)</td>
-</tr>
-<tr>
-<td><strong>X11 Fallback</strong></td>
-<td>Available</td>
-<td>Available</td>
-<td>None (Wayland required)</td>
-</tr>
-<tr>
-<td><strong>wl_subsurface</strong></td>
-<td>Via Ozone</td>
-<td>Internal to WebKitWebProcess</td>
-<td>Implemented</td>
-</tr>
-<tr>
-<td><strong>dmabuf</strong></td>
-<td>Via Ozone</td>
-<td>Via WPE/libwpe</td>
-<td>Implemented (zero-copy)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="25-gobject-introspection-support">2.5 GObject Introspection
-Support</h3>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>GObject Type System</strong></td>
-<td>None (C++ API)</td>
-<td>Full support</td>
-<td>Supported</td>
-</tr>
-<tr>
-<td><strong>GIR / typelib</strong></td>
-<td>None</td>
-<td>Available</td>
-<td>Available (BlinkGTK-0.1.gir / .typelib)</td>
-</tr>
-<tr>
-<td><strong>PyGObject</strong></td>
-<td>Not supported</td>
-<td>Supported</td>
-<td>Supported</td>
-</tr>
-<tr>
-<td><strong>GJS (JavaScript)</strong></td>
-<td>Not supported</td>
-<td>Supported</td>
-<td>Supported</td>
-</tr>
-<tr>
-<td><strong>Vala</strong></td>
-<td>Not supported</td>
-<td>Supported</td>
-<td>Supported</td>
-</tr>
-<tr>
-<td><strong>Rust (gtk-rs)</strong></td>
-<td>Not supported</td>
-<td>Supported</td>
-<td>Supported (via GIR)</td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="3-api-comparison">3. API Comparison</h2>
-<h3 id="31-initialization-and-basic-operations">3.1 Initialization and
-Basic Operations</h3>
-<table>
-<thead>
-<tr>
-<th>API</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Initialization</strong></td>
-<td><code>CefInitialize()</code></td>
-<td>Not required (included in GTK init)</td>
-<td><code>blink_gtk_init(&amp;argc, &amp;argv)</code></td>
-</tr>
-<tr>
-<td><strong>WebView Creation</strong></td>
-<td><code>CefBrowserHost::CreateBrowser()</code></td>
-<td><code>webkit_web_view_new()</code></td>
-<td><code>blink_web_view_new()</code></td>
-</tr>
-<tr>
-<td><strong>Load URL</strong></td>
-<td><code>browser-&gt;GetMainFrame()-&gt;LoadURL()</code></td>
-<td><code>webkit_web_view_load_uri()</code></td>
-<td><code>blink_web_view_load_uri()</code></td>
-</tr>
-<tr>
-<td><strong>Load HTML String</strong></td>
-<td><code>browser-&gt;GetMainFrame()-&gt;LoadString()</code></td>
-<td><code>webkit_web_view_load_html()</code></td>
-<td><code>blink_web_view_load_html()</code></td>
-</tr>
-<tr>
-<td><strong>Shutdown</strong></td>
-<td><code>CefShutdown()</code></td>
-<td>Not required</td>
-<td><code>blink_gtk_shutdown()</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="32-javascript-execution">3.2 JavaScript Execution</h3>
-<table>
-<thead>
-<tr>
-<th>API</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Execute JS</strong></td>
-<td><code>frame-&gt;ExecuteJavaScript()</code></td>
-<td><code>webkit_web_view_evaluate_javascript()</code></td>
-<td><code>blink_web_view_execute_javascript()</code></td>
-</tr>
-<tr>
-<td><strong>Return Value</strong></td>
-<td><code>CefV8Value</code> (inter-process communication)</td>
-<td><code>JSCValue</code> (callback)</td>
-<td>Callback-based</td>
-</tr>
-<tr>
-<td><strong>User Script Injection</strong></td>
-<td><code>CefRegisterExtension()</code></td>
-<td><code>webkit_user_content_manager_add_script()</code></td>
-<td><code>blink_web_view_inject_user_script()</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="33-cookie-management">3.3 Cookie Management</h3>
-<table>
-<thead>
-<tr>
-<th>API</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Get Cookies</strong></td>
-<td><code>CefCookieManager::VisitAllCookies()</code></td>
-<td><code>webkit_cookie_manager_get_cookies()</code></td>
-<td><code>blink_web_view_get_cookies()</code></td>
-</tr>
-<tr>
-<td><strong>Set Cookie</strong></td>
-<td><code>CefCookieManager::SetCookie()</code></td>
-<td><code>webkit_cookie_manager_add_cookie()</code></td>
-<td><code>blink_web_view_set_cookie()</code></td>
-</tr>
-<tr>
-<td><strong>Delete Cookies</strong></td>
-<td><code>CefCookieManager::DeleteCookies()</code></td>
-<td><code>webkit_cookie_manager_delete_all_cookies()</code></td>
-<td><code>blink_web_view_delete_all_cookies()</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="34-devtools">3.4 DevTools</h3>
-<table>
-<thead>
-<tr>
-<th>API</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Open DevTools</strong></td>
-<td><code>browser-&gt;GetHost()-&gt;ShowDevTools()</code></td>
-<td><code>webkit_web_inspector_show()</code></td>
-<td><code>blink_web_view_open_devtools()</code></td>
-</tr>
-<tr>
-<td><strong>Remote Debugging</strong></td>
-<td><code>--remote-debugging-port</code></td>
-<td>WebKitWebInspectorServer</td>
-<td><code>--remote-debugging-port</code> (Chromium compatible)</td>
-</tr>
-<tr>
-<td><strong>Locale Support</strong></td>
-<td>Built into Chromium</td>
-<td>Built into WebKit</td>
-<td><code>blink_gtk_set_devtools_locale()</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="35-content-policy">3.5 Content Policy</h3>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Copy Prevention</strong></td>
-<td>Custom implementation required</td>
-<td>Custom implementation required</td>
-<td><code>BLINK_CONTENT_POLICY_NO_COPY</code></td>
-</tr>
-<tr>
-<td><strong>Print Prevention</strong></td>
-<td><code>OnBeforePrint()</code></td>
-<td>Custom implementation</td>
-<td><code>BLINK_CONTENT_POLICY_NO_PRINT</code></td>
-</tr>
-<tr>
-<td><strong>DevTools Prevention</strong></td>
-<td>Configuration-based</td>
-<td>Configuration-based</td>
-<td><code>BLINK_CONTENT_POLICY_NO_DEVTOOLS</code></td>
-</tr>
-<tr>
-<td><strong>Context Menu Prevention</strong></td>
-<td><code>OnBeforeContextMenu()</code></td>
-<td>Custom implementation</td>
-<td><code>BLINK_CONTENT_POLICY_NO_CONTEXT_MENU</code></td>
-</tr>
-<tr>
-<td><strong>E-book Reader Preset</strong></td>
-<td>None</td>
-<td>None</td>
-<td><code>BLINK_CONTENT_POLICY_EBOOK_READER</code></td>
-</tr>
-<tr>
-<td><strong>Kiosk Preset</strong></td>
-<td>None</td>
-<td>None</td>
-<td><code>BLINK_CONTENT_POLICY_KIOSK</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="36-ime--japanese-input">3.6 IME / Japanese Input</h3>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>IME Integration</strong></td>
-<td>OS IME auto-linked</td>
-<td>GtkIMContext integration</td>
-<td>GtkIMContext integration</td>
-</tr>
-<tr>
-<td><strong>Composition Text</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td><code>SetCompositionText()</code> supported</td>
-</tr>
-<tr>
-<td><strong>Cursor Position Notification</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td><code>OnSelectionBoundsChanged()</code> supported</td>
-</tr>
-<tr>
-<td><strong>CJK Input</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (Japanese tested)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="37-print--pdf">3.7 Print / PDF</h3>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Print Dialog</strong></td>
-<td><code>browser-&gt;GetHost()-&gt;Print()</code></td>
-<td><code>webkit_print_operation_run_dialog()</code></td>
-<td><code>blink_web_view_print_to_pdf()</code></td>
-</tr>
-<tr>
-<td><strong>PDF Output</strong></td>
-<td><code>PrintToPDF()</code></td>
-<td><code>webkit_print_operation_print()</code></td>
-<td><code>blink_web_view_print_to_pdf()</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="4-rendering-architecture">4. Rendering Architecture</h2>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Standard Rendering</strong></td>
-<td>In-window rendering</td>
-<td>GtkWidget integration</td>
-<td>GtkGLArea / GtkDrawingArea</td>
-</tr>
-<tr>
-<td><strong>OSR (Off-Screen Rendering)</strong></td>
-<td>Supported (primary feature)</td>
-<td>Via WPE</td>
-<td>Supported (direct Chromium Content API)</td>
-</tr>
-<tr>
-<td><strong>GPU Acceleration</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (SwiftShader / EGL native)</td>
-</tr>
-<tr>
-<td><strong>dmabuf / Zero-Copy</strong></td>
-<td>Via Ozone</td>
-<td>Via WPE libwpe</td>
-<td>Supported (GdkDmabufTextureBuilder)</td>
-</tr>
-<tr>
-<td><strong>EGLSync Fence Synchronization</strong></td>
-<td>Built into Chromium</td>
-<td>Built into WebKit</td>
-<td>Supported</td>
-</tr>
-<tr>
-<td><strong>Software Rendering</strong></td>
-<td><code>CefRenderHandler::OnPaint()</code></td>
-<td>Cairo</td>
-<td>CopyFromSurface + Cairo</td>
-</tr>
-</tbody>
-</table>
-<h3 id="frame-rate-measured-values">Frame Rate (Measured Values)</h3>
-<table>
-<thead>
-<tr>
-<th>Condition</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>GPU Accelerated</strong></td>
-<td>60fps (estimated)</td>
-<td>60fps (estimated)</td>
-<td>39.5fps stable (measured)</td>
-</tr>
-<tr>
-<td><strong>dmabuf Mode</strong></td>
-<td>60fps (estimated)</td>
-<td>60fps (estimated)</td>
-<td>62.5fps stable (measured)</td>
-</tr>
-<tr>
-<td><strong>Software Mode</strong></td>
-<td>30-60fps (estimated)</td>
-<td>30-60fps (estimated)</td>
-<td>39.5fps (measured)</td>
-</tr>
-<tr>
-<td><strong>Initial Display Latency</strong></td>
-<td>1-3s (estimated)</td>
-<td>1-2s (estimated)</td>
-<td>2.0s (measured)</td>
-</tr>
-</tbody>
-</table>
-<p>Note: CEF and WebKitGTK values are estimates for typical execution
-environments. BlinkGTK values were measured in a Weston headless
-environment with SwiftShader / dmabuf.</p>
-<hr />
-<h2 id="5-package-size">5. Package Size</h2>
-<table>
-<thead>
-<tr>
-<th>Item</th>
-<th>CEF</th>
-<th>WebKitGTK</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>Main Shared Library</strong></td>
-<td>libcef.so: ~150-200MB</td>
-<td>libwebkitgtk-6.0.so: ~25-35MB</td>
-<td>libblinkgtk-0.1.so: ~26MB (+ Chromium .so files: ~40MB)</td>
-</tr>
-<tr>
-<td><strong>Minimum Distribution Size</strong></td>
-<td>~200-250MB</td>
-<td>~40-60MB</td>
-<td>~65-80MB (Component Build total)</td>
-</tr>
-<tr>
-<td><strong>RPM Support</strong></td>
-<td>None (self-bundled)</td>
-<td>Yes (system package)</td>
-<td>Yes (blinkgtk-bin RPM)</td>
-</tr>
-<tr>
-<td><strong>DEB Support</strong></td>
-<td>None (self-bundled)</td>
-<td>Yes (system package)</td>
-<td>Yes (libblinkgtk-0.1-0 DEB)</td>
-</tr>
-<tr>
-<td><strong>Tarball Support</strong></td>
-<td>Yes (official distribution)</td>
-<td>Source tarball</td>
-<td>Yes (tar.gz / tar.bz2)</td>
-</tr>
-</tbody>
-</table>
-<h3 id="package-structure">Package Structure</h3>
-<p><strong>CEF</strong>: A single large binary package. Distributed by
-bundling with the application.</p>
-<p><strong>WebKitGTK</strong>: Distributed as a distribution system
-package. Available via <code>dnf install webkitgtk6.0-devel</code>
-etc.</p>
-<p><strong>BlinkGTK</strong>: Planned for distribution in 4 formats.</p>
-<table>
-<thead>
-<tr>
-<th>Format</th>
-<th>Package Name</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>RPM</td>
-<td><code>blinkgtk-bin-1.0.0-1.fc43.x86_64.rpm</code></td>
-</tr>
-<tr>
-<td>DEB</td>
-<td><code>libblinkgtk-0.1-0_1.0.0-1_amd64.deb</code></td>
-</tr>
-<tr>
-<td>tar.gz</td>
-<td><code>blinkgtk-1.2.0-build2-linux-x86_64.tar.gz</code></td>
-</tr>
-<tr>
-<td>tar.bz2</td>
-<td><code>blinkgtk-1.2.0-build2-linux-x86_64.tar.bz2</code></td>
-</tr>
-</tbody>
-</table>
-<hr />
-<h2 id="6-web-standards-support">6. Web Standards Support</h2>
-<table>
-<thead>
-<tr>
-<th>Feature</th>
-<th>CEF (Blink)</th>
-<th>WebKitGTK (WebKit)</th>
-<th>BlinkGTK (Blink)</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>HTML5/CSS3 Compliance</strong></td>
-<td>98-100%</td>
-<td>95-98%</td>
-<td>98-100% (Chromium equivalent)</td>
-</tr>
-<tr>
-<td><strong>WebRTC</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (Chromium equivalent)</td>
-</tr>
-<tr>
-<td><strong>WebGL</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (with GPU acceleration)</td>
-</tr>
-<tr>
-<td><strong>WebGPU</strong></td>
-<td>Supported</td>
-<td>Supported (experimental)</td>
-<td>Supported (Chromium equivalent)</td>
-</tr>
-<tr>
-<td><strong>Service Worker</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (Chromium equivalent)</td>
-</tr>
-<tr>
-<td><strong>Web Components</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (Chromium equivalent)</td>
-</tr>
-<tr>
-<td><strong>WebAssembly</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (Chromium equivalent)</td>
-</tr>
-<tr>
-<td><strong>CSS Container Queries</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (Chromium equivalent)</td>
-</tr>
-<tr>
-<td><strong>Push API</strong></td>
-<td>Supported</td>
-<td>Limited</td>
-<td>Supported (Chromium equivalent)</td>
-</tr>
-<tr>
-<td><strong>CSS Paged Media</strong></td>
-<td>Supported</td>
-<td>Supported</td>
-<td>Supported (Chromium equivalent)</td>
-</tr>
-</tbody>
-</table>
-<p>Note: BlinkGTK uses the Chromium Content API directly, so its web
-standards support is equivalent to the underlying Chromium version
-(146.0.7680.71). CEF is also Chromium-based but may differ in
-version.</p>
-<hr />
-<h2 id="7-blinkgtk-positioning">7. BlinkGTK Positioning</h2>
-<h3 id="71-differences-from-cef">7.1 Differences from CEF</h3>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
-<th>CEF</th>
-<th>BlinkGTK</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>GTK Integration</strong></td>
-<td>None (own window management)</td>
-<td>GTK4 native (GtkGLArea / GtkDrawingArea)</td>
-</tr>
-<tr>
-<td><strong>GObject</strong></td>
-<td>None (C++ API)</td>
-<td>Full GObject type system support</td>
-</tr>
-<tr>
-<td><strong>Language Bindings</strong></td>
-<td>C++ / Java / C#</td>
-<td>C / Python / Rust / Vala / GJS / Go (via GIR)</td>
-</tr>
-<tr>
-<td><strong>Package Distribution</strong></td>
-<td>Bundled with application</td>
-<td>RPM / DEB system packages</td>
-</tr>
-<tr>
-<td><strong>Binary Size</strong></td>
-<td>150-200MB</td>
-<td>65-80MB</td>
-</tr>
-<tr>
-<td><strong>Design Philosophy</strong></td>
-<td>Cross-platform embedding</td>
-<td>GTK4 / Wayland-exclusive integration</td>
-</tr>
-</tbody>
-</table>
-<p>CEF is designed as a general-purpose cross-platform embedding
-framework. BlinkGTK, on the other hand, aims for native integration into
-the GTK4 ecosystem, providing an API experience equivalent to
-WebKitGTK.</p>
-<h3 id="72-differences-from-webkitgtk">7.2 Differences from
-WebKitGTK</h3>
-<table>
-<thead>
-<tr>
-<th>Aspect</th>
 <th>WebKitGTK</th>
 <th>BlinkGTK</th>
 </tr>
@@ -1012,145 +138,79 @@ WebKitGTK</h3>
 <tbody>
 <tr>
 <td><strong>Engine</strong></td>
-<td>WebKit (JavaScriptCore)</td>
-<td>Blink (V8)</td>
+<td>Blink (Chromium)</td>
+<td>WebKit</td>
+<td>Blink (Chromium)</td>
 </tr>
 <tr>
-<td><strong>Web Standards Compliance</strong></td>
-<td>95-98%</td>
-<td>98-100%</td>
+<td><strong>JavaScript</strong></td>
+<td>V8</td>
+<td>JavaScriptCore</td>
+<td>V8</td>
 </tr>
 <tr>
-<td><strong>Chrome Compatibility</strong></td>
-<td>Low to medium</td>
-<td>Chromium equivalent (full)</td>
+<td><strong>Relationship to GTK</strong></td>
+<td>Its own window management, separate from GTK</td>
+<td>A native GTK widget</td>
+<td>A native GTK4 widget</td>
 </tr>
 <tr>
-<td><strong>Safari Compatibility</strong></td>
-<td>Full</td>
-<td>Low to medium</td>
+<td><strong>Licence</strong></td>
+<td>BSD-3-Clause</td>
+<td>LGPL-2.1 / BSD-2-Clause</td>
+<td>BSD-3-Clause</td>
 </tr>
 <tr>
-<td><strong>X11 Support</strong></td>
-<td>Available</td>
-<td>None (Wayland exclusive)</td>
-</tr>
-<tr>
-<td><strong>API Maturity</strong></td>
-<td>Stable (10+ years of history)</td>
-<td>Pre-release (v1.0.0-rc2)</td>
-</tr>
-<tr>
-<td><strong>Content Policy</strong></td>
-<td>Custom implementation required</td>
-<td>Built-in presets (e-book / kiosk)</td>
-</tr>
-<tr>
-<td><strong>Distribution Standard</strong></td>
-<td>Yes (Fedora/Ubuntu, etc.)</td>
-<td>No (independent distribution)</td>
+<td><strong>Operating systems</strong></td>
+<td>Linux / Windows / macOS</td>
+<td>Linux and others</td>
+<td>Linux (Wayland)</td>
 </tr>
 </tbody>
 </table>
-<p>WebKitGTK is the de facto standard for the Linux desktop, used by
-GNOME Web (Epiphany) and many other applications. BlinkGTK serves as an
-alternative for scenarios requiring Chromium-based web standards support
-and Chrome DevTools compatibility.</p>
-<h3 id="73-target-use-cases">7.3 Target Use Cases</h3>
-<p><strong>Cases where BlinkGTK is suitable</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Use Case</th>
-<th>Reason</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>E-book Reader</td>
-<td>Built-in content policy presets, CSS Paged Media support</td>
-</tr>
-<tr>
-<td>Kiosk Terminal</td>
-<td>Content protection features, fullscreen API</td>
-</tr>
-<tr>
-<td>GTK4 Native Browser</td>
-<td>GObject integration, GIR bindings</td>
-</tr>
-<tr>
-<td>Apps Requiring Chrome Compatibility</td>
-<td>Full compatibility via Blink engine</td>
-</tr>
-<tr>
-<td>Wayland-Native Applications</td>
-<td>No X11 usage, direct Wayland protocol</td>
-</tr>
-<tr>
-<td>Multi-Language Binding Needs</td>
-<td>Python / Rust / Vala / GJS / Go support</td>
-</tr>
-</tbody>
-</table>
-<p><strong>Cases where BlinkGTK is not suitable</strong>:</p>
-<table>
-<thead>
-<tr>
-<th>Case</th>
-<th>Reason</th>
-<th>Alternative</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>X11 Environment</td>
-<td>Wayland exclusive</td>
-<td>CEF or WebKitGTK</td>
-</tr>
-<tr>
-<td>Windows / macOS</td>
-<td>Linux only</td>
-<td>CEF</td>
-</tr>
-<tr>
-<td>Lightweight Applications</td>
-<td>Higher memory consumption (Chromium-based)</td>
-<td>WebKitGTK</td>
-</tr>
-<tr>
-<td>GTK3 Applications</td>
-<td>GTK4 exclusive</td>
-<td>WebKitGTK (GTK3 version)</td>
-</tr>
-<tr>
-<td>Safari Compatibility Required</td>
-<td>Uses Blink, not WebKit</td>
-<td>WebKitGTK</td>
-</tr>
-<tr>
-<td>Stable API Required</td>
-<td>Currently v1.0.0-rc2</td>
-<td>WebKitGTK</td>
-</tr>
-</tbody>
-</table>
-<h3 id="74-known-limitations">7.4 Known Limitations</h3>
+<p>Read it like this:</p>
 <ul>
-<li>Wayland exclusive: Does not operate in X11 environments</li>
-<li>Component Build: Requires approximately 30-40 shared libraries
-(static link version not provided)</li>
-<li>API stability: API may change before v1.0 official release</li>
-<li>GtkGLArea mode cap: Rendering with SwiftShader reaches approximately
-39.5fps (room for improvement with hardware GPU)</li>
-<li>Process model: Operates in single-process mode (multi-process
-isolation not supported)</li>
+<li><strong>You want Chrome's rendering</strong> → CEF or BlinkGTK (both
+are Blink)</li>
+<li><strong>You want it to behave like a GTK widget</strong> → WebKitGTK
+or BlinkGTK</li>
+<li><strong>You want both</strong> → BlinkGTK</li>
 </ul>
-<hr />
-<h2 id="8-overall-comparison">8. Overall Comparison</h2>
+<p>BlinkGTK sits where it does by going after Chromium's rendering and
+GTK-native<br />
+handling at the same time. The price is <strong>narrowing to
+Linux/Wayland</strong>. If you<br />
+ship to several operating systems, CEF is the straighter path; if
+WebKit's<br />
+rendering is fine for you, so is WebKitGTK.</p>
+<h2 id="what-embedding-looks-like">What embedding looks like</h2>
+<p>The same "put the web in a window" differs in weight.</p>
+<p><strong>BlinkGTK</strong> — a GTK widget, so you just put it in the
+window.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>WebKitGTK</strong> — nearly the same shape. Different
+function names and types.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> webkit_web_view_new<span class="op">();</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>webkit_web_view_load_uri<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>CEF</strong> — you supply handler classes and hand control to
+CEF's message loop. It<br />
+starts at a few dozen lines of C++, and windows are managed outside the
+GTK<br />
+widget hierarchy.</p>
+<p>If you are porting, <strong>coming from WebKitGTK is close to
+mechanical</strong>. The mapping<br />
+table is in<br />
+<a href="./migration/webkitgtk-to-blinkgtk-en.html">Migrating from
+WebKitGTK</a>.</p>
+<h2 id="wayland-and-gobject-introspection">Wayland and GObject
+Introspection</h2>
 <table>
 <thead>
 <tr>
-<th>Criteria</th>
+<th></th>
 <th>CEF</th>
 <th>WebKitGTK</th>
 <th>BlinkGTK</th>
@@ -1158,89 +218,218 @@ isolation not supported)</li>
 </thead>
 <tbody>
 <tr>
-<td>GTK4 Integration</td>
-<td>--</td>
-<td>++</td>
-<td>++</td>
+<td><strong>Wayland</strong></td>
+<td>Yes (X11 too)</td>
+<td>Yes (X11 too)</td>
+<td><strong>Wayland only</strong></td>
 </tr>
 <tr>
-<td>Cross-Platform</td>
-<td>++</td>
-<td>-</td>
-<td>--</td>
+<td><strong>GObject Introspection</strong></td>
+<td>No</td>
+<td>Yes</td>
+<td>Yes</td>
 </tr>
 <tr>
-<td>Web Standards</td>
-<td>++</td>
-<td>+</td>
-<td>++</td>
-</tr>
-<tr>
-<td>Binary Size</td>
-<td>-</td>
-<td>+</td>
-<td>+/-</td>
-</tr>
-<tr>
-<td>GObject / GIR</td>
-<td>--</td>
-<td>++</td>
-<td>++</td>
-</tr>
-<tr>
-<td>API Maturity</td>
-<td>++</td>
-<td>++</td>
-<td>-</td>
-</tr>
-<tr>
-<td>Documentation</td>
-<td>+</td>
-<td>++</td>
-<td>+</td>
-</tr>
-<tr>
-<td>Content Policy</td>
-<td>+/-</td>
-<td>+/-</td>
-<td>++</td>
-</tr>
-<tr>
-<td>Wayland Support</td>
-<td>+</td>
-<td>+</td>
-<td>++</td>
-</tr>
-<tr>
-<td>Package Distribution</td>
-<td>-</td>
-<td>++</td>
-<td>+</td>
+<td><strong>From Python / Rust</strong></td>
+<td>Needs separate bindings</td>
+<td>Directly, via GI</td>
+<td>Directly, via GI</td>
 </tr>
 </tbody>
 </table>
-<p>Legend: ++ = Excellent, + = Good, +/- = Average, - = Insufficient, --
-= Not supported / Major limitation</p>
-<hr />
+<p>Dropping X11 is a deliberate trade. Today's major desktops default to
+Wayland,<br />
+so the practical cost is small, while keeping to a single path buys a
+lot. If<br />
+X11 is a requirement, BlinkGTK is not an option for you.</p>
+<p>Because it supports GObject Introspection, Python looks like
+this:</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span></code></pre></div>
+<h2 id="how-big-it-is">How big it is</h2>
+<p>Carrying Chromium, it is <strong>not small</strong>. Measured on
+BlinkGTK<br />
+1.2.0-build2:</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Measured</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tarball (tar.gz)</td>
+<td>about 220 MB</td>
+</tr>
+<tr>
+<td>Unpacked</td>
+<td>about 749 MB</td>
+</tr>
+<tr>
+<td>Shared libraries</td>
+<td>537 files, about 710 MB</td>
+</tr>
+<tr>
+<td><code>libblinkgtk-0.1.so</code> alone</td>
+<td>about 10 MB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>If you are considering embedded hardware, check these numbers
+first.</strong> Where<br />
+storage is tight, the WebKit family is the realistic choice. Being<br />
+Chromium-based, CEF lands in the same order of magnitude.</p>
+<p>Memory is the same story: Chromium spreads its work over several
+processes, so<br />
+budget <strong>a few hundred MB per WebView</strong>.</p>
+<p>We ship RPM (Fedora), DEB (Debian / Ubuntu) and a tarball. The
+tarball runs from<br />
+wherever you unpack it.</p>
+<h2 id="what-the-api-can-do">What the API can do</h2>
+<p>The major capabilities are all there. For BlinkGTK, the entry points
+are:</p>
+<table>
+<thead>
+<tr>
+<th>What you want</th>
+<th>Where to look</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open pages, go back and forward</td>
+<td><a href="./api-reference/navigation-api-en.html">Navigation
+API</a></td>
+</tr>
+<tr>
+<td>Run JavaScript and exchange messages</td>
+<td><a href="./api-reference/app-integration-api-en.html">App integration
+API</a></td>
+</tr>
+<tr>
+<td>Serve app content over a custom URL scheme</td>
+<td>Same page</td>
+</tr>
+<tr>
+<td>Read and write cookies</td>
+<td><a href="./api-reference/c-api-reference-en.html">C API
+reference</a></td>
+</tr>
+<tr>
+<td>Attach DevTools</td>
+<td><a href="./api-reference/devtools-api-en.html">DevTools API</a></td>
+</tr>
+<tr>
+<td>Print to PDF, take screenshots</td>
+<td><a href="./api-reference/c-api-reference-en.html">C API
+reference</a></td>
+</tr>
+<tr>
+<td>Forbid copy, save and print</td>
+<td><a href="./api-reference/settings-api-en.html">Settings API</a></td>
+</tr>
+</tbody>
+</table>
+<p>Debugging splits along engine lines. BlinkGTK and CEF both give you
+<strong>Chrome<br />
+DevTools</strong>. WebKitGTK gives you Web Inspector.</p>
+<h2 id="japanese-typesetting">Japanese typesetting</h2>
+<p>This is an area BlinkGTK deliberately invests in.</p>
+<p>Vertical writing, ruby, emphasis dots, tate-chu-yoko and
+line-breaking rules are<br />
+supported, and we aim to follow JLReq (Requirements for Japanese Text
+Layout).<br />
+Problems we find are proposed as fixes to Chromium itself, so the work
+reaches<br />
+other Blink-based engines too.</p>
+<p>Where the quality of Japanese typesetting is part of the product —
+e-book<br />
+readers, for instance — this can be the deciding factor.</p>
+<h2 id="choosing">Choosing</h2>
+<table>
+<thead>
+<tr>
+<th>If this is you</th>
+<th>What suits</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>You ship to Windows / macOS as well</td>
+<td>CEF</td>
+</tr>
+<tr>
+<td>You need to keep size and memory down</td>
+<td>WebKitGTK</td>
+</tr>
+<tr>
+<td>X11 is a requirement</td>
+<td>CEF / WebKitGTK</td>
+</tr>
+<tr>
+<td>You want Chrome's rendering</td>
+<td>CEF / BlinkGTK</td>
+</tr>
+<tr>
+<td>You want it to behave like a GTK widget</td>
+<td>WebKitGTK / BlinkGTK</td>
+</tr>
+<tr>
+<td>You want to debug with Chrome DevTools</td>
+<td>CEF / BlinkGTK</td>
+</tr>
+<tr>
+<td>Japanese vertical typesetting quality matters</td>
+<td>BlinkGTK</td>
+</tr>
+<tr>
+<td>You are moving from WebKitGTK</td>
+<td>BlinkGTK (porting is close to mechanical)</td>
+</tr>
+</tbody>
+</table>
+<p>It is not a question of which is best but of <strong>what you can
+give up</strong>. BlinkGTK<br />
+gives up size and operating-system reach, and takes Chromium's rendering
+with<br />
+GTK's ergonomics in exchange.</p>
 <h2 id="references">References</h2>
 <ul>
 <li>CEF: <a
 href="https://bitbucket.org/chromiumembedded/cef">https://bitbucket.org/chromiumembedded/cef</a></li>
-<li>CEF C API: <a
-href="https://cef-builds.spotifycdn.com/docs/stable.html">https://cef-builds.spotifycdn.com/docs/stable.html</a></li>
 <li>WebKitGTK: <a
 href="https://webkitgtk.org/">https://webkitgtk.org/</a></li>
-<li>WebKitGTK API: <a
-href="https://webkitgtk.org/reference/webkit2gtk/stable/">https://webkitgtk.org/reference/webkit2gtk/stable/</a></li>
-<li>BlinkGTK: <a href="https://blinkgtk.org/">https://blinkgtk.org/</a>
-(distribution: <a
-href="https://github.com/daisy19gnu/blinkgtk-dist">https://github.com/daisy19gnu/blinkgtk-dist</a>)</li>
+<li>BlinkGTK: <a
+href="https://blinkgtk.org/">https://blinkgtk.org/</a></li>
 <li>Chromium: <a
 href="https://www.chromium.org/">https://www.chromium.org/</a></li>
 </ul>
-<hr />
-<p><strong>Author</strong>: BlinkGTK Development Team<br />
-<strong>Last Updated</strong>: 2026-03-26</p>
+<h2 id="history">History</h2>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.2.0-build2</td>
+<td>Rewritten. The previous text assumed CEF 127 / WebKitGTK 2.44 /
+BlinkGTK v1.0.0-rc2 (Chromium 146) and had stood unchanged for over four
+months. Its distribution size — "roughly 65-80MB" — was far from reality
+(220MB packed, 749MB unpacked). Estimated performance figures for the
+other engines have been dropped, since we cannot keep measuring them
+fairly</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>
 </div></div>

@@ -25,7 +25,7 @@
     margin: 0 0 .2em;
     letter-spacing: -0.02em;
   }
-  .tagline { font-size: 1.15rem; margin: 0 0 1.6em; }
+  .tagline { font-size: 1.15rem; margin: 0 0 2.5em; }
   .tagline .ja { display: block; }
   .tagline .en { display: block; color: #5b6770; font-size: .95rem; margin-top: .3em; }
   /* 主要な行き先への案内。初めて来た方が迷わないよう、
