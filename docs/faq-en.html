@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Frequently asked questions — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Questions we are asked, from people considering BlinkGTK through to people already building with it.">
+<link rel="canonical" href="https://blinkgtk.org/docs/faq-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Frequently asked questions — BlinkGTK">
+<meta property="og:description" content="Questions we are asked, from people considering BlinkGTK through to people already building with it.">
+<meta property="og:url" content="https://blinkgtk.org/docs/faq-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/faq-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/faq-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/faq-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="frequently-asked-questions">Frequently asked questions</h1>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Version</strong>: 1.2.0-build2</p>
+<p>Questions we are asked, from people considering BlinkGTK through to
+people<br />
+already building with it.</p>
+<p>If what you need is not here, try <a
+href="./troubleshooting-en.html">When things go wrong</a><br />
+or simply write to <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a>.</p>
+<h2 id="about-blinkgtk">About BlinkGTK</h2>
+<h3 id="what-is-blinkgtk">What is BlinkGTK?</h3>
+<p>A library that makes Chromium's rendering engine (Blink) usable
+<strong>as a GTK4<br />
+widget</strong>.</p>
+<p>Put a <code>BlinkWebView</code> in a window and a web page appears in
+it. You handle it the<br />
+way you handle a GTK button or label.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<h3 id="what-is-it-for">What is it for?</h3>
+<p>Anywhere you want to build a screen with web technology. Areas where
+it is being<br />
+considered or used include e-book readers, in-vehicle information
+displays,<br />
+industrial control panels, digital signage and point-of-sale
+terminals.</p>
+<p>See <a href="./use-cases-en.html">What BlinkGTK is for</a> for
+more.</p>
+<h3 id="how-does-it-differ-from-webkitgtk">How does it differ from
+WebKitGTK?</h3>
+<p>The <strong>engine</strong>, most of all. BlinkGTK uses the same
+Blink as Chromium, so pages<br />
+look the way they look in Chrome.</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>BlinkGTK</th>
+<th>WebKitGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Engine</td>
+<td>Blink (Chromium)</td>
+<td>WebKit</td>
+</tr>
+<tr>
+<td>Rendering matches</td>
+<td>Chrome</td>
+<td>Closer to Safari</td>
+</tr>
+<tr>
+<td>Developer tools</td>
+<td>Chrome DevTools</td>
+<td>Web Inspector</td>
+</tr>
+</tbody>
+</table>
+<p>As widgets they are handled similarly, but <strong>the function names
+differ</strong>. If you<br />
+are porting, <a href="./migration/webkitgtk-to-blinkgtk-en.html">Migrating
+from WebKitGTK</a><br />
+has the mapping table.</p>
+<p>This is not a question of which is better. BlinkGTK suits you if you
+want to<br />
+develop against Chrome as your reference, or want Chrome DevTools.</p>
+<h3 id="is-this-a-new-project">Is this a new project?</h3>
+<p>Yes. It has not been public for long.</p>
+<p>The upside is that <strong>reported problems get attention
+quickly</strong>. Points raised by<br />
+users have gone straight into the next build. Whatever you notice,
+however<br />
+small, please tell us.</p>
+<h3 id="what-licence-is-it-under">What licence is it under?</h3>
+<p>BSD 3-Clause. Commercial use is fine.</p>
+<p>The bundled Chromium-derived components carry their own licences. We
+ship<br />
+<code>THIRD_PARTY_NOTICES</code> with the distribution — please carry it
+along if you<br />
+redistribute.</p>
+<hr />
+<h2 id="will-it-work-for-me">Will it work for me?</h2>
+<h3 id="which-languages-can-i-use">Which languages can I use?</h3>
+<p>C is the baseline. On top of that it supports <strong>GObject
+Introspection</strong>, so<br />
+Python, Rust, JavaScript and Vala can call it too.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span></code></pre></div>
+<p>There are tutorials for <a
+href="./tutorials/python-tutorial-en.html">Python</a> and<br />
+<a href="./tutorials/rust-tutorial-en.html">Rust</a>.</p>
+<h3 id="does-it-run-on-x11">Does it run on X11?</h3>
+<p>No. It is <strong>Wayland only</strong>.</p>
+<p>Today's major desktops (GNOME, KDE Plasma, Sway) default to Wayland,
+so it<br />
+usually just works. If you are on an X11 session, log back in under
+Wayland.</p>
+<h3 id="which-distributions-are-supported">Which distributions are
+supported?</h3>
+<p>We ship RPM (Fedora family), DEB (Debian / Ubuntu family) and a
+tarball. The<br />
+tarball runs from wherever you unpack it, so you can try it on any
+distribution.</p>
+<p><a href="./INSTALL.html">Install</a> has the steps.</p>
+<h3 id="do-i-need-a-gpu">Do I need a GPU?</h3>
+<p>No. There is a CPU-only rendering path, and it works by default.</p>
+<p>Where a GPU is available, <code>BLINKGTK_GPU_MODE=egl</code> switches
+to GPU rendering.<br />
+Which is faster varies by machine, so it is worth trying on your own
+hardware.</p>
+<h3 id="how-much-memory-does-it-use">How much memory does it use?</h3>
+<p>Because Chromium spreads its work over several processes, budget
+<strong>a few hundred<br />
+MB per WebView</strong>. If you are targeting embedded hardware, this
+needs to be part<br />
+of your design.</p>
+<hr />
+<h2 id="building-with-it">Building with it</h2>
+<h3 id="where-should-i-start">Where should I start?</h3>
+<p><a href="./building-with-blinkgtk-en.html">Build and run your first
+app</a> is the entry<br />
+point. It goes end to end, up to something actually running.</p>
+<p>After that, looking things up from your goal in the<br />
+<a href="./api-reference/howto-index-en.html">How do I…? index</a> is
+usually quickest.</p>
+<h3 id="can-i-use-it-with-gtkapplication">Can I use it with
+GtkApplication?</h3>
+<p>Yes — with <strong>one caveat about the main loop</strong>.</p>
+<p><code>g_application_run()</code> does not turn Chromium's loop, so on
+its own it renders<br />
+nothing. Present your window, then turn
+<code>blink_gtk_run_main_loop()</code>.</p>
+<p>The shape is in <a
+href="./consumer-integration-guide-en.html">Integrate into your
+application</a>.<br />
+We wrote that section after a user told us their code "did exactly what
+the<br />
+documentation said and still did not work".</p>
+<h3 id="can-it-do-vertical-japanese-text">Can it do vertical Japanese
+text?</h3>
+<p>It can — and it is an area we <strong>put particular effort
+into</strong>.</p>
+<p>Vertical writing, ruby, emphasis dots, tate-chu-yoko and
+line-breaking rules are<br />
+all supported. We aim to follow JLReq (Requirements for Japanese Text
+Layout),<br />
+and we contribute fixes upstream to Chromium.</p>
+<p>If you find anything that is set differently from what you expect,
+please tell<br />
+us. Send the HTML that shows it and we will use it directly in our
+testing.</p>
+<h3 id="how-do-i-serve-my-applications-own-content">How do I serve my
+application's own content?</h3>
+<p>Register a custom URL scheme. Something like <code>myapp://</code>
+can serve data from<br />
+inside your application, which is both safer and easier to work with
+than<br />
+<code>file://</code>.</p>
+<p>See "Custom URL schemes" in the<br />
+<a href="./api-reference/app-integration-api-en.html">App integration
+API</a>.</p>
+<h3 id="can-i-talk-to-the-pages-javascript">Can I talk to the page's
+JavaScript?</h3>
+<p>Yes, in both directions.</p>
+<ul>
+<li>Run JavaScript from C</li>
+<li>Receive messages from the page's JavaScript in C</li>
+<li>Send messages from C to the page</li>
+</ul>
+<p>Also in the <a href="./api-reference/app-integration-api-en.html">App
+integration API</a>.</p>
+<h3 id="can-i-prevent-copying-or-printing">Can I prevent copying or
+printing?</h3>
+<p>Yes. There are settings meant for cases like e-book readers and
+kiosks where the<br />
+content needs protecting.</p>
+<p>See the <a href="./api-reference/settings-api-en.html">Settings
+API</a>.</p>
+<hr />
+<h2 id="running-it">Running it</h2>
+<h3 id="how-often-is-it-updated">How often is it updated?</h3>
+<p>We follow Chromium's stable releases. On top of that, fixes go out as
+builds as<br />
+they are made.</p>
+<p>The <a href="./version-history-en.html">release history</a> records the
+updates, and<br />
+<a href="./chromium-feature-history-en.html">what changed in Chromium</a>
+records what became<br />
+possible with each engine version.</p>
+<h3 id="can-i-stay-on-an-older-version">Can I stay on an older
+version?</h3>
+<p>Behaviour will not change, but <strong>we do recommend updating a web
+browser engine</strong>,<br />
+because Chromium updates carry security fixes. If you display pages from
+the<br />
+internet, keep reasonably current.</p>
+<p>On a closed network the calculus is different.</p>
+<h3 id="can-i-ship-it-with-my-application">Can I ship it with my
+application?</h3>
+<p>Yes. You can bundle what is needed and produce something that runs on
+its own.</p>
+<p><a href="./portable-app-guide-en.html">Ship as a portable
+application</a> has the steps.</p>
+<h3 id="can-i-use-it-in-a-commercial-product">Can I use it in a
+commercial product?</h3>
+<p>Yes. Under BSD 3-Clause there is no restriction on embedding it in
+commercial<br />
+products.</p>
+<p>For questions about adoption, or about tuning it for a particular
+environment,<br />
+write to <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a>.</p>
+<hr />
+<h2 id="if-you-get-stuck">If you get stuck</h2>
+<ul>
+<li><strong>Look it up by symptom</strong>: <a
+href="./troubleshooting-en.html">When things go wrong</a></li>
+<li><strong>Report a problem</strong>: <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">https://github.com/daisy19gnu/blinkgtk-dist/issues</a></li>
+<li><strong>Ask us</strong>: <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a></li>
+</ul>
+<p>There is no need to wonder whether a question is worth asking. Please
+just ask.</p>
+</body>
+</html>
+</div></div>

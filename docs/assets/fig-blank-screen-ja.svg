@@ -1,0 +1,59 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 540" font-family="Liberation Sans, Harano Aji Gothic, sans-serif">
+<text x="380" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">画面が出ないとき — 5 つの関門のどこで止まったか</text>
+<text x="380" y="44" text-anchor="middle" font-size="10" fill="#5b6770">左が処理の流れ、右がそこで止まったときに見える症状です</text>
+
+<!-- 関門 1 -->
+<rect x="40" y="62" width="300" height="72" rx="8" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="55" y="88" font-size="12" font-weight="bold" fill="#1a3a8a">1. エンジンが起きる</text>
+<text x="55" y="109" font-size="10" fill="#1a3a8a">blink_gtk_init()</text>
+<text x="55" y="126" font-size="10" fill="#1a3a8a">Chromium の各プロセスがここで立ち上がる</text>
+<rect x="400" y="62" width="320" height="72" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.2"/>
+<text x="415" y="88" font-size="11" font-weight="bold" fill="#8a1a1a">止まると: 窓すら出ない</text>
+<text x="415" y="108" font-size="10" fill="#8a1a1a">端末に FATAL が出て即終了します。</text>
+<text x="415" y="125" font-size="10" fill="#8a1a1a">リソースの場所か、版の食い違いが原因</text>
+
+<!-- 関門 2 -->
+<rect x="40" y="154" width="300" height="72" rx="8" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="55" y="180" font-size="12" font-weight="bold" fill="#1a3a8a">2. 窓とウィジェットができる</text>
+<text x="55" y="201" font-size="10" fill="#1a3a8a">gtk_window_new() / blink_web_view_new()</text>
+<text x="55" y="218" font-size="10" fill="#1a3a8a">Wayland に繋がり、表示面が確保される</text>
+<rect x="400" y="154" width="320" height="72" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.2"/>
+<text x="415" y="180" font-size="11" font-weight="bold" fill="#8a1a1a">止まると: 窓が出ない・すぐ閉じる</text>
+<text x="415" y="200" font-size="10" fill="#8a1a1a">Failed to open Wayland display が典型。</text>
+<text x="415" y="217" font-size="10" fill="#8a1a1a">WAYLAND_DISPLAY を確かめてください</text>
+
+<!-- 関門 3 -->
+<rect x="40" y="246" width="300" height="72" rx="8" fill="#f4f1e8" stroke="#8a7a3a" stroke-width="1.5"/>
+<text x="55" y="272" font-size="12" font-weight="bold" fill="#6a5a1a">3. 読み込みが始まる</text>
+<text x="55" y="293" font-size="10" fill="#6a5a1a">blink_web_view_load_uri()</text>
+<text x="55" y="310" font-size="10" fill="#6a5a1a">URL を解決し、取得を始める</text>
+<rect x="400" y="246" width="320" height="72" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.2"/>
+<text x="415" y="272" font-size="11" font-weight="bold" fill="#8a1a1a">止まると: 白いまま変わらない</text>
+<text x="415" y="292" font-size="10" fill="#8a1a1a">URL が実在しないのが最も多い原因です。</text>
+<text x="415" y="309" font-size="10" fill="#8a1a1a">file:// のパスを実際に開いて確かめる</text>
+
+<!-- 関門 4 -->
+<rect x="40" y="338" width="300" height="84" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.8"/>
+<text x="55" y="364" font-size="12" font-weight="bold" fill="#8a1a1a">4. メインループが回る</text>
+<text x="55" y="385" font-size="10" fill="#8a1a1a">blink_gtk_run_main_loop()</text>
+<text x="55" y="402" font-size="10" fill="#8a1a1a">ここが回って初めて読み込みが確定し、</text>
+<text x="55" y="416" font-size="10" fill="#8a1a1a">描画が始まる</text>
+<rect x="400" y="338" width="320" height="84" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.8"/>
+<text x="415" y="364" font-size="11" font-weight="bold" fill="#8a1a1a">止まると: 窓は出るが永久に白い</text>
+<text x="415" y="384" font-size="10" fill="#8a1a1a">g_application_run() を回していると、</text>
+<text x="415" y="401" font-size="10" fill="#8a1a1a">ここに到達しません。エラーも出ないため</text>
+<text x="415" y="418" font-size="10" fill="#8a1a1a">最も気付きにくい箇所です</text>
+
+<!-- 関門 5 -->
+<rect x="40" y="442" width="300" height="66" rx="8" fill="#e9f6ec" stroke="#3a8a4d" stroke-width="1.5"/>
+<text x="55" y="468" font-size="12" font-weight="bold" fill="#1a6a30">5. 画面に出る</text>
+<text x="55" y="489" font-size="10" fill="#1a6a30">描画結果がウィジェットに届く</text>
+<rect x="400" y="442" width="320" height="66" rx="8" fill="#f7f8f9" stroke="#9aa4ad" stroke-width="1.2"/>
+<text x="415" y="468" font-size="11" font-weight="bold" fill="#3a444d">ここまで来れば、あとは見た目の調整</text>
+<text x="415" y="489" font-size="10" fill="#3a444d">倍率・描画経路・フォントの話になります</text>
+
+<line x1="190" y1="134" x2="190" y2="148" stroke="#5b6770" stroke-width="1.6"/><path d="M 185 148 L 195 148 L 190 156 Z" fill="#5b6770"/>
+<line x1="190" y1="226" x2="190" y2="240" stroke="#5b6770" stroke-width="1.6"/><path d="M 185 240 L 195 240 L 190 248 Z" fill="#5b6770"/>
+<line x1="190" y1="318" x2="190" y2="332" stroke="#5b6770" stroke-width="1.6"/><path d="M 185 332 L 195 332 L 190 340 Z" fill="#5b6770"/>
+<line x1="190" y1="422" x2="190" y2="436" stroke="#5b6770" stroke-width="1.6"/><path d="M 185 436 L 195 436 L 190 444 Z" fill="#5b6770"/>
+</svg>

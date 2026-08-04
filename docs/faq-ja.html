@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>よくあるご質問 — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="導入をご検討中の方から、実際に使い始めた方まで、よくいただくご質問をまとめました。">
+<link rel="canonical" href="https://blinkgtk.org/docs/faq-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="よくあるご質問 — BlinkGTK">
+<meta property="og:description" content="導入をご検討中の方から、実際に使い始めた方まで、よくいただくご質問をまとめました。">
+<meta property="og:url" content="https://blinkgtk.org/docs/faq-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/faq-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/faq-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/faq-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="よくあるご質問">よくあるご質問</h1>
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>バージョン</strong>: 1.2.0-build2</p>
+<p>導入をご検討中の方から、実際に使い始めた方まで、よくいただくご質問をまとめました。</p>
+<p>ここに無いことは <a href="./troubleshooting-ja.html">困ったときは</a>
+をご覧いただくか、<br />
+<a href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a>
+までお気軽にお尋ねください。</p>
+<h2 id="blinkgtk-について">BlinkGTK について</h2>
+<h3 id="blinkgtk-とは何ですか">BlinkGTK とは何ですか</h3>
+<p>Chromium のレンダリングエンジン (Blink) を、<strong>GTK4
+のウィジェットとして<br />
+使えるようにした</strong>ライブラリです。</p>
+<p><code>BlinkWebView</code> を窓に入れれば、そこに Web
+ページが表示されます。GTK の<br />
+ボタンやラベルと同じ感覚で扱えます。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<h3 id="何に使えますか">何に使えますか</h3>
+<p>Web
+の技術で画面を作りたい場面すべてです。実際に検討・利用されている領域には、<br />
+電子書籍リーダー、車載の情報画面、産業機器の操作パネル、デジタルサイネージ、<br />
+店頭端末などがあります。</p>
+<p>詳しくは <a href="./use-cases-ja.html">BlinkGTK は何に使えるか</a>
+をご覧ください。</p>
+<h3 id="webkitgtk-とどう違いますか">WebKitGTK とどう違いますか</h3>
+<p>いちばん大きな違いは<strong>エンジン</strong>です。BlinkGTK は
+Chromium と同じ Blink を<br />
+使うので、Chrome で見えるとおりに表示されます。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>BlinkGTK</th>
+<th>WebKitGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>エンジン</td>
+<td>Blink (Chromium)</td>
+<td>WebKit</td>
+</tr>
+<tr>
+<td>表示の基準</td>
+<td>Chrome と同じ</td>
+<td>Safari に近い</td>
+</tr>
+<tr>
+<td>DevTools</td>
+<td>Chrome DevTools が使える</td>
+<td>Web Inspector</td>
+</tr>
+</tbody>
+</table>
+<p>ウィジェットとしての扱い方はよく似ていますが、<strong>関数名は異なります</strong>。<br />
+移行される場合は <a
+href="./migration/webkitgtk-to-blinkgtk-ja.html">WebKitGTK
+からの移行</a><br />
+に対応表があります。</p>
+<p>「どちらが優れているか」という話ではありません。Chrome
+を基準に確認しながら<br />
+作りたい、Chrome DevTools を使いたい、という場合に BlinkGTK
+が向いています。</p>
+<h3 id="まだ新しいプロジェクトですか">まだ新しいプロジェクトですか</h3>
+<p>はい。公開して間もないプロジェクトです。</p>
+<p>そのぶん、<strong>ご報告いただいた不具合には早く手が入ります</strong>。実際、利用者の方から<br />
+いただいた指摘がそのまま次のビルドに反映されています。お気付きの点は<br />
+どんな小さなことでもお知らせください。</p>
+<h3 id="ライセンスは何ですか">ライセンスは何ですか</h3>
+<p>BSD 3-Clause です。商用利用も可能です。</p>
+<p>同梱している Chromium
+由来のコンポーネントには、それぞれのライセンスが<br />
+適用されます。配布物に <code>THIRD_PARTY_NOTICES</code>
+を同梱していますので、<br />
+再配布される際はそちらもあわせてお使いください。</p>
+<hr />
+<h2 id="使えるかどうか">使えるかどうか</h2>
+<h3 id="どの言語から使えますか">どの言語から使えますか</h3>
+<p>C から使うのが基本です。加えて <strong>GObject Introspection</strong>
+に対応しているので、<br />
+Python・Rust・JavaScript・Vala などからも呼べます。</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span></code></pre></div>
+<p>チュートリアルは <a
+href="./tutorials/python-tutorial-ja.html">Python</a> と<br />
+<a href="./tutorials/rust-tutorial-ja.html">Rust</a>
+をご用意しています。</p>
+<h3 id="x11-でも動きますか">X11 でも動きますか</h3>
+<p>いいえ。<strong>Wayland 専用</strong>です。</p>
+<p>現在の主要なデスクトップ環境 (GNOME・KDE Plasma・Sway など) は既定で
+Wayland<br />
+なので、通常はそのまま動きます。X11 セッションでお使いの場合は、Wayland
+での<br />
+ログインに切り替えてください。</p>
+<h3
+id="どのディストリビューションで動きますか">どのディストリビューションで動きますか</h3>
+<p>RPM (Fedora 系) と DEB (Debian / Ubuntu 系)、それに tarball
+を配布しています。<br />
+tarball
+は展開したその場で動くので、どのディストリビューションでもお試し<br />
+いただけます。</p>
+<p><a href="./INSTALL.html">インストール</a> に手順があります。</p>
+<h3 id="gpu-は必要ですか">GPU は必要ですか</h3>
+<p>必須ではありません。CPU
+だけで描画する経路があり、既定でも動きます。</p>
+<p>GPU が使える環境では、<code>BLINKGTK_GPU_MODE=egl</code> で GPU
+描画に切り替えられます。<br />
+環境によってどちらが速いかは変わるので、実機でお試しいただくのが確実です。</p>
+<h3 id="どのくらいメモリを使いますか">どのくらいメモリを使いますか</h3>
+<p>Chromium がプロセスを分けて動く都合上、<strong>WebView 1 つあたり数百
+MB</strong>を<br />
+見込んでください。組み込み機器でお使いの場合は、この点を設計に織り込んで<br />
+いただく必要があります。</p>
+<hr />
+<h2 id="作るとき">作るとき</h2>
+<h3 id="最初は何を読めばよいですか">最初は何を読めばよいですか</h3>
+<p><a
+href="./building-with-blinkgtk-ja.html">最初のアプリをビルドして動かす</a>
+が入口です。<br />
+実際に動くところまで通しで書いてあります。</p>
+<p>その次は、やりたいことに応じて<br />
+<a href="./api-reference/howto-index-ja.html">逆引き索引</a>
+から引くのが早いです。</p>
+<h3 id="gtkapplication-と組み合わせられますか">GtkApplication
+と組み合わせられますか</h3>
+<p>はい。ただし<strong>メインループにひとつ注意点</strong>があります。</p>
+<p><code>g_application_run()</code> は Chromium
+側のループを回さないため、これだけでは<br />
+ページが表示されません。窓を出したあとに
+<code>blink_gtk_run_main_loop()</code> を<br />
+回してください。</p>
+<p>書き方は <a
+href="./consumer-integration-guide-ja.html">アプリに組み込む</a>
+にあります。<br />
+これは実際に利用者の方から「記載どおりに書いたのに動かない」とご指摘を<br />
+いただいて整備した箇所です。</p>
+<h3 id="日本語の縦書きは使えますか">日本語の縦書きは使えますか</h3>
+<p>使えます。むしろ<strong>力を入れている領域</strong>です。</p>
+<p>縦書き・ルビ・圏点・縦中横・禁則処理に対応しています。JLReq
+(日本語組版処理の<br />
+要件) に沿った組版を目指しており、Chromium
+本体への貢献も行っています。</p>
+<p>期待どおりに組まれない箇所を見つけられた場合は、ぜひお知らせください。<br />
+再現用の HTML をいただければ、そのまま検証に使わせていただきます。</p>
+<h3
+id="アプリ内のコンテンツをどう配信しますか">アプリ内のコンテンツをどう配信しますか</h3>
+<p>独自の URL スキームを登録できます。<code>myapp://</code>
+のような形でアプリ内のデータを<br />
+配信でき、<code>file://</code> を使うより安全で扱いやすい方法です。</p>
+<p>詳しくは <a
+href="./api-reference/app-integration-api-ja.html">アプリ連携 API</a>
+の<br />
+「カスタム URL スキーム」をご覧ください。</p>
+<h3 id="ページの-javascript-とやり取りできますか">ページの JavaScript
+とやり取りできますか</h3>
+<p>できます。双方向です。</p>
+<ul>
+<li>C から JavaScript を実行する</li>
+<li>ページの JavaScript から C にメッセージを送る</li>
+<li>C からページにメッセージを送る</li>
+</ul>
+<p>こちらも <a
+href="./api-reference/app-integration-api-ja.html">アプリ連携 API</a>
+に<br />
+まとまっています。</p>
+<h3 id="コピーや印刷を禁止できますか">コピーや印刷を禁止できますか</h3>
+<p>できます。電子書籍リーダーや店頭端末のように、コンテンツを保護したい用途を<br />
+想定した設定があります。</p>
+<p><a href="./api-reference/settings-api-ja.html">設定 API</a>
+をご覧ください。</p>
+<hr />
+<h2 id="運用するとき">運用するとき</h2>
+<h3
+id="どのくらいの頻度で更新されますか">どのくらいの頻度で更新されますか</h3>
+<p>Chromium
+の安定版が上がるのに合わせて追従しています。加えて、不具合の修正は<br />
+その都度ビルドを出しています。</p>
+<p>更新の履歴は <a href="./version-history-ja.html">改版履歴</a>
+に、Chromium の版が上がって<br />
+何ができるようになったかは<br />
+<a href="./chromium-feature-history-ja.html">Chromium 新機能史</a>
+にまとめています。</p>
+<h3
+id="古い版を使い続けても大丈夫ですか">古い版を使い続けても大丈夫ですか</h3>
+<p>動作は変わりませんが、<strong>Web
+ブラウザは更新をおすすめします</strong>。Chromium の<br />
+更新には脆弱性の修正が含まれるためです。インターネット上のページを表示する<br />
+用途では、なるべく新しい版をお使いください。</p>
+<p>閉じたネットワークでお使いの場合は、この限りではありません。</p>
+<h3 id="アプリと一緒に配布できますか">アプリと一緒に配布できますか</h3>
+<p>できます。必要なファイルを同梱して、単体で動く形にまとめられます。</p>
+<p>手順は <a
+href="./portable-app-guide-ja.html">ポータブルアプリとして配布する</a>
+に<br />
+あります。</p>
+<h3 id="商用製品に組み込めますか">商用製品に組み込めますか</h3>
+<p>はい。BSD 3-Clause
+なので、商用製品への組み込みに制限はありません。</p>
+<p>導入のご相談や、特定の環境向けの調整については <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a> まで<br />
+お問い合わせください。</p>
+<hr />
+<h2 id="お困りのときは">お困りのときは</h2>
+<ul>
+<li><strong>症状から探す</strong>: <a
+href="./troubleshooting-ja.html">困ったときは</a></li>
+<li><strong>不具合のご報告</strong>: <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">https://github.com/daisy19gnu/blinkgtk-dist/issues</a></li>
+<li><strong>お問い合わせ</strong>: <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a></li>
+</ul>
+<p>「こんなことを聞いてよいのだろうか」と迷われる必要はありません。<br />
+お気軽にお尋ねください。</p>
+</body>
+</html>
+</div></div>

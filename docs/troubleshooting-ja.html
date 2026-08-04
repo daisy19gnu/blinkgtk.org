@@ -1,0 +1,399 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>困ったときは — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="うまくいかないときのためのページです。症状から引けるように並べてあります。">
+<link rel="canonical" href="https://blinkgtk.org/docs/troubleshooting-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="困ったときは — BlinkGTK">
+<meta property="og:description" content="うまくいかないときのためのページです。症状から引けるように並べてあります。">
+<meta property="og:url" content="https://blinkgtk.org/docs/troubleshooting-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/troubleshooting-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/troubleshooting-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/troubleshooting-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="困ったときは">困ったときは</h1>
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>バージョン</strong>: 1.2.0-build2</p>
+<p>うまくいかないときのためのページです。症状から引けるように並べてあります。</p>
+<p>BlinkGTK
+はまだ若いプロジェクトです。ここに載っていない症状に出会われたら、<br />
+それは私たちがまだ知らない症状かもしれません。<strong>遠慮なくお知らせください</strong>
+—<br />
+再現手順が 1
+つあれば追いかけられます。連絡先はこのページの末尾にあります。</p>
+<p><img src="./assets/fig-triage-ja.svg"
+alt="どこで止まっているかを見分ける" /></p>
+<p><em><strong>図 1: 切り分けの順序</strong>
+上から順に確かめると、原因のある層まで一直線にたどり着きます。</em></p>
+<h2 id="まず試していただきたいこと">まず試していただきたいこと</h2>
+<p>原因を探す前に、この 3 つで多くが片付きます。</p>
+<p><strong>1. ログを最後まで読む</strong></p>
+<p>端末に出るメッセージに答えが書いてあることが多いです。とくに
+<code>FATAL</code> の行が<br />
+要点です。長くても、最後まで目を通してみてください。</p>
+<p><strong>2. 同梱のサンプルを動かす</strong></p>
+<p>配布物の <code>examples/</code> にある <code>blinkgtk_browser</code>
+が動くかどうかで、切り分けが<br />
+一気に進みます。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /usr/share/doc/blinkgtk-0.1/examples</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./blinkgtk_browser</span> https://example.com/</span></code></pre></div>
+<p>これが動けば、<strong>環境は正常</strong>です。原因はご自分のコード側にあります。<br />
+動かなければ、環境の側です。</p>
+<p><strong>3. 最小の再現を作る</strong></p>
+<p>1
+画面ぶんのコードまで削ってみてください。削っている途中で原因が見えることが<br />
+よくあります。それでも再現するなら、そのコードをそのまま送っていただければ<br />
+こちらで追えます。</p>
+<hr />
+<h2 id="画面が出ない">画面が出ない</h2>
+<p>いちばん多いご相談です。窓は出るのに中身が白いまま、あるいは黒いまま。</p>
+<p><img src="./assets/fig-blank-screen-ja.svg"
+alt="画面が出ないとき" /></p>
+<p><em><strong>図 2: 5 つの関門</strong>
+どこで止まったかによって、見える症状が変わります。</em></p>
+<h3 id="メインループを間違えている">メインループを間違えている</h3>
+<p><strong>これが圧倒的に多い原因です。</strong>
+<code>GtkApplication</code> を使う書き方をすると、つい<br />
+こう書いてしまいます。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* これでは画面が出ません */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> g_application_run<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> argc<span class="op">,</span> argv<span class="op">);</span></span></code></pre></div>
+<p><code>g_application_run()</code> は GTK
+のループを回しますが、<strong>Chromium 側のループを<br />
+回しません</strong>。読み込みが確定しないので、いつまでも白いままです。</p>
+<p>厄介なのは、<strong>コンパイルも起動も通ってしまう</strong>ことです。エラーも警告も出ません。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* こちらを回してください */</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span></code></pre></div>
+<p><code>GtkApplication</code>
+と組み合わせる場合は、<code>activate</code> で窓を出したあとに<br />
+<code>blink_gtk_run_main_loop()</code> を回します。書き方は<br />
+<a
+href="./consumer-integration-guide-ja.html">アプリに組み込む</a>にあります。</p>
+<h3 id="url-が実在しない">URL が実在しない</h3>
+<p>次に多い原因です。とくに <code>file://</code> のパス誤りです。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;file:///home/you/test.html&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>このパスを、ふつうのブラウザのアドレス欄に貼って開いてみてください。開けなければ<br />
+BlinkGTK でも開けません。</p>
+<p><code>data:</code> URL を使うときは、<strong><code>#</code>
+を含めない</strong>ようにご注意ください。<code>#</code> 以降は<br />
+フラグメントとして扱われ、それより後ろが切り落とされます。CSS
+の色指定<br />
+<code>#ffe</code> を書いてしまうと、そこから先の HTML
+がまるごと消えます。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 切れてしまう */</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;data:text/html,&lt;body style=&#39;background:#ffe&#39;&gt;...&quot;</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* どちらかにする */</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;data:text/html,&lt;body style=&#39;background:rgb(255,255,238)&#39;&gt;...&quot;</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;data:text/html,&lt;body style=&#39;background:</span><span class="sc">%23f</span><span class="st">fe&#39;&gt;...&quot;</span></span></code></pre></div>
+<h3 id="描画経路が環境に合っていない">描画経路が環境に合っていない</h3>
+<p>環境変数 <code>BLINKGTK_GPU_MODE</code>
+で描画経路を切り替えられます。既定のままで<br />
+出ないときは、別の経路を試してみてください。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>software <span class="ex">./your-app</span></span></code></pre></div>
+<p><code>software</code>
+はもっとも素直な経路で、どの環境でも動きます。まずこれで出るか<br />
+どうかを見ると、GPU 側の問題かどうかが分かります。</p>
+<hr />
+<h2 id="起動しないすぐ落ちる">起動しない・すぐ落ちる</h2>
+<h3 id="ライブラリが見つからない">ライブラリが見つからない</h3>
+<pre><code>error while loading shared libraries: libblinkgtk.so.0: cannot open shared object file</code></pre>
+<p>まず、どこを探しているかを見ます。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ldd</span> ./your-app <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-i</span> blink</span></code></pre></div>
+<p><code>not found</code>
+と出ていれば、そのライブラリの場所を教えます。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/usr/lib64:<span class="va">$LD_LIBRARY_PATH</span></span></code></pre></div>
+<p>パッケージから入れた場合は、通常この設定は要りません。それでも見つからない<br />
+ときは、インストールが途中で失敗している可能性があります。</p>
+<h3 id="wayland-に繋がらない">Wayland に繋がらない</h3>
+<pre><code>Failed to open Wayland display</code></pre>
+<p>BlinkGTK は <strong>Wayland 専用</strong>です。X11
+では動きません。</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$WAYLAND_DISPLAY</span>      <span class="co"># wayland-0 などが出れば OK</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$XDG_SESSION_TYPE</span>     <span class="co"># wayland と出れば OK</span></span></code></pre></div>
+<p>空だったり <code>x11</code> と出る場合は、Wayland
+セッションでログインし直してください。<br />
+GNOME・KDE Plasma・Sway などは既定で Wayland です。</p>
+<p>SSH 越しやコンテナの中では、Wayland
+のソケットが見えないことがあります。<br />
+その場合は <code>WAYLAND_DISPLAY</code> と <code>XDG_RUNTIME_DIR</code>
+の両方を渡す必要があります。</p>
+<h3 id="起動した瞬間に落ちる">起動した瞬間に落ちる</h3>
+<pre><code>Received signal 5 SIGTRAP
+Check failed: ... (PA_NOTREACHED)</code></pre>
+<p><strong>ライブラリとリソースの版がずれている</strong>ときの典型的な症状です。<br />
+<code>libv8.so</code> と <code>snapshot_blob.bin</code> /
+<code>v8_context_snapshot.bin</code> は、<br />
+<strong>同じビルドのものを揃えて</strong>使う必要があります。</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-la</span> /usr/lib64/libv8.so /usr/lib64/blinkgtk/<span class="pp">*</span>.bin</span></code></pre></div>
+<p>日付が大きく食い違っていたら、混ざっています。パッケージを入れ直すのが<br />
+確実です。tarball
+を展開して使っている場合は、<strong>中身を混ぜずに</strong>、<br />
+展開したディレクトリごと使ってください。</p>
+<h3
+id="組み込んだアプリだけが白くなる">組み込んだアプリだけが白くなる</h3>
+<p>同梱サンプルは動くのに、ご自分のアプリだけ白い —
+という場合、リンクの仕方が<br />
+原因のことがあります。</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your-app <span class="kw">|</span> <span class="fu">grep</span> NEEDED</span></code></pre></div>
+<p><code>libbase_allocator_partition_allocator_...allocator_shim.so</code>
+が並んでいるか<br />
+確かめてください。無ければ、リンク指定が不足しています。</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> app app.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<p><code>pkg-config</code>
+を通せば必要なものが揃います。<code>-lblinkgtk</code>
+だけを手で書くと<br />
+不足します。</p>
+<hr />
+<h2 id="ビルドできない">ビルドできない</h2>
+<h3 id="pkg-config-が見つけてくれない">pkg-config
+が見つけてくれない</h3>
+<pre><code>Package blinkgtk-0.1 was not found in the pkg-config search path</code></pre>
+<p><code>.pc</code> ファイルの場所を確かめます。</p>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> / <span class="at">-name</span> <span class="st">&#39;blinkgtk-0.1.pc&#39;</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null</span></code></pre></div>
+<p>見つかったら、そのディレクトリを教えます。</p>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1</span></code></pre></div>
+<p>そもそも見つからない場合は、<strong>開発用パッケージ</strong>が入っていません。配布物の<br />
+ダウンロードページから取得して入れてください。</p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>版<span class="op">&gt;</span>.fc44.x86_64.rpm</span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_<span class="op">&lt;</span>版<span class="op">&gt;</span>_amd64.deb</span></code></pre></div>
+<p>手順の詳細は <a href="./INSTALL.html">インストール</a> にあります。</p>
+<h3 id="undefined-reference-が出る">undefined reference が出る</h3>
+<p>リンク指定の順序が原因のことがあります。ライブラリは<strong>ソースより後ろ</strong>に<br />
+置いてください。</p>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> app app.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span>   <span class="co"># 正しい</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span> <span class="at">-o</span> app app.c            <span class="co"># 順序が逆</span></span></code></pre></div>
+<h3 id="python-から-import-できない">Python から import できない</h3>
+<pre><code>ValueError: Namespace BlinkGTK not available</code></pre>
+<p>typelib の場所を教えます。</p>
+<div class="sourceCode" id="cb22"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GI_TYPELIB_PATH</span><span class="op">=</span>/usr/lib64/girepository-1.0:<span class="va">$GI_TYPELIB_PATH</span></span>
+<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-c</span> <span class="st">&quot;import gi; gi.require_version(&#39;BlinkGTK&#39;,&#39;0.1&#39;); print(&#39;ok&#39;)&quot;</span></span></code></pre></div>
+<hr />
+<h2
+id="表示はされるが様子がおかしい">表示はされるが、様子がおかしい</h2>
+<h3 id="文字がにじむ小さい">文字がにじむ・小さい</h3>
+<p>表示倍率が絡んでいることがあります。倍率 1.25 や 1.5
+のような分数倍率の環境では、<br />
+まだ調整中の箇所が残っています。</p>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>software <span class="ex">./your-app</span></span></code></pre></div>
+<p>で改善するかをお試しください。改善する／しないのどちらであっても、<br />
+<strong>環境(ディストリビューション・デスクトップ・倍率)を添えてお知らせいただけると<br />
+大変助かります。</strong></p>
+<h3
+id="縦書きやルビの組み方が期待と違う">縦書きやルビの組み方が期待と違う</h3>
+<p>BlinkGTK は日本語組版に力を入れています。JLReq (日本語組版処理の要件)
+に<br />
+沿わない挙動を見つけられた場合は、<strong>具体的にどう違うか</strong>をお知らせください。<br />
+再現用の HTML をいただければ、そのまま検証に使わせていただきます。</p>
+<h3 id="動作が重い">動作が重い</h3>
+<p>まず描画経路を確かめてください。</p>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>software <span class="ex">./your-app</span>   <span class="co"># CPU 描画</span></span>
+<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./your-app</span>        <span class="co"># GPU 描画</span></span></code></pre></div>
+<p>環境によって速いほうが変わります。</p>
+<p>メモリ使用量は、Chromium
+がプロセスを分けて動く都合上、どうしても大きめに<br />
+なります。1 つの WebView あたり数百 MB は見込んでください。</p>
+<h3 id="入力が効かない">入力が効かない</h3>
+<p>スクロールやクリックが効かない場合、まず同梱サンプルで同じ操作を試して<br />
+みてください。サンプルで効くなら、ウィジェットの重ね方や、イベントを<br />
+横取りしているコントローラが原因のことがあります。</p>
+<hr />
+<h2 id="ログの読み方">ログの読み方</h2>
+<p>代表的な行と、その意味です。</p>
+<table>
+<thead>
+<tr>
+<th>ログ</th>
+<th>意味</th>
+<th>見るところ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>Failed to open Wayland display</code></td>
+<td>Wayland に繋がっていない</td>
+<td><code>WAYLAND_DISPLAY</code></td>
+</tr>
+<tr>
+<td><code>SIGTRAP</code> / <code>PA_NOTREACHED</code></td>
+<td>版の食い違いで内部の前提が壊れた</td>
+<td>ライブラリとリソースの組</td>
+</tr>
+<tr>
+<td><code>cannot open shared object file</code></td>
+<td>ライブラリが見つからない</td>
+<td><code>ldd</code> の出力</td>
+</tr>
+<tr>
+<td><code>VK_ERROR_INITIALIZATION_FAILED</code></td>
+<td>GPU 初期化に失敗</td>
+<td><code>BLINKGTK_GPU_MODE=software</code> を試す</td>
+</tr>
+<tr>
+<td><code>CONTEXT_LOST_WEBGL</code></td>
+<td>GPU コンテキストが失われた</td>
+<td>ドライバとの相性</td>
+</tr>
+</tbody>
+</table>
+<p>ログは必ず<strong>ファイルに残して</strong>からご確認ください。端末の履歴は流れてしまい、<br />
+肝心の最初の数行が消えていることがよくあります。</p>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./your-app</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> blinkgtk.log</span></code></pre></div>
+<p>描画の様子まで見たいときは、フレームを画像として書き出せます。</p>
+<div class="sourceCode" id="cb26"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_FRAME_PNG_DIR</span><span class="op">=</span>/tmp/frames <span class="ex">./your-app</span></span></code></pre></div>
+<p>出力された PNG
+が真っ白なら描画そのものが行われておらず、絵が写っているのに<br />
+画面に出ないなら、その先の受け渡しの問題だと切り分けられます。<br />
+使える環境変数は <a
+href="./api-reference/environment-variables-ja.html">環境変数</a> に<br />
+一覧があります。</p>
+<hr />
+<h2 id="それでも解決しないときは">それでも解決しないときは</h2>
+<p><strong>お気軽にご連絡ください。</strong>
+私たちはまだ利用者が多くないぶん、<br />
+1 件ずつ丁寧に見られます。</p>
+<ul>
+<li><strong>不具合のご報告</strong>: <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">https://github.com/daisy19gnu/blinkgtk-dist/issues</a></li>
+<li><strong>メール</strong>: <a
+href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a></li>
+</ul>
+<p>次の 4 つを添えていただけると、こちらの調査がとても早くなります。</p>
+<ol type="1">
+<li><strong>何をしたら、何が起きたか</strong>
+(期待した動きも書いていただけると助かります)</li>
+<li><strong>端末に出たログ</strong>
+(長くて構いません。むしろ全部あるほうが助かります)</li>
+<li><strong>環境</strong> —
+ディストリビューション、デスクトップ環境、表示倍率</li>
+<li><strong>再現するコード</strong> —
+短ければ短いほど、原因にたどり着くのが速くなります</li>
+</ol>
+<p>うまく書けなくても構いません。「白い画面のまま何も出ません」だけでも、<br />
+そこから一緒に絞り込めます。</p>
+<h2 id="関連">関連</h2>
+<ul>
+<li><a href="./faq-ja.html">よくあるご質問</a></li>
+<li><a
+href="./building-with-blinkgtk-ja.html">最初のアプリをビルドして動かす</a></li>
+<li><a
+href="./consumer-integration-guide-ja.html">アプリに組み込む</a></li>
+<li><a
+href="./api-reference/environment-variables-ja.html">環境変数</a></li>
+<li><a href="./api-reference/howto-index-ja.html">逆引き索引</a></li>
+</ul>
+</body>
+</html>
+</div></div>

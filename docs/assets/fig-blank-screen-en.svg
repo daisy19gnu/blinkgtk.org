@@ -1,0 +1,54 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 540" font-family="Liberation Sans, Harano Aji Gothic, sans-serif">
+<text x="380" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Nothing on screen — which of the five gates did it stop at?</text>
+<text x="380" y="44" text-anchor="middle" font-size="10" fill="#5b6770">The flow is on the left; what you see when it stops there is on the right</text>
+
+<rect x="40" y="62" width="300" height="72" rx="8" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="55" y="88" font-size="12" font-weight="bold" fill="#1a3a8a">1. The engine wakes up</text>
+<text x="55" y="109" font-size="10" fill="#1a3a8a">blink_gtk_init()</text>
+<text x="55" y="126" font-size="10" fill="#1a3a8a">Chromium's processes come up here</text>
+<rect x="400" y="62" width="320" height="72" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.2"/>
+<text x="415" y="88" font-size="11" font-weight="bold" fill="#8a1a1a">Stops here: not even a window</text>
+<text x="415" y="108" font-size="10" fill="#8a1a1a">A FATAL line appears and it exits at once.</text>
+<text x="415" y="125" font-size="10" fill="#8a1a1a">Resource paths, or mismatched versions</text>
+
+<rect x="40" y="154" width="300" height="72" rx="8" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="55" y="180" font-size="12" font-weight="bold" fill="#1a3a8a">2. Window and widget exist</text>
+<text x="55" y="201" font-size="10" fill="#1a3a8a">gtk_window_new() / blink_web_view_new()</text>
+<text x="55" y="218" font-size="10" fill="#1a3a8a">Wayland connects; a surface is obtained</text>
+<rect x="400" y="154" width="320" height="72" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.2"/>
+<text x="415" y="180" font-size="11" font-weight="bold" fill="#8a1a1a">Stops here: no window, or it shuts</text>
+<text x="415" y="200" font-size="10" fill="#8a1a1a">"Failed to open Wayland display" is typical.</text>
+<text x="415" y="217" font-size="10" fill="#8a1a1a">Check WAYLAND_DISPLAY</text>
+
+<rect x="40" y="246" width="300" height="72" rx="8" fill="#f4f1e8" stroke="#8a7a3a" stroke-width="1.5"/>
+<text x="55" y="272" font-size="12" font-weight="bold" fill="#6a5a1a">3. The load begins</text>
+<text x="55" y="293" font-size="10" fill="#6a5a1a">blink_web_view_load_uri()</text>
+<text x="55" y="310" font-size="10" fill="#6a5a1a">The URL resolves and fetching starts</text>
+<rect x="400" y="246" width="320" height="72" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.2"/>
+<text x="415" y="272" font-size="11" font-weight="bold" fill="#8a1a1a">Stops here: stays white</text>
+<text x="415" y="292" font-size="10" fill="#8a1a1a">A URL that does not exist is the usual cause.</text>
+<text x="415" y="309" font-size="10" fill="#8a1a1a">Open your file:// path by hand and check</text>
+
+<rect x="40" y="338" width="300" height="84" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.8"/>
+<text x="55" y="364" font-size="12" font-weight="bold" fill="#8a1a1a">4. The main loop turns</text>
+<text x="55" y="385" font-size="10" fill="#8a1a1a">blink_gtk_run_main_loop()</text>
+<text x="55" y="402" font-size="10" fill="#8a1a1a">Only once this runs does the load commit</text>
+<text x="55" y="416" font-size="10" fill="#8a1a1a">and rendering start</text>
+<rect x="400" y="338" width="320" height="84" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.8"/>
+<text x="415" y="364" font-size="11" font-weight="bold" fill="#8a1a1a">Stops here: a window, white forever</text>
+<text x="415" y="384" font-size="10" fill="#8a1a1a">If you are turning g_application_run(),</text>
+<text x="415" y="401" font-size="10" fill="#8a1a1a">you never arrive here. Nothing is logged,</text>
+<text x="415" y="418" font-size="10" fill="#8a1a1a">which makes it the hardest one to spot</text>
+
+<rect x="40" y="442" width="300" height="66" rx="8" fill="#e9f6ec" stroke="#3a8a4d" stroke-width="1.5"/>
+<text x="55" y="468" font-size="12" font-weight="bold" fill="#1a6a30">5. It reaches the screen</text>
+<text x="55" y="489" font-size="10" fill="#1a6a30">The rendered result arrives at the widget</text>
+<rect x="400" y="442" width="320" height="66" rx="8" fill="#f7f8f9" stroke="#9aa4ad" stroke-width="1.2"/>
+<text x="415" y="468" font-size="11" font-weight="bold" fill="#3a444d">Past this point it is about appearance</text>
+<text x="415" y="489" font-size="10" fill="#3a444d">Scale, rendering path and fonts</text>
+
+<line x1="190" y1="134" x2="190" y2="148" stroke="#5b6770" stroke-width="1.6"/><path d="M 185 148 L 195 148 L 190 156 Z" fill="#5b6770"/>
+<line x1="190" y1="226" x2="190" y2="240" stroke="#5b6770" stroke-width="1.6"/><path d="M 185 240 L 195 240 L 190 248 Z" fill="#5b6770"/>
+<line x1="190" y1="318" x2="190" y2="332" stroke="#5b6770" stroke-width="1.6"/><path d="M 185 332 L 195 332 L 190 340 Z" fill="#5b6770"/>
+<line x1="190" y1="422" x2="190" y2="436" stroke="#5b6770" stroke-width="1.6"/><path d="M 185 436 L 195 436 L 190 444 Z" fill="#5b6770"/>
+</svg>

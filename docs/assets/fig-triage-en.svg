@@ -1,0 +1,57 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" font-family="Liberation Sans, Harano Aji Gothic, sans-serif">
+<text x="380" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">Working out where it stops</text>
+<text x="380" y="44" text-anchor="middle" font-size="10" fill="#5b6770">Check these in order and you land straight on the layer that is at fault</text>
+
+<rect x="40" y="62" width="330" height="86" rx="8" fill="#f4f1e8" stroke="#8a7a3a" stroke-width="1.5"/>
+<text x="55" y="89" font-size="12" font-weight="bold" fill="#6a5a1a">1. It will not build</text>
+<text x="55" y="110" font-size="10" fill="#6a5a1a">pkg-config finds nothing / undefined reference</text>
+<text x="55" y="128" font-size="10" fill="#6a5a1a">Check the devel package and PKG_CONFIG_PATH</text>
+
+<rect x="40" y="168" width="330" height="86" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.5"/>
+<text x="55" y="195" font-size="12" font-weight="bold" fill="#8a1a1a">2. It will not start, or dies at once</text>
+<text x="55" y="216" font-size="10" fill="#8a1a1a">libblinkgtk.so missing / no Wayland connection</text>
+<text x="55" y="234" font-size="10" fill="#8a1a1a">Check ldd and WAYLAND_DISPLAY</text>
+
+<rect x="40" y="274" width="330" height="104" rx="8" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="55" y="301" font-size="12" font-weight="bold" fill="#1a3a8a">3. A window opens but stays empty</text>
+<text x="55" y="322" font-size="10" fill="#1a3a8a">Plain white or plain black, and never changes</text>
+<text x="55" y="340" font-size="10" fill="#1a3a8a">Is the loop blink_gtk_run_main_loop()?</text>
+<text x="55" y="358" font-size="10" fill="#1a3a8a">Does the URL exist? (file:// paths trip people up)</text>
+
+<rect x="40" y="398" width="330" height="86" rx="8" fill="#e9f6ec" stroke="#3a8a4d" stroke-width="1.5"/>
+<text x="55" y="425" font-size="12" font-weight="bold" fill="#1a6a30">4. It renders, but behaves oddly</text>
+<text x="55" y="446" font-size="10" fill="#1a6a30">Slow / text looks wrong / input ignored</text>
+<text x="55" y="464" font-size="10" fill="#1a6a30">Check the rendering path and the display scale</text>
+
+<line x1="205" y1="148" x2="205" y2="162" stroke="#5b6770" stroke-width="1.6"/><path d="M 200 162 L 210 162 L 205 170 Z" fill="#5b6770"/>
+<line x1="205" y1="254" x2="205" y2="268" stroke="#5b6770" stroke-width="1.6"/><path d="M 200 268 L 210 268 L 205 276 Z" fill="#5b6770"/>
+<line x1="205" y1="378" x2="205" y2="392" stroke="#5b6770" stroke-width="1.6"/><path d="M 200 392 L 210 392 L 205 400 Z" fill="#5b6770"/>
+
+<rect x="410" y="62" width="310" height="422" rx="8" fill="#f7f8f9" stroke="#9aa4ad" stroke-width="1.5"/>
+<text x="425" y="89" font-size="12" font-weight="bold" fill="#3a444d">Worth doing first</text>
+
+<text x="425" y="118" font-size="11" font-weight="bold" fill="#1a3a8a">Read the log to the end</text>
+<text x="425" y="137" font-size="10" fill="#3a444d">The terminal usually spells out the answer.</text>
+<text x="425" y="154" font-size="10" fill="#3a444d">The FATAL line is the one that matters</text>
+
+<text x="425" y="184" font-size="11" font-weight="bold" fill="#1a3a8a">Run the bundled sample</text>
+<text x="425" y="203" font-size="10" fill="#3a444d">If examples/blinkgtk_browser runs, your</text>
+<text x="425" y="220" font-size="10" fill="#3a444d">machine is fine and the fault is in your code</text>
+
+<text x="425" y="250" font-size="11" font-weight="bold" fill="#1a3a8a">Cut it down to a minimal case</text>
+<text x="425" y="269" font-size="10" fill="#3a444d">Strip it to one screen of code. The cause</text>
+<text x="425" y="286" font-size="10" fill="#3a444d">usually shows itself while you are stripping</text>
+
+<text x="425" y="316" font-size="11" font-weight="bold" fill="#1a3a8a">Keep the versions together</text>
+<text x="425" y="335" font-size="10" fill="#3a444d">A library and resources from different</text>
+<text x="425" y="352" font-size="10" fill="#3a444d">builds will crash on startup</text>
+
+<rect x="425" y="374" width="280" height="94" rx="6" fill="#eef3f7" stroke="#3a5fb0" stroke-width="1.2"/>
+<text x="440" y="399" font-size="11" font-weight="bold" fill="#1a3a8a">Still stuck?</text>
+<text x="440" y="420" font-size="10" fill="#1a3a8a">Send us the symptom, the log and your setup.</text>
+<text x="440" y="437" font-size="10" fill="#1a3a8a">One reproducible case is enough for us to dig.</text>
+<text x="440" y="454" font-size="10" fill="#1a3a8a">contact@blinkgtk.org</text>
+
+<text x="380" y="516" text-anchor="middle" font-size="10" fill="#5b6770">Most of the time it is 1 or 2 — either building it, or starting it</text>
+<text x="380" y="536" text-anchor="middle" font-size="10" fill="#5b6770">If you have reached 3 or 4, the engine itself is already running</text>
+</svg>

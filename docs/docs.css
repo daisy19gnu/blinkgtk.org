@@ -15,6 +15,9 @@
     .card { background: #1a2027 !important; border-color: #2a323b !important; }
     .muted { color: #9aa4ad !important; }
     .lang-label { color: #9aa4ad !important; border-color: #2a323b !important; }
+    .topnav a { background: #1a2027 !important; border-color: #2a323b !important; }
+    .topnav a:hover { background: #222b34 !important; border-color: #ffc078 !important; }
+    .topnav .sub { color: #9aa4ad !important; }
   }
   .wrap { max-width: 760px; margin: 0 auto; padding: 8vh 24px 12vh; }
   header h1 {
@@ -22,9 +25,20 @@
     margin: 0 0 .2em;
     letter-spacing: -0.02em;
   }
-  .tagline { font-size: 1.15rem; margin: 0 0 2.5em; }
+  .tagline { font-size: 1.15rem; margin: 0 0 1.6em; }
   .tagline .ja { display: block; }
   .tagline .en { display: block; color: #5b6770; font-size: .95rem; margin-top: .3em; }
+  /* 主要な行き先への案内。初めて来た方が迷わないよう、
+   * 上から順に「知る → 作る → 引く → 困ったとき → 入手」で並べる。 */
+  .topnav { display: flex; flex-wrap: wrap; gap: .5em; margin: 0 0 2.4em; padding: 0; list-style: none; }
+  .topnav a {
+    display: block; padding: .5em .95em; border-radius: 999px;
+    border: 1px solid #d5dade; background: #f7f8f9;
+    text-decoration: none; font-size: .93rem; line-height: 1.3;
+  }
+  .topnav a:hover { background: #eef3f7; border-color: #3a5fb0; }
+  .topnav .sub { display: block; font-size: .74rem; color: #6b7680; margin-top: .1em; }
+  @media (max-width: 560px) { .topnav a { padding: .45em .8em; font-size: .88rem; } }
   .card {
     background: #ffffff;
     border: 1px solid #e1e6ea;
@@ -86,6 +100,13 @@
   .doc table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
   .doc th, .doc td { border: 1px solid rgba(128,128,128,.3); padding: .45em .7em; text-align: left; }
   .doc blockquote { border-left: 3px solid rgba(128,128,128,.4); margin-left: 0; padding-left: 1em; }
+  /* 図は必ず明るい台紙に載せる。SVG の地の文字は #333 で描かれており、
+   * 暗色表示の本文背景に直接置くと沈んで読めなくなるため (2026-08-04)。 */
+  .doc img { max-width: 100%; height: auto; display: block; margin: 1.4em auto;
+             background: #fff; padding: 10px; border-radius: 8px;
+             border: 1px solid rgba(128,128,128,.3); }
+  .doc p > em:only-child { display: block; text-align: center; font-size: .88em;
+                           opacity: .75; margin-top: -.8em; }
   .navbar { margin-bottom: 2em; font-size: .95em; }
   .doclist { list-style: none; padding-left: 0; }
   .doclist li { margin: .35em 0; }

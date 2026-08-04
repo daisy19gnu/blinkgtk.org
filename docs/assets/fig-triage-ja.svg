@@ -1,0 +1,63 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 760 560" font-family="Liberation Sans, Harano Aji Gothic, sans-serif">
+<text x="380" y="24" text-anchor="middle" font-size="14" font-weight="bold" fill="#333">どこで止まっているかを見分ける</text>
+<text x="380" y="44" text-anchor="middle" font-size="10" fill="#5b6770">上から順に確かめると、原因のある場所まで一直線にたどり着きます</text>
+
+<!-- 1: ビルド -->
+<rect x="40" y="62" width="330" height="86" rx="8" fill="#f4f1e8" stroke="#8a7a3a" stroke-width="1.5"/>
+<text x="55" y="89" font-size="12" font-weight="bold" fill="#6a5a1a">1. ビルドが通らない</text>
+<text x="55" y="110" font-size="10" fill="#6a5a1a">pkg-config が見つからない / undefined reference</text>
+<text x="55" y="128" font-size="10" fill="#6a5a1a">→ 開発パッケージと PKG_CONFIG_PATH を確かめる</text>
+
+<!-- 2: 起動 -->
+<rect x="40" y="168" width="330" height="86" rx="8" fill="#fdeaea" stroke="#b03a3a" stroke-width="1.5"/>
+<text x="55" y="195" font-size="12" font-weight="bold" fill="#8a1a1a">2. 起動しない・すぐ落ちる</text>
+<text x="55" y="216" font-size="10" fill="#8a1a1a">libblinkgtk.so が無い / Wayland に繋がらない</text>
+<text x="55" y="234" font-size="10" fill="#8a1a1a">→ ldd と WAYLAND_DISPLAY を確かめる</text>
+
+<!-- 3: 描画 -->
+<rect x="40" y="274" width="330" height="104" rx="8" fill="#e8f0ff" stroke="#3a5fb0" stroke-width="1.5"/>
+<text x="55" y="301" font-size="12" font-weight="bold" fill="#1a3a8a">3. 窓は出るが中身が出ない</text>
+<text x="55" y="322" font-size="10" fill="#1a3a8a">真っ白・真っ黒のまま変わらない</text>
+<text x="55" y="340" font-size="10" fill="#1a3a8a">→ メインループが blink_gtk_run_main_loop() か</text>
+<text x="55" y="358" font-size="10" fill="#1a3a8a">→ URL が実在するか (file:// のパス誤りが多い)</text>
+
+<!-- 4: 動作 -->
+<rect x="40" y="398" width="330" height="86" rx="8" fill="#e9f6ec" stroke="#3a8a4d" stroke-width="1.5"/>
+<text x="55" y="425" font-size="12" font-weight="bold" fill="#1a6a30">4. 表示はされるが挙動が変</text>
+<text x="55" y="446" font-size="10" fill="#1a6a30">遅い / 文字が乱れる / 入力が効かない</text>
+<text x="55" y="464" font-size="10" fill="#1a6a30">→ 描画経路と表示倍率を確かめる</text>
+
+<!-- 矢印 -->
+<line x1="205" y1="148" x2="205" y2="162" stroke="#5b6770" stroke-width="1.6"/><path d="M 200 162 L 210 162 L 205 170 Z" fill="#5b6770"/>
+<line x1="205" y1="254" x2="205" y2="268" stroke="#5b6770" stroke-width="1.6"/><path d="M 200 268 L 210 268 L 205 276 Z" fill="#5b6770"/>
+<line x1="205" y1="378" x2="205" y2="392" stroke="#5b6770" stroke-width="1.6"/><path d="M 200 392 L 210 392 L 205 400 Z" fill="#5b6770"/>
+
+<!-- 右: 最初に見るもの -->
+<rect x="410" y="62" width="310" height="422" rx="8" fill="#f7f8f9" stroke="#9aa4ad" stroke-width="1.5"/>
+<text x="425" y="89" font-size="12" font-weight="bold" fill="#3a444d">先に見ておくと早いもの</text>
+
+<text x="425" y="118" font-size="11" font-weight="bold" fill="#1a3a8a">ログを最後まで読む</text>
+<text x="425" y="137" font-size="10" fill="#3a444d">端末に出るメッセージに答えが書いて</text>
+<text x="425" y="154" font-size="10" fill="#3a444d">あることが多く、FATAL の行が要点です</text>
+
+<text x="425" y="184" font-size="11" font-weight="bold" fill="#1a3a8a">同梱サンプルを動かす</text>
+<text x="425" y="203" font-size="10" fill="#3a444d">examples/ の blinkgtk_browser が動くなら</text>
+<text x="425" y="220" font-size="10" fill="#3a444d">環境は正常で、原因は自分のコード側です</text>
+
+<text x="425" y="250" font-size="11" font-weight="bold" fill="#1a3a8a">最小の再現を作る</text>
+<text x="425" y="269" font-size="10" fill="#3a444d">1 画面ぶんのコードまで削ると、</text>
+<text x="425" y="286" font-size="10" fill="#3a444d">たいてい削っている途中で原因が見えます</text>
+
+<text x="425" y="316" font-size="11" font-weight="bold" fill="#1a3a8a">版を揃える</text>
+<text x="425" y="335" font-size="10" fill="#3a444d">ライブラリとリソースの版がずれていると</text>
+<text x="425" y="352" font-size="10" fill="#3a444d">起動直後に落ちます</text>
+
+<rect x="425" y="374" width="280" height="94" rx="6" fill="#eef3f7" stroke="#3a5fb0" stroke-width="1.2"/>
+<text x="440" y="399" font-size="11" font-weight="bold" fill="#1a3a8a">それでも分からないときは</text>
+<text x="440" y="420" font-size="10" fill="#1a3a8a">症状・ログ・環境を添えてご連絡ください。</text>
+<text x="440" y="437" font-size="10" fill="#1a3a8a">再現手順が 1 つあれば、こちらで追えます。</text>
+<text x="440" y="454" font-size="10" fill="#1a3a8a">contact@blinkgtk.org</text>
+
+<text x="380" y="516" text-anchor="middle" font-size="10" fill="#5b6770">多くの場合、原因は 1 と 2 — つまり「作る」か「起動する」のどちらかにあります</text>
+<text x="380" y="536" text-anchor="middle" font-size="10" fill="#5b6770">3 と 4 まで来ていれば、エンジン自体はすでに動いています</text>
+</svg>
