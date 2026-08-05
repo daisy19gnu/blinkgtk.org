@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>デスクトップに置く — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="アプリが動いたら、次はアプリらしく置く段です。アプリ一覧に出す、アイコンを 付ける、ソフトウェアセンターに載せる — このページはその手順です。">
+<link rel="canonical" href="https://blinkgtk.org/docs/desktop-integration-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="デスクトップに置く — BlinkGTK">
+<meta property="og:description" content="アプリが動いたら、次はアプリらしく置く段です。アプリ一覧に出す、アイコンを 付ける、ソフトウェアセンターに載せる — このページはその手順です。">
+<meta property="og:url" content="https://blinkgtk.org/docs/desktop-integration-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/desktop-integration-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/desktop-integration-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/desktop-integration-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="デスクトップに置く">デスクトップに置く</h1>
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>バージョン</strong>: 1.2.0-build2</p>
+<p>アプリが動いたら、次は<strong>アプリらしく置く</strong>段です。アプリ一覧に出す、アイコンを<br />
+付ける、ソフトウェアセンターに載せる — このページはその手順です。</p>
+<p>BlinkGTK 固有の話は多くありません。<strong>GTK4
+アプリとして普通のことをするだけ</strong>です。<br />
+そのため、仕様そのものは freedesktop.org と GNOME
+の一次情報へ誘導し、ここでは<br />
+<strong>BlinkGTK を使うときに気をつける点</strong>を中心に書きます。</p>
+<h2 id="アプリ-id-を決める">アプリ ID を決める</h2>
+<p>最初に決めるのがこれです。逆ドメイン形式にします。</p>
+<pre><code>org.example.MyReader</code></pre>
+<p>この ID
+を、以下すべてで<strong>同じ文字列</strong>として使います。</p>
+<table>
+<thead>
+<tr>
+<th>使う場所</th>
+<th>形</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.desktop</code> ファイル名</td>
+<td><code>org.example.MyReader.desktop</code></td>
+</tr>
+<tr>
+<td>AppStream ファイル名</td>
+<td><code>org.example.MyReader.metainfo.xml</code></td>
+</tr>
+<tr>
+<td>アイコンファイル名</td>
+<td><code>org.example.MyReader.svg</code></td>
+</tr>
+<tr>
+<td><code>GtkApplication</code> の ID</td>
+<td><code>gtk_application_new("org.example.MyReader", ...)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>揃っていないとアイコンが出ません。</strong>
+デスクトップ環境は、ウィンドウとアイコンを<br />
+この ID で結び付けます。</p>
+<h2 id="アプリ一覧に出す-desktop">アプリ一覧に出す (.desktop)</h2>
+<p><code>/usr/share/applications/org.example.MyReader.desktop</code>
+に置きます。</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[Desktop Entry]</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Type</span><span class="ot">=</span><span class="st">Application</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Name</span><span class="ot">=</span><span class="st">My Reader</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Name</span><span class="kw">[ja]</span><span class="ot">=</span><span class="st">マイリーダー</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">Comment</span><span class="ot">=</span><span class="st">An e-book reader</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Comment</span><span class="kw">[ja]</span><span class="ot">=</span><span class="st">電子書籍リーダー</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Exec</span><span class="ot">=</span><span class="st">/usr/bin/my-reader %f</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="dt">Icon</span><span class="ot">=</span><span class="st">org.example.MyReader</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Categories</span><span class="ot">=</span><span class="st">Office;Viewer;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a><span class="dt">MimeType</span><span class="ot">=</span><span class="st">application/epub+zip;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a><span class="dt">Terminal</span><span class="ot">=</span><span class="kw">false</span></span></code></pre></div>
+<p><code>Icon=</code>
+には<strong>拡張子もパスも書きません</strong>。アプリ ID
+をそのまま書きます。</p>
+<p>書式の詳細は<br />
+<a
+href="https://specifications.freedesktop.org/desktop-entry-spec/latest/">Desktop
+Entry Specification</a><br />
+が正本です。</p>
+<p>置いたら索引を更新します。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-desktop-database /usr/share/applications</span></code></pre></div>
+<h2 id="アイコンを置く">アイコンを置く</h2>
+<p><code>hicolor</code> テーマに、アプリ ID
+の名前で置きます。<strong>SVG が 1 枚あれば足ります。</strong></p>
+<pre><code>/usr/share/icons/hicolor/scalable/apps/org.example.MyReader.svg</code></pre>
+<p>PNG も併せて置く場合はサイズごとのディレクトリへ。</p>
+<pre><code>/usr/share/icons/hicolor/48x48/apps/org.example.MyReader.png
+/usr/share/icons/hicolor/256x256/apps/org.example.MyReader.png</code></pre>
+<p>キャッシュを更新します。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> gtk4-update-icon-cache /usr/share/icons/hicolor</span></code></pre></div>
+<h2
+id="ソフトウェアセンターに載せる-appstream">ソフトウェアセンターに載せる
+(AppStream)</h2>
+<p><code>/usr/share/metainfo/org.example.MyReader.metainfo.xml</code>
+に置きます。</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span> <span class="ot">encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">component</span> <span class="ot">type=</span><span class="st">&quot;desktop-application&quot;</span>&gt;</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">id</span>&gt;org.example.MyReader&lt;/<span class="kw">id</span>&gt;</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">name</span>&gt;My Reader&lt;/<span class="kw">name</span>&gt;</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">summary</span>&gt;An e-book reader&lt;/<span class="kw">summary</span>&gt;</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">metadata_license</span>&gt;CC0-1.0&lt;/<span class="kw">metadata_license</span>&gt;</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">project_license</span>&gt;MIT&lt;/<span class="kw">project_license</span>&gt;</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">description</span>&gt;</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">p</span>&gt;Reads EPUB 3 with vertical Japanese typesetting.&lt;/<span class="kw">p</span>&gt;</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">description</span>&gt;</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">launchable</span> <span class="ot">type=</span><span class="st">&quot;desktop-id&quot;</span>&gt;org.example.MyReader.desktop&lt;/<span class="kw">launchable</span>&gt;</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">screenshots</span>&gt;</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">screenshot</span> <span class="ot">type=</span><span class="st">&quot;default&quot;</span>&gt;</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      &lt;<span class="kw">image</span>&gt;https://example.org/screenshot.png&lt;/<span class="kw">image</span>&gt;</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">screenshot</span>&gt;</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">screenshots</span>&gt;</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">releases</span>&gt;</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">release</span> <span class="ot">version=</span><span class="st">&quot;1.0.0&quot;</span> <span class="ot">date=</span><span class="st">&quot;2026-08-05&quot;</span>/&gt;</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">releases</span>&gt;</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">component</span>&gt;</span></code></pre></div>
+<p>書式の検証ができます。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">appstreamcli</span> validate /usr/share/metainfo/org.example.MyReader.metainfo.xml</span></code></pre></div>
+<p>仕様は <a
+href="https://www.freedesktop.org/software/appstream/docs/">AppStream</a>
+が正本です。</p>
+<h2 id="ファイルを関連付ける">ファイルを関連付ける</h2>
+<p><code>.desktop</code> の <code>MimeType=</code>
+に書いたうえで、独自形式なら MIME 型そのものを登録します。</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- /usr/share/mime/packages/org.example.MyReader.xml --&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span> <span class="ot">encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">mime-info</span> <span class="ot">xmlns=</span><span class="st">&quot;http://www.freedesktop.org/standards/shared-mime-info&quot;</span>&gt;</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">mime-type</span> <span class="ot">type=</span><span class="st">&quot;application/x-myreader-book&quot;</span>&gt;</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">comment</span>&gt;My Reader book&lt;/<span class="kw">comment</span>&gt;</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">glob</span> <span class="ot">pattern=</span><span class="st">&quot;*.mrb&quot;</span>/&gt;</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">mime-type</span>&gt;</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">mime-info</span>&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-mime-database /usr/share/mime</span></code></pre></div>
+<p>EPUB
+のような既存の型なら、登録は要りません。<code>MimeType=application/epub+zip;</code><br />
+と書くだけです。</p>
+<hr />
+<h2 id="blinkgtk-を使うときに気をつける点">BlinkGTK
+を使うときに気をつける点</h2>
+<p>ここからが本題です。</p>
+<h3 id="wayland-専用であることを書く">Wayland 専用であることを書く</h3>
+<p>BlinkGTK は <strong>Wayland でのみ動きます</strong>。X11
+セッションでは起動しません。</p>
+<p><code>.desktop</code>
+から起動された場合、利用者には「クリックしたのに何も起きない」と<br />
+しか見えません。<strong>AppStream の <code>&lt;description&gt;</code>
+に動作環境を明記</strong>しておくと、<br />
+入れる前に気づいてもらえます。</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">p</span>&gt;Requires a Wayland session. Does not run on X11.&lt;/<span class="kw">p</span>&gt;</span></code></pre></div>
+<p>起動スクリプトで確かめて、分かる形で終わらせるのも手です。</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">$WAYLAND_DISPLAY</span><span class="st">&quot;</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">&quot;This application requires a Wayland session.&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span> /usr/libexec/my-reader <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span></code></pre></div>
+<h3
+id="リソースの場所を実行ファイルから決める">リソースの場所を実行ファイルから決める</h3>
+<p>BlinkGTK は Chromium のリソース (<code>icudtl.dat</code> /
+<code>.pak</code> / V8 スナップショット) を<br />
+必要とします。<code>.desktop</code> から起動されると
+<strong>カレントディレクトリが不定</strong>なので、<br />
+相対パスに頼ると見つかりません。</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 実行ファイルの位置から決める。カレントディレクトリに頼らない */</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_resources_path<span class="op">(</span><span class="st">&quot;/usr/lib64/my-reader&quot;</span><span class="op">);</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_icu_data_path<span class="op">(</span><span class="st">&quot;/usr/lib64/my-reader&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>端末から動いていたアプリが <code>.desktop</code>
+経由だと起動しない、という場合は<br />
+<strong>まずここを疑ってください</strong>。</p>
+<h3 id="単一インスタンスにするなら">単一インスタンスにするなら</h3>
+<p><code>GtkApplication</code>
+の単一インスタンス機能を使う場合、<strong>メインループの扱いに<br />
+注意が要ります</strong>。<code>g_application_run()</code> は Chromium
+側のループを回さないため、<br />
+それだけでは画面が出ません。</p>
+<p>書き方は <a
+href="./consumer-integration-guide-ja.html">アプリに組み込む</a>
+にあります。</p>
+<h3 id="起動が速く見えるようにする">起動が速く見えるようにする</h3>
+<p>BlinkGTK は起動時に Chromium
+のプロセス群を立ち上げるため、<strong>最初の 1 秒ほどは<br />
+何も出ません</strong>。<code>.desktop</code>
+に次を書くと、デスクトップ環境が起動中であることを<br />
+利用者に示してくれます。</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">StartupNotify</span><span class="ot">=</span><span class="kw">true</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">StartupWMClass</span><span class="ot">=</span><span class="st">org.example.MyReader</span></span></code></pre></div>
+<p><code>StartupWMClass</code>
+は、ウィンドウとアイコンを結び付けるためにも要ります。<br />
+<strong>タスクバーのアイコンが既定のものになる</strong>場合は、ここが合っていません。</p>
+<hr />
+<h2 id="確認する">確認する</h2>
+<p>置いたあと、こう確かめられます。</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .desktop の書式</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">desktop-file-validate</span> /usr/share/applications/org.example.MyReader.desktop</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># AppStream の書式</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">appstreamcli</span> validate /usr/share/metainfo/org.example.MyReader.metainfo.xml</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># アイコンが引けるか</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="ex">gtk4-query-settings</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null <span class="kw">||</span> <span class="fu">true</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-c</span> <span class="st">&quot;</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="st">import gi; gi.require_version(&#39;Gtk&#39;,&#39;4.0&#39;)</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="st">from gi.repository import Gtk, Gdk</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="st">Gtk.init()</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="st">t = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())</span></span>
+<span id="cb15-14"><a href="#cb15-14" aria-hidden="true" tabindex="-1"></a><span class="st">print(&#39;見つかりました&#39; if t.has_icon(&#39;org.example.MyReader&#39;) else &#39;見つかりません&#39;)&quot;</span></span></code></pre></div>
+<h2 id="パッケージに入れる">パッケージに入れる</h2>
+<p>RPM / DEB を作る場合、上記 4 つを配置します。</p>
+<pre><code>/usr/share/applications/org.example.MyReader.desktop
+/usr/share/icons/hicolor/scalable/apps/org.example.MyReader.svg
+/usr/share/metainfo/org.example.MyReader.metainfo.xml
+/usr/share/mime/packages/org.example.MyReader.xml   (独自形式のみ)</code></pre>
+<p>索引の更新はパッケージマネージャが自動で行うため、<code>%post</code>
+に書く必要は<br />
+通常ありません。</p>
+<h2 id="関連">関連</h2>
+<ul>
+<li><a
+href="./building-with-blinkgtk-ja.html">最初のアプリをビルドして動かす</a></li>
+<li><a
+href="./consumer-integration-guide-ja.html">アプリに組み込む</a></li>
+<li><a
+href="./portable-app-guide-ja.html">ポータブルアプリとして配布する</a> —
+システムに入れず、展開したその場で動かす形</li>
+<li><a href="./troubleshooting-ja.html">困ったときは</a></li>
+</ul>
+</body>
+</html>
+</div></div>

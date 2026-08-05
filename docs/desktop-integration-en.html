@@ -1,0 +1,332 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Putting it on the desktop — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Once your application runs, the next step is making it look like an application: appearing in the app list, having an icon, showing up in the software centre. T">
+<link rel="canonical" href="https://blinkgtk.org/docs/desktop-integration-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Putting it on the desktop — BlinkGTK">
+<meta property="og:description" content="Once your application runs, the next step is making it look like an application: appearing in the app list, having an icon, showing up in the software centre. T">
+<meta property="og:url" content="https://blinkgtk.org/docs/desktop-integration-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/desktop-integration-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/desktop-integration-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/desktop-integration-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="putting-it-on-the-desktop">Putting it on the desktop</h1>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Version</strong>: 1.2.0-build2</p>
+<p>Once your application runs, the next step is making it <strong>look
+like an<br />
+application</strong>: appearing in the app list, having an icon, showing
+up in the<br />
+software centre. This page covers that.</p>
+<p>Very little of it is BlinkGTK-specific — it is <strong>the ordinary
+work of a GTK4<br />
+application</strong>. So the specifications themselves are left to
+freedesktop.org and<br />
+GNOME, and what follows concentrates on <strong>what to watch out for
+when the app is<br />
+built on BlinkGTK</strong>.</p>
+<h2 id="choose-an-application-id">Choose an application ID</h2>
+<p>This comes first. Use reverse-domain form.</p>
+<pre><code>org.example.MyReader</code></pre>
+<p>Use that <strong>same string</strong> everywhere:</p>
+<table>
+<thead>
+<tr>
+<th>Where</th>
+<th>Form</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>.desktop</code> filename</td>
+<td><code>org.example.MyReader.desktop</code></td>
+</tr>
+<tr>
+<td>AppStream filename</td>
+<td><code>org.example.MyReader.metainfo.xml</code></td>
+</tr>
+<tr>
+<td>Icon filename</td>
+<td><code>org.example.MyReader.svg</code></td>
+</tr>
+<tr>
+<td><code>GtkApplication</code> ID</td>
+<td><code>gtk_application_new("org.example.MyReader", ...)</code></td>
+</tr>
+</tbody>
+</table>
+<p><strong>If they do not match, no icon appears.</strong> The desktop
+matches your window to<br />
+its icon through this ID.</p>
+<h2 id="appear-in-the-app-list-desktop">Appear in the app list
+(.desktop)</h2>
+<p>Install to
+<code>/usr/share/applications/org.example.MyReader.desktop</code>.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">[Desktop Entry]</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="dt">Type</span><span class="ot">=</span><span class="st">Application</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="dt">Name</span><span class="ot">=</span><span class="st">My Reader</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">Comment</span><span class="ot">=</span><span class="st">An e-book reader</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="dt">Exec</span><span class="ot">=</span><span class="st">/usr/bin/my-reader %f</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="dt">Icon</span><span class="ot">=</span><span class="st">org.example.MyReader</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="dt">Categories</span><span class="ot">=</span><span class="st">Office;Viewer;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="dt">MimeType</span><span class="ot">=</span><span class="st">application/epub+zip;</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="dt">Terminal</span><span class="ot">=</span><span class="kw">false</span></span></code></pre></div>
+<p><code>Icon=</code> takes <strong>neither an extension nor a
+path</strong> — just the application ID.</p>
+<p>The <a
+href="https://specifications.freedesktop.org/desktop-entry-spec/latest/">Desktop
+Entry Specification</a><br />
+is authoritative for the format.</p>
+<p>Then refresh the index:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-desktop-database /usr/share/applications</span></code></pre></div>
+<h2 id="install-an-icon">Install an icon</h2>
+<p>Into the <code>hicolor</code> theme, named after the application ID.
+<strong>One SVG is enough.</strong></p>
+<pre><code>/usr/share/icons/hicolor/scalable/apps/org.example.MyReader.svg</code></pre>
+<p>If you also ship PNGs, put them in per-size directories:</p>
+<pre><code>/usr/share/icons/hicolor/48x48/apps/org.example.MyReader.png
+/usr/share/icons/hicolor/256x256/apps/org.example.MyReader.png</code></pre>
+<p>Refresh the cache:</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> gtk4-update-icon-cache /usr/share/icons/hicolor</span></code></pre></div>
+<h2 id="appear-in-software-centres-appstream">Appear in software centres
+(AppStream)</h2>
+<p>Install to
+<code>/usr/share/metainfo/org.example.MyReader.metainfo.xml</code>.</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span> <span class="ot">encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">component</span> <span class="ot">type=</span><span class="st">&quot;desktop-application&quot;</span>&gt;</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">id</span>&gt;org.example.MyReader&lt;/<span class="kw">id</span>&gt;</span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">name</span>&gt;My Reader&lt;/<span class="kw">name</span>&gt;</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">summary</span>&gt;An e-book reader&lt;/<span class="kw">summary</span>&gt;</span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">metadata_license</span>&gt;CC0-1.0&lt;/<span class="kw">metadata_license</span>&gt;</span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">project_license</span>&gt;MIT&lt;/<span class="kw">project_license</span>&gt;</span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">description</span>&gt;</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">p</span>&gt;Reads EPUB 3 with vertical Japanese typesetting.&lt;/<span class="kw">p</span>&gt;</span>
+<span id="cb7-10"><a href="#cb7-10" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">description</span>&gt;</span>
+<span id="cb7-11"><a href="#cb7-11" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">launchable</span> <span class="ot">type=</span><span class="st">&quot;desktop-id&quot;</span>&gt;org.example.MyReader.desktop&lt;/<span class="kw">launchable</span>&gt;</span>
+<span id="cb7-12"><a href="#cb7-12" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">screenshots</span>&gt;</span>
+<span id="cb7-13"><a href="#cb7-13" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">screenshot</span> <span class="ot">type=</span><span class="st">&quot;default&quot;</span>&gt;</span>
+<span id="cb7-14"><a href="#cb7-14" aria-hidden="true" tabindex="-1"></a>      &lt;<span class="kw">image</span>&gt;https://example.org/screenshot.png&lt;/<span class="kw">image</span>&gt;</span>
+<span id="cb7-15"><a href="#cb7-15" aria-hidden="true" tabindex="-1"></a>    &lt;/<span class="kw">screenshot</span>&gt;</span>
+<span id="cb7-16"><a href="#cb7-16" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">screenshots</span>&gt;</span>
+<span id="cb7-17"><a href="#cb7-17" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">releases</span>&gt;</span>
+<span id="cb7-18"><a href="#cb7-18" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">release</span> <span class="ot">version=</span><span class="st">&quot;1.0.0&quot;</span> <span class="ot">date=</span><span class="st">&quot;2026-08-05&quot;</span>/&gt;</span>
+<span id="cb7-19"><a href="#cb7-19" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">releases</span>&gt;</span>
+<span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">component</span>&gt;</span></code></pre></div>
+<p>You can validate it:</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">appstreamcli</span> validate /usr/share/metainfo/org.example.MyReader.metainfo.xml</span></code></pre></div>
+<p><a
+href="https://www.freedesktop.org/software/appstream/docs/">AppStream</a>
+is<br />
+authoritative for the format.</p>
+<h2 id="associate-file-types">Associate file types</h2>
+<p>List them in <code>MimeType=</code> in the <code>.desktop</code>
+file. If your format is your own,<br />
+register the MIME type as well:</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co">&lt;!-- /usr/share/mime/packages/org.example.MyReader.xml --&gt;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">&lt;?xml</span> <span class="ot">version=</span><span class="st">&quot;1.0&quot;</span> <span class="ot">encoding=</span><span class="st">&quot;UTF-8&quot;</span><span class="fu">?&gt;</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">mime-info</span> <span class="ot">xmlns=</span><span class="st">&quot;http://www.freedesktop.org/standards/shared-mime-info&quot;</span>&gt;</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  &lt;<span class="kw">mime-type</span> <span class="ot">type=</span><span class="st">&quot;application/x-myreader-book&quot;</span>&gt;</span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">comment</span>&gt;My Reader book&lt;/<span class="kw">comment</span>&gt;</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a>    &lt;<span class="kw">glob</span> <span class="ot">pattern=</span><span class="st">&quot;*.mrb&quot;</span>/&gt;</span>
+<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a>  &lt;/<span class="kw">mime-type</span>&gt;</span>
+<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">mime-info</span>&gt;</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-mime-database /usr/share/mime</span></code></pre></div>
+<p>For an existing type such as EPUB, no registration is needed — just
+write<br />
+<code>MimeType=application/epub+zip;</code>.</p>
+<hr />
+<h2 id="what-to-watch-out-for-with-blinkgtk">What to watch out for with
+BlinkGTK</h2>
+<p>This is the part that matters here.</p>
+<h3 id="say-that-it-needs-wayland">Say that it needs Wayland</h3>
+<p>BlinkGTK runs <strong>only on Wayland</strong>. It will not start in
+an X11 session.</p>
+<p>Launched from a <code>.desktop</code> entry, all the user sees is "I
+clicked it and nothing<br />
+happened". <strong>Stating the requirement in the AppStream
+<code>&lt;description&gt;</code></strong> lets them<br />
+find out before installing.</p>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode xml"><code class="sourceCode xml"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>&lt;<span class="kw">p</span>&gt;Requires a Wayland session. Does not run on X11.&lt;/<span class="kw">p</span>&gt;</span></code></pre></div>
+<p>Checking in a launcher script and failing visibly is another
+option:</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="bu">[</span> <span class="ot">-z</span> <span class="st">&quot;</span><span class="va">$WAYLAND_DISPLAY</span><span class="st">&quot;</span> <span class="bu">]</span><span class="kw">;</span> <span class="cf">then</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>  <span class="bu">echo</span> <span class="st">&quot;This application requires a Wayland session.&quot;</span> <span class="op">&gt;&amp;</span><span class="dv">2</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>  <span class="bu">exit</span> 1</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="cf">fi</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span> /usr/libexec/my-reader <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span></code></pre></div>
+<h3 id="derive-resource-paths-from-the-executable">Derive resource paths
+from the executable</h3>
+<p>BlinkGTK needs Chromium's resources (<code>icudtl.dat</code>, the
+<code>.pak</code> files, the V8<br />
+snapshots). When launched from a <code>.desktop</code> entry the
+<strong>working directory is<br />
+undefined</strong>, so anything relative will not be found.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Decide from the install location. Never rely on the working directory */</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_resources_path<span class="op">(</span><span class="st">&quot;/usr/lib64/my-reader&quot;</span><span class="op">);</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_icu_data_path<span class="op">(</span><span class="st">&quot;/usr/lib64/my-reader&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>If an application that works from a terminal fails to start via its
+<code>.desktop</code><br />
+entry, <strong>suspect this first</strong>.</p>
+<h3 id="if-you-want-a-single-instance">If you want a single
+instance</h3>
+<p>Using <code>GtkApplication</code>'s single-instance behaviour needs
+<strong>care with the main<br />
+loop</strong>. <code>g_application_run()</code> does not turn Chromium's
+loop, so on its own<br />
+nothing renders.</p>
+<p>The shape is in <a
+href="./consumer-integration-guide-en.html">Integrate into your
+application</a>.</p>
+<h3 id="make-startup-look-responsive">Make startup look responsive</h3>
+<p>BlinkGTK brings up Chromium's processes at startup, so
+<strong>nothing appears for<br />
+about a second</strong>. These lines let the desktop show that something
+is starting:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode ini"><code class="sourceCode ini"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">StartupNotify</span><span class="ot">=</span><span class="kw">true</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="dt">StartupWMClass</span><span class="ot">=</span><span class="st">org.example.MyReader</span></span></code></pre></div>
+<p><code>StartupWMClass</code> is also what ties your window to its
+icon. <strong>If the taskbar<br />
+shows a generic icon</strong>, this is what is wrong.</p>
+<hr />
+<h2 id="check-your-work">Check your work</h2>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># .desktop format</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">desktop-file-validate</span> /usr/share/applications/org.example.MyReader.desktop</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># AppStream format</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="ex">appstreamcli</span> validate /usr/share/metainfo/org.example.MyReader.metainfo.xml</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Can the icon be found?</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-c</span> <span class="st">&quot;</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a><span class="st">import gi; gi.require_version(&#39;Gtk&#39;,&#39;4.0&#39;)</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a><span class="st">from gi.repository import Gtk, Gdk</span></span>
+<span id="cb15-11"><a href="#cb15-11" aria-hidden="true" tabindex="-1"></a><span class="st">Gtk.init()</span></span>
+<span id="cb15-12"><a href="#cb15-12" aria-hidden="true" tabindex="-1"></a><span class="st">t = Gtk.IconTheme.get_for_display(Gdk.Display.get_default())</span></span>
+<span id="cb15-13"><a href="#cb15-13" aria-hidden="true" tabindex="-1"></a><span class="st">print(&#39;found&#39; if t.has_icon(&#39;org.example.MyReader&#39;) else &#39;not found&#39;)&quot;</span></span></code></pre></div>
+<h2 id="shipping-in-a-package">Shipping in a package</h2>
+<p>For an RPM or DEB, install these four:</p>
+<pre><code>/usr/share/applications/org.example.MyReader.desktop
+/usr/share/icons/hicolor/scalable/apps/org.example.MyReader.svg
+/usr/share/metainfo/org.example.MyReader.metainfo.xml
+/usr/share/mime/packages/org.example.MyReader.xml   (own formats only)</code></pre>
+<p>Package managers refresh the indexes for you, so <code>%post</code>
+scriptlets are normally<br />
+unnecessary.</p>
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="./building-with-blinkgtk-en.html">Build and run your first
+app</a></li>
+<li><a href="./consumer-integration-guide-en.html">Integrate into your
+application</a></li>
+<li><a href="./portable-app-guide-en.html">Ship as a portable
+application</a> — running from an unpacked directory instead of
+installing</li>
+<li><a href="./troubleshooting-en.html">When things go wrong</a></li>
+</ul>
+</body>
+</html>
+</div></div>
