@@ -111,7 +111,7 @@ BlinkGTK</title>
 API リファレンスマニュアル — 第 9 章 環境変数</h1>
 <p><strong>作成者</strong>: BlinkGTK-Readium
 プロジェクト(consumer/embedder 視点、#121)<br />
-<strong>対象バージョン</strong>: BlinkGTK 1.2.0(Chromium 151
+<strong>対象バージョン</strong>: BlinkGTK 1.1.0(Chromium 150
 baseline)</p>
 <blockquote>
 <p><strong>正本について</strong>: 環境変数の正リスト(3
@@ -212,18 +212,6 @@ embedder が依存してはいけない。</li>
 <p>以下は EPUB
 ビューワ(BlinkGTK-Readium)としての実使用例。値の意味は上表(正本)が正。</p>
 <h4 id="blinkgtk_gpu_mode"><code>BLINKGTK_GPU_MODE</code></h4>
-<blockquote>
-<p><strong>1.2.0-build3 より</strong>: <code>egl</code>
-は指定するだけで動きます。以前は GTK4 統合・<br />
-手動
-viewport・デバイススケール・受け手ウィジェットの構築を利用者側で<br />
-行う必要があり、指定しただけでは白画面になっていました。<br />
-現在はエンジンが既定で与えます (<code>BLINKGTK_EGL_GTK4_NATIVE</code>
-/<br />
-<code>BLINKGTK_EGL_MANUAL_VIEWPORT</code> /
-<code>--force-device-scale-factor</code>)。<br />
-明示指定があればそちらが優先されます。</p>
-</blockquote>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 既定(software)を明示して起動する例</span></span>
 <span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>software <span class="ex">./my-embedder</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
@@ -399,16 +387,6 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="
 <td>egl resize ブリッジを無効化</td>
 <td>CP-1092</td>
 </tr>
-<tr>
-<td><code>BLINKGTK_RESIZE_FIT=center</code></td>
-<td>リサイズ中の旧フレームを中央に置く(既定は上端)</td>
-<td>#132</td>
-</tr>
-<tr>
-<td><code>BLINKGTK_RESIZE_FIT=stretch</code></td>
-<td>リサイズ中の旧フレームを引き伸ばす(build2 までの挙動)</td>
-<td>#132</td>
-</tr>
 </tbody>
 </table>
 <p><strong>consumer 追補</strong>:
@@ -429,9 +407,10 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="
 <code>BLINKGTK_120_FI_ROW1</code>(fault injection・検証専用)/<br />
 <code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
 <code>BLINKGTK_LAYOUT_DEBUG</code> /<br />
-<code>BLINKGTK_RUBY_RESERVE_EM</code> / <code>BLINKGTK_EGL_DIAG</code>
-/<br />
-<code>BLINKGTK_EGL_BRIDGE_SETTLE_MS</code> /<br />
+<code>BLINKGTK_RUBY_RESERVE_EM</code> / <code>BLINKGTK_EGL_DIAG</code> /
+<code>BLINKGTK_EGL_MANUAL_VIEWPORT</code> /<br />
+<code>BLINKGTK_EGL_BRIDGE_SETTLE_MS</code> /
+<code>BLINKGTK_EGL_GTK4_NATIVE</code> /<br />
 <code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
 <code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /<br />
 <code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /

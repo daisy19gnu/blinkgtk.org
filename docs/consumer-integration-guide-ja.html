@@ -400,8 +400,7 @@ Chromium 148 以降で描画されません（#90
 <div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_SOFTWARE<span class="op">);</span></span></code></pre></div>
 <p>環境変数 <code>BLINKGTK_GPU_MODE=software|swiftshader|egl</code>
 でも指定できます。<strong>まず software で<br />
-動作確認すること</strong>を推奨します。egl は <strong>v1.2.0-build2
-以前では白画面</strong>になります (次の版で解消)。実 GPU と DRM
+動作確認すること</strong>を推奨します。egl は実 GPU と DRM
 が必要で、ヘッドレスや GPU 無し環境では<br />
 描画されません。</p>
 <h3 id="52-hidpi-と-device-scale-factor">5.2 HiDPI と

@@ -108,7 +108,7 @@
 </div><div class="card doc">
 <h1 id="frequently-asked-questions">Frequently asked questions</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Version</strong>: 1.2.0-build3</p>
+<strong>Version</strong>: 1.2.0-build2</p>
 <p>Questions we are asked, from people considering BlinkGTK through to
 people<br />
 already building with it.</p>
@@ -220,18 +220,10 @@ distribution.</p>
 <p><a href="./INSTALL.html">Install</a> has the steps.</p>
 <h3 id="do-i-need-a-gpu">Do I need a GPU?</h3>
 <p>No. There is a CPU-only rendering path, and it works by default.</p>
-<p>A GPU path is also available. Set <code>BLINKGTK_GPU_MODE=egl</code>
-and the engine<br />
-applies everything else it needs.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
-<p>It requires a real GPU and a Wayland-EGL-capable driver. Which path
-is faster<br />
-varies by machine, so try it on your own hardware.</p>
-<p><strong>On v1.2.0-build2 and earlier this shows a white
-screen</strong>, because the<br />
-required setup was left to the application. That is fixed from the
-next<br />
-release; on earlier versions please use <code>software</code>.</p>
+<p>Where a GPU is available, <code>BLINKGTK_GPU_MODE=egl</code> switches
+to GPU rendering.<br />
+Which is faster varies by machine, so it is worth trying on your own
+hardware.</p>
 <h3 id="how-much-memory-does-it-use">How much memory does it use?</h3>
 <p>Because Chromium spreads its work over several processes, budget
 <strong>a few hundred<br />

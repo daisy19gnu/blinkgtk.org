@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build3 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.0-build2 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-08-08 / Chromium: 151.0.7922.71 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-08-05 / Chromium: 151.0.7922.71 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build3 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-08-08 / Chromium: 151.0.7922.71 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.0-build2 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-08-05 / Chromium: 151.0.7922.71 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -106,70 +106,14 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build3-リリースノート">BlinkGTK 1.2.0-build3
+<h1 id="blinkgtk-120-build2-リリースノート">BlinkGTK 1.2.0-build2
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-08-08 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-08-05 / <strong>Chromium</strong>:
 151.0.7922.71 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.0-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 151</strong>
 に更新しました。日本語の組版に直接効く変更が<br />
 まとまって入っています。とくに縦組みで圏点を使う文書は、<strong>版面が変わります</strong>。</p>
-<hr />
-<h2 id="build3-で加わったもの">build3 で加わったもの</h2>
-<h3 id="gpu-描画が指定だけで使えるようになりました">GPU
-描画が指定だけで使えるようになりました</h3>
-<p>環境変数ひとつで GPU 経路に切り替えられます。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
-<p>**アプリ側のコード変更は要りません。**縦書きの長文でもスクロールが軽く、<br />
-CPU 描画より明確に速く動きます。</p>
-<p>これまでは、この経路を動かすのに 4 つの設定 (GTK4 統合・手動
-viewport・<br />
-デバイススケール・受け手ウィジェットの構築)
-が必要で、<strong>それを行っていたのは<br />
-配布物に含まれない開発用ブラウザの中だけ</strong>でした。利用者が知る手段が無く、<br />
-<code>BLINKGTK_GPU_MODE=egl</code>
-を指定してもウィンドウが白いままになっていました。<br />
-必要な組み立てはすべてエンジン側へ移しました。</p>
-<p>実 GPU と Wayland EGL 対応ドライバが要ります。環境によって CPU
-描画のほうが<br />
-速いこともあるので、実機でお確かめください。</p>
-<h3
-id="ウィンドウの大きさを変えても文字が二重に見えなくなりました">ウィンドウの大きさを変えても、文字が二重に見えなくなりました</h3>
-<p>リサイズや全画面化の途中で、<strong>前の画面と新しい画面が重なって見える</strong>ことが<br />
-ありました。縦書きでは行の位置が命なので、行がずれて見えると組版が壊れたように<br />
-映ります。</p>
-<p>新しい画面が整うまでの間、前の画面を<strong>引き伸ばさず、原寸のまま</strong>表示するように<br />
-しました。文字の位置が動かないので、二重には見えません。切り替わりの間、<br />
-余白が見えます。</p>
-<p>見え方は環境変数で選べます。</p>
-<table>
-<thead>
-<tr>
-<th>指定</th>
-<th>見え方</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>(既定)</td>
-<td>原寸のまま上端に置く。文字が動かない</td>
-</tr>
-<tr>
-<td><code>BLINKGTK_RESIZE_FIT=center</code></td>
-<td>原寸のまま中央に置く</td>
-</tr>
-<tr>
-<td><code>BLINKGTK_RESIZE_FIT=stretch</code></td>
-<td>引き伸ばす (build2 までの挙動)</td>
-</tr>
-</tbody>
-</table>
-<h3
-id="更新のたびに描画を自動で検査するようにしました">更新のたびに描画を自動で検査するようにしました</h3>
-<p>エンジンの土台となる Chromium を更新するたび、GPU
-経路で「白いまま」<br />
-「小さく表示される」が再発していました。<strong>画面を見なくてもログから判定できる<br />
-検査</strong>を用意し、更新手順の必須項目にしています。</p>
 <hr />
 <h2 id="build2-で加わったもの">build2 で加わったもの</h2>
 <h3 id="版が正しく名乗られる">版が正しく名乗られる</h3>
@@ -192,9 +136,9 @@ JavaScript から読める</h3>
 の版面について、<strong>エンジンが実際に使った値</strong>をページ内 JS
 から<br />
 読めるようになりました。行送りや列境界を矩形から逆算する必要がなくなります。</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// → { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">//     lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// → { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">//     lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
 <p><code>columnIndex</code>
 は<strong>エンジン内部の列添字そのもの</strong>で、座標比較の結果ではありません。<br />
 境界ちょうどの行が 1 列ずれる、という誤りが原理的に起きません。</p>
@@ -217,10 +161,10 @@ id="ドキュメントのサンプルが記載どおりに動く">ドキュメ�
 メインループが回らないためで、コンパイルも起動も通るぶん気付きにくいものでした。</p>
 <p>利用者が最初に読む QUICKSTART
 を含めて是正し、検出ゲートを追加しています。</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* g_application_run() ではない */</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* g_application_run() ではない */</span></span></code></pre></div>
 <h3 id="圏点の独自-patch-を外しました">圏点の独自 patch
 を外しました</h3>
 <p>v1.1 系で同梱していた圏点まわりの独自 patch
@@ -347,23 +291,6 @@ id="移行時に確認していただきたいこと">移行時に確認して�
 </tr>
 </tbody>
 </table>
-<h3
-id="縦書きで閉じ括弧で終わる段落の行が半分しか埋まらないことがあります">縦書きで、閉じ括弧で終わる段落の行が半分しか埋まらないことがあります</h3>
-<p>Chromium 側の不具合です。縦書きで、段落の途中に要素
-(<code>&lt;span&gt;</code> <code>&lt;ruby&gt;</code> など) が<br />
-あり、<strong>閉じ括弧 (<code>」』）〉】｝］</code>)
-で終わる</strong>とき、版面幅が特定の 8px の帯に<br />
-入ると、行が本来の半分ほどしか埋まりません。<code>text-align: justify</code>
-を併用すると<br />
-字間が倍近くに開くため目に付きます。</p>
-<p>上流に報告済みです — <a
-href="https://issues.chromium.org/issues/542686223">crbug
-542686223</a>。</p>
-<p><strong>詰めを保ったままの回避策はありません。</strong>
-<code>text-spacing-trim: space-all</code> で<br />
-症状は消えますが、約物の詰めが丸ごと効かなくなります。<code>trim-start</code>
-は発症する<br />
-幅が 8px ずれるだけで、回避になりません。</p>
 <hr />
 <h2 id="動かすために必要なもの">動かすために必要なもの</h2>
 <ul>
