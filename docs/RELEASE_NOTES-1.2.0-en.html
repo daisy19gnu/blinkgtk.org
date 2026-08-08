@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build2 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.0-build3 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Released: 2026-08-05 / Chromium: 151.0.7922.71 / Language: English | 日本語">
+<meta name="description" content="Released: 2026-08-08 / Chromium: 151.0.7922.71 / Language: English | 日本語">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build2 Release Notes — BlinkGTK">
-<meta property="og:description" content="Released: 2026-08-05 / Chromium: 151.0.7922.71 / Language: English | 日本語">
+<meta property="og:title" content="BlinkGTK 1.2.0-build3 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-08-08 / Chromium: 151.0.7922.71 / Language: English | 日本語">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -106,9 +106,9 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build2-release-notes">BlinkGTK 1.2.0-build2 Release
+<h1 id="blinkgtk-120-build3-release-notes">BlinkGTK 1.2.0-build3 Release
 Notes</h1>
-<p><strong>Released</strong>: 2026-08-05 / <strong>Chromium</strong>:
+<p><strong>Released</strong>: 2026-08-08 / <strong>Chromium</strong>:
 151.0.7922.71 / Language: English | <a
 href="RELEASE_NOTES-1.2.0-ja.html">日本語</a></p>
 <p>The rendering engine moves to <strong>Chromium 151</strong>. This
@@ -116,6 +116,74 @@ release brings a cluster of changes<br />
 that act directly on Japanese typography. In particular, documents that
 use emphasis marks<br />
 in vertical writing mode <strong>will lay out differently</strong>.</p>
+<hr />
+<h2 id="new-in-build3">New in build3</h2>
+<h3 id="gpu-rendering-now-works-with-a-single-setting">GPU rendering now
+works with a single setting</h3>
+<p>One environment variable switches to the GPU path.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
+<p><strong>No application changes are needed.</strong> Scrolling stays
+light even in long<br />
+vertical-writing documents, and it is noticeably faster than CPU
+rendering.</p>
+<p>Until now this path needed four separate things to be set up (GTK4
+integration,<br />
+a manual viewport, the device scale, and the receiving widget) — and the
+only<br />
+place that did so was our development browser, <strong>which is not part
+of the<br />
+distribution</strong>. Applications had no way to know, so setting<br />
+<code>BLINKGTK_GPU_MODE=egl</code> left the window blank. All of that
+setup now happens<br />
+inside the engine.</p>
+<p>It requires a real GPU and a Wayland-EGL-capable driver. On some
+machines CPU<br />
+rendering is still faster, so try it on your own hardware.</p>
+<h3 id="resizing-no-longer-shows-text-twice">Resizing no longer shows
+text twice</h3>
+<p>While a window was being resized or made fullscreen, the previous
+frame and the<br />
+new one could appear on top of each other. In vertical writing, line
+positions<br />
+are everything, so shifted lines read as broken typography.</p>
+<p>Until the new frame is ready, the previous frame is now shown
+<strong>at its own size<br />
+rather than stretched</strong>. Nothing moves, so nothing appears
+doubled. A margin is<br />
+visible during the transition.</p>
+<p>You can choose the behaviour:</p>
+<table>
+<thead>
+<tr>
+<th>Setting</th>
+<th>Behaviour</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(default)</td>
+<td>Previous frame at native size, anchored to the top. Nothing
+moves</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RESIZE_FIT=center</code></td>
+<td>Previous frame at native size, centred</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RESIZE_FIT=stretch</code></td>
+<td>Stretched (behaviour up to build2)</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="rendering-is-now-checked-automatically-on-every-engine-update">Rendering
+is now checked automatically on every engine update</h3>
+<p>Each time the underlying Chromium was updated, the GPU path tended to
+regress to<br />
+a blank or shrunken picture. There is now a check that detects both from
+logs<br />
+alone — no display required — and it is a required step when
+updating.</p>
 <hr />
 <h2 id="new-in-build2">New in build2</h2>
 <h3 id="the-engine-reports-its-real-version">The engine reports its real
@@ -145,9 +213,9 @@ layout metrics readable from JavaScript</h3>
 engine actually used</strong>, instead of inferring line pitch and
 column boundaries<br />
 from client rects.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co">// -&gt; { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">//      lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// -&gt; { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">//      lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
 <p><code>columnIndex</code> is <strong>the engine's own fragmentainer
 index</strong>, not the result of a<br />
 coordinate comparison. A line sitting exactly on a boundary cannot be
@@ -177,10 +245,10 @@ notice.</p>
 <p>They are corrected — including the QUICKSTART that readers see first
 — and a<br />
 gate now detects the pattern.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* not g_application_run() */</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* not g_application_run() */</span></span></code></pre></div>
 <h3 id="the-local-emphasis-mark-patch-is-gone">The local emphasis-mark
 patch is gone</h3>
 <p>The emphasis-mark patch carried in the v1.1 series has been removed,
@@ -313,6 +381,28 @@ change</strong></td>
 </tr>
 </tbody>
 </table>
+<h3
+id="in-vertical-writing-a-paragraph-ending-in-a-closing-bracket-can-leave-its-line-half-empty">In
+vertical writing, a paragraph ending in a closing bracket can leave its
+line half empty</h3>
+<p>This is a Chromium defect. In vertical writing, when a paragraph
+contains an inline<br />
+element (<code>&lt;span&gt;</code>, <code>&lt;ruby&gt;</code>, …) and
+<strong>ends with a fullwidth closing bracket</strong><br />
+(<code>」』）〉】｝］</code>), line boxes within a particular 8px band
+hold only about half the<br />
+characters they should. With <code>text-align: justify</code> the letter
+advance then roughly<br />
+doubles, which is what makes it visible.</p>
+<p>Reported upstream — <a
+href="https://issues.chromium.org/issues/542686223">crbug
+542686223</a>.</p>
+<p><strong>There is no workaround that keeps the punctuation
+trimming.</strong><br />
+<code>text-spacing-trim: space-all</code> removes the symptom but
+switches the trimming off<br />
+entirely. <code>trim-start</code> only shifts the affected band by 8px;
+it does not avoid it.</p>
 <hr />
 <h2 id="requirements">Requirements</h2>
 <ul>

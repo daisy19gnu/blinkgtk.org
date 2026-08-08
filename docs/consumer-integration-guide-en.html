@@ -395,8 +395,9 @@ pitfalls</h2>
 <div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_SOFTWARE<span class="op">);</span></span></code></pre></div>
 <p>You can also select via the environment variable
 <code>BLINKGTK_GPU_MODE=software|swiftshader|egl</code>. We<br />
-recommend <strong>verifying with software first</strong>. egl needs a
-real GPU and DRM and will not render in<br />
+recommend <strong>verifying with software first</strong>. egl shows a
+<strong>white screen on v1.2.0-build2 and earlier</strong> (fixed in the
+next release). egl needs a real GPU and DRM and will not render in<br />
 headless or GPU-less environments.</p>
 <h3 id="52-hidpi-and-device-scale-factor">5.2 HiDPI and
 device-scale-factor</h3>

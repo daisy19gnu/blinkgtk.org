@@ -145,15 +145,15 @@ GJS</td>
 </table>
 <h2 id="1-install">1. Install</h2>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.2.0-build2.fc44.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.2.0-build2.fc44.x86_64.rpm</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.2.0-build3.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.2.0-build3.fc44.x86_64.rpm</span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.2.0-build2_amd64.deb <span class="dt">\</span></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.2.0-build2_amd64.deb</span></code></pre></div>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.2.0-build3_amd64.deb <span class="dt">\</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.2.0-build3_amd64.deb</span></code></pre></div>
 <p>If you use the tarball, extract it anywhere and tell
 <code>pkg-config</code> where it is:</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.2.0-build2-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xzf blinkgtk-1.2.0-build3-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span></code></pre></div>
 <h2 id="2-always-link-through-pkg-config">2. Always link through
 pkg-config</h2>
