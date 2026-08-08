@@ -114,7 +114,7 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/tree/main/manifests"><code>man
 <p><strong>注</strong>: パス中の
 <code>0.1</code>(<code>blinkgtk-0.1</code> 等)は <strong>API
 バージョン</strong>です(GTK4 の <code>gtk-4.0</code>
-と同じ規約)。製品バージョン(v1.2.0-build3 等)とは独立で、互換性のない
+と同じ規約)。製品バージョン(v1.2.0-build4 等)とは独立で、互換性のない
 API 変更時にのみ変わります。</p>
 </blockquote>
 <h2 id="0-システム要件">0. システム要件</h2>
@@ -150,25 +150,46 @@ API 変更時にのみ変わります。</p>
 </tbody>
 </table>
 <h2 id="1-rpmfedora-44--x86_64">1. RPM(Fedora 44 / x86_64)</h2>
-<p>依存パッケージは <strong>dnf が自動解決</strong>します。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime(実行に必須)</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.2.0-build3.fc44.x86_64.rpm</span>
+<h3 id="1-a-dnf-リポジトリから推奨--更新も-dnf-に任せる">1-a. dnf
+リポジトリから(推奨 — 更新も dnf に任せる)</h3>
+<p>一度登録すれば、以降は <code>dnf upgrade</code>
+で新しい版に追随できます。<br />
+毎回ダウンロードする必要はありません。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-o</span> /etc/yum.repos.d/blinkgtk.repo <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  https://blinkgtk.org/repo/fedora/blinkgtk.repo</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># アプリを開発する場合(ヘッダ + pkg-config)</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.0-build3.fc44.x86_64.rpm</span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Python (PyGObject) / GJS から使う場合</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-gir-1.2.0-build3.fc44.x86_64.rpm</span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="co"># マニュアル(日英)</span></span>
-<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-doc-1.2.0-build3.fc44.noarch.rpm</span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin                          <span class="co"># runtime</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin-devel blinkgtk-bin-gir   <span class="co"># 開発する場合</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin-doc                      <span class="co"># マニュアル(日英)</span></span></code></pre></div>
+<p>パッケージは署名済みで、<code>.repo</code> は <code>gpgcheck=1</code>
+です。初回の <code>dnf install</code><br />
+で公開鍵の取り込みを確認されるので、指紋が一致することを確かめてください。</p>
+<pre><code>D3A0 3E93 E845 4347 D52D  4372 2F48 F4B7 5395 96DA</code></pre>
+<p>メタデータは blinkgtk.org、パッケージ本体は GitHub Releases
+に置いています。<br />
+<code>dnf</code>
+がメタデータを辿って本体を取りに行くので、使い分けは不要です。</p>
+<h3 id="1-b-rpm-を個別に">1-b. RPM を個別に</h3>
+<p>リポジトリを登録しない場合。依存パッケージは <strong>dnf
+が自動解決</strong>します。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime(実行に必須)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.2.0-build4.fc44.x86_64.rpm</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># アプリを開発する場合(ヘッダ + pkg-config)</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.0-build4.fc44.x86_64.rpm</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Python (PyGObject) / GJS から使う場合</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-gir-1.2.0-build4.fc44.x86_64.rpm</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a><span class="co"># マニュアル(日英)</span></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-doc-1.2.0-build4.fc44.noarch.rpm</span></code></pre></div>
 <p>RPM は GPG
 署名済みです。署名検証を行う場合は公開鍵をインポートしてください。</p>
 <h2 id="2-debdebian--ubuntu--amd64">2. DEB(Debian / Ubuntu / amd64)</h2>
 <p>依存パッケージは <strong>apt が自動解決</strong>します(glibc 2.43
 以上のリリースが必要です)。</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.0-build3_amd64.deb      <span class="co"># runtime</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.0-build3_amd64.deb    <span class="co"># 開発用</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.0-build4_amd64.deb      <span class="co"># runtime</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.0-build4_amd64.deb    <span class="co"># 開発用</span></span></code></pre></div>
 <h2 id="3-tarballその他の-linux--glibc--x86_64">3. tarball(その他の
 Linux / glibc / x86_64)</h2>
 <p><code>.tar.gz</code> と <code>.tar.bz2</code>
@@ -180,14 +201,14 @@ Linux / glibc / x86_64)</h2>
 ランタイムを同梱しますが、システム側のライブラリ(GTK4・NSS・音声・印刷・メディア等)に依存します。主要ディストリビューションでは次の
 1 コマンドでトップレベル依存が揃います(残りは連鎖導入されます):</p>
 <p><strong>Fedora(44 以降)</strong>:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4 nss alsa-lib cups-libs dbus-libs at-spi2-core at-spi2-atk <span class="dt">\</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  libdrm mesa-libgbm mesa-libEGL libxkbcommon wayland-utils libseccomp <span class="dt">\</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>  gstreamer1 gstreamer1-plugins-base openssl-libs sqlite-libs libcurl</span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4 nss alsa-lib cups-libs dbus-libs at-spi2-core at-spi2-atk <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  libdrm mesa-libgbm mesa-libEGL libxkbcommon wayland-utils libseccomp <span class="dt">\</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>  gstreamer1 gstreamer1-plugins-base openssl-libs sqlite-libs libcurl</span></code></pre></div>
 <p><strong>Debian / Ubuntu(glibc 2.43 以上のリリース)</strong>:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-1 libnss3 libasound2t64 libcups2t64 libdbus-1-3 <span class="dt">\</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  libatk-bridge2.0-0t64 libatspi2.0-0t64 libdrm2 libgbm1 libegl1 <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>  libxkbcommon0 libseccomp2 libgstreamer1.0-0 gstreamer1.0-plugins-base <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>  libssl3t64 libsqlite3-0</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-1 libnss3 libasound2t64 libcups2t64 libdbus-1-3 <span class="dt">\</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>  libatk-bridge2.0-0t64 libatspi2.0-0t64 libdrm2 libgbm1 libegl1 <span class="dt">\</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>  libxkbcommon0 libseccomp2 libgstreamer1.0-0 gstreamer1.0-plugins-base <span class="dt">\</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>  libssl3t64 libsqlite3-0</span></code></pre></div>
 <p>(パッケージ名はリリースにより多少異なります。<code>t64</code>
 接尾辞は Ubuntu 24.04 以降の表記です)</p>
 <blockquote>
@@ -201,92 +222,94 @@ automatically.</p>
 <h3 id="3-2-展開">3-2. 展開</h3>
 <p>FHS 構成(<code>usr/</code>,
 <code>etc/</code>)なのでルートに展開します:</p>
-<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar <span class="at">-C</span> / <span class="at">-xzf</span> blinkgtk-1.2.0-build3-linux-x86_64.tar.gz</span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar <span class="at">-C</span> / <span class="at">-xzf</span> blinkgtk-1.2.0-build4-linux-x86_64.tar.gz</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig</span></code></pre></div>
 <p>システムを汚したくない場合は任意の prefix に展開し、実行時に
 <code>LD_LIBRARY_PATH</code> を通してください:</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/blinkgtk <span class="kw">&amp;&amp;</span> <span class="fu">tar</span> <span class="at">-C</span> ~/blinkgtk <span class="at">-xzf</span> blinkgtk-1.2.0-build3-linux-x86_64.tar.gz</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>~/blinkgtk/usr/lib64/blinkgtk-0.1:~/blinkgtk/usr/lib64/blinkgtk-0.1/chromium</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">mkdir</span> <span class="at">-p</span> ~/blinkgtk <span class="kw">&amp;&amp;</span> <span class="fu">tar</span> <span class="at">-C</span> ~/blinkgtk <span class="at">-xzf</span> blinkgtk-1.2.0-build4-linux-x86_64.tar.gz</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>~/blinkgtk/usr/lib64/blinkgtk-0.1:~/blinkgtk/usr/lib64/blinkgtk-0.1/chromium</span></code></pre></div>
 <h3 id="3-3-依存の不足を機械的に確認推奨">3-3.
 依存の不足を機械的に確認(推奨)</h3>
 <p>ディストリビューションごとのパッケージ名差異に依らず、<strong>実際に何が足りないか</strong>を次のコマンドで確認できます。出力が空なら依存は揃っています:</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="va">PREFIX</span><span class="op">=</span>/            <span class="co"># ~/blinkgtk に展開した場合はそのパス</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ldd</span> <span class="va">$PREFIX</span>/usr/lib64/blinkgtk-0.1/chromium/libcontent.so <span class="dt">\</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$PREFIX</span>/usr/lib64/blinkgtk-0.1/libblinkgtk-0.1.so.0.0.0 <span class="dv">2</span><span class="op">&gt;</span>/dev/null <span class="dt">\</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;not found&quot;</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span></span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="va">PREFIX</span><span class="op">=</span>/            <span class="co"># ~/blinkgtk に展開した場合はそのパス</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">ldd</span> <span class="va">$PREFIX</span>/usr/lib64/blinkgtk-0.1/chromium/libcontent.so <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>    <span class="va">$PREFIX</span>/usr/lib64/blinkgtk-0.1/libblinkgtk-0.1.so.0.0.0 <span class="dv">2</span><span class="op">&gt;</span>/dev/null <span class="dt">\</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="fu">grep</span> <span class="st">&quot;not found&quot;</span> <span class="kw">|</span> <span class="fu">sort</span> <span class="at">-u</span></span></code></pre></div>
 <p><code>not found</code>
 が出た場合は、そのライブラリ名でディストリビューションのパッケージを検索して導入してください(例:
 Fedora <code>dnf provides '*/libasound.so.2'</code> / Debian
 <code>apt-file search libasound.so.2</code>)。</p>
 <h2 id="4-検証">4. 検証</h2>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sha256sum</span> <span class="at">-c</span> SHA256SUMS <span class="at">--ignore-missing</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sha256sum</span> <span class="at">-c</span> SHA256SUMS <span class="at">--ignore-missing</span></span></code></pre></div>
 <h2 id="5-動作確認">5. 動作確認</h2>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk                  <span class="co"># ライブラリ登録確認 (ルート展開時)</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1         <span class="co"># devel 導入時</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk                  <span class="co"># ライブラリ登録確認 (ルート展開時)</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1         <span class="co"># devel 導入時</span></span></code></pre></div>
 <h2 id="6-アップデート">6. アップデート</h2>
 <p>同じ形式でインストールしたものを上書きします。<strong>先に古い版を削除する必要は<br />
 ありません</strong>(パッケージマネージャが置き換えます)。</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RPM (Fedora)</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf upgrade ./blinkgtk-bin-1.2.0-build3.fc44.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.2.0-build3.fc44.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.0-build3.fc44.x86_64.rpm</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="co"># DEB (Debian / Ubuntu)</span></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.2.0-build3_amd64.deb <span class="dt">\</span></span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.2.0-build3_amd64.deb</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RPM (Fedora)</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf upgrade ./blinkgtk-bin-1.2.0-build4.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.2.0-build4.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.0-build4.fc44.x86_64.rpm</span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a><span class="co"># DEB (Debian / Ubuntu)</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.2.0-build4_amd64.deb <span class="dt">\</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>             ./libblinkgtk-0.1-dev_1.2.0-build4_amd64.deb</span></code></pre></div>
 <p>tarball
 の場合は、<strong>展開先を一度削除してから</strong>展開し直してください。上書き展開<br />
 すると、旧版にあって新版に無いファイルが残り、混在した状態になります。</p>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /opt/blinkgtk</span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /opt/blinkgtk</span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.0-build3-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /opt/blinkgtk</span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> mkdir <span class="at">-p</span> /opt/blinkgtk</span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.0-build4-linux-x86_64.tar.gz <span class="at">-C</span> /opt/blinkgtk</span></code></pre></div>
 <h3 id="アップデート後の確認">アップデート後の確認</h3>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1   <span class="co"># 新しい版数が返るか</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1   <span class="co"># 新しい版数が返るか</span></span></code></pre></div>
 <p>アプリを再ビルドする必要は通常ありません(SONAME
 <code>libblinkgtk-0.1.so.0</code> は<br />
 維持されます)。SONAME
 が変わる変更を行う場合は、リリースノートに明記します。</p>
 <h2 id="7-アンインストール">7. アンインストール</h2>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RPM (Fedora)</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf remove blinkgtk-bin blinkgtk-bin-devel blinkgtk-bin-gir blinkgtk-bin-doc</span>
-<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="co"># DEB (Debian / Ubuntu)</span></span>
-<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt remove libblinkgtk-0.1-0 libblinkgtk-0.1-dev</span>
-<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 設定ごと消す場合は apt purge</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co"># RPM (Fedora)</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf remove blinkgtk-bin blinkgtk-bin-devel blinkgtk-bin-gir blinkgtk-bin-doc</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co"># DEB (Debian / Ubuntu)</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt remove libblinkgtk-0.1-0 libblinkgtk-0.1-dev</span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="co"># 設定ごと消す場合は apt purge</span></span></code></pre></div>
 <p>tarball
 の場合は展開先を削除します。ルートに展開した場合は、同梱されていた<br />
 ファイルのみを削除してください。</p>
-<div class="sourceCode" id="cb14"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 任意の場所に展開した場合</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /opt/blinkgtk</span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ルート (/) に展開した場合 (配布物が置くもののみ)</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /usr/lib64/blinkgtk-0.1 <span class="dt">\</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>            /usr/include/blinkgtk-0.1 <span class="dt">\</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>            /usr/share/doc/blinkgtk-0.1 <span class="dt">\</span></span>
-<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>            /usr/libexec/blinkgtk-0.1</span>
-<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-f</span>  /usr/lib64/libblinkgtk-0.1.so.0 <span class="dt">\</span></span>
-<span id="cb14-10"><a href="#cb14-10" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/libblinkgtk-0.1.so <span class="dt">\</span></span>
-<span id="cb14-11"><a href="#cb14-11" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/pkgconfig/blinkgtk-0.1.pc <span class="dt">\</span></span>
-<span id="cb14-12"><a href="#cb14-12" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/girepository-1.0/BlinkGTK-0.1.typelib <span class="dt">\</span></span>
-<span id="cb14-13"><a href="#cb14-13" aria-hidden="true" tabindex="-1"></a>            /usr/share/gir-1.0/BlinkGTK-0.1.gir <span class="dt">\</span></span>
-<span id="cb14-14"><a href="#cb14-14" aria-hidden="true" tabindex="-1"></a>            /usr/share/vala/vapi/BlinkGTK-0.1.vapi <span class="dt">\</span></span>
-<span id="cb14-15"><a href="#cb14-15" aria-hidden="true" tabindex="-1"></a>            /etc/ld.so.conf.d/blinkgtk-0.1.conf</span>
-<span id="cb14-16"><a href="#cb14-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 任意の場所に展開した場合</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /opt/blinkgtk</span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co"># ルート (/) に展開した場合 (配布物が置くもののみ)</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-rf</span> /usr/lib64/blinkgtk-0.1 <span class="dt">\</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>            /usr/include/blinkgtk-0.1 <span class="dt">\</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>            /usr/share/doc/blinkgtk-0.1 <span class="dt">\</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>            /usr/libexec/blinkgtk-0.1</span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rm <span class="at">-f</span>  /usr/lib64/libblinkgtk-0.1.so.0 <span class="dt">\</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/libblinkgtk-0.1.so <span class="dt">\</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/pkgconfig/blinkgtk-0.1.pc <span class="dt">\</span></span>
+<span id="cb16-12"><a href="#cb16-12" aria-hidden="true" tabindex="-1"></a>            /usr/lib64/girepository-1.0/BlinkGTK-0.1.typelib <span class="dt">\</span></span>
+<span id="cb16-13"><a href="#cb16-13" aria-hidden="true" tabindex="-1"></a>            /usr/share/gir-1.0/BlinkGTK-0.1.gir <span class="dt">\</span></span>
+<span id="cb16-14"><a href="#cb16-14" aria-hidden="true" tabindex="-1"></a>            /usr/share/vala/vapi/BlinkGTK-0.1.vapi <span class="dt">\</span></span>
+<span id="cb16-15"><a href="#cb16-15" aria-hidden="true" tabindex="-1"></a>            /etc/ld.so.conf.d/blinkgtk-0.1.conf</span>
+<span id="cb16-16"><a href="#cb16-16" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig</span></code></pre></div>
 <h3 id="残るもの">残るもの</h3>
 <p>BlinkGTK は Chromium
 と同様に、<strong>利用者のホームにプロファイルを作ります</strong>。<br />
 パッケージを削除しても残るため、不要なら手動で削除してください。</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> ~/.blink_gtk</span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> ~/.blink_gtk</span></code></pre></div>
 <h3 id="確認">確認</h3>
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1   <span class="co"># 何も返らなければ削除済み</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk            <span class="co"># 出力が無ければ削除済み</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1   <span class="co"># 何も返らなければ削除済み</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk            <span class="co"># 出力が無ければ削除済み</span></span></code></pre></div>
 <h2 id="8-トラブルシューティング">8. トラブルシューティング</h2>
 <table>
 <thead>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build3 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.0-build4 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -91,7 +91,7 @@
 <meta name="description" content="Released: 2026-08-08 / Chromium: 151.0.7922.71 / Language: English | 日本語">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build3 Release Notes — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.0-build4 Release Notes — BlinkGTK">
 <meta property="og:description" content="Released: 2026-08-08 / Chromium: 151.0.7922.71 / Language: English | 日本語">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -106,7 +106,7 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build3-release-notes">BlinkGTK 1.2.0-build3 Release
+<h1 id="blinkgtk-120-build4-release-notes">BlinkGTK 1.2.0-build4 Release
 Notes</h1>
 <p><strong>Released</strong>: 2026-08-08 / <strong>Chromium</strong>:
 151.0.7922.71 / Language: English | <a
@@ -117,11 +117,70 @@ that act directly on Japanese typography. In particular, documents that
 use emphasis marks<br />
 in vertical writing mode <strong>will lay out differently</strong>.</p>
 <hr />
+<h2 id="new-in-build4">New in build4</h2>
+<h3 id="install-and-update-with-dnf">Install and update with
+<code>dnf</code></h3>
+<p>Register the repository once, and <code>dnf upgrade</code> keeps you
+on the current<br />
+release. No more downloading files each time.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-o</span> /etc/yum.repos.d/blinkgtk.repo <span class="dt">\</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  https://blinkgtk.org/repo/fedora/blinkgtk.repo</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin</span></code></pre></div>
+<p>Packages are signed and the <code>.repo</code> ships with
+<code>gpgcheck=1</code>. The first<br />
+<code>dnf install</code> asks you to confirm the public key — check the
+fingerprint:</p>
+<pre><code>D3A0 3E93 E845 4347 D52D  4372 2F48 F4B7 5395 96DA</code></pre>
+<h3 id="continuously-animating-pages-no-longer-freeze">Continuously
+animating pages no longer freeze</h3>
+<p>Canvas animation, CSS animation and video — anything whose content
+keeps<br />
+changing — no longer freezes in software mode.</p>
+<p>Reported by <strong>iche29</strong> (<code>blinkgtk-dist#4</code>).
+Their observation that the<br />
+internal drawing work continued even after the picture stopped moving is
+what<br />
+located the fault: the draw calls were happening, but the image they
+referred<br />
+to was no longer being updated.</p>
+<p>The cause was that <strong>the shipped build contained an object file
+five days<br />
+older than the header it inlines from</strong>. The header changed; that
+object was<br />
+not rebuilt, so it ran against a stale class layout. Frame arrival
+was<br />
+misdetected, and the "skip the capture if nothing changed" logic
+kept<br />
+skipping.</p>
+<p>Screen updates over 20 seconds: 59 on a consistent build, 10 on
+build3.</p>
+<p>Two release checks were added so this cannot recur silently — one
+verifies<br />
+the build has nothing left to rebuild, the other measures that screen
+updates<br />
+keep flowing on a continuously animating page.</p>
+<h3 id="package-metadata-corrected">Package metadata corrected</h3>
+<p>The DEB <code>Maintainer</code> field and the RPM changelog carried a
+personal name;<br />
+both now read "BlinkGTK Project".</p>
+<hr />
 <h2 id="new-in-build3">New in build3</h2>
+<h3 id="with-thanks-to-the-reporters">With thanks to the reporters</h3>
+<p>The GPU rendering problem was found by <strong>iche29</strong>
+(<code>blinkgtk-dist#3</code>). The<br />
+reproduction steps, environment, and logs were complete enough to work
+from<br />
+directly; the observation that the target surface was never resolved was
+the key.</p>
+<p>The doubled-text-on-resize problem was reported by
+<strong>FUSEe-SMIL</strong> (#132). The<br />
+default (previous frame at native size, anchored to the top) follows
+their<br />
+judgement after looking at it on real hardware.</p>
 <h3 id="gpu-rendering-now-works-with-a-single-setting">GPU rendering now
 works with a single setting</h3>
 <p>One environment variable switches to the GPU path.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
 <p><strong>No application changes are needed.</strong> Scrolling stays
 light even in long<br />
 vertical-writing documents, and it is noticeably faster than CPU
@@ -213,9 +272,9 @@ layout metrics readable from JavaScript</h3>
 engine actually used</strong>, instead of inferring line pitch and
 column boundaries<br />
 from client rects.</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">// -&gt; { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co">//      lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">// -&gt; { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co">//      lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
 <p><code>columnIndex</code> is <strong>the engine's own fragmentainer
 index</strong>, not the result of a<br />
 coordinate comparison. A line sitting exactly on a boundary cannot be
@@ -245,10 +304,10 @@ notice.</p>
 <p>They are corrected — including the QUICKSTART that readers see first
 — and a<br />
 gate now detects the pattern.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* not g_application_run() */</span></span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* not g_application_run() */</span></span></code></pre></div>
 <h3 id="the-local-emphasis-mark-patch-is-gone">The local emphasis-mark
 patch is gone</h3>
 <p>The emphasis-mark patch carried in the v1.1 series has been removed,
