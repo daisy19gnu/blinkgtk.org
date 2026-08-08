@@ -1,0 +1,8 @@
+[blinkgtk]
+name=BlinkGTK
+baseurl=https://blinkgtk.org/repo/fedora
+enabled=1
+gpgcheck=1
+repo_gpgcheck=1
+gpgkey=https://blinkgtk.org/repo/fedora/RPM-GPG-KEY-blinkgtk
+metadata_expire=6h
