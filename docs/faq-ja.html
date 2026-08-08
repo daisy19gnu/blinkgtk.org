@@ -108,7 +108,7 @@
 </div><div class="card doc">
 <h1 id="よくあるご質問">よくあるご質問</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>バージョン</strong>: 1.2.0-build2</p>
+<strong>バージョン</strong>: 1.2.0-build3</p>
 <p>導入をご検討中の方から、実際に使い始めた方まで、よくいただくご質問をまとめました。</p>
 <p>ここに無いことは <a href="./troubleshooting-ja.html">困ったときは</a>
 をご覧いただくか、<br />
@@ -218,9 +218,17 @@ tarball
 <h3 id="gpu-は必要ですか">GPU は必要ですか</h3>
 <p>必須ではありません。CPU
 だけで描画する経路があり、既定でも動きます。</p>
-<p>GPU が使える環境では、<code>BLINKGTK_GPU_MODE=egl</code> で GPU
-描画に切り替えられます。<br />
-環境によってどちらが速いかは変わるので、実機でお試しいただくのが確実です。</p>
+<p>GPU を使う EGL 経路もあります。<code>BLINKGTK_GPU_MODE=egl</code>
+を指定するだけで、<br />
+必要な設定はエンジンが行います。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
+<p>実 GPU と Wayland EGL
+対応ドライバが要ります。環境によってどちらが速いかは<br />
+変わるので、実機でお試しください。</p>
+<p>**v1.2.0-build2
+以前では白画面になります。**必要な設定が利用者側に委ねられて<br />
+いたためで、次の版から解消します。それ以前の版では <code>software</code>
+をお使いください。</p>
 <h3 id="どのくらいメモリを使いますか">どのくらいメモリを使いますか</h3>
 <p>Chromium がプロセスを分けて動く都合上、<strong>WebView 1 つあたり数百
 MB</strong>を<br />

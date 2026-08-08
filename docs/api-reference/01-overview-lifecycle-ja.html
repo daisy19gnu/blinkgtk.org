@@ -112,8 +112,8 @@ id="blinkgtk-api-リファレンスマニュアル--第-1-章-概観とライフ
 API リファレンスマニュアル — 第 1 章 概観とライフサイクル</h1>
 <p><strong>作成者</strong>: BlinkGTK-Readium
 プロジェクト(consumer/embedder 視点、#121)<br />
-<strong>対象バージョン</strong>: BlinkGTK 1.1.0(fix117
-パッケージ、Chromium 150.0.7871.46)<br />
+<strong>対象バージョン</strong>: BlinkGTK 1.2.0(Chromium
+151.0.7922.71)<br />
 <strong>位置づけ</strong>:
 consumer(組み込み側)が実運用で得た知見を含む利用者マニュアル。API
 セマンティクスの正は公開ヘッダ <code>blink_gtk/blink_gtk.h</code>
@@ -526,7 +526,7 @@ software で安定)。また前述のとおりモードはプロセス単位な�
 だけで合格判定しないこと(当方はこれで<br />
 False Pass を経験し、GTK 合成結果を直接読む検査を併用している)。</p>
 <h2 id="16-バージョン確認">1.6 バージョン確認</h2>
-<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>           <span class="co">/* 例 &quot;1.1.0&quot; */</span></span>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>           <span class="co">/* 例 &quot;1.2.0&quot; */</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_chromium_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>  <span class="co">/* 例 &quot;150.0.7871.46&quot; */</span></span></code></pre></div>
 <p>コンパイル時マクロ(<code>BLINKGTK_VERSION</code> /
 <code>CHROMIUM_VERSION</code>)ではなく、実行時に<br />
