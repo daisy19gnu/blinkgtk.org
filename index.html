@@ -385,8 +385,8 @@ int main(int argc, char **argv)
   if (!el) return;
   // 公開時に焼き込んだ実績。GitHub API が使えなくても必ず表示する
   // (未認証 API は 60 req/時・IP 単位で枯渇するため、表示を API に依存させない)。
-  var withdrawn = 106;   // 取り下げ済み build の実績 (公開 API からは見えない)
-  var baseline  = 344;       // 公開時点の総計
+  var withdrawn = 129;   // 取り下げ済み build の実績 (公開 API からは見えない)
+  var baseline  = 368;       // 公開時点の総計
   var show = function (n) {
     el.textContent = 'ダウンロード数 / Downloads: ' + n.toLocaleString('en-US');
     el.hidden = false;
