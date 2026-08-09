@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="ja">
+  <title>BlinkGTK のお知らせ</title>
+  <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
+  <link href="https://blinkgtk.org/news-ja.html"/>
+  <id>https://blinkgtk.org/feed-ja.xml</id>
+  <updated>2026-08-09T00:00:00Z</updated>
+  <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>dnf でインストールと更新ができるようになりました</title>
+    <link href="https://blinkgtk.org/docs/installation/INSTALLATION-ja.html"/>
+    <id>tag:blinkgtk.org,2026:2026-08-09-dnf-repo:ja</id>
+    <updated>2026-08-09T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>リポジトリを一度登録すれば、以降は dnf upgrade で新しい版に追随できます。パッケージは署名済みで、リポジトリは gpgcheck=1 です。</summary>
+  </entry>
+  <entry>
+    <title>v1.2.0-build4 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build4"/>
+    <id>tag:blinkgtk.org,2026:2026-08-09-build4:ja</id>
+    <updated>2026-08-08T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>software モードで、動き続けるページ (Canvas・CSS アニメーション・動画) が静止しなくなりました。</summary>
+  </entry>
+  <entry>
+    <title>GPU 描画が環境変数の指定だけで使えるようになりました</title>
+    <link href="https://blinkgtk.org/docs/api-reference/environment-variables-ja.html"/>
+    <id>tag:blinkgtk.org,2026:2026-08-08-build3:ja</id>
+    <updated>2026-08-08T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>BLINKGTK_GPU_MODE=egl だけで GPU 経路に切り替えられます。アプリ側のコード変更は要りません。</summary>
+  </entry>
+  <entry>
+    <title>縦書きの行分割について Chromium へ報告しました</title>
+    <link href="https://issues.chromium.org/issues/542686223"/>
+    <id>tag:blinkgtk.org,2026:2026-08-05-upstream-linebreak:ja</id>
+    <updated>2026-08-05T00:00:00Z</updated>
+    <category term="upstream"/>
+    <summary>縦書きで閉じ括弧が行末に来ると、行が半分しか埋まらないことがあります。再現条件と計測を添えて上流に報告しました。</summary>
+  </entry>
+  <entry>
+    <title>Chromium 151 へ更新しました</title>
+    <link href="https://blinkgtk.org/docs/chromium-feature-history-ja.html"/>
+    <id>tag:blinkgtk.org,2026:2026-08-01-chromium151:ja</id>
+    <updated>2026-08-01T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>圏点を付けても行送りが太らなくなり、ルビのはみ出しが指定どおりに効きます。</summary>
+  </entry>
+</feed>

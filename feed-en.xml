@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="utf-8"?>
+<feed xmlns="http://www.w3.org/2005/Atom" xml:lang="en">
+  <title>BlinkGTK News</title>
+  <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
+  <link href="https://blinkgtk.org/news-en.html"/>
+  <id>https://blinkgtk.org/feed-en.xml</id>
+  <updated>2026-08-09T00:00:00Z</updated>
+  <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>Install and update with dnf</title>
+    <link href="https://blinkgtk.org/docs/installation/INSTALLATION-ja.html"/>
+    <id>tag:blinkgtk.org,2026:2026-08-09-dnf-repo:en</id>
+    <updated>2026-08-09T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Register the repository once and dnf upgrade keeps you current. Packages are signed and the repository ships with gpgcheck=1.</summary>
+  </entry>
+  <entry>
+    <title>v1.2.0-build4 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build4"/>
+    <id>tag:blinkgtk.org,2026:2026-08-09-build4:en</id>
+    <updated>2026-08-08T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Continuously animating pages — Canvas, CSS animation, video — no longer freeze in software mode.</summary>
+  </entry>
+  <entry>
+    <title>GPU rendering works with a single environment variable</title>
+    <link href="https://blinkgtk.org/docs/api-reference/environment-variables-ja.html"/>
+    <id>tag:blinkgtk.org,2026:2026-08-08-build3:en</id>
+    <updated>2026-08-08T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Switch to the GPU path with BLINKGTK_GPU_MODE=egl alone. No application code changes required.</summary>
+  </entry>
+  <entry>
+    <title>Reported a vertical-writing line-breaking issue upstream</title>
+    <link href="https://issues.chromium.org/issues/542686223"/>
+    <id>tag:blinkgtk.org,2026:2026-08-05-upstream-linebreak:en</id>
+    <updated>2026-08-05T00:00:00Z</updated>
+    <category term="upstream"/>
+    <summary>In vertical writing, a closing bracket at the line end can leave the line half filled. Reported upstream with reproduction steps and measurements.</summary>
+  </entry>
+  <entry>
+    <title>Updated to Chromium 151</title>
+    <link href="https://blinkgtk.org/docs/chromium-feature-history-ja.html"/>
+    <id>tag:blinkgtk.org,2026:2026-08-01-chromium151:en</id>
+    <updated>2026-08-01T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Emphasis marks no longer inflate line pitch, and ruby overhang behaves as specified.</summary>
+  </entry>
+</feed>
