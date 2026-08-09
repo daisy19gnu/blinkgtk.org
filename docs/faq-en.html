@@ -175,13 +175,51 @@ has the mapping table.</p>
 <p>This is not a question of which is better. BlinkGTK suits you if you
 want to<br />
 develop against Chrome as your reference, or want Chrome DevTools.</p>
-<h3 id="is-this-a-new-project">Is this a new project?</h3>
-<p>Yes. It has not been public for long.</p>
-<p>The upside is that <strong>reported problems get attention
-quickly</strong>. Points raised by<br />
-users have gone straight into the next build. Whatever you notice,
-however<br />
-small, please tell us.</p>
+<h3 id="how-long-has-this-been-around">How long has this been
+around?</h3>
+<p>Development began in 2025 and BlinkGTK went public in 2026. The
+engine itself<br />
+is Chromium's Blink, and BlinkGTK tracks Chromium stable releases.</p>
+<p><strong>Reported problems get attention quickly.</strong> Points
+raised by users have gone<br />
+into the next build. Whatever you notice, please tell us.</p>
+<h3 id="what-are-you-focusing-on">What are you focusing on?</h3>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>What it covers</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GPU rendering path</td>
+<td>Research and development of a dmabuf-based GPU path</td>
+</tr>
+<tr>
+<td>Swapping the rendering module</td>
+<td>Switching rendering paths without restarting the application</td>
+</tr>
+<tr>
+<td>Japanese vertical typesetting</td>
+<td>Vertical writing, ruby, emphasis marks, tate-chu-yoko, line breaking
+— following JLReq</td>
+</tr>
+<tr>
+<td>EPUB Media Overlays</td>
+<td>Read-aloud with audio synchronised to the text</td>
+</tr>
+<tr>
+<td>Accessibility</td>
+<td>Exposing page content to assistive technology</td>
+</tr>
+</tbody>
+</table>
+<p>We also file bug reports and improvement proposals with Chromium and
+other<br />
+related open source projects. Where a problem belongs upstream, fixing
+it<br />
+upstream serves users better in the long run.</p>
 <h3 id="what-licence-is-it-under">What licence is it under?</h3>
 <p>BSD 3-Clause. Commercial use is fine.</p>
 <p>The bundled Chromium-derived components carry their own licences. We
