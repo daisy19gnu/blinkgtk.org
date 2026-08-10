@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-08-09T00:00:00Z</updated>
+  <updated>2026-08-10T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>Western hyphenation now works</title>
+    <link href="https://blinkgtk.org/docs/version-history-ja.html"/>
+    <id>tag:blinkgtk.org,2026:2026-08-10-hyphenation:en</id>
+    <updated>2026-08-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Specifying hyphens: auto now breaks Western words at appropriate points, with dictionaries for 52 languages bundled. Justified Western text depends on hyphenation, so previously the shorter the line the wider the word gaps became.</summary>
+  </entry>
   <entry>
     <title>Install and update with dnf</title>
     <link href="https://blinkgtk.org/docs/installation/INSTALLATION-ja.html"/>

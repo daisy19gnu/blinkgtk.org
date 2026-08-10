@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-08-09T00:00:00Z</updated>
+  <updated>2026-08-10T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>欧文の分綴が効くようになりました</title>
+    <link href="https://blinkgtk.org/docs/version-history-ja.html"/>
+    <id>tag:blinkgtk.org,2026:2026-08-10-hyphenation:ja</id>
+    <updated>2026-08-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>hyphens: auto を指定すると欧文が語の途中で適切に分割されます。52 言語の辞書を同梱しています。分綴は欧文の両端揃えとセットで成立するため、これまでは行が短いほど語間が開いていました。</summary>
+  </entry>
   <entry>
     <title>dnf でインストールと更新ができるようになりました</title>
     <link href="https://blinkgtk.org/docs/installation/INSTALLATION-ja.html"/>
