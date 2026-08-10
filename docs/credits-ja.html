@@ -1,0 +1,101 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>謝辞 — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="BlinkGTK は、外部の方からのご報告で直った不具合が数多くあります。 このページはその記録です。">
+<link rel="canonical" href="https://blinkgtk.org/docs/credits-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="謝辞 — BlinkGTK">
+<meta property="og:description" content="BlinkGTK は、外部の方からのご報告で直った不具合が数多くあります。 このページはその記録です。">
+<meta property="og:url" content="https://blinkgtk.org/docs/credits-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/credits-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/credits-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/credits-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="謝辞">謝辞</h1>
+<p>BlinkGTK
+は、外部の方からのご報告で直った不具合が数多くあります。<br />
+このページはその記録です。</p>
+<p><strong>再現手順を添えたご報告は、こちらの調査をそのまま省きます。</strong>
+環境や版数、<br />
+切り分けの経過まで書いていただけると、受け取ってすぐ同じものを走らせられます。<br />
+実際に、下記のご報告はいずれもその形で届きました。</p>
+<p>不具合のご報告は<br />
+<a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">blinkgtk-dist
+の Issues</a><br />
+へお願いします。</p>
+<hr />
+<table>
+<thead>
+<tr>
+<th>報告者</th>
+<th>対象</th>
+<th>反映された版</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>iche29</strong></td>
+<td>dist#5</td>
+<td><code>v1.2.0-build5</code></td>
+<td>診断用 PNG
+の生成が環境変数で止められない問題をご報告いただきました。再現手順が公式サンプルだけで完結する形で、こちらはそのまま走らせて確認できました</td>
+</tr>
+<tr>
+<td><strong>iche29</strong></td>
+<td>dist#4</td>
+<td><code>v1.2.0-build4</code></td>
+<td>software
+モードで動き続けるページが静止する問題をご報告いただきました。終了時の異常終了も併せてご指摘いただき、切り分けて書いていただいたことで別々に追えました</td>
+</tr>
+<tr>
+<td><strong>iche29</strong></td>
+<td>dist#3</td>
+<td><code>v1.2.0-build5</code></td>
+<td>EGL
+モードで公式サンプルが白画面になる問題をご報告いただきました。SHA256
+の照合まで済んだ状態で届いたため、環境の問題ではないと即断できました</td>
+</tr>
+<tr>
+<td><strong>SOTA FUJIWARA</strong></td>
+<td>—</td>
+<td><code>v1.1.0-build3</code></td>
+<td>RPM の依存名が Fedora
+で解決できずインストールできない問題をご報告いただきました。配布前に依存解決性を検査する仕組みを設ける契機になりました</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>

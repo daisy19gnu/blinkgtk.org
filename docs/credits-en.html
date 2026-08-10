@@ -1,0 +1,106 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Acknowledgements — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Many defects in BlinkGTK were fixed thanks to reports from outside the project. This page records them.">
+<link rel="canonical" href="https://blinkgtk.org/docs/credits-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Acknowledgements — BlinkGTK">
+<meta property="og:description" content="Many defects in BlinkGTK were fixed thanks to reports from outside the project. This page records them.">
+<meta property="og:url" content="https://blinkgtk.org/docs/credits-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/credits-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/credits-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/credits-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="acknowledgements">Acknowledgements</h1>
+<p>Many defects in BlinkGTK were fixed thanks to reports from outside
+the project.<br />
+This page records them.</p>
+<p><strong>A report with reproduction steps removes our investigation
+work entirely.</strong><br />
+When the environment, version and the reporter's own narrowing-down
+are<br />
+included, we can run the same thing immediately on receipt. Every report
+below<br />
+arrived in that form.</p>
+<p>Please file problem reports at<br />
+<a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">blinkgtk-dist
+Issues</a>.</p>
+<hr />
+<table>
+<thead>
+<tr>
+<th>Reporter</th>
+<th>Issue</th>
+<th>Released in</th>
+<th>Summary</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>iche29</strong></td>
+<td>dist#5</td>
+<td><code>v1.2.0-build5</code></td>
+<td>Reported that diagnostic PNG output could not be disabled via the
+environment variable. The reproduction used only the bundled sample, so
+it ran unchanged on our side</td>
+</tr>
+<tr>
+<td><strong>iche29</strong></td>
+<td>dist#4</td>
+<td><code>v1.2.0-build4</code></td>
+<td>Reported that continuously animating pages froze in software mode,
+and separately noted the abnormal exit on shutdown. Keeping the two
+apart let us trace them independently</td>
+</tr>
+<tr>
+<td><strong>iche29</strong></td>
+<td>dist#3</td>
+<td><code>v1.2.0-build5</code></td>
+<td>Reported that the bundled sample showed a white window in EGL mode.
+The report arrived with SHA256 verification already done, so we could
+rule out the environment immediately</td>
+</tr>
+<tr>
+<td><strong>SOTA FUJIWARA</strong></td>
+<td>—</td>
+<td><code>v1.1.0-build3</code></td>
+<td>Reported that the RPM dependency name could not be resolved on
+Fedora, making it uninstallable. This led us to add a pre-release
+dependency resolvability check</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>
