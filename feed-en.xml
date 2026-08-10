@@ -7,6 +7,14 @@
   <updated>2026-08-10T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.0-build5 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build5"/>
+    <id>tag:blinkgtk.org,2026:2026-08-10-build5:en</id>
+    <updated>2026-08-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Hyphenation now works for Western text. The browser no longer fails on exit, and diagnostic images are no longer written unless you ask for them.</summary>
+  </entry>
+  <entry>
     <title>Western hyphenation now works</title>
     <link href="https://blinkgtk.org/docs/version-history-ja.html"/>
     <id>tag:blinkgtk.org,2026:2026-08-10-hyphenation:en</id>

@@ -7,6 +7,14 @@
   <updated>2026-08-10T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.0-build5 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build5"/>
+    <id>tag:blinkgtk.org,2026:2026-08-10-build5:ja</id>
+    <updated>2026-08-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>欧文の分綴が効くようになりました。終了時にエラーで落ちることがなくなり、頼んでいない診断画像が既定で書き出されなくなりました。</summary>
+  </entry>
+  <entry>
     <title>欧文の分綴が効くようになりました</title>
     <link href="https://blinkgtk.org/docs/version-history-ja.html"/>
     <id>tag:blinkgtk.org,2026:2026-08-10-hyphenation:ja</id>
