@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build5 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.0-build6 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-08-10 / Chromium: 151.0.7922.71 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-08-11 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build5 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-08-10 / Chromium: 151.0.7922.71 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.0-build6 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-08-11 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -106,14 +106,103 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build5-リリースノート">BlinkGTK 1.2.0-build5
+<h1 id="blinkgtk-120-build6-リリースノート">BlinkGTK 1.2.0-build6
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-08-10 / <strong>Chromium</strong>:
-151.0.7922.71 / 言語: 日本語 | <a
+<p><strong>リリース日</strong>: 2026-08-11 / <strong>Chromium</strong>:
+151.0.7922.108 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.0-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 151</strong>
 に更新しました。日本語の組版に直接効く変更が<br />
 まとまって入っています。とくに縦組みで圏点を使う文書は、<strong>版面が変わります</strong>。</p>
+<hr />
+<h2 id="build6-で加わったもの">build6 で加わったもの</h2>
+<h3
+id="レンダリングエンジンを-chromium-15107922108-に更新しました">レンダリングエンジンを
+Chromium 151.0.7922.108 に更新しました</h3>
+<p>151
+系の最新安定版です。<strong>ウィンドウを閉じる・隠す・入力を扱う経路</strong>の解放後利用<br />
+(use-after-free) が 10
+件直っています。長く開いたまま使う読み物アプリでは、<br />
+この種の不具合は「ときどき落ちる」という形でしか現れず、再現条件を掴みにくい<br />
+ものです。</p>
+<p>BlinkGTK が日常的に通る経路に当たるものを挙げます。</p>
+<table>
+<thead>
+<tr>
+<th>直ったところ</th>
+<th>効くところ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>GTK と Wayland から受け取るカーソルテーマ名・サイズの検証</td>
+<td>BlinkGTK の描画経路そのもの</td>
+</tr>
+<tr>
+<td><code>RenderWidgetHostViewEventHandler</code> のウィンドウ破棄</td>
+<td>マウス・キーボードの入力経路</td>
+</tr>
+<tr>
+<td><code>WidgetBase</code> (2 件) /
+<code>TransientWindowManager</code></td>
+<td>ウィンドウの表示・非表示</td>
+</tr>
+<tr>
+<td><code>HTMLSlotElement</code> の子要素の走査</td>
+<td>Web Components</td>
+</tr>
+<tr>
+<td><code>TouchEmulatorImpl</code> /
+<code>AccessibilityEventRewriter</code></td>
+<td>タッチ・支援技術</td>
+</tr>
+</tbody>
+</table>
+<p>このほか、CSS セレクタ <code>:nth-child(0)</code> の誤動作、WebAudio
+で <code>ended</code> が二重に<br />
+発火する問題、GPU
+ドライバ回避策の追加、共有メモリ画像のサイズ計算、<br />
+HEVC・AV1 の不正データ拒否などが入っています。</p>
+<h3
+id="ユーザースクリプトがページ本文より先に走ります">ユーザースクリプトがページ本文より先に走ります</h3>
+<p><code>blink_web_view_inject_user_script(view, script, TRUE)</code>
+で登録したスクリプトが、<br />
+<strong>ページ自身の <code>&lt;script&gt;</code>
+より前</strong>に実行されるようになりました。</p>
+<p>これまでは登録も実行もされていましたが、実行のタイミングがページ本文より後に<br />
+なっており、<code>document_start</code>
+の約束を果たしていませんでした。エンジンのログには<br />
+「注入した」と出るため、外からは成功しているように見える形の不具合です。</p>
+<p>2 つの制約があります。いずれも公開ヘッダに書いてあります。</p>
+<ul>
+<li><strong>最初の <code>load_uri()</code>
+より前に登録してください。</strong> レンダラープロセスが起動した<br />
+後に足したスクリプトは、そのプロセスには届きません
+(次にプロセスが起動する<br />
+ページから効きます)。該当したときは警告を出します</li>
+<li>同じレンダラープロセスを使う複数の <code>BlinkWebView</code>
+では、スクリプトが共有されます</li>
+</ul>
+<h3 id="javascript-の実行結果が-json-で返ります">JavaScript の実行結果が
+JSON で返ります</h3>
+<p><code>blink_web_view_execute_javascript()</code>
+のコールバックに渡る文字列が、常に妥当な<br />
+JSON
+になりました。以前は文字列が引用符なしで返り、オブジェクトはデバッグ表示<br />
+形式だったため、受け取った側で <code>JSON.parse</code>
+すると壊れていました。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* &quot;plain string&quot; — 引用符付きの JSON 文字列 */</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* {&quot;a&quot;:1,&quot;b&quot;:[2,3]} — オブジェクトも JSON */</span></span></code></pre></div>
+<h3
+id="同梱ドキュメントを最新にしました">同梱ドキュメントを最新にしました</h3>
+<p>API リファレンスの索引・環境変数一覧・アプリ連携 API など <strong>14
+ファイル</strong>が<br />
+配布物に届いていませんでした。組み直して同梱しています。</p>
+<p>あわせて、GObject 化以前の内部ヘッダ <code>blink_web_view.h</code>
+の同梱をやめました。<br />
+<code>blink_gtk.h</code> と同時に include
+すると確定的にコンパイルエラーになるもので、<br />
+これまでは「同梱されているが include するな」とご案内していました。</p>
 <hr />
 <h2 id="build5-で加わったもの">build5 で加わったもの</h2>
 <h3 id="欧文の分綴-hyphens-auto-が効きます">欧文の分綴
@@ -122,8 +211,8 @@ href="RELEASE_NOTES-1.2.0-en.html">English</a></p>
 を指定すると、欧文が語の途中で適切に分割されます。<br />
 <strong>52 言語</strong>の辞書を同梱しており、言語は <code>lang</code>
 属性から選ばれます。</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode css"><code class="sourceCode css"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p { <span class="kw">text-align</span><span class="ch">:</span> <span class="dv">justify</span><span class="op">;</span> <span class="kw">hyphens</span><span class="ch">:</span> <span class="bu">auto</span><span class="op">;</span> }</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p { <span class="kw">text-align</span><span class="ch">:</span> <span class="dv">justify</span><span class="op">;</span> <span class="kw">hyphens</span><span class="ch">:</span> <span class="bu">auto</span><span class="op">;</span> }</span></code></pre></div>
 <p>欧文の両端揃えは分綴とセットで成立します。分綴が働かないと、行が短いほど<br />
 語と語の間隔が開きます。リフロー型の読み物では読者が文字サイズを変えるため、<br />
 <strong>拡大するほど間隔が目立つ</strong>当たり方をしていました。</p>
@@ -173,9 +262,9 @@ id="診断用の画像は既定で保存しません">診断用の画像は既�
 <p>リポジトリを一度登録すれば、以降は <code>dnf upgrade</code>
 で新しい版に追随できます。<br />
 毎回ダウンロードする必要はありません。</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-o</span> /etc/yum.repos.d/blinkgtk.repo <span class="dt">\</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  https://blinkgtk.org/repo/fedora/blinkgtk.repo</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-o</span> /etc/yum.repos.d/blinkgtk.repo <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  https://blinkgtk.org/repo/fedora/blinkgtk.repo</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin</span></code></pre></div>
 <p>パッケージは署名済みで、<code>.repo</code> は <code>gpgcheck=1</code>
 です。初回の <code>dnf install</code> で<br />
 公開鍵の取り込みを確認されるので、指紋が一致することを確かめてください。</p>
@@ -220,7 +309,7 @@ id="パッケージのメタデータを是正しました">パッケージの�
 <h3 id="gpu-描画が指定だけで使えるようになりました">GPU
 描画が指定だけで使えるようになりました</h3>
 <p>環境変数ひとつで GPU 経路に切り替えられます。</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
 <p>**アプリ側のコード変更は要りません。**縦書きの長文でもスクロールが軽く、<br />
 CPU 描画より明確に速く動きます。</p>
 <p>これまでは、この経路を動かすのに 4 つの設定 (GTK4 統合・手動
@@ -293,9 +382,9 @@ JavaScript から読める</h3>
 の版面について、<strong>エンジンが実際に使った値</strong>をページ内 JS
 から<br />
 読めるようになりました。行送りや列境界を矩形から逆算する必要がなくなります。</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// → { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">//     lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">// → { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">//     lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
 <p><code>columnIndex</code>
 は<strong>エンジン内部の列添字そのもの</strong>で、座標比較の結果ではありません。<br />
 境界ちょうどの行が 1 列ずれる、という誤りが原理的に起きません。</p>
@@ -318,10 +407,10 @@ id="ドキュメントのサンプルが記載どおりに動く">ドキュメ�
 メインループが回らないためで、コンパイルも起動も通るぶん気付きにくいものでした。</p>
 <p>利用者が最初に読む QUICKSTART
 を含めて是正し、検出ゲートを追加しています。</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* g_application_run() ではない */</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* g_application_run() ではない */</span></span></code></pre></div>
 <h3 id="圏点の独自-patch-を外しました">圏点の独自 patch
 を外しました</h3>
 <p>v1.1 系で同梱していた圏点まわりの独自 patch

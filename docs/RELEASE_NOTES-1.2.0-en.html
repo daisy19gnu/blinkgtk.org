@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build5 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.0-build6 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Released: 2026-08-10 / Chromium: 151.0.7922.71 / Language: English | 日本語">
+<meta name="description" content="Released: 2026-08-11 / Chromium: 151.0.7922.108 / Language: English | 日本語">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build5 Release Notes — BlinkGTK">
-<meta property="og:description" content="Released: 2026-08-10 / Chromium: 151.0.7922.71 / Language: English | 日本語">
+<meta property="og:title" content="BlinkGTK 1.2.0-build6 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-08-11 / Chromium: 151.0.7922.108 / Language: English | 日本語">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -106,16 +106,115 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build5-release-notes">BlinkGTK 1.2.0-build5 Release
+<h1 id="blinkgtk-120-build6-release-notes">BlinkGTK 1.2.0-build6 Release
 Notes</h1>
-<p><strong>Released</strong>: 2026-08-10 / <strong>Chromium</strong>:
-151.0.7922.71 / Language: English | <a
+<p><strong>Released</strong>: 2026-08-11 / <strong>Chromium</strong>:
+151.0.7922.108 / Language: English | <a
 href="RELEASE_NOTES-1.2.0-ja.html">日本語</a></p>
 <p>The rendering engine moves to <strong>Chromium 151</strong>. This
 release brings a cluster of changes<br />
 that act directly on Japanese typography. In particular, documents that
 use emphasis marks<br />
 in vertical writing mode <strong>will lay out differently</strong>.</p>
+<hr />
+<h2 id="new-in-build6">New in build6</h2>
+<h3 id="rendering-engine-updated-to-chromium-15107922108">Rendering
+engine updated to Chromium 151.0.7922.108</h3>
+<p>The latest stable release in the 151 series. It fixes ten
+use-after-free bugs in<br />
+the paths that <strong>close windows, hide windows, and handle
+input</strong>. In an app that<br />
+stays open for a long time, this class of bug only shows up as "it
+crashes<br />
+sometimes", which makes it hard to pin down.</p>
+<p>These are the ones on paths BlinkGTK uses every day.</p>
+<table>
+<thead>
+<tr>
+<th>What was fixed</th>
+<th>Where it matters</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Cursor theme name and size received from GTK and Wayland are now
+validated</td>
+<td>BlinkGTK's own rendering path</td>
+</tr>
+<tr>
+<td>Window destruction in
+<code>RenderWidgetHostViewEventHandler</code></td>
+<td>Mouse and keyboard input</td>
+</tr>
+<tr>
+<td><code>WidgetBase</code> (2) /
+<code>TransientWindowManager</code></td>
+<td>Showing and hiding windows</td>
+</tr>
+<tr>
+<td>Iterating slot children in <code>HTMLSlotElement</code></td>
+<td>Web Components</td>
+</tr>
+<tr>
+<td><code>TouchEmulatorImpl</code> /
+<code>AccessibilityEventRewriter</code></td>
+<td>Touch and assistive technology</td>
+</tr>
+</tbody>
+</table>
+<p>Also included: a CSS <code>:nth-child(0)</code> selector fix, a
+duplicate <code>ended</code> event in<br />
+WebAudio, three new GPU driver workarounds, a shared-memory image
+size<br />
+calculation fix, and stricter rejection of malformed HEVC and AV1
+data.</p>
+<h3 id="user-scripts-now-run-before-the-pages-own-scripts">User scripts
+now run before the page's own scripts</h3>
+<p>A script registered with
+<code>blink_web_view_inject_user_script(view, script, TRUE)</code><br />
+now runs <strong>before the page's own <code>&lt;script&gt;</code>
+elements</strong>.</p>
+<p>It was previously registered and executed, but the execution landed
+after the<br />
+page body had already run, so it did not honour the
+<code>document_start</code> contract.<br />
+The engine logged the injection either way, so from the outside it
+looked like it<br />
+was working.</p>
+<p>Two limits apply. Both are documented in the public header.</p>
+<ul>
+<li><strong>Register before the first <code>load_uri()</code>.</strong>
+A script added after the renderer<br />
+process has started does not reach that renderer; it takes effect from
+the next<br />
+page that starts a renderer process. A warning is logged when this
+happens</li>
+<li>Scripts are shared by every <code>BlinkWebView</code> served by the
+same renderer process</li>
+</ul>
+<h3 id="javascript-results-are-returned-as-json">JavaScript results are
+returned as JSON</h3>
+<p>The string passed to the
+<code>blink_web_view_execute_javascript()</code> callback is now<br />
+always valid JSON. Previously a string came back unquoted and other
+values came<br />
+back in a debug format, so calling <code>JSON.parse</code> on the result
+would fail.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* &quot;plain string&quot; — a quoted JSON string */</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* {&quot;a&quot;:1,&quot;b&quot;:[2,3]} — objects are JSON too */</span></span></code></pre></div>
+<h3 id="bundled-documentation-is-up-to-date">Bundled documentation is up
+to date</h3>
+<p>Fourteen files were not reaching the package, including the API
+reference index,<br />
+the environment variable list, and the app integration API. They are
+bundled now.</p>
+<p>The internal header <code>blink_web_view.h</code>, left over from
+before the GObject<br />
+migration, is no longer shipped. Including it alongside
+<code>blink_gtk.h</code> always<br />
+failed to compile, so until now the documentation had to tell you not to
+include<br />
+a header we were shipping.</p>
 <hr />
 <h2 id="new-in-build5">New in build5</h2>
 <h3 id="western-hyphenation-hyphens-auto-now-works">Western hyphenation
@@ -125,8 +224,8 @@ appropriate points.<br />
 Dictionaries for <strong>52 languages</strong> are bundled; the language
 is selected from<br />
 the <code>lang</code> attribute.</p>
-<div class="sourceCode" id="cb1"><pre
-class="sourceCode css"><code class="sourceCode css"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>p { <span class="kw">text-align</span><span class="ch">:</span> <span class="dv">justify</span><span class="op">;</span> <span class="kw">hyphens</span><span class="ch">:</span> <span class="bu">auto</span><span class="op">;</span> }</span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>p { <span class="kw">text-align</span><span class="ch">:</span> <span class="dv">justify</span><span class="op">;</span> <span class="kw">hyphens</span><span class="ch">:</span> <span class="bu">auto</span><span class="op">;</span> }</span></code></pre></div>
 <p>Justified Western text depends on hyphenation. Without it, the
 shorter the<br />
 line, the wider the gaps between words. In reflowable content readers
@@ -179,9 +278,9 @@ them. This removes the extra load during performance measurement.</p>
 <p>Register the repository once, and <code>dnf upgrade</code> keeps you
 on the current<br />
 release. No more downloading files each time.</p>
-<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-o</span> /etc/yum.repos.d/blinkgtk.repo <span class="dt">\</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  https://blinkgtk.org/repo/fedora/blinkgtk.repo</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin</span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-o</span> /etc/yum.repos.d/blinkgtk.repo <span class="dt">\</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>  https://blinkgtk.org/repo/fedora/blinkgtk.repo</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin</span></code></pre></div>
 <p>Packages are signed and the <code>.repo</code> ships with
 <code>gpgcheck=1</code>. The first<br />
 <code>dnf install</code> asks you to confirm the public key — check the
@@ -236,7 +335,7 @@ judgement after looking at it on real hardware.</p>
 <h3 id="gpu-rendering-now-works-with-a-single-setting">GPU rendering now
 works with a single setting</h3>
 <p>One environment variable switches to the GPU path.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
 <p><strong>No application changes are needed.</strong> Scrolling stays
 light even in long<br />
 vertical-writing documents, and it is noticeably faster than CPU
@@ -328,9 +427,9 @@ layout metrics readable from JavaScript</h3>
 engine actually used</strong>, instead of inferring line pitch and
 column boundaries<br />
 from client rects.</p>
-<div class="sourceCode" id="cb6"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="co">// -&gt; { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co">//      lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode js"><code class="sourceCode javascript"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">window</span><span class="op">.</span><span class="at">__blinkgtk</span><span class="op">.</span><span class="fu">verticalFlowMetrics</span>(element)</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co">// -&gt; { stride, originX, contentWidth, columnCount, lineCount, generation,</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co">//      lines: [{ inlineSize, blockOffset, columnIndex, hasHanging }] }</span></span></code></pre></div>
 <p><code>columnIndex</code> is <strong>the engine's own fragmentainer
 index</strong>, not the result of a<br />
 coordinate comparison. A line sitting exactly on a boundary cannot be
@@ -360,10 +459,10 @@ notice.</p>
 <p>They are corrected — including the QUICKSTART that readers see first
 — and a<br />
 gate now detects the pattern.</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* not g_application_run() */</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">);</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span>   <span class="co">/* not g_application_run() */</span></span></code></pre></div>
 <h3 id="the-local-emphasis-mark-patch-is-gone">The local emphasis-mark
 patch is gone</h3>
 <p>The emphasis-mark patch carried in the v1.1 series has been removed,
