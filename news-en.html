@@ -9,6 +9,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build7">v1.2.0-build7 released</a></h2>
+<p><small>2026-08-12 · Release</small></p>
+<p>The header shipped with the development package claimed the previous release (this affects every v1.2.0 build from build1 through build6). The runtime API was always correct, so only compile-time macros were affected. Nothing includes that header, so builds kept succeeding — which is why it went unnoticed for so long. The runtime itself is identical to build6; Chromium was not rebuilt.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build6">v1.2.0-build6 released</a></h2>
 <p><small>2026-08-11 · Release</small></p>
 <p>The rendering engine is now Chromium 151.0.7922.108, fixing defects in the paths that close windows, hide windows, and handle input. User scripts you register now run before the page's own scripts, and JavaScript results come back as JSON.</p>

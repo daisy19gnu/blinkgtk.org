@@ -7,6 +7,14 @@
   <updated>2026-08-10T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.0-build7 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build7"/>
+    <id>tag:blinkgtk.org,2026:2026-08-12-build7:ja</id>
+    <updated>2026-08-12T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>開発用パッケージが同梱するヘッダの版数を是正。build1〜6 は 1 版前を名乗っていました。実行時 API は正しく、影響はコンパイル時のマクロのみです。</summary>
+  </entry>
+  <entry>
     <title>v1.2.0-build6 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build6"/>
     <id>tag:blinkgtk.org,2026:2026-08-11-build6:ja</id>

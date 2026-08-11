@@ -7,6 +7,14 @@
   <updated>2026-08-10T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.0-build7 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build7"/>
+    <id>tag:blinkgtk.org,2026:2026-08-12-build7:en</id>
+    <updated>2026-08-12T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Corrected the version macros in the header shipped with the development package; build1-6 claimed the previous release. The runtime API was always correct.</summary>
+  </entry>
+  <entry>
     <title>v1.2.0-build6 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build6"/>
     <id>tag:blinkgtk.org,2026:2026-08-11-build6:en</id>

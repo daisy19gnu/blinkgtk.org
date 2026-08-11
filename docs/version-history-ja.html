@@ -44,7 +44,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.0-build6 / 言語: 日本語 | <a
+<p>バージョン: 1.2.0-build7 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -68,9 +68,17 @@ Chromium の<br />
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.0-build6</strong> ← 公開中</td>
-<td>2026-08-11</td>
+<td><strong>v1.2.0-build7</strong> ← 公開中</td>
+<td>2026-08-12</td>
 <td><strong>151.0.7922.108</strong></td>
+<td>開発用パッケージが同梱するヘッダの版数を是正。build1〜6 は 1 版前
+(1.1.0 / Chromium 150) を名乗っていた。実行時 API
+は正しく、影響はコンパイル時のマクロのみ。実行部分は build6 と同一</td>
+</tr>
+<tr>
+<td>v1.2.0-build6</td>
+<td>2026-08-11</td>
+<td>151.0.7922.108</td>
 <td>Chromium 151.0.7922.108
 に更新。ユーザースクリプトがページ本文より先に走るようになり、JavaScript
 の実行結果が JSON で返る</td>
