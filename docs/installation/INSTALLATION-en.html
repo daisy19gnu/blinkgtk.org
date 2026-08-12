@@ -238,6 +238,24 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 the<br />
 fingerprint matches:</p>
 <pre><code>D3A0 3E93 E845 4347 D52D  4372 2F48 F4B7 5395 96DA</code></pre>
+<p>This key expires on <strong>2028-07-06</strong>. Once it does,
+<code>dnf</code> can no longer verify<br />
+signatures and updates stop. We will publish a new key before then and
+replace<br />
+the fingerprint on this page. After that, import the new key like
+this:</p>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> rpm <span class="at">--import</span> https://blinkgtk.org/repo/fedora/RPM-GPG-KEY-blinkgtk</span></code></pre></div>
+<p><strong>Check the fingerprint on this page before importing.</strong>
+The key is served from<br />
+the same place as the packages, so comparing the fingerprint is the only
+way to<br />
+establish that the key itself is the right one. You can also read
+the<br />
+fingerprint of the key currently served:</p>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">curl</span> <span class="at">-s</span> https://blinkgtk.org/repo/fedora/RPM-GPG-KEY-blinkgtk <span class="dt">\</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>  <span class="kw">|</span> <span class="ex">gpg</span> <span class="at">--show-keys</span> <span class="at">--with-fingerprint</span></span></code></pre></div>
 <p>Repository metadata is hosted on blinkgtk.org while the packages
 themselves<br />
 live in GitHub Releases. <code>dnf</code> follows the metadata to fetch
@@ -248,27 +266,27 @@ RPMs)</h3>
 <p>If you prefer not to register the repository, install downloaded
 RPMs<br />
 directly.</p>
-<div class="sourceCode" id="cb4"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime only (run apps)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm</span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for development, add devel + gir</span></span>
-<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm</span></code></pre></div>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime only (run apps)</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm</span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for development, add devel + gir</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm</span></code></pre></div>
 <h3 id="debian--ubuntu-deb">Debian / Ubuntu (DEB)</h3>
-<div class="sourceCode" id="cb5"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb        <span class="co"># runtime</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb        <span class="co"># runtime</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
 <h3 id="tarball-fhs-layout">Tarball (FHS layout)</h3>
 <p>Both runtime and devel use an FHS layout
 (<code>usr/lib64/...</code>). Extract at root (<code>/</code>).</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                                    <span class="co"># apply ld.so.conf.d</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel (only when developing consumers)</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                                    <span class="co"># apply ld.so.conf.d</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel (only when developing consumers)</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
 <p><code>ldconfig</code> applies
 <code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code> (bundled in
 runtime),<br />
@@ -276,47 +294,47 @@ which adds the private directory to the loader search path.</p>
 <hr />
 <h2 id="verifying-the-installation">Verifying the Installation</h2>
 <h3 id="runtime">runtime</h3>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ldconfig <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> libblinkgtk-0.1</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">libblinkgtk-0.1.so.0</span> <span class="er">(</span><span class="ex">libc6,x86-64</span><span class="kw">)</span> <span class="ex">=</span><span class="op">&gt;</span> /usr/lib64/libblinkgtk-0.1.so.0</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># demo browser (in a Wayland session)</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> /usr/libexec/blinkgtk-0.1/simple_browser</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ldconfig <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> libblinkgtk-0.1</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">libblinkgtk-0.1.so.0</span> <span class="er">(</span><span class="ex">libc6,x86-64</span><span class="kw">)</span> <span class="ex">=</span><span class="op">&gt;</span> /usr/lib64/libblinkgtk-0.1.so.0</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># demo browser (in a Wayland session)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> /usr/libexec/blinkgtk-0.1/simple_browser</span></code></pre></div>
 <h3 id="devel-pkg-config">devel (pkg-config)</h3>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--modversion</span> blinkgtk-0.1</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>VERSION<span class="op">&gt;</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--libs</span> blinkgtk-0.1</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-L/usr/lib64</span> <span class="at">-L</span>/usr/lib64/blinkgtk-0.1 <span class="at">-L</span>/usr/lib64/blinkgtk-0.1/chromium <span class="dt">\</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-lblinkgtk-0.1</span> <span class="at">-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</span> ...</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--modversion</span> blinkgtk-0.1</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>VERSION<span class="op">&gt;</span></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--libs</span> blinkgtk-0.1</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-L/usr/lib64</span> <span class="at">-L</span>/usr/lib64/blinkgtk-0.1 <span class="at">-L</span>/usr/lib64/blinkgtk-0.1/chromium <span class="dt">\</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>  <span class="at">-lblinkgtk-0.1</span> <span class="at">-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</span> ...</span></code></pre></div>
 <p><strong>Important</strong>: <code>--libs</code> includes the
 PartitionAlloc allocator shim. Consumers<br />
 <strong>must link via pkg-config</strong> — if the shim is not linked
 directly into the<br />
 executable, Chromium navigation fails (Issue #90).</p>
 <h3 id="gir-python--pygobject">gir (Python / PyGObject)</h3>
-<div class="sourceCode" id="cb9"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> python3 <span class="at">-c</span> <span class="st">&quot;import gi; gi.require_version(&#39;BlinkGTK&#39;,&#39;0.1&#39;); from gi.repository import BlinkGTK; print(&#39;BlinkGTK OK&#39;)&quot;</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">BlinkGTK</span> OK</span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> python3 <span class="at">-c</span> <span class="st">&quot;import gi; gi.require_version(&#39;BlinkGTK&#39;,&#39;0.1&#39;); from gi.repository import BlinkGTK; print(&#39;BlinkGTK OK&#39;)&quot;</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">BlinkGTK</span> OK</span></code></pre></div>
 <hr />
 <h2 id="building-a-consumer-app">Building a Consumer App</h2>
 <p>Build apps that embed BlinkGTK with pkg-config (the direct shim link
 is added<br />
 automatically):</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> my_app.c <span class="at">-o</span> my_app <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> my_app.c <span class="at">-o</span> my_app <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
 <p>See the <a href="../consumer-integration-guide-en.html">consumer
 integration guide</a><br />
 (lifecycle / embedding a WebView / GPU mode / injection, etc.).</p>
 <hr />
 <h2 id="uninstall">Uninstall</h2>
 <h3 id="rpm">RPM</h3>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf remove blinkgtk-bin blinkgtk-bin-devel blinkgtk-bin-gir</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf remove blinkgtk-bin blinkgtk-bin-devel blinkgtk-bin-gir</span></code></pre></div>
 <h3 id="deb">DEB</h3>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt remove libblinkgtk-0.1-0 libblinkgtk-0.1-dev</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt remove libblinkgtk-0.1-0 libblinkgtk-0.1-dev</span></code></pre></div>
 <h3 id="tarball">Tarball</h3>
 <p>The tarball places files under FHS paths, so remove them manually
 (RPM/DEB with<br />
@@ -333,16 +351,16 @@ package management is preferred). Main locations:
 <h3 id="1-libblinkgtk-01so0-cannot-open-shared-object-file">1.
 <code>libblinkgtk-0.1.so.0: cannot open shared object file</code></h3>
 <p>The private directory is not in the loader search path.</p>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                          <span class="co"># apply /etc/ld.so.conf.d/blinkgtk-0.1.conf</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> libblinkgtk-0.1     <span class="co"># confirm resolution</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                          <span class="co"># apply /etc/ld.so.conf.d/blinkgtk-0.1.conf</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> libblinkgtk-0.1     <span class="co"># confirm resolution</span></span></code></pre></div>
 <h3 id="2-pkg-config-does-not-find-blinkgtk-01">2. pkg-config does not
 find blinkgtk-0.1</h3>
 <p>The devel package is not installed, or <code>PKG_CONFIG_PATH</code>
 is unset.</p>
-<div class="sourceCode" id="cb14"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1</span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1</span></code></pre></div>
 <h3 id="3-black-screen--navigation-fails-in-your-app-issue-90">3. Black
 screen / navigation fails in your app (Issue #90)</h3>
 <p>The consumer is not linking the allocator shim directly. <strong>Link
@@ -356,13 +374,13 @@ one entry.</p>
 Python import error (<code>Namespace BlinkGTK not available</code>)</h3>
 <p>The gir package is not installed, or <code>GI_TYPELIB_PATH</code> is
 unset.</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GI_TYPELIB_PATH</span><span class="op">=</span>/usr/lib64/girepository-1.0:<span class="va">$GI_TYPELIB_PATH</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GI_TYPELIB_PATH</span><span class="op">=</span>/usr/lib64/girepository-1.0:<span class="va">$GI_TYPELIB_PATH</span></span></code></pre></div>
 <h3 id="5-failed-to-open-wayland-display">5.
 <code>Failed to open Wayland display</code></h3>
 <p>BlinkGTK supports <strong>Wayland only</strong> (no X11).</p>
-<div class="sourceCode" id="cb16"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$WAYLAND_DISPLAY</span>    <span class="co"># if empty, re-login into a Wayland session</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$WAYLAND_DISPLAY</span>    <span class="co"># if empty, re-login into a Wayland session</span></span></code></pre></div>
 <hr />
 <h2 id="next-steps">Next Steps</h2>
 <ol type="1">
