@@ -20,7 +20,7 @@
 (function () {
   'use strict';
 
-  var GA_MEASUREMENT_ID = '';   // ← 測定 ID を入れるまで計測しない
+  var GA_MEASUREMENT_ID = 'G-QEY2DNWRYK';   // blinkgtk.org。空にすれば計測もバナーも止まる
 
   var KEY = 'blinkgtk-analytics-consent';   // 'granted' / 'denied'
   var LANG = (document.documentElement.lang || 'ja').slice(0, 2);
