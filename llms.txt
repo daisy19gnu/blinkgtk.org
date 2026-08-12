@@ -5,7 +5,7 @@
 > 日本語の縦組み・ルビ・圏点といった JLReq 準拠の組版と EPUB 表示に強みがあります。
 > Linux (Wayland) デスクトップ向けで、WebKitGTK の代替として使えます。
 
-現在のバージョン: 1.2.0-build7 (Chromium ベース)
+現在のバージョン: 1.2.0-build8 (Chromium ベース)
 
 ## はじめる
 - [インストール](https://blinkgtk.org/docs/INSTALL.html)

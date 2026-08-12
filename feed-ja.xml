@@ -7,6 +7,14 @@
   <updated>2026-08-10T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.0-build8 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build8"/>
+    <id>tag:blinkgtk.org,2026:2026-08-12-build8:ja</id>
+    <updated>2026-08-12T12:00:00Z</updated>
+    <category term="release"/>
+    <summary>セキュリティ点検の結果を反映。サイトごとのプロセス分離が既定で有効になり、sandbox の可否判定を実測に変更、状態を問い合わせる API を追加しました。</summary>
+  </entry>
+  <entry>
     <title>v1.2.0-build7 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build7"/>
     <id>tag:blinkgtk.org,2026:2026-08-12-build7:ja</id>

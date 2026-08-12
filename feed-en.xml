@@ -7,6 +7,14 @@
   <updated>2026-08-10T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.0-build8 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build8"/>
+    <id>tag:blinkgtk.org,2026:2026-08-12-build8:en</id>
+    <updated>2026-08-12T12:00:00Z</updated>
+    <category term="release"/>
+    <summary>Applied the results of a security review: per-site process isolation is on by default, sandbox availability is measured, and a new API reports the sandbox state.</summary>
+  </entry>
+  <entry>
     <title>v1.2.0-build7 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build7"/>
     <id>tag:blinkgtk.org,2026:2026-08-12-build7:en</id>
