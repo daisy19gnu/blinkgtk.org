@@ -4,6 +4,7 @@
 <title>お知らせ · BlinkGTK</title>
 <link rel="alternate" type="application/atom+xml" title="BlinkGTK お知らせ" href="https://blinkgtk.org/feed-ja.xml">
 <link rel="stylesheet" href="docs/docs.css">
+<script src="/privacy-consent.js" defer></script>
 </head><body><div class="wrap">
 <div class="navbar"><a href="./">BlinkGTK</a> · <a href="docs/">ドキュメント</a> · <a href="news-en.html">English</a></div>
 <div class="card doc">
@@ -11,7 +12,7 @@
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build8">v1.2.0-build8 を公開しました</a></h2>
 <p><small>2026-08-12 · リリース</small></p>
-<p>自主的なセキュリティ点検の結果を反映しました。**サイトごとのプロセス分離を既定で有効にしました** — あるサイトのページが乗っ取られたときに、別のサイトのデータを読ませないための境界です。複数のサイトを開くと描画プロセスが増えるため、メモリ使用量が増えることがあります。あわせて sandbox の可否判定を実測に変え、状態を問い合わせる API を追加しました。環境変数の一覧も新設しています。</p>
+<p>自主的なセキュリティ点検の結果を反映しました。<strong>サイトごとのプロセス分離を既定で有効にしました</strong> — あるサイトのページが乗っ取られたときに、別のサイトのデータを読ませないための境界です。複数のサイトを開くと描画プロセスが増えるため、メモリ使用量が増えることがあります。あわせて sandbox の可否判定を実測に変え、状態を問い合わせる API を追加しました。環境変数の一覧も新設しています。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build7">v1.2.0-build7 を公開しました</a></h2>
 <p><small>2026-08-12 · リリース</small></p>
 <p>開発用パッケージ（devel）に同梱しているヘッダが、1 版前の版数を名乗っていました（v1.2.0 の build1 から build6 まで、すべて該当します）。実行時 API は当初から正しく、影響を受けるのはコンパイル時のマクロだけです。ヘッダを include しなくてもビルドは通るため、長く気付けませんでした。実行部分は build6 と同一で、Chromium の再ビルドは行っていません。</p>

@@ -1,0 +1,109 @@
+<!doctype html>
+<html lang="ja"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>プライバシーポリシー · BlinkGTK</title>
+<meta name="description" content="BlinkGTK のサイトで何を集め、何を集めないか。同意の取り方と、あとから変える方法。">
+<link rel="stylesheet" href="docs/docs.css">
+<script src="/privacy-consent.js" defer></script>
+</head><body><div class="wrap">
+<div class="navbar"><a href="./">BlinkGTK</a> · <a href="docs/">ドキュメント</a> · <a href="privacy-en.html">English</a></div>
+<div class="card doc">
+
+<h1>プライバシーポリシー</h1>
+
+<p>このサイト (blinkgtk.org / blinkgtk.com) で、何を集め、何を集めないかをまとめます。
+BlinkGTK <strong>ライブラリ本体</strong>については、末尾の「ライブラリ本体について」をご覧ください。</p>
+
+<h2>まとめ</h2>
+
+<ul>
+<li>閲覧状況の計測は、<strong>同意をいただいた場合にだけ</strong>行います。同意がなければ計測用のスクリプトを読み込みません</li>
+<li>お名前・メールアドレスなど、<strong>個人を特定する情報は集めません</strong></li>
+<li>判断はあとから何度でも変えられます (このページの下にボタンがあります)</li>
+</ul>
+
+<h2>同意をいただいた場合に集めるもの</h2>
+
+<p>Google Analytics 4 を使い、次のものを集めます。いずれも集計して傾向を見るためのもので、
+個人を割り出すためのものではありません。</p>
+
+<table>
+<thead><tr><th>集めるもの</th><th>何に使うか</th></tr></thead>
+<tbody>
+<tr><td>閲覧したページの URL</td><td>どの資料が読まれているかを知り、手を入れる順番を決めるため</td></tr>
+<tr><td>どこから来たか (参照元)</td><td>どの経路で見つけていただいたかを知るため</td></tr>
+<tr><td>おおよその地域 (国・都市)</td><td>どの言語の資料を厚くするかを決めるため</td></tr>
+<tr><td>ブラウザ・OS・画面幅の種別</td><td>表示の確認をどの環境で行うかを決めるため</td></tr>
+<tr><td>ランダムな識別子 (Cookie)</td><td>同じ方の複数ページ閲覧を 1 回として数えるため</td></tr>
+</tbody>
+</table>
+
+<p>IP アドレスは Google 側で丸められ、そのままの形では保存されません
+(<code>anonymize_ip</code> を明示的に指定しています)。</p>
+
+<h3>集めないもの</h3>
+
+<p>お名前、メールアドレス、勤務先、入力された文字列、その他あなたを特定できる情報は
+集めません。Google Analytics の利用規約でも、これらを送信することは禁じられています。</p>
+
+<h2>同意しない場合</h2>
+
+<p>「使わない」を選ぶと、計測用のスクリプトは<strong>一切読み込まれません</strong>。
+選択はこのブラウザの中にだけ記録され、次からは尋ねません。サイトの内容や
+ダウンロードには何の制限もかかりません。</p>
+
+<h2>同意とは関係なく記録されるもの</h2>
+
+<p>正直に書いておきます。このサイトは GitHub Pages で配信しており、
+配信元である GitHub 社のサーバーには、アクセス日時・IP アドレス・
+ブラウザの種類などが記録されます。これは Web サイトを配信する仕組みそのものに
+伴うもので、当プロジェクトが止めることはできません。
+取り扱いは <a href="https://docs.github.com/site-policy/privacy-policies/github-general-privacy-statement" rel="noopener">GitHub 社のプライバシーに関する声明</a>によります。</p>
+
+<p>同様に、配布物のダウンロード数は GitHub の公開 API から得られる集計値で、
+誰がダウンロードしたかは当プロジェクトからは分かりません。</p>
+
+<h2>第三者への提供</h2>
+
+<p>集めた情報を第三者に販売・提供することはありません。
+Google Analytics は集計を行うための委託先であり、
+取り扱いは <a href="https://policies.google.com/privacy" rel="noopener">Google のプライバシー ポリシー</a>によります。</p>
+
+<h2>保存期間</h2>
+
+<p>Google Analytics 側の保存期間は 14 か月に設定しています。
+それを過ぎたものは自動的に削除されます。</p>
+
+<h2>判断を変える</h2>
+
+<p>下のボタンで、同意するかどうかをもう一度選び直せます。</p>
+
+<p><button type="button" onclick="if(window.blinkgtkResetConsent){blinkgtkResetConsent()}else{location.reload()}"
+   style="padding:.5rem 1.2rem;border-radius:4px;border:1px solid #6b6b70;cursor:pointer;font-size:.95rem">
+   同意の設定を選び直す</button></p>
+
+<p>ブラウザ側で Cookie を拒否する、
+<a href="https://tools.google.com/dlpage/gaoptout" rel="noopener">Google のオプトアウト アドオン</a>を使う、
+といった方法でも計測を止められます。</p>
+
+<h2>ライブラリ本体について</h2>
+
+<p><strong>BlinkGTK ライブラリ自体は、いかなる情報も外部に送信しません。</strong>
+利用状況の収集、クラッシュレポートの自動送信、更新確認のいずれも行いません。
+ネットワーク通信が発生するのは、あなたのアプリケーションが読み込むよう指示した
+コンテンツを取りに行くときだけです。</p>
+
+<p>これは設計上の約束です。確認したい場合はソースを追ってください。
+外部へ送信する経路は存在しません。</p>
+
+<h2>お問い合わせ</h2>
+
+<p>このポリシーについてのご質問は <a href="mailto:daisy19@gmail.com">daisy19@gmail.com</a> までお寄せください。</p>
+
+<h2>改定</h2>
+
+<p>変更した場合は、このページの日付を更新します。</p>
+
+<p><small>最終更新: 2026-08-13 · 制定: 2026-08-13 · BlinkGTK プロジェクト</small></p>
+
+</div></div></body></html>

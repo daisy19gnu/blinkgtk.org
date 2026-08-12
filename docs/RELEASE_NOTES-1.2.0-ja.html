@@ -88,15 +88,16 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-08-12 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-08-13 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK 1.2.0-build8 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-08-12 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
+<meta property="og:description" content="リリース日: 2026-08-13 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
 <meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
 <link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
@@ -108,7 +109,7 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-120-build8-リリースノート">BlinkGTK 1.2.0-build8
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-08-12 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-08-13 / <strong>Chromium</strong>:
 151.0.7922.108 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.0-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 151</strong>
@@ -310,7 +311,7 @@ id="パッケージのメタデータを是正しました">パッケージの�
 描画が指定だけで使えるようになりました</h3>
 <p>環境変数ひとつで GPU 経路に切り替えられます。</p>
 <div class="sourceCode" id="cb5"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
-<p>**アプリ側のコード変更は要りません。**縦書きの長文でもスクロールが軽く、<br />
+<p><strong>アプリ側のコード変更は要りません</strong>。縦書きの長文でもスクロールが軽く、<br />
 CPU 描画より明確に速く動きます。</p>
 <p>これまでは、この経路を動かすのに 4 つの設定 (GTK4 統合・手動
 viewport・<br />

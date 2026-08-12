@@ -4,6 +4,7 @@
 <title>News · BlinkGTK</title>
 <link rel="alternate" type="application/atom+xml" title="BlinkGTK News" href="https://blinkgtk.org/feed-en.xml">
 <link rel="stylesheet" href="docs/docs.css">
+<script src="/privacy-consent.js" defer></script>
 </head><body><div class="wrap">
 <div class="navbar"><a href="./">BlinkGTK</a> · <a href="docs/">Documentation</a> · <a href="news-ja.html">日本語</a></div>
 <div class="card doc">
@@ -11,7 +12,7 @@
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build8">v1.2.0-build8 released</a></h2>
 <p><small>2026-08-12 · Release</small></p>
-<p>Applied the results of a security review. **Per-site process isolation is now on by default** — the boundary that stops a compromised page reading another site's data. Opening several sites now uses more renderer processes, which can increase memory use. Sandbox availability is now measured rather than inferred, and there is a new API to query the sandbox state. A reference page for environment variables is also published.</p>
+<p>Applied the results of a security review. <strong>Per-site process isolation is now on by default</strong> — the boundary that stops a compromised page reading another site's data. Opening several sites now uses more renderer processes, which can increase memory use. Sandbox availability is now measured rather than inferred, and there is a new API to query the sandbox state. A reference page for environment variables is also published.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build7">v1.2.0-build7 released</a></h2>
 <p><small>2026-08-12 · Release</small></p>
 <p>The header shipped with the development package claimed the previous release (this affects every v1.2.0 build from build1 through build6). The runtime API was always correct, so only compile-time macros were affected. Nothing includes that header, so builds kept succeeding — which is why it went unnoticed for so long. The runtime itself is identical to build6; Chromium was not rebuilt.</p>
