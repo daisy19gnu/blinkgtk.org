@@ -71,6 +71,38 @@
     try { return localStorage.getItem(KEY); } catch (e) { return null; }
   }
 
+
+  /* 🔴 現在の状態を画面に出す (2026-08-14)。
+   *
+   * これが無いと「同意したのに記録されない」のか「まだ同意していない」のかを
+   * 利用者が区別できない。実際、計測が始まらない原因を追う際に、実装・配信・
+   * 到達性をすべて確認してもなお**同意状態だけが見えず**、切り分けに時間を
+   * 要した。状態は必ず本人に見えるようにする。
+   *
+   * プライバシーページの #blinkgtk-consent-status に書き込む。
+   * 要素が無いページでは何もしない。 */
+  function showStatus() {
+    var el = document.getElementById('blinkgtk-consent-status');
+    if (!el) return;
+    var c = recalled();
+    var loaded = !!window.__blinkgtkAnalyticsLoaded;
+    var msg;
+    if (c === 'granted') {
+      msg = (LANG === 'en')
+        ? (loaded ? 'Current setting: measurement allowed (the script has been loaded).'
+                  : 'Current setting: measurement allowed (the script did not load — an ad blocker or tracking protection may be blocking it).')
+        : (loaded ? '現在の設定: 計測に同意しています (計測スクリプトを読み込みました)。'
+                  : '現在の設定: 計測に同意していますが、**スクリプトを読み込めていません**。広告ブロッカーや追跡防止機能が googletagmanager.com を遮断している可能性があります。');
+    } else if (c === 'denied') {
+      msg = (LANG === 'en') ? 'Current setting: no measurement.'
+                            : '現在の設定: 計測しない。';
+    } else {
+      msg = (LANG === 'en') ? 'Current setting: not chosen yet (the banner at the bottom lets you choose).'
+                            : '現在の設定: まだ選ばれていません (画面下のバナーで選べます)。';
+    }
+    el.textContent = msg;
+  }
+
   function banner() {
     var box = document.createElement('div');
     box.id = 'blinkgtk-consent';
@@ -133,9 +165,10 @@
   function start() {
     if (!GA_MEASUREMENT_ID) return;          /* 未設定なら何もしない */
     var c = recalled();
-    if (c === 'granted') { loadAnalytics(); return; }
-    if (c === 'denied') { return; }
+    if (c === 'granted') { loadAnalytics(); showStatus(); return; }
+    if (c === 'denied') { showStatus(); return; }
     banner();
+    showStatus();
   }
 
   if (document.readyState === 'loading') {
