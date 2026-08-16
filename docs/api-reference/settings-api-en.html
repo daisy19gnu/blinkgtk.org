@@ -404,7 +404,15 @@ everywhere.</p>
 (use<br />
 <code>new_with_gpu_mode()</code> instead of
 <code>blink_web_view_new()</code>). It cannot be<br />
-switched afterwards. In the current implementation the mode is<br />
+switched afterwards. Note that the <strong>delivery path inside software
+mode</strong><br />
+(P1 direct / P2 mojo shared memory) is a separate axis and, since<br />
+v1.2.0-build9, <em>can</em> be switched at runtime with<br />
+<code>blink_web_view_switch_render_path()</code> (see the
+render-path-changed section<br />
+of the <a href="./signals-api-en.html">Signals API</a>). That does not
+switch the GPU<br />
+mode itself. In the current implementation the mode is<br />
 <strong>process-wide</strong>: with multiple WebViews of different modes
 in one process,<br />
 the first WebView's mode wins.</p>
