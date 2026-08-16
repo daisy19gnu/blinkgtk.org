@@ -136,10 +136,10 @@ completion signal carries the same number, so records taken around a
 switch<br />
 can be keyed to the exact swap. Measured on a headless test environment,
 a<br />
-switch takes 662 ms (P1→P2) / 201 ms (P2→P1) from request to
-render<br />
-confirmation; the previous process-restart approach took 2–3
-seconds<br />
+switch takes 662 ms from "P1" (direct delivery) to "P2" (via
+shared<br />
+memory), and 201 ms back, from request to render confirmation; the
+previous process-restart approach took 2–3 seconds<br />
 (earlier measurement). Before publishing we verified that 100
 consecutive<br />
 switches keep the browser process's fd count and memory flat and leave

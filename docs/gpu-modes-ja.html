@@ -1,0 +1,485 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK GPU モード解説 — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="BlinkGTK は 3 つの GPU モードで動作します。環境変数 BLINKGTK_GPU_MODE で選択します。">
+<link rel="canonical" href="https://blinkgtk.org/docs/gpu-modes-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK GPU モード解説 — BlinkGTK">
+<meta property="og:description" content="BlinkGTK は 3 つの GPU モードで動作します。環境変数 BLINKGTK_GPU_MODE で選択します。">
+<meta property="og:url" content="https://blinkgtk.org/docs/gpu-modes-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/gpu-modes-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/gpu-modes-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/gpu-modes-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-gpu-モード解説">BlinkGTK GPU モード解説</h1>
+<p>BlinkGTK は 3 つの GPU モードで動作します。環境変数
+<code>BLINKGTK_GPU_MODE</code> で選択します。</p>
+<blockquote>
+<p><strong>記述時点について（2026-08-16 更新）</strong><br />
+第 6 章 (トラブルシューティング)
+の一部は過去の版で観測した症状の記録で、<br />
+現行の版では解消済みのものを含みます。切り替えの仕組み (第 5 章)
+は<br />
+現行の版に合わせて更新済みです。環境変数の正リストは<br />
+<a
+href="./api-reference/environment-variables-ja.html">環境変数リファレンス</a>
+を<br />
+ご確認ください。</p>
+</blockquote>
+<hr />
+<h2 id="1-3-つのモード">1. 3 つのモード</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">モード</th>
+<th style="text-align: center;"><code>BLINKGTK_GPU_MODE</code></th>
+<th style="text-align: left;">レンダリング</th>
+<th style="text-align: left;">コンポジション</th>
+<th style="text-align: left;">用途</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>|</p>
+<p><strong>ソフトウェア</strong> | <code>software</code>（既定） | CPU |
+ソフトウェアコンポジタ | ヘッドレス・CI・サーバ・低スペック |<br />
+|</p>
+<p><strong>SwiftShader</strong> | <code>swiftshader</code> |
+ソフトウェア GL（ANGLE→Vulkan→SwiftShader） | ソフトウェアコンポジタ |
+仮想マシン・安定優先 |<br />
+|</p>
+<p><strong>EGL ネイティブ</strong> | <code>egl</code> | ハードウェア
+GPU（Wayland EGL） | GPU コンポジタ | デスクトップ・本番 |</p>
+<h3 id="画面描画について">画面描画について</h3>
+<p><strong>v1.0.10 iter7 以降</strong>、3 モードすべてで GTK
+ウィンドウに Blink の<br />
+レンダリング結果が基本的に表示されます。</p>
+<ul>
+<li>v0.9 系: <code>--headless</code> が browser
+プロセスに強制付与され白画面になっていた</li>
+<li>v1.0.1 Issue #47: EGL mode 修正</li>
+<li>v1.0.10 iter2-iter7 Issue #53: SwiftShader mode 修正</li>
+<li>v1.0.10 iter5 Issue #54: EGL mode viz Skia readback 修正</li>
+<li>v1.0.10 iter7 Issue #55: EGL mode Context Lost 修正</li>
+</ul>
+<p>ただし、以下の既知事項は iter9 時点で追跡中です:</p>
+<ul>
+<li>Issue #58: HiDPI (<code>gtk_scale=2</code>)<br />
+環境で <code>wl_subsurface</code> のサイズが親 widget allocation
+に完全には追従しない</li>
+<li>Issue #59: 同一 WebView で<br />
+<code>blink_web_view_load_uri()</code> を繰返し呼ぶとリソース累積リーク
+(iter9 で 2 層<br />
+緩和済、深層は iter10 対応予定)</li>
+</ul>
+<hr />
+<h2 id="2-モード別詳細">2. モード別詳細</h2>
+<h3 id="21-ソフトウェア-software">2.1 ソフトウェア
+(<code>software</code>)</h3>
+<p><strong>挙動</strong>:</p>
+<ul>
+<li>Blink が CPU でピクセルを生成</li>
+<li><code>viz::SoftwareOutputDevice</code>
+がビットマップをフレームバッファに書き込み</li>
+<li><code>CopyFromSurface</code> で BlinkGTK
+が取得し、<code>GtkPicture</code> / <code>GtkGLArea</code>
+経由で表示</li>
+<li>内部的に <code>--disable-gpu-compositing</code> が付与される</li>
+</ul>
+<p><strong>長所</strong>:</p>
+<ul>
+<li>最も安定、GPU ドライバに依存しない</li>
+<li>Weston headless・仮想マシン・CI で動作確認済み</li>
+<li>デバッグが容易（レンダリングパスが単純）</li>
+</ul>
+<p><strong>短所</strong>:</p>
+<ul>
+<li>パフォーマンスは他モードより劣る</li>
+<li><strong>WebGL / WebGPU はこのモードでは動作しません</strong>。<br />
+3D コンテンツを表示するページでは
+<code>THREE.WebGLRenderer: Error creating WebGL context</code> や
+<code>Failed to create WebGPU Context Provider</code> といった<br />
+Console エラーが出ます。GPU アクセラレーション前提の JS
+に依存するなら<br />
+<code>swiftshader</code> または <code>egl</code>
+モードを選んでください。</li>
+</ul>
+<p><strong>推奨用途</strong>:</p>
+<ul>
+<li>電子書籍リーダー（読書 UI は静的コンテンツが主）</li>
+<li>キオスク端末</li>
+<li>サーバサイド PDF 生成</li>
+<li>CI 自動テスト</li>
+</ul>
+<h3 id="22-swiftshader-swiftshader">2.2 SwiftShader
+(<code>swiftshader</code>)</h3>
+<p><strong>挙動</strong>:</p>
+<ul>
+<li>ANGLE が GL コマンドを Vulkan に変換</li>
+<li>Vulkan を SwiftShader が CPU でエミュレート</li>
+<li>GL はソフトウェアでエミュレートされるが、Blink から見ると GPU
+が存在する状態</li>
+<li><code>--use-gl=angle --use-angle=swiftshader</code>
+が設定される</li>
+</ul>
+<p><strong>長所</strong>:</p>
+<ul>
+<li>GPU ドライバ不要で WebGL / Canvas 高速描画が可能</li>
+<li>software モードより 2〜3 倍速いケースあり</li>
+<li>ハードウェア依存しないので挙動が再現的</li>
+</ul>
+<p><strong>短所</strong>:</p>
+<ul>
+<li>起動時間が software より少し長い</li>
+<li>SwiftShader ICD (<code>vk_swiftshader_icd.json</code>) と
+<code>libvk_swiftshader.so</code>、<br />
+および Vulkan loader (<code>libvulkan.so.1</code>) が必要。v1.0.10 iter7
+以降の<br />
+公式 tarball / RPM では <code>lib/chromium/</code>
+に同梱されている<br />
+(Issue #56 でパッケージング<br />
+修正済)</li>
+<li>Intel Mesa などでは ANGLE の Vulkan backend
+初期化に失敗する可能性があるが、<br />
+v1.0.10 iter7 で <code>--disable-vulkan</code>
+相当の緩和策が入っている<br />
+(Issue #53)</li>
+</ul>
+<p><strong>推奨用途</strong>:</p>
+<ul>
+<li>VM・コンテナ・クラウド上の自動テスト</li>
+<li>GPU ドライバがないが WebGL を動かしたい場合</li>
+<li>デスクトップ環境の代替（GPU ドライバが不安定な場合）</li>
+</ul>
+<h3 id="23-egl-ネイティブ-egl">2.3 EGL ネイティブ
+(<code>egl</code>)</h3>
+<p><strong>挙動</strong>:</p>
+<ul>
+<li>Wayland EGL を直接使用</li>
+<li>Ozone/Wayland プラットフォーム経由でネイティブ GPU を利用</li>
+<li><code>--use-gl=angle --use-angle=gl --ignore-gpu-blocklist</code>
+が設定される</li>
+<li><code>--headless</code> は付与されない（Issue #47 で修正済み）</li>
+</ul>
+<blockquote>
+<p><strong>v1.2.0-build2 以前では白画面になります。</strong></p>
+<p>動作に必要な設定 (GTK4 統合・手動 viewport・device
+scale・受け手ウィジェット)<br />
+が利用者側に委ねられており、指定しないと表示されませんでした。<br />
+<strong>次の版からはエンジンが行う</strong>ので、<code>BLINKGTK_GPU_MODE=egl</code>
+だけで動きます。<br />
+それ以前の版では <code>software</code> をお使いください。</p>
+</blockquote>
+<p><strong>目指しているもの</strong>:</p>
+<ul>
+<li>WebGL / WebGPU / Canvas の GPU アクセラレーション</li>
+<li>4K / HiDPI での高フレームレート</li>
+</ul>
+<p><strong>現状の制約</strong>:</p>
+<ul>
+<li><strong>環境によって描画されない</strong> (上記)</li>
+<li>リサイズ中に一時的に白くなることがある</li>
+<li>実 GPU と Wayland EGL 対応ドライバが必要</li>
+<li>Weston headless では一部機能に制限あり</li>
+<li>ドライバ依存のバグに遭遇するリスク</li>
+</ul>
+<p><strong>現在の位置付け</strong>:</p>
+<ul>
+<li><code>BLINKGTK_GPU_MODE=egl</code> だけで動作 (次の版以降)</li>
+<li>実 GPU と Wayland EGL 対応ドライバが必要</li>
+</ul>
+<hr />
+<h2 id="3-モード選択フロー">3. モード選択フロー</h2>
+<pre><code>アプリの実行環境は？
+├─ GPU あり・デスクトップ・Wayland → egl
+├─ GPU なし・WebGL 必要           → swiftshader
+├─ GPU なし・WebGL 不要           → software（既定）
+└─ ヘッドレス・CI                  → software または swiftshader</code></pre>
+<hr />
+<h2 id="4-起動例">4. 起動例</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ソフトウェアモード（既定）</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># SwiftShader モード</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># EGL ネイティブモード</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
+<p>コード内から指定する場合（v1.0.2 以降）:</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> view <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span></span></code></pre></div>
+<p><strong>注意</strong>: この関数は <code>BLINKGTK_GPU_MODE</code>
+を<strong>プロセス全体に対して</strong>設定します。<br />
+同一プロセス内で複数の WebView
+を異なるモードで作っても、<strong>最初に作られた<br />
+WebView のモードが全体に適用されます</strong>。WebView
+単位の分離は将来の課題です<br />
+(公開ヘッダ <code>blink_web_view_new_with_gpu_mode</code>
+の注記どおり)。</p>
+<p>確実に意図したモードで動かすには、<code>blink_gtk_init(&amp;argc, &amp;argv)</code>
+を呼ぶ<strong>前に</strong><br />
+環境変数を設定してください。</p>
+<hr />
+<h2 id="5-モードと経路の切り替え--何が実行中に変えられるか">5.
+モードと経路の切り替え — 何が実行中に変えられるか</h2>
+<p>切り替えには<strong>二つの軸</strong>があり、できることが違います。</p>
+<table>
+<thead>
+<tr>
+<th>軸</th>
+<th>例</th>
+<th>実行中の切替</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GPU モード</strong> (本ページの software / swiftshader /
+egl)</td>
+<td>software → egl</td>
+<td><strong>不可</strong> — プロセス再起動が必要</td>
+</tr>
+<tr>
+<td><strong>配送経路</strong> (software モード内部の画面転送経路)</td>
+<td>P1 (直接) ↔︎ P2 (mojo 共有メモリ)</td>
+<td><strong>可</strong> (v1.2.0-build9 以降) —
+<code>blink_web_view_switch_render_path()</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="51-gpu-モードの切替-再起動が必要">5.1 GPU モードの切替
+(再起動が必要)</h3>
+<p>ユーザーが GPU モードを選択できる
+UI（メニュー項目など）を提供する場合、<br />
+モード切替にはプロセス再起動が必要です。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ユーザーが別モードを選んだら</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>g_setenv<span class="op">(</span><span class="st">&quot;BLINKGTK_GPU_MODE&quot;</span><span class="op">,</span> <span class="st">&quot;egl&quot;</span><span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>execv<span class="op">(</span>argv<span class="op">[</span><span class="dv">0</span><span class="op">],</span> argv<span class="op">);</span>  <span class="co">// プロセス再起動</span></span></code></pre></div>
+<p>再起動をまたぐ状態（URL・スクロール位置・表示スケール）の引き継ぎには<br />
+handoff meta API（<code>blink_web_view_export_handoff_meta()</code>
+/<br />
+<code>import_handoff_meta()</code>）が使えます。表示スケールを含めて正準単位で<br />
+引き継ぐため、再起動後に「描画が小さい」が起きません。</p>
+<h3 id="52-配送経路のライブ切替-v120-build9-以降">5.2
+配送経路のライブ切替 (v1.2.0-build9 以降)</h3>
+<p>software モードの内部には画面転送の経路が複数あり<br />
+（P1 = 直接配送 / P2 = mojo
+共有メモリ配送）、これは<strong>再起動なしに</strong><br />
+切り替えられます。</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* 完了は &quot;render-path-changed&quot; シグナル。切替後の描画が確認できなければ</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * 自動で元の経路に戻ります (result=&quot;rollback&quot;、画面は壊れません) */</span></span></code></pre></div>
+<p>切替はテスト環境の実測で数百ミリ秒です。詳細（seq
+による前後対応付け・<br />
+result の意味）は <a href="./api-reference/signals-api-ja.html">シグナル
+API リファレンス</a><br />
+の render-path-changed の節を参照してください。</p>
+<p><strong>適用範囲に注意</strong>: この API が切り替えるのは software
+系の配送経路<br />
+（"P1" / "P2"）だけです。GPU モードそのもの（software ↔︎
+egl）の実行時切替は<br />
+できません（5.1 の再起動手順を使ってください）。</p>
+<h3 id="53-画面転送を止めたい場合-提示ポリシー">5.3
+画面転送を止めたい場合 (提示ポリシー)</h3>
+<p>「経路を変える」のではなく「今は画面に出す必要がない」場合（音声だけを聞く<br />
+場面など）は、提示ポリシー
+<code>blink_web_view_set_presentation_policy()</code> が<br />
+正規の口です。画面転送の費用だけを省き、組版と描画（先読み）は止めません。</p>
+<hr />
+<h2 id="6-トラブルシューティング">6. トラブルシューティング</h2>
+<h3 id="61-egl-モードで-fatal-gl_factory_ozone-notreached">6.1 EGL
+モードで <code>FATAL: gl_factory_ozone NOTREACHED</code></h3>
+<p><strong>原因</strong>: Wayland EGL ドライバが見つからない、または X11
+Display に<br />
+フォールバックしている<br />
+<strong>対処</strong>: v1.0.10 iter7 以降を使用<br />
+(Issue #47 で v1.0.1 修正済、<br />
+Issue #53 で v1.0.10 iter7<br />
+さらに強化)。</p>
+<h3 id="62-swiftshader-モードで-vk_error_initialization_failed">6.2
+SwiftShader モードで <code>VK_ERROR_INITIALIZATION_FAILED</code></h3>
+<p><strong>原因</strong>: ANGLE の Vulkan backend 初期化が環境の Vulkan
+ドライバ設定で失敗する<br />
+<strong>対処</strong>: v1.0.10 iter7 以降を使用。iter7 で SwiftShader
+経路は<br />
+ANGLE Vulkan を明示的に回避するよう修正済 (Issue #53)。<br />
+iter6 以前を使っている場合は更新してください。</p>
+<h3
+id="63-swiftshader-モードで描画されるがピクセルが-gtk-に届かない">6.3
+SwiftShader モードで描画されるがピクセルが GTK に届かない</h3>
+<p><strong>症状</strong>: <code>BLINK_LOAD_FINISHED</code> に到達、FPS
+も 60 前後、しかし GTK ウィンドウは<br />
+真っ黒または背景色のまま<br />
+<strong>原因</strong>: Issue #54 の CopyFromSurface ガードが SwiftShader
+にも過剰適用されている<br />
+可能性 ([Issue #54 follow-up])<br />
+<strong>対処</strong>: v1.0.10 iter10 以降の修正を待つ。当面は
+<code>software</code> または <code>egl</code> に<br />
+切替。</p>
+<h3 id="64-egl-モードで描画範囲が左上にクリップされる-hidpi">6.4 EGL
+モードで描画範囲が左上にクリップされる (HiDPI)</h3>
+<p><strong>症状</strong>: <code>gtk_scale=2</code> 環境で EGL
+モード、親ウィジェットは 1536×785 logical px<br />
+あるのに Web コンテンツが約 400×360 physical px
+の左上領域のみに表示<br />
+<strong>原因</strong>: <code>size_allocate</code> 経由で Chromium
+側のビュー (RenderWidgetHostView) は正しく更新されるが、<br />
+<code>wl_subsurface</code> / <code>wp_viewport</code> の destination
+サイズが追従していない<br />
+(Issue #58)<br />
+<strong>対処</strong>: iter10 以降の修正を待つ。暫定的には window を
+800×600 以下にして全体<br />
+表示を確保。</p>
+<h3 id="65-全モードで白画面">6.5 全モードで白画面</h3>
+<p>v1.0.10 iter7
+以降でも条件によっては発生することがあります。確認手順:</p>
+<ul>
+<li>BlinkGTK バージョン:
+<code>pkg-config --modversion blinkgtk-0.1</code> が <code>1.0.10</code>
+以上</li>
+<li>親ウィジェット階層:
+<ul>
+<li><code>blink_web_view_new()</code> 直接利用の場合 (推奨): 親は任意の
+GtkContainer で可<br />
+(<code>gtk_window_set_child(window, view)</code> が最もシンプル)</li>
+<li><code>blink_web_view_new_container()</code> 利用の場合: 内部で
+GtkOverlay +<br />
+GtkPicture が自動構築される。<strong>非推奨 (Issue #90): Chromium 148+
+で<br />
+内部 software bridge が描画しないため、<code>blink_web_view_new()</code>
++<br />
+自前 GtkOverlay への移行を推奨</strong></li>
+</ul></li>
+<li>読み込み HTML: テスト用に
+<code>data:text/html,&lt;body style='background:red'&gt;TEST&lt;/body&gt;</code><br />
+で確認</li>
+<li>ログ: <code>DidFinishNavigation()</code> と
+<code>BLINK_LOAD_FINISHED</code> が出ているか</li>
+</ul>
+<p>詳細は <a href="./troubleshooting-ja.html">トラブルシューティング</a>
+を参照。</p>
+<hr />
+<h2 id="7-ベンチマーク">7. ベンチマーク</h2>
+<p><code>triple_gpu_compare</code> サンプル
+(<code>examples/triple_gpu_compare.c</code>) で 3 モードを同一<br />
+アプリ内で並列比較できます。</p>
+<p><strong>Chromium ビルドツリーから実行する場合</strong>:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$CHROMIUM_SRC</span>/out/Release_Component</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$PWD</span> <span class="ex">./triple_gpu_compare</span></span></code></pre></div>
+<p><strong>tarball / RPM でインストールした場合</strong>:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 実行ファイルは $prefix/bin、ランタイム .so は $prefix/lib/chromium</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /usr/local/lib/chromium   <span class="co"># もしくは prefix に応じて</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/usr/local/bin/triple_gpu_compare</span></span></code></pre></div>
+<p>3 つの WebView が並列表示され、FPS
+とレンダリング品質を比較できます。</p>
+<hr />
+<h2 id="8-関連資料">8. 関連資料</h2>
+<ul>
+<li><a href="./api-reference/settings-api-ja.html">設定 API
+リファレンス</a> — 生成時のモード指定
+(<code>new_with_gpu_mode</code>)</li>
+<li><a href="./api-reference/signals-api-ja.html">シグナル API
+リファレンス</a> — 配送経路のライブ切替の完了通知</li>
+<li>[Issue #47: EGL mode fix]</li>
+</ul>
+</body>
+</html>
+</div></div>

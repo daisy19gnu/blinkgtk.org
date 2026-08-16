@@ -405,8 +405,8 @@ everywhere.</p>
 <code>new_with_gpu_mode()</code> instead of
 <code>blink_web_view_new()</code>). It cannot be<br />
 switched afterwards. Note that the <strong>delivery path inside software
-mode</strong><br />
-(P1 direct / P2 mojo shared memory) is a separate axis and, since<br />
+mode</strong> — "P1" (direct) /<br />
+"P2" (via shared memory) — is a separate axis and, since<br />
 v1.2.0-build9, <em>can</em> be switched at runtime with<br />
 <code>blink_web_view_switch_render_path()</code> (see the
 render-path-changed section<br />

@@ -1,0 +1,481 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK GPU Modes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="BlinkGTK runs in one of three GPU modes, selected with the BLINKGTK_GPU_MODE environment variable.">
+<link rel="canonical" href="https://blinkgtk.org/docs/gpu-modes-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK GPU Modes — BlinkGTK">
+<meta property="og:description" content="BlinkGTK runs in one of three GPU modes, selected with the BLINKGTK_GPU_MODE environment variable.">
+<meta property="og:url" content="https://blinkgtk.org/docs/gpu-modes-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/gpu-modes-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/gpu-modes-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/gpu-modes-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-gpu-modes">BlinkGTK GPU Modes</h1>
+<p>BlinkGTK runs in one of three GPU modes, selected with the
+<code>BLINKGTK_GPU_MODE</code> environment variable.</p>
+<blockquote>
+<p><strong>About this page (updated 2026-08-16)</strong><br />
+Parts of chapter 6 (troubleshooting) record symptoms observed on
+earlier<br />
+releases; some are resolved in the current release. Chapter 5
+(switching)<br />
+is up to date. For the authoritative list of environment variables, see
+the<br />
+<a href="./api-reference/environment-variables-en.html">environment
+variables reference</a>.</p>
+</blockquote>
+<hr />
+<h2 id="1-the-three-modes">1. The three modes</h2>
+<table>
+<thead>
+<tr>
+<th style="text-align: left;">Mode</th>
+<th style="text-align: center;"><code>BLINKGTK_GPU_MODE</code></th>
+<th style="text-align: left;">Rendering</th>
+<th style="text-align: left;">Compositing</th>
+<th style="text-align: left;">Intended use</th>
+</tr>
+</thead>
+<tbody>
+</tbody>
+</table>
+<p>|</p>
+<p><strong>Software</strong> | <code>software</code> (default) | CPU |
+Software compositor | Headless, CI, servers, low-spec machines |<br />
+|</p>
+<p><strong>SwiftShader</strong> | <code>swiftshader</code> | Software GL
+(ANGLE → Vulkan → SwiftShader) | Software compositor | Virtual machines,
+stability first |<br />
+|</p>
+<p><strong>Native EGL</strong> | <code>egl</code> | Hardware GPU
+(Wayland EGL) | GPU compositor | Desktop, production |</p>
+<h3 id="on-screen-rendering">On-screen rendering</h3>
+<p><strong>Since v1.0.10 iter7</strong>, all three modes generally
+display Blink's rendering output in the GTK window.</p>
+<ul>
+<li>v0.9 series: <code>--headless</code> was forced onto the browser
+process, producing a white screen</li>
+<li>v1.0.1 Issue #47: EGL mode fix</li>
+<li>v1.0.10 iter2–iter7 Issue #53: SwiftShader mode fix</li>
+<li>v1.0.10 iter5 Issue #54: EGL mode viz Skia readback fix</li>
+<li>v1.0.10 iter7 Issue #55: EGL mode context-lost fix</li>
+</ul>
+<p>The following were still being tracked as of iter9:</p>
+<ul>
+<li>Issue #58: on HiDPI (<code>gtk_scale=2</code>), the<br />
+<code>wl_subsurface</code> size does not fully follow the parent widget
+allocation</li>
+<li>Issue #59: repeatedly calling<br />
+<code>blink_web_view_load_uri()</code> on the same WebView accumulates a
+resource leak (two layers mitigated in<br />
+iter9; the deeper cause was scheduled for iter10)</li>
+</ul>
+<hr />
+<h2 id="2-mode-details">2. Mode details</h2>
+<h3 id="21-software-software">2.1 Software (<code>software</code>)</h3>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>Blink produces pixels on the CPU</li>
+<li><code>viz::SoftwareOutputDevice</code> writes the bitmap into the
+framebuffer</li>
+<li>BlinkGTK retrieves it via <code>CopyFromSurface</code> and displays
+it through <code>GtkPicture</code> / <code>GtkGLArea</code></li>
+<li><code>--disable-gpu-compositing</code> is added internally</li>
+</ul>
+<p><strong>Strengths</strong>:</p>
+<ul>
+<li>The most stable mode; does not depend on GPU drivers</li>
+<li>Verified on Weston headless, virtual machines, and CI</li>
+<li>Easy to debug (the rendering path is simple)</li>
+</ul>
+<p><strong>Weaknesses</strong>:</p>
+<ul>
+<li>Slower than the other modes</li>
+<li><strong>WebGL and WebGPU do not work in this mode.</strong> Pages
+with 3D content will log console errors such as<br />
+<code>THREE.WebGLRenderer: Error creating WebGL context</code> or<br />
+<code>Failed to create WebGPU Context Provider</code>. If your
+JavaScript depends on GPU acceleration, choose<br />
+<code>swiftshader</code> or <code>egl</code>.</li>
+</ul>
+<p><strong>Recommended for</strong>:</p>
+<ul>
+<li>E-book readers (reading UIs are mostly static content)</li>
+<li>Kiosk terminals</li>
+<li>Server-side PDF generation</li>
+<li>Automated CI tests</li>
+</ul>
+<h3 id="22-swiftshader-swiftshader">2.2 SwiftShader
+(<code>swiftshader</code>)</h3>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>ANGLE translates GL commands into Vulkan</li>
+<li>SwiftShader emulates Vulkan on the CPU</li>
+<li>GL is emulated in software, but from Blink's point of view a GPU is
+present</li>
+<li><code>--use-gl=angle --use-angle=swiftshader</code> is set</li>
+</ul>
+<p><strong>Strengths</strong>:</p>
+<ul>
+<li>WebGL and fast canvas rendering without a GPU driver</li>
+<li>Can be 2–3× faster than software mode</li>
+<li>Reproducible behavior because it does not depend on hardware</li>
+</ul>
+<p><strong>Weaknesses</strong>:</p>
+<ul>
+<li>Slightly longer startup than software mode</li>
+<li>Requires the SwiftShader ICD (<code>vk_swiftshader_icd.json</code>),
+<code>libvk_swiftshader.so</code>, and the Vulkan<br />
+loader (<code>libvulkan.so.1</code>). Official tarballs and RPMs from
+v1.0.10 iter7 onward bundle these under<br />
+<code>lib/chromium/</code> (packaging fixed in<br />
+Issue #56)</li>
+<li>ANGLE's Vulkan backend may fail to initialize on Intel Mesa and
+similar stacks; v1.0.10 iter7 added a<br />
+mitigation equivalent to <code>--disable-vulkan</code><br />
+(Issue #53)</li>
+</ul>
+<p><strong>Recommended for</strong>:</p>
+<ul>
+<li>Automated tests on VMs, containers, and cloud hosts</li>
+<li>Running WebGL where no GPU driver is available</li>
+<li>As a desktop fallback when GPU drivers are unstable</li>
+</ul>
+<h3 id="23-native-egl-egl">2.3 Native EGL (<code>egl</code>)</h3>
+<p><strong>Behavior</strong>:</p>
+<ul>
+<li>Uses Wayland EGL directly</li>
+<li>Uses the native GPU through the Ozone/Wayland platform</li>
+<li><code>--use-gl=angle --use-angle=gl --ignore-gpu-blocklist</code> is
+set</li>
+<li><code>--headless</code> is not added (fixed in Issue #47)</li>
+</ul>
+<blockquote>
+<p><strong>On v1.2.0-build2 and earlier this shows a white
+screen.</strong></p>
+<p>The setup this path needs (GTK4 integration, manual viewport, device
+scale,<br />
+and the receiving widget) was left to the application, so nothing
+appeared<br />
+unless you knew to configure it. <strong>From the next release the
+engine does<br />
+this</strong>, so <code>BLINKGTK_GPU_MODE=egl</code> alone is enough. On
+earlier versions,<br />
+please use <code>software</code>.</p>
+</blockquote>
+<p><strong>What it aims to provide</strong>:</p>
+<ul>
+<li>GPU acceleration for WebGL, WebGPU, and canvas</li>
+<li>High frame rates at 4K / HiDPI</li>
+</ul>
+<p><strong>Current limitations</strong>:</p>
+<ul>
+<li><strong>Does not render on some machines</strong> (see above)</li>
+<li>May briefly turn white during a resize</li>
+<li>Requires a real GPU and a Wayland-EGL-capable driver</li>
+<li>Some functionality is limited under Weston headless</li>
+<li>Exposed to driver-specific bugs</li>
+</ul>
+<p><strong>Current status</strong>:</p>
+<ul>
+<li>Works with <code>BLINKGTK_GPU_MODE=egl</code> alone (from the next
+release)</li>
+<li>Requires a real GPU and a Wayland-EGL-capable driver</li>
+</ul>
+<hr />
+<h2 id="3-choosing-a-mode">3. Choosing a mode</h2>
+<pre><code>What is the application&#39;s runtime environment?
+├─ GPU + desktop + Wayland         -&gt; egl
+├─ No GPU, need WebGL              -&gt; swiftshader
+├─ No GPU, no WebGL                -&gt; software (default)
+└─ Headless / CI                   -&gt; software or swiftshader</code></pre>
+<hr />
+<h2 id="4-launch-examples">4. Launch examples</h2>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Software mode (default)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># SwiftShader mode</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Native EGL mode</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
+<p>Selecting the mode from code (v1.0.2 and later):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> view <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span></span></code></pre></div>
+<p>Note that <code>blink_web_view_new_with_gpu_mode()</code> sets
+<code>BLINKGTK_GPU_MODE</code> for the process and therefore<br />
+affects renderer processes launched afterwards; it is not per-WebView
+isolation. For deterministic<br />
+behavior, set the environment variable before
+<code>blink_gtk_init(&amp;argc, &amp;argv)</code>.</p>
+<hr />
+<h2 id="5-switching-modes-and-paths--what-can-change-at-runtime">5.
+Switching modes and paths — what can change at runtime</h2>
+<p>There are <strong>two different axes</strong>, with different
+capabilities.</p>
+<table>
+<thead>
+<tr>
+<th>Axis</th>
+<th>Example</th>
+<th>Switchable at runtime?</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>GPU mode</strong> (software / swiftshader / egl on this
+page)</td>
+<td>software → egl</td>
+<td><strong>No</strong> — requires a process restart</td>
+</tr>
+<tr>
+<td><strong>Delivery path</strong> (inside software mode)</td>
+<td>P1 (direct) ↔︎ P2 (mojo shared memory)</td>
+<td><strong>Yes</strong> (v1.2.0-build9+) —
+<code>blink_web_view_switch_render_path()</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="51-switching-the-gpu-mode-restart-required">5.1 Switching the
+GPU mode (restart required)</h3>
+<p>If your application offers a UI (for example a menu item) that lets
+the user<br />
+pick a GPU mode, changing the mode requires restarting the process.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// When the user selects a different mode</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>g_setenv<span class="op">(</span><span class="st">&quot;BLINKGTK_GPU_MODE&quot;</span><span class="op">,</span> <span class="st">&quot;egl&quot;</span><span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>execv<span class="op">(</span>argv<span class="op">[</span><span class="dv">0</span><span class="op">],</span> argv<span class="op">);</span>  <span class="co">// restart the process</span></span></code></pre></div>
+<p>To carry state (URL, scroll position, display scale) across the
+restart, use<br />
+the handoff meta API (<code>blink_web_view_export_handoff_meta()</code>
+/<br />
+<code>import_handoff_meta()</code>). It carries the display scale in
+canonical units, so<br />
+the restarted view does not come back undersized.</p>
+<h3 id="52-live-delivery-path-switching-v120-build9">5.2 Live
+delivery-path switching (v1.2.0-build9+)</h3>
+<p>Software mode has more than one internal delivery path (P1 =
+direct,<br />
+P2 = mojo shared memory), and these <strong>can</strong> be switched
+without a restart:</p>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* Completion arrives on the &quot;render-path-changed&quot; signal. If the new path</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * fails its render check, the previous path is restored automatically</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"> * (result=&quot;rollback&quot; — the screen is never broken). */</span></span></code></pre></div>
+<p>A switch takes a few hundred milliseconds in our test environment.
+See the<br />
+render-path-changed section of the<br />
+<a href="./api-reference/signals-api-en.html">Signals API reference</a>
+for details<br />
+(sequence numbers, result values).</p>
+<p><strong>Scope</strong>: this API switches software-side delivery
+paths ("P1" / "P2") only.<br />
+It does not switch the GPU mode itself (software ↔︎ egl) — use the
+restart<br />
+procedure in 5.1 for that.</p>
+<h3 id="53-stopping-presentation-instead-presentation-policy">5.3
+Stopping presentation instead (presentation policy)</h3>
+<p>If what you actually want is "this view need not be presented right
+now"<br />
+(an audio-only mode, for example) rather than a different path, the
+proper<br />
+tool is the presentation policy:<br />
+<code>blink_web_view_set_presentation_policy()</code>. It skips only the
+cost of<br />
+presenting frames; layout and rasterization (read-ahead) continue.</p>
+<hr />
+<h2 id="6-troubleshooting">6. Troubleshooting</h2>
+<h3 id="61-fatal-gl_factory_ozone-notreached-in-egl-mode">6.1
+<code>FATAL: gl_factory_ozone NOTREACHED</code> in EGL mode</h3>
+<p><strong>Cause</strong>: the Wayland EGL driver is not found, or the
+process is falling back to an X11 display.<br />
+<strong>Fix</strong>: use v1.0.10 iter7 or later (fixed for v1.0.1
+in<br />
+Issue #47, hardened further for v1.0.10 iter7 in<br />
+Issue #53).</p>
+<h3 id="62-vk_error_initialization_failed-in-swiftshader-mode">6.2
+<code>VK_ERROR_INITIALIZATION_FAILED</code> in SwiftShader mode</h3>
+<p><strong>Cause</strong>: ANGLE's Vulkan backend fails to initialize
+against the environment's Vulkan driver<br />
+configuration.<br />
+<strong>Fix</strong>: use v1.0.10 iter7 or later. In iter7 the
+SwiftShader path was changed to explicitly avoid<br />
+ANGLE Vulkan (Issue #53). Upgrade if you are on<br />
+iter6 or earlier.</p>
+<h3 id="63-swiftshader-renders-but-pixels-never-reach-gtk">6.3
+SwiftShader renders, but pixels never reach GTK</h3>
+<p><strong>Symptom</strong>: <code>BLINK_LOAD_FINISHED</code> is reached
+and FPS is around 60, yet the GTK window stays black or<br />
+shows only the background color.<br />
+<strong>Cause</strong>: the <code>CopyFromSurface</code> guard from
+Issue #54 may be over-applied to SwiftShader<br />
+([Issue #54 follow-up]).<br />
+<strong>Fix</strong>: wait for the fix in v1.0.10 iter10 or later. In
+the meantime switch to <code>software</code> or <code>egl</code>.</p>
+<h3 id="64-egl-rendering-is-clipped-to-the-top-left-corner-hidpi">6.4
+EGL rendering is clipped to the top-left corner (HiDPI)</h3>
+<p><strong>Symptom</strong>: in EGL mode with <code>gtk_scale=2</code>,
+the parent widget is 1536×785 logical px but web content<br />
+appears only in roughly the top-left 400×360 physical px.<br />
+<strong>Cause</strong>: the Chromium Chromium view
+(RenderWidgetHostView) is updated correctly through
+<code>size_allocate</code>, but the destination size of<br />
+<code>wl_subsurface</code> / <code>wp_viewport</code> does not
+follow<br />
+(Issue #58).<br />
+<strong>Fix</strong>: wait for the fix in iter10 or later. As a
+workaround, keep the window at 800×600 or smaller so<br />
+that the whole surface is visible.</p>
+<h3 id="65-white-screen-in-every-mode">6.5 White screen in every
+mode</h3>
+<p>This can still occur under some conditions even on v1.0.10 iter7 and
+later. Check the following:</p>
+<ul>
+<li>BlinkGTK version: <code>pkg-config --modversion blinkgtk-0.1</code>
+reports <code>1.0.10</code> or later</li>
+<li>Parent widget hierarchy:
+<ul>
+<li>Using <code>blink_web_view_new()</code> directly (recommended): any
+GtkContainer works as the parent<br />
+(<code>gtk_window_set_child(window, view)</code> is the simplest)</li>
+<li>Using <code>blink_web_view_new_container()</code>: a GtkOverlay +
+GtkPicture is built internally.<br />
+<strong>Deprecated (Issue #90): on Chromium 148+ the internal software
+bridge does not render, so migrate<br />
+to <code>blink_web_view_new()</code> with your own
+GtkOverlay</strong></li>
+</ul></li>
+<li>Loaded HTML: try
+<code>data:text/html,&lt;body style='background:red'&gt;TEST&lt;/body&gt;</code>
+as a test page</li>
+<li>Logs: check that <code>DidFinishNavigation()</code> and
+<code>BLINK_LOAD_FINISHED</code> appear</li>
+</ul>
+<p>See <a href="./troubleshooting-en.html">Troubleshooting</a> for
+details.</p>
+<hr />
+<h2 id="7-benchmarking">7. Benchmarking</h2>
+<p>The <code>triple_gpu_compare</code> sample
+(<code>examples/triple_gpu_compare.c</code>) compares all three modes
+side by side<br />
+within a single application.</p>
+<p><strong>Running from a Chromium build tree</strong>:</p>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$CHROMIUM_SRC</span>/out/Release_Component</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$PWD</span> <span class="ex">./triple_gpu_compare</span></span></code></pre></div>
+<p><strong>When installed from a tarball or RPM</strong>:</p>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The executable lives in $prefix/bin; runtime .so files in $prefix/lib/chromium</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /usr/local/lib/chromium   <span class="co"># or adjust to your prefix</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/usr/local/bin/triple_gpu_compare</span></span></code></pre></div>
+<p>Three WebViews are displayed side by side so you can compare FPS and
+rendering quality.</p>
+<hr />
+<h2 id="8-related-documents">8. Related documents</h2>
+<ul>
+<li><a href="./api-reference/settings-api-en.html">Settings API
+reference</a> — choosing the mode at creation
+(<code>new_with_gpu_mode</code>)</li>
+<li><a href="./api-reference/signals-api-en.html">Signals API
+reference</a> — completion signal for live path switching</li>
+<li>[Issue #47: EGL mode fix]</li>
+</ul>
+</body>
+</html>
+</div></div>

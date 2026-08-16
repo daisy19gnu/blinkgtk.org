@@ -218,6 +218,47 @@ that field.</p>
 outside regulatory<br />
 scope, where the need is simply "render graphs and tables well" — it is
 straightforward.</p>
+<h3 id="on-device-ai-and-web-inference">On-device AI and web
+inference</h3>
+<p>The ecosystem for running machine-learning models inside a browser —
+web<br />
+inference built on WebAssembly and WebGPU — runs on the Chromium
+rendering<br />
+engine. BlinkGTK brings <strong>that same foundation into a desktop
+application as<br />
+a single GTK widget</strong>.</p>
+<p>A few shapes come into view from there:</p>
+<ul>
+<li><strong>Keep the model and the inference on the device</strong>:
+serve a model from<br />
+inside the machine over a custom URL scheme, and the inference
+inputs<br />
+never leave the device. That is a foundation for building
+summarisation,<br />
+translation, or search assistance into a document application in a<br />
+"data stays local" configuration</li>
+<li><strong>Use the web inference ecosystem as-is</strong>: inference
+runtimes and model<br />
+formats published for browsers are built on web standards. Rather
+than<br />
+reimplementing them for GTK, you can think in the order of "what runs
+on<br />
+the web, brought in as-is"</li>
+<li><strong>Write the UI and the inference in the same
+language</strong>: draw the screen<br />
+and call the inference from JavaScript, and leave only the hardware
+and<br />
+OS glue to the C side (signals and script injection)</li>
+</ul>
+<p>GPU-backed inference (WebGPU) depends on the hardware and
+driver<br />
+combination; as with the automotive section, <strong>verify on the real
+device</strong>.<br />
+This project itself is researching whether Japanese page layout can
+be<br />
+accelerated with WebGPU — experiment reports from the similarly curious
+are<br />
+welcome.</p>
 <h3 id="publishing-and-japanese-typography">Publishing and Japanese
 typography</h3>
 <p>This is where we have the most experience today. Vertical writing,

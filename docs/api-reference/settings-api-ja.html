@@ -420,8 +420,9 @@ BlinkWebView（<code>BLINK_WEB_VIEW()</code> でキャスト） |</p>
 (<code>blink_web_view_new()</code> の<br />
 代わりに <code>new_with_gpu_mode()</code>
 を使う)。生成後の切り替えはできません。<br />
-なお <strong>software モード内部の配送経路</strong> (P1 直接 / P2 mojo
-共有メモリ) は<br />
+なお <strong>software モード内部の配送経路</strong> — "P1"
+(画面へ直接渡す) /<br />
+"P2" (共有メモリを経由して渡す) — は<br />
 別軸で、v1.2.0-build9 以降
 <code>blink_web_view_switch_render_path()</code> により<br />
 <strong>実行中に</strong>切り替えられます (<a
