@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build8 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.0-build9 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Released: 2026-08-13 / Chromium: 151.0.7922.108 / Language: English | 日本語">
+<meta name="description" content="Released: 2026-08-16 / Chromium: 151.0.7922.108 / Language: English | 日本語">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build8 Release Notes — BlinkGTK">
-<meta property="og:description" content="Released: 2026-08-13 / Chromium: 151.0.7922.108 / Language: English | 日本語">
+<meta property="og:title" content="BlinkGTK 1.2.0-build9 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-08-16 / Chromium: 151.0.7922.108 / Language: English | 日本語">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,9 +107,9 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build8-release-notes">BlinkGTK 1.2.0-build8 Release
+<h1 id="blinkgtk-120-build9-release-notes">BlinkGTK 1.2.0-build9 Release
 Notes</h1>
-<p><strong>Released</strong>: 2026-08-13 / <strong>Chromium</strong>:
+<p><strong>Released</strong>: 2026-08-16 / <strong>Chromium</strong>:
 151.0.7922.108 / Language: English | <a
 href="RELEASE_NOTES-1.2.0-ja.html">日本語</a></p>
 <p>The rendering engine moves to <strong>Chromium 151</strong>. This
@@ -117,6 +117,134 @@ release brings a cluster of changes<br />
 that act directly on Japanese typography. In particular, documents that
 use emphasis marks<br />
 in vertical writing mode <strong>will lay out differently</strong>.</p>
+<hr />
+<h2 id="new-in-build9">New in build9</h2>
+<h3 id="switch-render-paths-without-restarting-blinkshift">Switch render
+paths without restarting (BlinkShift)</h3>
+<p>Added <code>blink_web_view_switch_render_path()</code> and the
+completion signal<br />
+<code>render-path-changed</code>. The rendering output path can now be
+switched live,<br />
+without restarting the application. If the new path fails its render
+check,<br />
+the engine automatically restores the previous path — the reader's
+screen is<br />
+never broken (the signal reports "rollback").</p>
+<p>The switch function synchronously returns the swap's sequence number,
+and the<br />
+completion signal carries the same number, so records taken around a
+switch<br />
+can be keyed to the exact swap. Measured on a headless test environment,
+a<br />
+switch takes 662 ms (P1→P2) / 201 ms (P2→P1) from request to
+render<br />
+confirmation; the previous process-restart approach took 2–3
+seconds<br />
+(earlier measurement). Before publishing we verified that 100
+consecutive<br />
+switches keep the browser process's fd count and memory flat and leave
+the<br />
+input wiring untouched. Values on a real display (scale 2) and on the
+EGL<br />
+path are not yet measured.</p>
+<h3 id="one-function-for-correct-gtkapplication-integration">One
+function for correct GtkApplication integration</h3>
+<p><code>blink_gtk_application_run()</code>. With
+<code>g_application_run()</code> the Chromium<br />
+browser loop never runs — the program compiles and starts, but no page
+ever<br />
+loads. The new function performs the correct sequence (register →
+activate →<br />
+BlinkGTK's loop) and exits automatically when the last window closes.
+The<br />
+quickstart now uses this form.</p>
+<h3
+id="declare-when-a-view-need-not-be-presented-presentation-policy">Declare
+when a view need not be presented (presentation policy)</h3>
+<p><code>blink_web_view_set_presentation_policy()</code>. When your
+application declares<br />
+that a view does not need to be presented right now — an audio-only
+mode,<br />
+for example — the engine skips the cost of presenting frames. The
+engine<br />
+never guesses visibility; the declaration alone decides. Layout
+and<br />
+rasterization (read-ahead) are not stopped. On returning to ACTIVE
+the<br />
+engine performs one unconditional capture on the next presentation
+tick<br />
+(about 16 ms on the software path). The default is ACTIVE; if you never
+call<br />
+it, behaviour is unchanged.</p>
+<h3 id="user-scripts-no-longer-have-a-size-limit">User scripts no longer
+have a size limit</h3>
+<p>Scripts are now passed to the renderer over a file descriptor instead
+of<br />
+argv, fixing real-size (tens of KB) scripts never reaching the
+renderer<br />
+(#135). A leftover re-injection into pre-commit frames was also
+removed<br />
+(#136).</p>
+<h3 id="diagnostics-are-quiet-by-default">Diagnostics are quiet by
+default</h3>
+<p>Per-frame diagnostic logging is off by default and selectable
+via<br />
+environment variables. <code>--force-device-scale-factor</code> is now
+honoured as<br />
+specified.</p>
+<h3 id="new-release-checks">New release checks</h3>
+<p>Three checks were added to the pre-release suite (33 total):
+render-path<br />
+switch API, render-path soak, and GtkApplication integration.</p>
+<hr />
+<h2 id="new-in-build8">New in build8</h2>
+<p>We carried out a security review of our own and fixed what it found.
+We<br />
+recommend updating to this build or later, especially if you open
+remote<br />
+pages or user-supplied documents.</p>
+<p><strong>Per-site process isolation is now on by default.</strong>
+Isolation is the<br />
+boundary that keeps a compromised page on one site from reading
+another<br />
+site's data. Up to build7 it was unconditionally disabled to avoid
+a<br />
+rendering problem; we verified that the problem does not reproduce
+on<br />
+Chromium 151 before restoring the default. Opening several sites now
+spawns<br />
+more renderer processes, which can increase memory use. To restore the
+old<br />
+behaviour, set <code>BLINKGTK_DISABLE_SITE_ISOLATION=1</code>.</p>
+<p>Other fixes:</p>
+<ul>
+<li>Sandbox availability is now measured rather than inferred;
+environments<br />
+where the heuristics could not be read no longer disable a usable
+sandbox</li>
+<li>Added an API to query the sandbox state
+(<code>blink_gtk_is_sandboxed</code>)</li>
+<li>A certificate-error decision path now checks types before
+casting</li>
+<li>Path-setting APIs now copy the strings they are given instead of
+keeping<br />
+the caller's buffer</li>
+<li>Published a reference page for environment variables, grouped by
+effect</li>
+</ul>
+<hr />
+<h2 id="new-in-build7">New in build7</h2>
+<p>Fixed the bundled development header <code>blinkgtk_version.h</code>,
+which declared<br />
+the previous release's version (1.1.0 / Chromium 150.0.7871.46).
+<strong>All of<br />
+v1.2.0 build1 through build6 are affected.</strong> Only the
+compile-time macros<br />
+were wrong; the runtime APIs (<code>blink_gtk_get_version()</code> and
+friends)<br />
+returned correct values from the start. The runtime parts
+(libraries,<br />
+executables, resources) are identical to build6.</p>
 <hr />
 <h2 id="new-in-build6">New in build6</h2>
 <h3 id="rendering-engine-updated-to-chromium-15107922108">Rendering

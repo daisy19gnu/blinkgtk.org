@@ -109,7 +109,7 @@
 </div><div class="card doc">
 <h1 id="the-blinkwebview-widget">The BlinkWebView widget</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Version</strong>: 1.2.0-build8</p>
+<strong>Version</strong>: 1.2.0-build9</p>
 <p><code>BlinkWebView</code> is the GTK4 widget that displays what
 Chromium/Blink renders.<br />
 It derives from GtkWidget, so you handle it like any other GTK widget —
@@ -216,7 +216,7 @@ cleanly, which is what makes it hard to spot. For the
 see <a href="../consumer-integration-guide-en.html">Integrate into your
 application</a>.</p>
 <h2 id="signals">Signals</h2>
-<p>Seven, all implemented.</p>
+<p>Eight, all implemented.</p>
 <table>
 <thead>
 <tr>
@@ -261,13 +261,20 @@ application</a>.</p>
 <td>Geolocation, notifications and the like are requested</td>
 <td><a href="./ui-handlers-api-en.html">UI handlers API</a></td>
 </tr>
+<tr>
+<td><code>render-path-changed</code></td>
+<td>A live render-path switch completed (v1.2.0-build9+)</td>
+<td><a href="./signals-api-en.html">Signals API</a></td>
+</tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>title<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>data<span class="op">),</span> title<span class="op">);</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_title<span class="op">),</span> window<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* title-changed carries no string argument; read the value with the getter */</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>title <span class="op">=</span> blink_web_view_get_title<span class="op">(</span>view<span class="op">);</span></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>data<span class="op">),</span> title <span class="op">?</span> title <span class="op">:</span> <span class="st">&quot;BlinkGTK&quot;</span><span class="op">);</span></span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb5-6"><a href="#cb5-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-7"><a href="#cb5-7" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_title<span class="op">),</span> window<span class="op">);</span></span></code></pre></div>
 <p>All but <code>permission-request</code> appear in the GObject
 Introspection data, so Python<br />
 and Rust connect to them under the same names.</p>

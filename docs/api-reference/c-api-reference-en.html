@@ -767,8 +767,9 @@ It carries <code>G_DEPRECATED_FOR(blink_web_view_get_uri)</code>.</p>
 removal,<br />
 we will say so in the release notes first.</p>
 <h2 id="complete-function-index">Complete function index</h2>
-<p>The 79 functions in <code>blink_gtk.h</code> that you would actually
-call. Where a dedicated page<br />
+<p>The 86 functions in <code>blink_gtk.h</code> that you would actually
+call (verified against the header, 2026-08-16). Where a dedicated
+page<br />
 exists it is linked; otherwise the entry says "this page".</p>
 <table>
 <thead>
@@ -1077,14 +1078,6 @@ href="./app-integration-api-en.html">app-integration-api-en.md</a></td>
 <td><a href="./devtools-api-en.html">devtools-api-en.md</a></td>
 </tr>
 <tr>
-<td><code>blink_web_view_queue_draw()</code></td>
-<td>this page</td>
-</tr>
-<tr>
-<td><code>blink_web_view_set_frame_data()</code></td>
-<td>this page</td>
-</tr>
-<tr>
 <td><code>blink_web_view_register_message_handler()</code></td>
 <td><a
 href="./app-integration-api-en.html">app-integration-api-en.md</a></td>
@@ -1106,6 +1099,46 @@ href="./app-integration-api-en.html">app-integration-api-en.md</a></td>
 <tr>
 <td><code>blink_gtk_get_chromium_version()</code></td>
 <td>this page</td>
+</tr>
+<tr>
+<td><code>blink_gtk_application_run()</code></td>
+<td><a href="../getting-started/QUICKSTART-en.html">Quickstart</a>
+(v1.2.0-build9+)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_presentation_policy()</code></td>
+<td>"Presentation policy" in the <a
+href="../environment-variables-en.html">environment variables guide</a>
+(v1.2.0-build9+)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_switch_render_path()</code></td>
+<td>render-path-changed in <a
+href="./signals-api-en.html">signals-api-en.md</a> (v1.2.0-build9+)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_get_render_path()</code></td>
+<td>Same page (v1.2.0-build9+)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_export_handoff_meta()</code></td>
+<td>Not yet on this page (see gtk-doc in the header)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_import_handoff_meta()</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_serialize()</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_deserialize()</code></td>
+<td>Same</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_free()</code></td>
+<td>Same</td>
 </tr>
 </tbody>
 </table>

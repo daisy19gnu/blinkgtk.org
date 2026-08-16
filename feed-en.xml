@@ -4,15 +4,23 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-08-10T00:00:00Z</updated>
+  <updated>2026-08-16T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.0-build9 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build9"/>
+    <id>tag:blinkgtk.org,2026:2026-08-16-build9:en</id>
+    <updated>2026-08-16T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Render paths can now be switched live, without restarting the application (the BlinkShift public API). A switch takes a few hundred milliseconds in our test environment and rolls back automatically if the new path fails its render check. Also adds blink_gtk_application_run() for correct GtkApplication integration and a presentation-policy API, and fixes large user scripts never reaching the renderer.</summary>
+  </entry>
   <entry>
     <title>v1.2.0-build8 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build8"/>
     <id>tag:blinkgtk.org,2026:2026-08-12-build8:en</id>
-    <updated>2026-08-12T12:00:00Z</updated>
+    <updated>2026-08-12T00:00:00Z</updated>
     <category term="release"/>
-    <summary>Applied the results of a security review: per-site process isolation is on by default, sandbox availability is measured, and a new API reports the sandbox state.</summary>
+    <summary>Applied the results of a security review. Per-site process isolation is now on by default — the boundary that stops a compromised page reading another site&#x27;s data. Opening several sites now uses more renderer processes, which can increase memory use. Sandbox availability is now measured rather than inferred, and there is a new API to query the sandbox state. A reference page for environment variables is also published.</summary>
   </entry>
   <entry>
     <title>v1.2.0-build7 released</title>
@@ -20,7 +28,7 @@
     <id>tag:blinkgtk.org,2026:2026-08-12-build7:en</id>
     <updated>2026-08-12T00:00:00Z</updated>
     <category term="release"/>
-    <summary>Corrected the version macros in the header shipped with the development package; build1-6 claimed the previous release. The runtime API was always correct.</summary>
+    <summary>The header shipped with the development package claimed the previous release (this affects every v1.2.0 build from build1 through build6). The runtime API was always correct, so only compile-time macros were affected. Nothing includes that header, so builds kept succeeding — which is why it went unnoticed for so long. The runtime itself is identical to build6; Chromium was not rebuilt.</summary>
   </entry>
   <entry>
     <title>v1.2.0-build6 released</title>
@@ -28,15 +36,7 @@
     <id>tag:blinkgtk.org,2026:2026-08-11-build6:en</id>
     <updated>2026-08-11T00:00:00Z</updated>
     <category term="release"/>
-    <summary>Updated to Chromium 151.0.7922.108. User scripts now run before the page's own scripts, and JavaScript results are returned as JSON.</summary>
-  </entry>
-  <entry>
-    <title>v1.2.0-build5 released</title>
-    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build5"/>
-    <id>tag:blinkgtk.org,2026:2026-08-10-build5:en</id>
-    <updated>2026-08-10T00:00:00Z</updated>
-    <category term="release"/>
-    <summary>Hyphenation now works for Western text. The browser no longer fails on exit, and diagnostic images are no longer written unless you ask for them.</summary>
+    <summary>The rendering engine is now Chromium 151.0.7922.108, fixing defects in the paths that close windows, hide windows, and handle input. User scripts you register now run before the page&#x27;s own scripts, and JavaScript results come back as JSON.</summary>
   </entry>
   <entry>
     <title>Western hyphenation now works</title>

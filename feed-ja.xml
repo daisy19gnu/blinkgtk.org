@@ -4,15 +4,23 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-08-10T00:00:00Z</updated>
+  <updated>2026-08-16T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.0-build9 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build9"/>
+    <id>tag:blinkgtk.org,2026:2026-08-16-build9:ja</id>
+    <updated>2026-08-16T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>描画経路を、アプリを再起動せずに切り替えられるようになりました (BlinkShift 公開 API)。切替はテスト環境の実測で数百ミリ秒、切替後の描画が確認できなければ自動で元の経路に戻ります。GtkApplication と正しく併用できる blink_gtk_application_run() と、画面に出さない場面を宣言する提示ポリシー API も加わりました。大きなユーザースクリプトが描画プロセスに届かない問題も解消しています。</summary>
+  </entry>
   <entry>
     <title>v1.2.0-build8 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build8"/>
     <id>tag:blinkgtk.org,2026:2026-08-12-build8:ja</id>
-    <updated>2026-08-12T12:00:00Z</updated>
+    <updated>2026-08-12T00:00:00Z</updated>
     <category term="release"/>
-    <summary>セキュリティ点検の結果を反映。サイトごとのプロセス分離が既定で有効になり、sandbox の可否判定を実測に変更、状態を問い合わせる API を追加しました。</summary>
+    <summary>自主的なセキュリティ点検の結果を反映しました。サイトごとのプロセス分離を既定で有効にしました — あるサイトのページが乗っ取られたときに、別のサイトのデータを読ませないための境界です。複数のサイトを開くと描画プロセスが増えるため、メモリ使用量が増えることがあります。あわせて sandbox の可否判定を実測に変え、状態を問い合わせる API を追加しました。環境変数の一覧も新設しています。</summary>
   </entry>
   <entry>
     <title>v1.2.0-build7 を公開しました</title>
@@ -20,7 +28,7 @@
     <id>tag:blinkgtk.org,2026:2026-08-12-build7:ja</id>
     <updated>2026-08-12T00:00:00Z</updated>
     <category term="release"/>
-    <summary>開発用パッケージが同梱するヘッダの版数を是正。build1〜6 は 1 版前を名乗っていました。実行時 API は正しく、影響はコンパイル時のマクロのみです。</summary>
+    <summary>開発用パッケージ（devel）に同梱しているヘッダが、1 版前の版数を名乗っていました（v1.2.0 の build1 から build6 まで、すべて該当します）。実行時 API は当初から正しく、影響を受けるのはコンパイル時のマクロだけです。ヘッダを include しなくてもビルドは通るため、長く気付けませんでした。実行部分は build6 と同一で、Chromium の再ビルドは行っていません。</summary>
   </entry>
   <entry>
     <title>v1.2.0-build6 を公開しました</title>
@@ -28,15 +36,7 @@
     <id>tag:blinkgtk.org,2026:2026-08-11-build6:ja</id>
     <updated>2026-08-11T00:00:00Z</updated>
     <category term="release"/>
-    <summary>Chromium 151.0.7922.108 に更新。ユーザースクリプトがページ本文より先に走るようになり、JavaScript の実行結果が JSON で返ります。</summary>
-  </entry>
-  <entry>
-    <title>v1.2.0-build5 を公開しました</title>
-    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build5"/>
-    <id>tag:blinkgtk.org,2026:2026-08-10-build5:ja</id>
-    <updated>2026-08-10T00:00:00Z</updated>
-    <category term="release"/>
-    <summary>欧文の分綴が効くようになりました。終了時にエラーで落ちることがなくなり、頼んでいない診断画像が既定で書き出されなくなりました。</summary>
+    <summary>レンダリングエンジンを Chromium 151.0.7922.108 に更新しました。ウィンドウを閉じる・隠す・入力を扱う経路の不具合が 10 件直っています。あわせて、登録したユーザースクリプトがページ本文より先に走るようになり、JavaScript の実行結果が JSON で返るようになりました。</summary>
   </entry>
   <entry>
     <title>欧文の分綴が効くようになりました</title>

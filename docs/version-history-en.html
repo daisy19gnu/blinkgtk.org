@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.0-build8 / Language: English | <a
+<p>Version: 1.2.0-build9 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,20 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.0-build8</strong> ← current</td>
-<td>2026-08-12</td>
+<td><strong>v1.2.0-build9</strong> ← current</td>
+<td>2026-08-16</td>
 <td><strong>151.0.7922.108</strong></td>
+<td>Render paths can now be switched live without restarting (BlinkShift
+public API — a switch takes a few hundred milliseconds and rolls back
+automatically on failure). Added blink_gtk_application_run() for correct
+GtkApplication integration and a presentation-policy API to declare when
+a view need not be presented. Fixed large user scripts never reaching
+the renderer</td>
+</tr>
+<tr>
+<td>v1.2.0-build8</td>
+<td>2026-08-12</td>
+<td>151.0.7922.108</td>
 <td>Applied the results of a security review. Per-site process isolation
 is now on by default (which can increase memory use), sandbox detection
 is measured rather than inferred, and an API to query the sandbox state

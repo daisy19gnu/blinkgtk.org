@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build8 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.0-build9 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-08-13 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-08-16 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build8 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-08-13 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.0-build9 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-08-16 / Chromium: 151.0.7922.108 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,14 +107,113 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build8-リリースノート">BlinkGTK 1.2.0-build8
+<h1 id="blinkgtk-120-build9-リリースノート">BlinkGTK 1.2.0-build9
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-08-13 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-08-16 / <strong>Chromium</strong>:
 151.0.7922.108 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.0-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 151</strong>
 に更新しました。日本語の組版に直接効く変更が<br />
 まとまって入っています。とくに縦組みで圏点を使う文書は、<strong>版面が変わります</strong>。</p>
+<hr />
+<h2 id="build9-で加わったもの">build9 で加わったもの</h2>
+<h3
+id="描画経路を再起動なしで切り替えられます-blinkshift">描画経路を再起動なしで切り替えられます
+(BlinkShift)</h3>
+<p><code>blink_web_view_switch_render_path()</code>
+と完了通知シグナル<br />
+<code>render-path-changed</code>
+を追加しました。アプリを再起動せずに描画の出力経路を<br />
+切り替えます。切替後の描画が確認できなかった場合は元の経路に自動で戻り、<br />
+読者の画面は壊れません (シグナルの result が "rollback"
+で通知されます)。</p>
+<p>切替関数は要求受理時にその切替の通し番号 (seq)
+を同期で返し、完了シグナルにも<br />
+同じ番号が載るため、切替の前後で採った記録を確実に対応付けられます。<br />
+実測 (Weston headless、テスト環境)
+では切替要求から描画確認完了まで<br />
+P1→P2 で 662 ミリ秒、P2→P1 で 201 ミリ秒でした
+(プロセス再起動方式は<br />
+過去実測で 2〜3 秒)。連続 100 回の切替で browser プロセスの fd
+とメモリが<br />
+平坦であること、入力の配線が影響を受けないことを自動検証してからの公開です。<br />
+実機 (表示スケール 2) と EGL 経路の値は未測定です。</p>
+<h3
+id="gtkapplication-と正しく併用できる-1-関数を追加しました">GtkApplication
+と正しく併用できる 1 関数を追加しました</h3>
+<p><code>blink_gtk_application_run()</code>。<code>g_application_run()</code>
+では Chromium の<br />
+ブラウザループが回らず、コンパイルも起動も通るのにページが読み込まれません。<br />
+正しい順序 (register → activate → BlinkGTK のループ) を 1
+関数に畳み、最後の<br />
+ウィンドウが閉じると自動で終了します。クイックスタートをこの形に更新しました。</p>
+<h3
+id="画面に出す必要がない場面を宣言できます-提示ポリシー">画面に出す必要がない場面を宣言できます
+(提示ポリシー)</h3>
+<p><code>blink_web_view_set_presentation_policy()</code>。音声だけを聞く場面など、<br />
+ビューを今は提示しなくてよいとアプリが宣言すると、エンジンは画面転送の<br />
+費用を省きます。エンジンが可視性を推測することはなく、宣言だけが根拠です。<br />
+組版と描画 (先読み) は止めません。ACTIVE へ戻すと次の提示周期
+(software<br />
+経路で約 16 ミリ秒) に無条件で 1 回キャプチャして復帰します。<br />
+既定は ACTIVE で、呼ばなければ挙動は従来と同一です。</p>
+<h3
+id="ユーザースクリプトの容量制限がなくなりました">ユーザースクリプトの容量制限がなくなりました</h3>
+<p>スクリプトの受け渡しを引数から fd に変えました。実サイズ (数十 KB 級)
+の<br />
+スクリプトが描画プロセスに届かない問題の恒久対策です
+(#135)。併せて、<br />
+表示確定前のフレームへの再注入残骸を撤去しました (#136)。</p>
+<h3
+id="診断出力が既定で静かになりました">診断出力が既定で静かになりました</h3>
+<p>毎フレームの診断ログを既定で止め、環境変数で量を選べるようにしました。<br />
+<code>--force-device-scale-factor</code> も指定どおり効きます。</p>
+<h3 id="検査の追加">検査の追加</h3>
+<p>リリース前検査に「経路スワップ API」「経路スワップ
+soak」「GtkApplication<br />
+併用」の 3 検査を追加しました (計 33 検査)。</p>
+<hr />
+<h2 id="build8-で加わったもの">build8 で加わったもの</h2>
+<p>自主的なセキュリティ点検を行い、見つかった点を直しました。とくに、遠隔の<br />
+ページや利用者が持ち込んだ文書を開く用途では、この版以降への更新を<br />
+おすすめします。</p>
+<p><strong>サイトごとのプロセス分離を既定で有効にしました。</strong>
+分離は、あるサイトの<br />
+ページが乗っ取られたときに別のサイトのデータを読ませないための境界です。<br />
+build7
+まで、描画上の不具合を避ける目的で無条件に無効化されていました。<br />
+現行の Chromium 151
+でその不具合が再現しないことを確かめたうえで、既定に<br />
+戻しています。複数のサイトを開くと描画プロセスが増えるため、メモリ使用量が<br />
+増えることがあります。従来の挙動に戻す場合は<br />
+<code>BLINKGTK_DISABLE_SITE_ISOLATION=1</code> を指定してください。</p>
+<p>そのほかの修正:</p>
+<ul>
+<li>sandbox
+の可否判定を、推測から実測に変えました。判定材料が読めない環境で、<br />
+名前空間が使えるのに無効化されることがありました</li>
+<li>sandbox の状態を問い合わせる API を追加しました
+(<code>blink_gtk_is_sandboxed</code>)</li>
+<li>証明書エラーの可否判断で、型の確認をしていなかった箇所を是正しました</li>
+<li>パスを設定する API
+が、渡された文字列を複製せずに保持していました。<br />
+複製するようにしました</li>
+<li>環境変数の一覧を新設しました (保護を弱めるもの / 動作を選ぶもの /
+診断用 /<br />
+デモ専用の区分)</li>
+</ul>
+<hr />
+<h2 id="build7-で加わったもの">build7 で加わったもの</h2>
+<p>開発用パッケージ (devel) に同梱しているヘッダ
+<code>blinkgtk_version.h</code> が、<br />
+1 版前の版数 (1.1.0 / Chromium 150.0.7871.46) を名乗っていた問題を<br />
+是正しました。<strong>v1.2.0 の build1 から build6
+まで、すべて該当します。</strong><br />
+影響を受けるのはコンパイル時のマクロだけで、実行時 API<br />
+(<code>blink_gtk_get_version()</code> 等)
+は当初から正しい値を返します。<br />
+実行部分 (ライブラリ本体・実行ファイル・リソース) は build6
+と同一です。</p>
 <hr />
 <h2 id="build6-で加わったもの">build6 で加わったもの</h2>
 <h3
