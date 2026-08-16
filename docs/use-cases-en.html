@@ -151,6 +151,55 @@ directly.</p>
 <p>Authoring the display in HTML also helps upkeep: changing what is
 shown is a content<br />
 swap, not an application rebuild.</p>
+<h3 id="game-hardware-photo-sticker-booths-entertainment-terminals">Game
+hardware, photo-sticker booths, entertainment terminals</h3>
+<p>Rich, continuously moving screens in an embedded device — the
+requirements of<br />
+entertainment hardware are one of the shapes BlinkGTK is best at.</p>
+<ul>
+<li><strong>Build the spectacle with web technology</strong>: Canvas,
+WebGL, CSS animation<br />
+and video playback are all in the box. Game menus, stores, rankings,
+event<br />
+screens, and a cabinet's attract loop — the "layer that draws people in"
+—<br />
+can run on web technology, separate from the game engine itself</li>
+<li><strong>Staying in motion is a release check</strong>: continuous
+frame delivery for<br />
+moving pages (Canvas animation, video) is verified on every release.
+The<br />
+class of regression where "optimising for quiet screens freezes
+moving<br />
+ones" is stopped by machinery — in entertainment, a frozen screen
+reads<br />
+as a broken machine</li>
+<li><strong>Seasonal events are a content swap</strong>: updating the
+show means replacing<br />
+HTML, not rebuilding the application. Limited-time decorations and
+event<br />
+screens rotate without touching the cabinet's software</li>
+<li><strong>For make-it-on-the-spot machines like photo-sticker
+booths</strong>: doodling,<br />
+stamps and frame compositing are exactly what Canvas is good at.
+Camera<br />
+and printer control live on the C side; the screen and the show live
+on<br />
+the web side — a split the JS↔︎C bridge is built for</li>
+<li><strong>Self-contained in a closed cabinet</strong>: serve content
+from inside the<br />
+machine over a custom URL scheme and the show works with no network
+at<br />
+the venue. Full-screen ownership and operation limits (content
+policy)<br />
+complete the closed, commercial-duty configuration</li>
+</ul>
+<p>With both GPU (EGL) and software rendering available, you can match
+the<br />
+cabinet's GPU configuration. As everywhere else, <strong>verify on the
+real<br />
+device</strong> — rendering performance depends on the hardware and the
+screen<br />
+design.</p>
 <h3 id="automotive-infotainment-navigation">Automotive (infotainment,
 navigation)</h3>
 <p>In-vehicle screens must <strong>keep working when connectivity
