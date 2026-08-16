@@ -51,17 +51,187 @@ HTML, CSS and JavaScript are embedded in, and run inside, a Linux
 application.</p>
 <p>The screenshots we publish are of an e-book reader, which may make
 this look like a<br />
-library for reading Japanese books. That is one use. This document
-explains<br />
-<strong>which properties lead to which uses</strong>, working from
-features that actually exist.</p>
+library for reading Japanese books. That is one use. This document looks
+at<br />
+<strong>the uses first</strong>, then closes with <strong>the properties
+that do the work across<br />
+all of them</strong> — grounded in features that actually exist.</p>
+<hr />
+<h2 id="by-use">By use</h2>
+<h3 id="on-device-ai-and-web-inference">On-device AI and web
+inference</h3>
+<p>AI is no longer a research topic. Document summarisation and
+translation,<br />
+meeting transcription, OCR for scanned paperwork, inspection-image<br />
+classification, conversational guidance at service counters — <strong>it
+is<br />
+becoming standard equipment in everyday software</strong>. And much of
+it is also<br />
+published in a form that runs inside a browser: web inference built
+on<br />
+WebAssembly and WebGPU, with a growing ecosystem of in-browser runtimes
+such<br />
+as Transformers.js and ONNX Runtime Web.</p>
+<p>BlinkGTK brings <strong>that same foundation into a desktop
+application as a<br />
+single GTK widget</strong>. Which means this: <strong>entering the AI
+field does not<br />
+require building a machine-learning stack from scratch. You can start
+by<br />
+running, inside your own application, what already runs on the
+web.</strong></p>
+<p>Imagine the screens you could build:</p>
+<ul>
+<li><strong>A reading app with summarisation, translation and semantic
+search</strong>:<br />
+summarise the open document on the spot; translate as you read;
+find<br />
+"where was that discussed?" by meaning — with every document
+staying<br />
+local, <strong>not a single line sent outside</strong></li>
+<li><strong>A meeting terminal whose minutes write themselves</strong>:
+speech recognition<br />
+for the transcript, extraction for the key points, speech synthesis
+to<br />
+read them back — without the recording ever leaving the device</li>
+<li><strong>A reception desk that turns paper into records</strong>: OCR
+scanned or<br />
+photographed forms and sort the fields. Paper that carries
+personal<br />
+information is exactly where on-device processing earns its keep</li>
+<li><strong>Measurement equipment that classifies inspection images in
+place</strong>: the<br />
+"never leaves the device" requirement from the medical section and
+an<br />
+image-classification model can share one screen</li>
+<li><strong>A guidance kiosk you can talk to</strong>: layer a
+conversational model onto<br />
+the signage configuration — a closed terminal that answers only from
+its<br />
+own body of knowledge</li>
+</ul>
+<p>The common strength is a single one: <strong>serve the model from
+inside the<br />
+machine over a custom URL scheme, and the inference inputs never leave
+the<br />
+device.</strong> The stronger the privacy or confidentiality barrier in
+a field,<br />
+the more on-device AI is worth there.</p>
+<p>The first steps are concrete, too:</p>
+<ol type="1">
+<li>Open an inference demo or library that runs in a browser — in
+BlinkGTK<br />
+(start from "what runs on the web, runs here")</li>
+<li>Once it works, switch the model's origin to on-device delivery over
+a<br />
+custom URL scheme</li>
+<li>Keep the screen and the inference in JavaScript; write only the
+hardware<br />
+and business-system glue on the C side (signals and script
+injection)</li>
+</ol>
+<p>GPU-backed inference (WebGPU) depends on the hardware and
+driver<br />
+combination; as with the automotive section, <strong>verify on the real
+device</strong>.<br />
+This project itself is researching whether Japanese page layout can
+be<br />
+accelerated with WebGPU — experiment reports from the similarly curious
+are<br />
+welcome.</p>
+<h3 id="wayfinding-signage-ticketing-terminals">Wayfinding, signage,
+ticketing terminals</h3>
+<p>On a device the public touches, the requirement is that <strong>the
+screen does not leave the<br />
+state you intended</strong>. Close operations off with
+<code>BLINK_CONTENT_POLICY_KIOSK</code>, take the<br />
+screen fullscreen, and serve on-device content through a custom scheme —
+the pieces map<br />
+directly.</p>
+<p>Authoring the display in HTML also helps upkeep: changing what is
+shown is a content<br />
+swap, not an application rebuild.</p>
+<h3 id="automotive-infotainment-navigation">Automotive (infotainment,
+navigation)</h3>
+<p>In-vehicle screens must <strong>keep working when connectivity
+drops</strong>. Serving from the device<br />
+through a custom scheme means display still succeeds out of coverage.
+Scale control suits<br />
+switching between at-distance legibility while moving and close-up
+operation when parked.</p>
+<p>Both GPU and software rendering paths exist, which leaves room to run
+on automotive SoCs<br />
+with constrained GPU configurations. <strong>Verification on the actual
+hardware is essential</strong><br />
+— the rendering path depends on the hardware and compositor
+combination.</p>
+<h3 id="iot--wot-control-screens">IoT / WoT control screens</h3>
+<p>Authoring a device's control panel in HTML means <strong>the same
+screen can serve both on the<br />
+device and in a browser at hand</strong>. BlinkGTK covers the on-device
+side.</p>
+<p>There is a path from JavaScript into your C code
+(<code>blink_web_view_execute_javascript()</code><br />
+and script injection), so the web screen can be wired to hardware
+control.</p>
+<h3 id="medical-and-measurement-equipment">Medical and measurement
+equipment</h3>
+<p>To be clear first: <strong>BlinkGTK cannot warrant conformance as a
+medical device</strong>.<br />
+Regulatory compliance belongs to whoever builds the equipment. What
+follows is only<br />
+<strong>which features answer requirements</strong> commonly seen in
+that field.</p>
+<table>
+<thead>
+<tr>
+<th>Common requirement</th>
+<th>Feature</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Never reach an external network</td>
+<td>On-device delivery via custom scheme</td>
+</tr>
+<tr>
+<td>Restrict operations (guard against mistakes)</td>
+<td>Per-operation content policy</td>
+</tr>
+<tr>
+<td>Record what was displayed</td>
+<td><code>blink_web_view_capture_screenshot()</code></td>
+</tr>
+<tr>
+<td>Reproducibility of the display</td>
+<td>Version obtainable at runtime and recordable</td>
+</tr>
+</tbody>
+</table>
+<p>For visualising measurement data or GUIs for research instruments —
+outside regulatory<br />
+scope, where the need is simply "render graphs and tables well" — it is
+straightforward.</p>
+<h3 id="publishing-and-japanese-typography">Publishing and Japanese
+typography</h3>
+<p>This is where we have the most experience today. Vertical writing,
+ruby, emphasis marks,<br />
+combined upright text and line-breaking rules are handled by Chromium's
+rendering engine<br />
+as-is.</p>
+<p>What works and what does not is documented version by version, with
+measurements, in<br />
+<a href="chromium-feature-history-en.html">Chromium 147 → 151</a>. In
+Chromium 151, for instance,<br />
+<strong>emphasis marks no longer grow the line pitch</strong> when the
+leading has room.</p>
 <hr />
 <h2 id="four-properties-that-apply-regardless-of-use">Four properties
 that apply regardless of use</h2>
-<p>Before the use-by-use section, here is what applies across all of
-them. These four are<br />
-more useful for deciding "does this fit my case" than any list of
-markets.</p>
+<p>Here is what has been doing the work across all the uses above. Even
+for a use<br />
+we did not list, these four properties are how to judge whether BlinkGTK
+fits.</p>
 <h3 id="1-it-works-without-a-network">1. It works without a network</h3>
 <p><code>blink_web_view_register_custom_scheme()</code> registers
 <strong>your own URL scheme</strong>. A URL like<br />
@@ -143,135 +313,6 @@ language you already use</h3>
 ship with the distribution. <strong>Python (PyGObject), Rust, C++,
 JavaScript (GJS), Vala and<br />
 Go</strong> can call the same API with no extra binding layer.</p>
-<hr />
-<h2 id="by-use">By use</h2>
-<h3 id="wayfinding-signage-ticketing-terminals">Wayfinding, signage,
-ticketing terminals</h3>
-<p>On a device the public touches, the requirement is that <strong>the
-screen does not leave the<br />
-state you intended</strong>. Close operations off with
-<code>BLINK_CONTENT_POLICY_KIOSK</code>, take the<br />
-screen fullscreen, and serve on-device content through a custom scheme —
-the pieces map<br />
-directly.</p>
-<p>Authoring the display in HTML also helps upkeep: changing what is
-shown is a content<br />
-swap, not an application rebuild.</p>
-<h3 id="automotive-infotainment-navigation">Automotive (infotainment,
-navigation)</h3>
-<p>In-vehicle screens must <strong>keep working when connectivity
-drops</strong>. Serving from the device<br />
-through a custom scheme means display still succeeds out of coverage.
-Scale control suits<br />
-switching between at-distance legibility while moving and close-up
-operation when parked.</p>
-<p>Both GPU and software rendering paths exist, which leaves room to run
-on automotive SoCs<br />
-with constrained GPU configurations. <strong>Verification on the actual
-hardware is essential</strong><br />
-— the rendering path depends on the hardware and compositor
-combination.</p>
-<h3 id="iot--wot-control-screens">IoT / WoT control screens</h3>
-<p>Authoring a device's control panel in HTML means <strong>the same
-screen can serve both on the<br />
-device and in a browser at hand</strong>. BlinkGTK covers the on-device
-side.</p>
-<p>There is a path from JavaScript into your C code
-(<code>blink_web_view_execute_javascript()</code><br />
-and script injection), so the web screen can be wired to hardware
-control.</p>
-<h3 id="medical-and-measurement-equipment">Medical and measurement
-equipment</h3>
-<p>To be clear first: <strong>BlinkGTK cannot warrant conformance as a
-medical device</strong>.<br />
-Regulatory compliance belongs to whoever builds the equipment. What
-follows is only<br />
-<strong>which features answer requirements</strong> commonly seen in
-that field.</p>
-<table>
-<thead>
-<tr>
-<th>Common requirement</th>
-<th>Feature</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td>Never reach an external network</td>
-<td>On-device delivery via custom scheme</td>
-</tr>
-<tr>
-<td>Restrict operations (guard against mistakes)</td>
-<td>Per-operation content policy</td>
-</tr>
-<tr>
-<td>Record what was displayed</td>
-<td><code>blink_web_view_capture_screenshot()</code></td>
-</tr>
-<tr>
-<td>Reproducibility of the display</td>
-<td>Version obtainable at runtime and recordable</td>
-</tr>
-</tbody>
-</table>
-<p>For visualising measurement data or GUIs for research instruments —
-outside regulatory<br />
-scope, where the need is simply "render graphs and tables well" — it is
-straightforward.</p>
-<h3 id="on-device-ai-and-web-inference">On-device AI and web
-inference</h3>
-<p>The ecosystem for running machine-learning models inside a browser —
-web<br />
-inference built on WebAssembly and WebGPU — runs on the Chromium
-rendering<br />
-engine. BlinkGTK brings <strong>that same foundation into a desktop
-application as<br />
-a single GTK widget</strong>.</p>
-<p>A few shapes come into view from there:</p>
-<ul>
-<li><strong>Keep the model and the inference on the device</strong>:
-serve a model from<br />
-inside the machine over a custom URL scheme, and the inference
-inputs<br />
-never leave the device. That is a foundation for building
-summarisation,<br />
-translation, or search assistance into a document application in a<br />
-"data stays local" configuration</li>
-<li><strong>Use the web inference ecosystem as-is</strong>: inference
-runtimes and model<br />
-formats published for browsers are built on web standards. Rather
-than<br />
-reimplementing them for GTK, you can think in the order of "what runs
-on<br />
-the web, brought in as-is"</li>
-<li><strong>Write the UI and the inference in the same
-language</strong>: draw the screen<br />
-and call the inference from JavaScript, and leave only the hardware
-and<br />
-OS glue to the C side (signals and script injection)</li>
-</ul>
-<p>GPU-backed inference (WebGPU) depends on the hardware and
-driver<br />
-combination; as with the automotive section, <strong>verify on the real
-device</strong>.<br />
-This project itself is researching whether Japanese page layout can
-be<br />
-accelerated with WebGPU — experiment reports from the similarly curious
-are<br />
-welcome.</p>
-<h3 id="publishing-and-japanese-typography">Publishing and Japanese
-typography</h3>
-<p>This is where we have the most experience today. Vertical writing,
-ruby, emphasis marks,<br />
-combined upright text and line-breaking rules are handled by Chromium's
-rendering engine<br />
-as-is.</p>
-<p>What works and what does not is documented version by version, with
-measurements, in<br />
-<a href="chromium-feature-history-en.html">Chromium 147 → 151</a>. In
-Chromium 151, for instance,<br />
-<strong>emphasis marks no longer grow the line pitch</strong> when the
-leading has room.</p>
 <hr />
 <h2 id="first-public-appearance">First public appearance</h2>
 <p>BlinkGTK was first shown publicly at <strong>Interop Tokyo 2026
