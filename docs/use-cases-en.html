@@ -185,6 +185,19 @@ Camera<br />
 and printer control live on the C side; the screen and the show live
 on<br />
 the web side — a split the JS↔︎C bridge is built for</li>
+<li><strong>Build the non-drawing parts in one unbroken line</strong>:
+make the screen web<br />
+technology, and everything around it that is not rendering —
+membership<br />
+and billing, campaign delivery, remote management servers, analytics
+on<br />
+the data you collect — shares the same technology, the same people
+and<br />
+the same assets. The web team that already runs your services can
+carry<br />
+the cabinet's screen too, with no separate stack raised just for
+the<br />
+terminal</li>
 <li><strong>Self-contained in a closed cabinet</strong>: serve content
 from inside the<br />
 machine over a custom URL scheme and the show works with no network
@@ -275,11 +288,11 @@ Chromium 151, for instance,<br />
 <strong>emphasis marks no longer grow the line pitch</strong> when the
 leading has room.</p>
 <hr />
-<h2 id="four-properties-that-apply-regardless-of-use">Four properties
-that apply regardless of use</h2>
+<h2 id="six-properties-that-apply-regardless-of-use">Six properties that
+apply regardless of use</h2>
 <p>Here is what has been doing the work across all the uses above. Even
 for a use<br />
-we did not list, these four properties are how to judge whether BlinkGTK
+we did not list, these six properties are how to judge whether BlinkGTK
 fits.</p>
 <h3 id="1-it-works-without-a-network">1. It works without a network</h3>
 <p><code>blink_web_view_register_custom_scheme()</code> registers
@@ -362,6 +375,31 @@ language you already use</h3>
 ship with the distribution. <strong>Python (PyGObject), Rust, C++,
 JavaScript (GJS), Vala and<br />
 Go</strong> can call the same API with no extra binding layer.</p>
+<h3 id="5-it-connects-to-external-hardware">5. It connects to external
+hardware</h3>
+<p>Between the screen (JavaScript) and the application (C and friends)
+runs a<br />
+two-way bridge — messages from JavaScript to C<br />
+(<a href="./api-reference/app-integration-api-en.html">app integration
+API</a>), script<br />
+execution and injection from C to JavaScript. Which means: <strong>any
+device you<br />
+can reach from C, the screen can use.</strong> Printers, cameras,
+sensors, IC-card<br />
+readers, payment terminals, serial devices — what you attach around
+the<br />
+terminal is your application's choice.</p>
+<h3 id="6-the-webs-evolution-flows-straight-in">6. The web's evolution
+flows straight in</h3>
+<p>BlinkGTK tracks upstream Chromium (currently 151.0.7922.108). New
+CSS,<br />
+WebAssembly, WebGPU — the web platform's evolution arrives with
+version<br />
+updates, without swapping engines. What became possible in which version
+is<br />
+recorded, with measurements, in the<br />
+<a href="./chromium-feature-history-en.html">Chromium feature
+history</a>.</p>
 <hr />
 <h2 id="first-public-appearance">First public appearance</h2>
 <p>BlinkGTK was first shown publicly at <strong>Interop Tokyo 2026
