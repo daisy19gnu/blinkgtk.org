@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.1-build1 Release Notes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Release date: 2026-08-27 / Chromium: 152.0.7977.64 / Language: English | 日本語">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.1-build1 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-08-27 / Chromium: 152.0.7977.64 / Language: English | 日本語">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-121-build1-release-notes">BlinkGTK 1.2.1-build1 Release
+Notes</h1>
+<p><strong>Release date</strong>: 2026-08-27 /
+<strong>Chromium</strong>: 152.0.7977.64 / Language: English | <a
+href="RELEASE_NOTES-1.2.1-ja.html">日本語</a></p>
+<p>The rendering engine has been updated to <strong>Chromium
+152</strong>, one upstream<br />
+generation on from Chromium 151 in the previous release (1.2.0).</p>
+<hr />
+<h2 id="what-is-now-possible-in-build1">What is now possible in
+build1</h2>
+<h3 id="vertical-lines-no-longer-break-half-way">Vertical lines no
+longer break half-way</h3>
+<p>In vertical writing, a paragraph could wrap <strong>about half-way
+along the line</strong><br />
+when a closing bracket fell at the line end. A line with room for 34
+characters<br />
+held only 17, and the rest moved to the next line. The larger the
+reading size,<br />
+the more visible it was.</p>
+<p>When a line is judged not to fit, the engine now tries the preceding
+legal break<br />
+opportunity. Measured on the same paragraph, the result changes
+from<br />
+17 + 18 characters across two lines to <strong>34 + 1</strong>.</p>
+<p>All seven closing brackets reproduced it; <code>。</code> and
+<code>、</code> did not. Reported<br />
+upstream as <a href="https://issues.chromium.org/issues/542686223">crbug
+542686223</a>.</p>
+<h3
+id="columns-in-vertical-multi-column-layout-now-fill-to-capacity">Columns
+in vertical multi-column layout now fill to capacity</h3>
+<p>A column in the middle of a chapter could push its last line into the
+next<br />
+column. One cause was the <strong>engine's default ruby
+reservation</strong>, which deducted<br />
+0.5em from the column's break width. In a column with room for 16 lines,
+that<br />
+deduction costs exactly one line.</p>
+<p>The default deduction is now 0. Measured on a synthetic with a
+capacity of<br />
+16.024 lines, <strong>all four columns reach 16 lines</strong>. To
+restore the previous<br />
+behaviour, set <code>BLINKGTK_RUBY_RESERVE_EM=0.5</code>.</p>
+<h3 id="the-line-grid-is-preserved-with-direction-rtl">The line grid is
+preserved with <code>direction: rtl</code></h3>
+<p>Combining right-to-left flow with vertical writing could let glyphs
+cross a<br />
+column boundary. The slice dimension is now unified with the column
+width.</p>
+<hr />
+<h2 id="before-you-update">Before you update</h2>
+<p>The runtime is Chromium <strong>152.0.7977.64</strong>. Since the
+previous release<br />
+(151.0.7922.108), the window, input and rendering paths follow upstream
+changes.</p>
+<p><strong>Typeset output changes.</strong> All three items above affect
+the page layout.<br />
+Existing documents may show a different number of lines, or fill
+columns<br />
+differently, compared with the previous release. This follows from the
+fixes<br />
+and is intended.</p>
+<hr />
+<h2 id="what-was-verified">What was verified</h2>
+<ul>
+<li>Rendering: vertical pages fill the window on both the software and
+EGL paths</li>
+<li>Startup and shutdown: no abnormal termination</li>
+<li>Typesetting: each of the three items above checked mechanically</li>
+<li>Packaging: signature, bundled header version, dependency
+resolvability</li>
+</ul>
+<p><strong>Not measured</strong>: long-running use on real hardware, EGL
+behaviour during<br />
+resize, continuous operation while switching render paths.</p>
+</body>
+</html>
+</div></div>

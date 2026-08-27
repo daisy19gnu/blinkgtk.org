@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.0-build9 — BlinkGTK</title>
+  <title>BlinkGTK 1.2.1-build1 — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -91,7 +91,7 @@
 <meta name="description" content="BlinkGTK は、Google Chrome と同じ Chromium / Blink レンダリングエンジンを GTK4 アプリケーションに直接組み込む WebView エンジンです。Electron のようにブラウザ全体を同梱するのではなく、最新の Web エンジンを 1 つの GTK ウィジェットとして扱えます">
 <link rel="canonical" href="https://blinkgtk.org/docs/README.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.0-build9 — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.1-build1 — BlinkGTK">
 <meta property="og:description" content="BlinkGTK は、Google Chrome と同じ Chromium / Blink レンダリングエンジンを GTK4 アプリケーションに直接組み込む WebView エンジンです。Electron のようにブラウザ全体を同梱するのではなく、最新の Web エンジンを 1 つの GTK ウィジェットとして扱えます">
 <meta property="og:url" content="https://blinkgtk.org/docs/README.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -104,7 +104,7 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-120-build9">BlinkGTK 1.2.0-build9</h1>
+<h1 id="blinkgtk-121-build1">BlinkGTK 1.2.1-build1</h1>
 <p>BlinkGTK は、Google Chrome と同じ Chromium / Blink
 レンダリングエンジンを GTK4 アプリケーションに直接組み込む WebView
 エンジンです。Electron のようにブラウザ全体を同梱するのではなく、最新の
@@ -116,7 +116,7 @@ Instead of bundling an entire browser the way Electron does, it lets you
 treat a modern web engine as a single GTK widget. It is Wayland-native,
 self-rendering, and stays current with upstream Chromium.</p>
 <ul>
-<li><strong>Chromium</strong>: 151(stable)</li>
+<li><strong>Chromium</strong>: 152(stable)</li>
 <li><strong>プロジェクトサイト / Project site</strong>: <a
 href="https://blinkgtk.org/">https://blinkgtk.org/</a></li>
 <li><strong>連絡先 / Contact</strong>:
@@ -125,7 +125,7 @@ href="https://blinkgtk.org/">https://blinkgtk.org/</a></li>
 <blockquote>
 <p>パス中の <code>0.1</code>(<code>blinkgtk-0.1</code> 等)は <strong>API
 バージョン</strong>です(GTK4 の <code>gtk-4.0</code>
-と同じ規約)。製品バージョン(1.2.0-build9 等)とは独立で、互換性のない API
+と同じ規約)。製品バージョン(1.2.1-build1 等)とは独立で、互換性のない API
 変更時にのみ変わります。<br />
 The <code>0.1</code> in paths is the <strong>API version</strong> (like
 GTK4's <code>gtk-4.0</code>), independent of the product version.</p>
@@ -187,13 +187,13 @@ documentation(<code>/usr/share/doc/blinkgtk-0.1/</code>):</p>
 <h2 id="インストール--installation">インストール / Installation</h2>
 <p><code>INSTALL.md</code> を参照してください。概要 / Quick start:</p>
 <div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora 44</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.2.0-build9.fc44.x86_64.rpm</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.2.1-build1.fc44.x86_64.rpm</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.0-build9_amd64.deb</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.1-build1_amd64.deb</span>
 <span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a><span class="co"># tarball(依存の導入手順は INSTALL.md 参照 / see INSTALL.md for dependencies)</span></span>
-<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar <span class="at">-C</span> / <span class="at">-xzf</span> blinkgtk-1.2.0-build9-linux-x86_64.tar.gz <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> ldconfig</span></code></pre></div>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar <span class="at">-C</span> / <span class="at">-xzf</span> blinkgtk-1.2.1-build1-linux-x86_64.tar.gz <span class="kw">&amp;&amp;</span> <span class="fu">sudo</span> ldconfig</span></code></pre></div>
 <h2 id="動作環境--requirements">動作環境 / Requirements</h2>
 <ul>
 <li>x86_64 / glibc 2.43+ / <strong>Wayland セッション必須</strong> /

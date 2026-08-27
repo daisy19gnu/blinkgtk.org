@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.1-build1 リリースノート — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="リリース日: 2026-08-27 / Chromium: 152.0.7977.64 / 言語: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.1-build1 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-08-27 / Chromium: 152.0.7977.64 / 言語: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-121-build1-リリースノート">BlinkGTK 1.2.1-build1
+リリースノート</h1>
+<p><strong>リリース日</strong>: 2026-08-27 / <strong>Chromium</strong>:
+152.0.7977.64 / 言語: 日本語 | <a
+href="RELEASE_NOTES-1.2.1-en.html">English</a></p>
+<p>レンダリングエンジンを <strong>Chromium 152</strong>
+に更新しました。前版 (1.2.0) の<br />
+Chromium 151 から、上流 1 世代ぶんの改善が入ります。</p>
+<hr />
+<h2 id="build1-でできるようになったこと">build1
+でできるようになったこと</h2>
+<h3
+id="縦組みで行が途中までしか埋まらない現象が直りました">縦組みで行が途中までしか埋まらない現象が直りました</h3>
+<p>縦書きの段落で、閉じ括弧などの禁則対象が行末に来ると、<strong>行が半分ほどで折り返す</strong><br />
+ことがありました。34 文字入る行に 17
+文字しか入らず、残りが次の行へ送られます。<br />
+文字を大きくして読む設定ほど目立ちます。</p>
+<p>行が収まらないと判断されたとき、直前の合法な改行位置を試すようにしました。<br />
+実測では、同じ段落が 17 文字 + 18 文字の 2 行から、<strong>34 文字 + 1
+文字</strong>へ変わります。</p>
+<p>閉じ括弧 7 種すべてで再現していた現象です。<code>。</code> や
+<code>、</code> では起きません。<br />
+上流にも報告しています (<a
+href="https://issues.chromium.org/issues/542686223">crbug
+542686223</a>)。</p>
+<h3
+id="縦組みの段組みで列が容量まで詰まるようになりました">縦組みの段組みで、列が容量まで詰まるようになりました</h3>
+<p>章の途中の列が最後の 1
+行を次の列へ送ってしまう現象がありました。<br />
+原因のひとつは<strong>エンジン既定のルビ予約</strong>で、列の切断幅から
+0.5em を控除していました。<br />
+16 行入る列では、これがちょうど 1 行を奪います。</p>
+<p>この控除の既定を 0 にしました。実測で、容量 16.024 行の列が <strong>4
+列とも 16 行</strong>に<br />
+到達します。従来の挙動に戻す場合は
+<code>BLINKGTK_RUBY_RESERVE_EM=0.5</code> を指定してください。</p>
+<h3
+id="direction-rtl-で縦組みの行格子が保たれます"><code>direction: rtl</code>
+で縦組みの行格子が保たれます</h3>
+<p>右から左に流す指定と縦組みを組み合わせたとき、列の境界をまたいで文字がはみ出す<br />
+ことがありました。切断の寸法を列幅に統一して解消しています。</p>
+<hr />
+<h2 id="更新にあたって">更新にあたって</h2>
+<p>実行部分は Chromium <strong>152.0.7977.64</strong> です。前版
+(151.0.7922.108) から<br />
+ウィンドウ・入力・描画の各経路が上流の変更に追従しています。</p>
+<p><strong>組版の結果が変わります。</strong> 上記 3
+点はいずれも版面に影響します。<br />
+既存の文書を開いたときの行数・列の詰まり方が前版と異なる場合があります。<br />
+これは不具合の修正によるもので、意図した変更です。</p>
+<hr />
+<h2 id="動作を確認した範囲">動作を確認した範囲</h2>
+<ul>
+<li>描画: software / EGL
+の両経路で、縦組みページが窓を埋めて描画されること</li>
+<li>起動と終了: 異常終了なし</li>
+<li>組版: 上記 3 点をそれぞれ機械判定で確認</li>
+<li>パッケージ: 署名、同梱ヘッダの版数、依存名の解決性</li>
+</ul>
+<p><strong>測っていないこと</strong>: 実機での長時間運用、EGL
+経路のリサイズ中の挙動、<br />
+描画経路を切り替えながらの連続運用。</p>
+</body>
+</html>
+</div></div>

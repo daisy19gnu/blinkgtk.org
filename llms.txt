@@ -5,7 +5,7 @@
 > 日本語の縦組み・ルビ・圏点といった JLReq 準拠の組版と EPUB 表示に強みがあります。
 > Linux (Wayland) デスクトップ向けで、WebKitGTK の代替として使えます。
 
-現在のバージョン: 1.2.0-build9 (Chromium ベース)
+現在のバージョン: 1.2.1-build1 (Chromium ベース)
 
 ## はじめる
 - [インストール](https://blinkgtk.org/docs/INSTALL.html)
@@ -24,7 +24,7 @@
 
 ## 深く知る
 - [エンジン比較 (WebKitGTK / CEF / Electron との違い)](https://blinkgtk.org/docs/ENGINE_COMPARISON_DETAILED-ja.html)
-- [リリースノート](https://blinkgtk.org/docs/RELEASE_NOTES-1.2.0-ja.html)
+- [リリースノート](https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-ja.html)
 
 ## 連絡先
 - 不具合・要望: https://github.com/daisy19gnu/blinkgtk-dist/issues
