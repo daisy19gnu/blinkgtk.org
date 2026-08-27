@@ -7,6 +7,14 @@
   <updated>2026-08-16T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.1-build1 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build1"/>
+    <id>tag:blinkgtk.org,2026:2026-08-27-build1-121:ja</id>
+    <updated>2026-08-27T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>レンダリングエンジンを Chromium 152 に更新しました。縦組みで、閉じ括弧が行末に来ると行が途中までしか埋まらない現象 (34 文字入る行に 17 文字) が直ります。段組みでも、列が最後の 1 行を次の列へ送ってしまう現象を解消しました — 原因のひとつはエンジン既定のルビ予約で、16 行入る列からちょうど 1 行を奪っていました。direction: rtl と縦組みを併用したときの行格子も保たれます。組版の結果が変わるため、既存の文書の行数や列の詰まり方が前版と異なる場合があります。あわせて、パッケージの宙吊り symlink を直しました (RPM は 12 版、DEB はリソース 6 本が Debian に無い場所を指していました)。</summary>
+  </entry>
+  <entry>
     <title>v1.2.0-build9 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build9"/>
     <id>tag:blinkgtk.org,2026:2026-08-16-build9:ja</id>

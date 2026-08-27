@@ -9,6 +9,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build1">v1.2.1-build1 released</a></h2>
+<p><small>2026-08-27 · Release</small></p>
+<p>The rendering engine is updated to Chromium 152. In vertical writing, lines no longer break half-way when a closing bracket falls at the line end (a line with room for 34 characters held only 17). Columns in multi-column layout now fill to capacity — one cause was the engine's default ruby reservation, which cost exactly one line in a column with room for 16. The line grid is also preserved when direction: rtl is combined with vertical writing. Typeset output changes, so existing documents may show a different number of lines. Dangling symlinks in the packages are also fixed (12 releases in the RPM; in the DEB, six resources pointed at a path that does not exist on Debian).</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build9">v1.2.0-build9 released</a></h2>
 <p><small>2026-08-16 · Release</small></p>
 <p>Render paths can now be switched live, without restarting the application (the BlinkShift public API). A switch takes a few hundred milliseconds in our test environment and rolls back automatically if the new path fails its render check. Also adds blink_gtk_application_run() for correct GtkApplication integration and a presentation-policy API, and fixes large user scripts never reaching the renderer.</p>

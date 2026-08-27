@@ -7,6 +7,14 @@
   <updated>2026-08-16T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.1-build1 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build1"/>
+    <id>tag:blinkgtk.org,2026:2026-08-27-build1-121:en</id>
+    <updated>2026-08-27T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>The rendering engine is updated to Chromium 152. In vertical writing, lines no longer break half-way when a closing bracket falls at the line end (a line with room for 34 characters held only 17). Columns in multi-column layout now fill to capacity — one cause was the engine's default ruby reservation, which cost exactly one line in a column with room for 16. The line grid is also preserved when direction: rtl is combined with vertical writing. Typeset output changes, so existing documents may show a different number of lines. Dangling symlinks in the packages are also fixed (12 releases in the RPM; in the DEB, six resources pointed at a path that does not exist on Debian).</summary>
+  </entry>
+  <entry>
     <title>v1.2.0-build9 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build9"/>
     <id>tag:blinkgtk.org,2026:2026-08-16-build9:en</id>

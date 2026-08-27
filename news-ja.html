@@ -9,6 +9,9 @@
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build1">v1.2.1-build1 を公開しました</a></h2>
+<p><small>2026-08-27 · リリース</small></p>
+<p>レンダリングエンジンを Chromium 152 に更新しました。縦組みで、閉じ括弧が行末に来ると行が途中までしか埋まらない現象 (34 文字入る行に 17 文字) が直ります。段組みでも、列が最後の 1 行を次の列へ送ってしまう現象を解消しました — 原因のひとつはエンジン既定のルビ予約で、16 行入る列からちょうど 1 行を奪っていました。direction: rtl と縦組みを併用したときの行格子も保たれます。組版の結果が変わるため、既存の文書の行数や列の詰まり方が前版と異なる場合があります。あわせて、パッケージの宙吊り symlink を直しました (RPM は 12 版、DEB はリソース 6 本が Debian に無い場所を指していました)。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.0-build9">v1.2.0-build9 を公開しました</a></h2>
 <p><small>2026-08-16 · リリース</small></p>
 <p>描画経路を、アプリを再起動せずに切り替えられるようになりました (BlinkShift 公開 API)。切替はテスト環境の実測で数百ミリ秒、切替後の描画が確認できなければ自動で元の経路に戻ります。GtkApplication と正しく併用できる blink_gtk_application_run() と、画面に出さない場面を宣言する提示ポリシー API も加わりました。大きなユーザースクリプトが描画プロセスに届かない問題も解消しています。</p>
