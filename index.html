@@ -325,7 +325,7 @@ int main(int argc, char **argv)
         <div class="compat-wrap"><table class="compat">
           <tr><th>経路 / Path</th><th>版 / Version</th><th>ホットスワップ / Hot-swap</th><th>位置づけ / Role</th></tr>
           <tr><td>BlinkGTK 標準 (software)</td><td>v1.0</td><td>対応 / yes — <a href="docs/gpu-modes-ja.html">配送経路のライブ切替 (v1.2.0-build9〜) / live delivery-path switching</a></td><td>既定 / 全 compositor 互換 / default, all compositors</td></tr>
-          <tr><td>BlinkGTK EGL 標準 (GPU)</td><td>v1.0</td><td>未対応 / not yet</td><td><code>BLINKGTK_GPU_MODE=egl</code> で有効 / Mesa + dmabuf 対応 GPU が必要、GNOME Mutter で検証 / opt-in, needs Mesa and a dmabuf-capable GPU, verified on GNOME Mutter</td></tr>
+          <tr><td>BlinkGTK EGL 標準 (GPU)</td><td>v1.0</td><td>自動のみ / automatic only — GPU が使えないとき <a href="docs/gpu-modes-ja.html">software 配送へ自動で退避します (v1.2.1-build2 以降)</a> / falls back to software delivery automatically when the GPU path is unusable。任意のタイミングで切り替える API は未公開 / no public on-demand switch yet</td><td><code>BLINKGTK_GPU_MODE=egl</code> で有効 / Mesa + dmabuf 対応 GPU が必要、GNOME Mutter で検証 / opt-in, needs Mesa and a dmabuf-capable GPU, verified on GNOME Mutter</td></tr>
         </table></div>
         <!-- BLINKGTK_RELEASE_END -->
         <p class="muted">全リリース / All releases: <a href="https://github.com/daisy19gnu/blinkgtk-dist/releases">github.com/daisy19gnu/blinkgtk-dist</a></p>
