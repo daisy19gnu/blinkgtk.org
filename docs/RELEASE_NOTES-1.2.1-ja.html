@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.1-build1 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.1-build2 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-08-27 / Chromium: 152.0.7977.64 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-08-30 / Chromium: 152.0.7977.64 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.1-build1 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-08-27 / Chromium: 152.0.7977.64 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.1-build2 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-08-30 / Chromium: 152.0.7977.64 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -42,14 +42,79 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-121-build1-リリースノート">BlinkGTK 1.2.1-build1
+<h1 id="blinkgtk-121-build2-リリースノート">BlinkGTK 1.2.1-build2
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-08-27 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-08-30 / <strong>Chromium</strong>:
 152.0.7977.64 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.1-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 152</strong>
 に更新しました。前版 (1.2.0) の<br />
 Chromium 151 から、上流 1 世代ぶんの改善が入ります。</p>
+<hr />
+<h2 id="build2-でできるようになったこと">build2
+でできるようになったこと</h2>
+<h3
+id="gpu-が使用できない環境でもフォールバックによりソフトウェア描画で表示されるようになりました">GPU
+が使用できない環境でも、フォールバックによりソフトウェア描画で表示されるようになりました</h3>
+<p><code>BLINKGTK_GPU_MODE=egl</code> を指定した環境で GPU
+経路が利用できない場合<br />
+(ドライバが無い、仮想環境で GPU
+が見えない、など)、<strong>ソフトウェア描画へ<br />
+フォールバックして表示を継続します</strong>。</p>
+<p>描画データが 5 秒間 1
+枚も届かなければ切り替わり、<strong>その理由を標準エラー出力に<br />
+記します</strong>。</p>
+<pre><code>[BlinkGTK] EGL 経路に dmabuf が 5000 ms 経っても 1 枚も届きません。
+この機械では GPU 経路が使えない可能性があります。画面が白いままにならないよう
+software 経路へ退避します (無効化: BLINKGTK_EGL_AUTO_FALLBACK=0)</code></pre>
+<p>GPU が使える機械では切り替わりません。待ち時間は
+<code>BLINKGTK_EGL_AUTO_FALLBACK_MS</code><br />
+で変えられます。切り替えそのものを止めるには
+<code>BLINKGTK_EGL_AUTO_FALLBACK=0</code> を<br />
+設定してください (画面は白いままになります)。</p>
+<h3
+id="画面を撮影した画像の色が入れ替わらなくなりました">画面を撮影した画像の色が入れ替わらなくなりました</h3>
+<p><code>blink_web_view_capture_screenshot()</code>
+で保存した画像で、<strong>赤と青が入れ替わる</strong><br />
+ことがありました。純粋な赤のページを撮ると純粋な青で保存されます。撮影のたびに<br />
+起きたり起きなかったりするため、1
+枚だけ見て「直った」と判断できない形でした。</p>
+<p>保存経路が画像データのバイト順を確認せずに扱っていたのが原因です。色の形式を<br />
+検査して揃えるようにしました。8 枚連続で撮影したときの入れ替わりは 4
+枚から<br />
+0 枚になります。</p>
+<h3 id="追加した環境変数">追加した環境変数</h3>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK</code></td>
+<td><code>0</code> で上記の自動切り替えを止めます (既定は有効)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK_MS</code></td>
+<td>切り替えまでの待ち時間 (既定 5000 ミリ秒)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_KEEP_GPU_COMPOSITING</code></td>
+<td><code>1</code> で <code>software</code> 起動時も GPU
+合成を無効にしません</td>
+</tr>
+</tbody>
+</table>
+<p><code>BLINKGTK_KEEP_GPU_COMPOSITING</code>
+は描画経路を実行中に切り替えるための前提です。<br />
+<strong>代わりに CPU 使用量が増えます</strong> — 手元の測定 (Intel UHD /
+Mesa、アニメーション<br />
+するページを 20 秒、3 回の中央値) では約 12%
+増でした。その機械・そのページでの<br />
+比で、上限でも代表値でもありません。このため既定は無効です。詳しくは同梱の環境変数リファレンス
+(<code>environment-variables-ja.md</code>) を参照してください。</p>
 <hr />
 <h2 id="build1-でできるようになったこと">build1
 でできるようになったこと</h2>

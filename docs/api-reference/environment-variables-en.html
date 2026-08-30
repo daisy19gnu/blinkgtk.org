@@ -176,6 +176,18 @@ rendering stalls)</td>
 <td>#120 fixG</td>
 </tr>
 <tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK=0</code></td>
+<td>Disable the automatic fallback to software when the GPU path is
+unusable (the window then stays blank)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK_MS=&lt;ms&gt;</code></td>
+<td>Wait before falling back (default 5000). Shortening it causes false
+fallbacks on machines with slow GPU startup</td>
+<td></td>
+</tr>
+<tr>
 <td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
 <td>Disables activation re-damage (fix for persistent-blank)</td>
 <td>#120 fixF</td>
@@ -234,6 +246,15 @@ without notice.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>BLINKGTK_KEEP_GPU_COMPOSITING=1</code></td>
+<td>Do not disable GPU compositing even when starting in
+<code>software</code>. Required if the rendering path is to be switched
+at runtime. <strong>CPU use goes up</strong> (in our measurement, an
+animating page over 20 seconds cost about 12% more; that is the ratio
+for that machine and page, neither an upper bound nor a representative
+value). Unsupported until switching the EGL path becomes public API</td>
+</tr>
 <tr>
 <td><code>BLINKGTK_ENABLE_THREADED_COMPOSITING</code></td>
 <td>Deprecated (threaded compositing is now ON by default; the old name

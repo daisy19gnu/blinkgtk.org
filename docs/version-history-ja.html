@@ -45,7 +45,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.1-build1 / 言語: 日本語 | <a
+<p>バージョン: 1.2.1-build2 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -69,9 +69,28 @@ Chromium の<br />
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.0-build9</strong> ← 公開中</td>
+<td><strong>v1.2.1-build2</strong> ← 公開中</td>
+<td>2026-08-30</td>
+<td><strong>152.0.7977.64</strong></td>
+<td>GPU
+が使用できない環境でも、フォールバックによりソフトウェア描画で表示されるようになりました。描画データが
+5 秒間届かなければ切り替わり、理由を標準エラー出力に記します。GPU
+が使える環境では切り替わりません。あわせて、画面を撮影した画像で赤と青が入れ替わることがある問題を修正しました</td>
+</tr>
+<tr>
+<td>v1.2.1-build1</td>
+<td>2026-08-27</td>
+<td>152.0.7977.64</td>
+<td>レンダリングエンジンを Chromium 152
+に更新しました。縦組みで行が途中までしか埋まらない現象(閉じ括弧が行末に来ると
+34 文字入る行に 17 文字しか入らない) と、段組みの列が最後の 1
+行を次の列へ送ってしまう現象が直ります。direction: rtl
+と縦組みを併用したときの行格子も保たれます</td>
+</tr>
+<tr>
+<td>v1.2.0-build9</td>
 <td>2026-08-16</td>
-<td><strong>151.0.7922.108</strong></td>
+<td>151.0.7922.108</td>
 <td>描画経路を再起動なしで切り替えられるようになりました (BlinkShift
 公開 API、切替は数百ミリ秒・失敗時は自動で元へ)。GtkApplication
 と正しく併用できる blink_gtk_application_run()
@@ -334,7 +353,7 @@ GTK4 の <code>gtk-4.0</code>、WebKitGTK の <code>webkitgtk-6.0</code>
 <ul>
 <li><a href="chromium-feature-history-ja.html">Chromium 147 → 151
 の新機能</a> — 各 Chromium 版で何ができるようになったか</li>
-<li><a href="RELEASE_NOTES-1.2.0-ja.html">リリースノート</a></li>
+<li><a href="RELEASE_NOTES-1.2.1-ja.html">リリースノート</a></li>
 <li><a href="INSTALL.html">インストール</a></li>
 </ul>
 </body>

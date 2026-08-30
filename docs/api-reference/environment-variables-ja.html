@@ -165,6 +165,18 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td>#120 fixG</td>
 </tr>
 <tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK=0</code></td>
+<td>GPU 経路が使えないときの software
+自動退避を無効化(画面が白いままになります)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK_MS=&lt;ms&gt;</code></td>
+<td>上記の待ち時間(既定 5000)。短くすると GPU
+初期化の遅い機械で誤退避します</td>
+<td></td>
+</tr>
+<tr>
 <td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
 <td>activation 再 damage(白紙固定の修正)を無効化</td>
 <td>#120 fixF</td>
@@ -220,6 +232,14 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 </tr>
 </thead>
 <tbody>
+<tr>
+<td><code>BLINKGTK_KEEP_GPU_COMPOSITING=1</code></td>
+<td><code>software</code> 起動でも GPU
+合成を無効にしません。描画経路を実行中に切り替えるための前提です。<strong>CPU
+が増えます</strong>(手元の測定でアニメーションするページを 20 秒、約 12%
+増。その機械・そのページでの比で、上限でも代表値でもありません)。EGL
+経路の切替が公開 API になるまでは無保証です</td>
+</tr>
 <tr>
 <td><code>BLINKGTK_ENABLE_THREADED_COMPOSITING</code></td>
 <td>廃止(threaded compositing は既定 ON 化済み。旧名は無効)</td>

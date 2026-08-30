@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.1-build1 / Language: English | <a
+<p>Version: 1.2.1-build2 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,29 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.0-build9</strong> ← current</td>
+<td><strong>v1.2.1-build2</strong> ← current</td>
+<td>2026-08-30</td>
+<td><strong>152.0.7977.64</strong></td>
+<td>Where the GPU path is unavailable, BlinkGTK now falls back to
+software rendering and keeps drawing. It switches when no frame arrives
+within five seconds and writes the reason to standard error, and it does
+not switch where the GPU path works. Captured screenshots no longer come
+out with red and blue exchanged</td>
+</tr>
+<tr>
+<td>v1.2.1-build1</td>
+<td>2026-08-27</td>
+<td>152.0.7977.64</td>
+<td>The rendering engine is updated to Chromium 152. Vertical lines no
+longer break half-way (a line with room for 34 characters held only 17
+when a closing bracket fell at the line end), and columns in
+multi-column layout now fill to capacity. The line grid is also
+preserved when direction: rtl is combined with vertical writing</td>
+</tr>
+<tr>
+<td>v1.2.0-build9</td>
 <td>2026-08-16</td>
-<td><strong>151.0.7922.108</strong></td>
+<td>151.0.7922.108</td>
 <td>Render paths can now be switched live without restarting (BlinkShift
 public API — a switch takes a few hundred milliseconds and rolls back
 automatically on failure). Added blink_gtk_application_run() for correct
@@ -344,7 +364,7 @@ API revisions.</p>
 <ul>
 <li><a href="chromium-feature-history-en.html">Chromium 147 → 151</a> —
 what each Chromium version brought</li>
-<li><a href="RELEASE_NOTES-1.2.0-en.html">Release notes</a></li>
+<li><a href="RELEASE_NOTES-1.2.1-en.html">Release notes</a></li>
 <li><a href="INSTALL.html">Installation</a></li>
 </ul>
 </body>

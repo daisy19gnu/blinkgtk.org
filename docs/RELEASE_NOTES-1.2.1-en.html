@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.1-build1 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.1-build2 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-08-27 / Chromium: 152.0.7977.64 / Language: English | 日本語">
+<meta name="description" content="Release date: 2026-08-30 / Chromium: 152.0.7977.64 / Language: English | 日本語">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.1-build1 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-08-27 / Chromium: 152.0.7977.64 / Language: English | 日本語">
+<meta property="og:title" content="BlinkGTK 1.2.1-build2 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-08-30 / Chromium: 152.0.7977.64 / Language: English | 日本語">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -42,14 +42,91 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-121-build1-release-notes">BlinkGTK 1.2.1-build1 Release
+<h1 id="blinkgtk-121-build2-release-notes">BlinkGTK 1.2.1-build2 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-08-27 /
+<p><strong>Release date</strong>: 2026-08-30 /
 <strong>Chromium</strong>: 152.0.7977.64 / Language: English | <a
 href="RELEASE_NOTES-1.2.1-ja.html">日本語</a></p>
 <p>The rendering engine has been updated to <strong>Chromium
 152</strong>, one upstream<br />
 generation on from Chromium 151 in the previous release (1.2.0).</p>
+<hr />
+<h2 id="what-build2-makes-possible">What build2 makes possible</h2>
+<h3
+id="falls-back-to-software-rendering-where-the-gpu-path-is-unavailable">Falls
+back to software rendering where the GPU path is unavailable</h3>
+<p>When <code>BLINKGTK_GPU_MODE=egl</code> is selected on a machine
+where the GPU path cannot be<br />
+used (no driver, no GPU visible inside a virtual machine, and so on),
+BlinkGTK<br />
+<strong>falls back to software rendering and keeps drawing</strong>.</p>
+<p>The switch happens when no frame reaches the GPU path within five
+seconds, and<br />
+<strong>the reason is written to standard error</strong>.<br />
+The message is currently emitted in Japanese; it reads: "No frame
+reached the EGL<br />
+path within 5000 ms. The GPU path may not be usable on this machine.
+Falling back<br />
+to the software path so the window does not stay blank (disable
+with<br />
+BLINKGTK_EGL_AUTO_FALLBACK=0)."</p>
+<p>The switch does not happen on machines where the GPU path works.
+Change the wait<br />
+with <code>BLINKGTK_EGL_AUTO_FALLBACK_MS</code>, or turn the switch off
+entirely with<br />
+<code>BLINKGTK_EGL_AUTO_FALLBACK=0</code> (the window then stays
+blank).</p>
+<h3
+id="captured-screenshots-no-longer-come-out-with-red-and-blue-swapped">Captured
+screenshots no longer come out with red and blue swapped</h3>
+<p>Images saved through <code>blink_web_view_capture_screenshot()</code>
+could come back with<br />
+<strong>red and blue exchanged</strong> — a pure red page saved as pure
+blue. It happened on<br />
+some captures and not others, so a single image was not enough to tell
+whether it<br />
+was fixed.</p>
+<p>The save path handled the image data without checking its byte order.
+It now<br />
+inspects the colour format and converts. Across eight consecutive
+captures, the<br />
+number of swapped images goes from four to zero.</p>
+<h3 id="new-environment-variables">New environment variables</h3>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK</code></td>
+<td><code>0</code> turns off the automatic switch described above (on by
+default)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK_MS</code></td>
+<td>How long to wait before switching (default 5000 ms)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_KEEP_GPU_COMPOSITING</code></td>
+<td><code>1</code> keeps GPU compositing enabled even when starting in
+<code>software</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>BLINKGTK_KEEP_GPU_COMPOSITING</code> is what allows the
+rendering path to be switched<br />
+while running. <strong>In exchange, CPU use goes up</strong> — in our
+measurement (Intel UHD /<br />
+Mesa, an animating page, 20 seconds, median of three runs) it was about
+12%<br />
+higher. That is the ratio for that machine and that page, neither an
+upper bound<br />
+nor a representative value. For this reason the option is off by
+default. See the bundled environment variable reference
+(<code>environment-variables-en.md</code>).</p>
 <hr />
 <h2 id="what-is-now-possible-in-build1">What is now possible in
 build1</h2>

@@ -267,6 +267,20 @@ scale・受け手ウィジェット)<br />
 だけで動きます。<br />
 それ以前の版では <code>software</code> をお使いください。</p>
 </blockquote>
+<p><strong>GPU が使えない機械では自動で退避します</strong>:</p>
+<p>ドライバが無い、仮想環境で GPU が見えないなど、<code>egl</code>
+を指定してもその機械で<br />
+GPU
+経路が使えないことがあります。以前はこの場合に画面が白いまま何も起きず、<br />
+原因を知る手立てがありませんでした。</p>
+<p>現在は、EGL 経路に描画データが 5 秒間 1
+枚も届かなければ、<strong>自動的にソフトウェア<br />
+経路へ切り替えて描画を続け、その理由を標準エラー出力に記します</strong>。<br />
+GPU が使える機械では退避しません。無効化は
+<code>BLINKGTK_EGL_AUTO_FALLBACK=0</code><br />
+(その場合、画面は白いままになります)。詳しくは<br />
+<a href="./api-reference/environment-variables-ja.html">環境変数</a>
+を参照してください。</p>
 <p><strong>目指しているもの</strong>:</p>
 <ul>
 <li>WebGL / WebGPU / Canvas の GPU アクセラレーション</li>

@@ -4,15 +4,23 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-08-16T00:00:00Z</updated>
+  <updated>2026-08-30T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.1-build2 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-08-30-build2-121:en</id>
+    <updated>2026-08-30T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Where the GPU path is unavailable — no driver, or no GPU visible inside a virtual machine — BlinkGTK now falls back to software rendering and keeps drawing. It switches when no frame arrives within five seconds and writes the reason to standard error, and it does not switch where the GPU path works. Captured screenshots no longer come out with red and blue exchanged.</summary>
+  </entry>
   <entry>
     <title>v1.2.1-build1 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build1"/>
     <id>tag:blinkgtk.org,2026:2026-08-27-build1-121:en</id>
     <updated>2026-08-27T00:00:00Z</updated>
     <category term="release"/>
-    <summary>The rendering engine is updated to Chromium 152. In vertical writing, lines no longer break half-way when a closing bracket falls at the line end (a line with room for 34 characters held only 17). Columns in multi-column layout now fill to capacity — one cause was the engine's default ruby reservation, which cost exactly one line in a column with room for 16. The line grid is also preserved when direction: rtl is combined with vertical writing. Typeset output changes, so existing documents may show a different number of lines. Dangling symlinks in the packages are also fixed (12 releases in the RPM; in the DEB, six resources pointed at a path that does not exist on Debian).</summary>
+    <summary>The rendering engine is updated to Chromium 152. In vertical writing, lines no longer break half-way when a closing bracket falls at the line end (a line with room for 34 characters held only 17), and columns now fill to capacity. The line grid is preserved with direction: rtl. Typeset output changes.</summary>
   </entry>
   <entry>
     <title>v1.2.0-build9 released</title>

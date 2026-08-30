@@ -260,6 +260,23 @@ this</strong>, so <code>BLINKGTK_GPU_MODE=egl</code> alone is enough. On
 earlier versions,<br />
 please use <code>software</code>.</p>
 </blockquote>
+<p><strong>Falls back automatically on machines without a usable
+GPU</strong>:</p>
+<p>You may select <code>egl</code> on a machine where the GPU path does
+not work (no driver,<br />
+no GPU visible inside a virtual machine, and so on). Previously the
+window<br />
+stayed blank with nothing to explain why.</p>
+<p>Now, if no frame reaches the EGL path within five seconds, BlinkGTK
+switches to<br />
+the software path so drawing continues, and writes the reason to
+standard error.<br />
+The fallback does not trigger where the GPU path works. Disable it
+with<br />
+<code>BLINKGTK_EGL_AUTO_FALLBACK=0</code> (the window then stays blank).
+See<br />
+<a href="./api-reference/environment-variables-en.html">Environment
+variables</a> for details.</p>
 <p><strong>What it aims to provide</strong>:</p>
 <ul>
 <li>GPU acceleration for WebGL, WebGPU, and canvas</li>
