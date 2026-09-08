@@ -412,11 +412,11 @@ device-scale-factor</h3>
 出る</strong>」症状が起きることがあります。software モードでは GTK
 のスケールに追従して自動処理<br />
 されます。egl など experimental
-経路でスケール不整合が出る場合は、Chromium のコマンドライン<br />
-引数 <code>--force-device-scale-factor=&lt;n&gt;</code> を
-<code>blink_gtk_init(&amp;argc, &amp;argv)</code> に渡す
-<code>argv</code> に含めることで<br />
-スケールを明示できます。WebView
+経路でスケール不整合が出ることがあります。その場合は<br />
+スケールを明示してください。Chromium のコマンドライン引数<br />
+<code>--force-device-scale-factor=&lt;n&gt;</code>
+を、<code>blink_gtk_init(&amp;argc, &amp;argv)</code> へ渡す<br />
+<code>argv</code> に含めます。WebView
 を入れ子のコンテナに深く埋め込む場合は、スケール伝播に注意<br />
 してください。</p>
 <h3 id="53-日本語描画とフォント">5.3 日本語描画とフォント</h3>
@@ -513,7 +513,16 @@ issue）。注入が走らない<br />
 API で取得してください。これにより <code>libblinkgtk.so</code>
 の更新に自動追従します。</p>
 <div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blinkgtk_ver <span class="op">=</span> blink_gtk_get_version<span class="op">();</span>           <span class="co">/* BlinkGTK バージョン */</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> chromium_ver <span class="op">=</span> blink_gtk_get_chromium_version<span class="op">();</span>  <span class="co">/* Chromium バージョン */</span></span></code></pre></div>
+<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> chromium_ver <span class="op">=</span> blink_gtk_get_chromium_version<span class="op">();</span>  <span class="co">/* Chromium バージョン */</span></span>
+<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* 不具合を報告するときは、これ 1 つを貼れば版が一意に決まります (Since 1.2.2)。</span></span>
+<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * build 番号は「同じ版を作り直した回数」で、同じ版でも build が違えば</span></span>
+<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"> * 挙動が違うことがあります。 */</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> full_ver <span class="op">=</span> blink_gtk_get_version_full<span class="op">();</span>          <span class="co">/* 例 &quot;1.2.1-build3&quot; */</span></span>
+<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">/* build 番号だけが要る場合。分からない場合は NULL を返します。</span></span>
+<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"> * &quot;0&quot; や &quot;unknown&quot; は返しません (build 番号と読めてしまうため)。 */</span></span>
+<span id="cb16-11"><a href="#cb16-11" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> build <span class="op">=</span> blink_gtk_get_build<span class="op">();</span>                    <span class="co">/* 例 &quot;2&quot; / NULL */</span></span></code></pre></div>
 <p>これらの API は公開ヘッダ <code>&lt;blink_gtk/blink_gtk.h&gt;</code>
 に宣言されています（<code>extern</code> 宣言は<br />
 不要）。返り値は内部の静的文字列のため free しないでください。シンボルを
@@ -569,11 +578,12 @@ API（requestFullscreen）</h3>
 <li><p><strong>ESC キーでの解除</strong>は自動では行われません（HTML
 fullscreen は browser 側の ESC 協調が<br />
 必要）。トップレベルウィンドウに CAPTURE phase
-のキーコントローラを付け、全画面中の ESC で<br />
-<code>blink_web_view_exit_fullscreen()</code>
-を呼んでください（<code>document.exitFullscreen()</code>
-と同じ協調<br />
-経路で Blink 側の状態も更新されます）。</p>
+のキーコントローラを付けてください。<br />
+全画面中の ESC で <code>blink_web_view_exit_fullscreen()</code>
+を呼びます。<br />
+<code>document.exitFullscreen()</code> と同じ協調経路を通るので、Blink
+側の状態も<br />
+併せて更新されます</p>
 <div class="sourceCode" id="cb19"><pre
 class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_key<span class="op">(</span>GtkEventControllerKey<span class="op">*</span> c<span class="op">,</span> guint keyval<span class="op">,</span> guint kc<span class="op">,</span></span>
 <span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>                       GdkModifierType st<span class="op">,</span> gpointer ud<span class="op">)</span> <span class="op">{</span></span>

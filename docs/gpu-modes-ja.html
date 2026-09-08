@@ -135,40 +135,92 @@ href="./api-reference/environment-variables-ja.html">環境変数リファレン
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align: left;"><strong>ソフトウェア</strong></td>
+<td style="text-align: center;"><code>software</code>（既定）</td>
+<td style="text-align: left;">CPU</td>
+<td style="text-align: left;">ソフトウェアコンポジタ</td>
+<td style="text-align: left;">ヘッドレス・CI・サーバ・低スペック</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SwiftShader</strong></td>
+<td style="text-align: center;"><code>swiftshader</code></td>
+<td style="text-align: left;">ソフトウェア
+GL（ANGLE→Vulkan→SwiftShader）</td>
+<td style="text-align: left;">ソフトウェアコンポジタ</td>
+<td style="text-align: left;">仮想マシン・安定優先</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>EGL ネイティブ</strong></td>
+<td style="text-align: center;"><code>egl</code></td>
+<td style="text-align: left;">ハードウェア GPU（Wayland EGL）</td>
+<td style="text-align: left;">GPU コンポジタ</td>
+<td style="text-align: left;">デスクトップ・本番</td>
+</tr>
 </tbody>
 </table>
-<p>|</p>
-<p><strong>ソフトウェア</strong> | <code>software</code>（既定） | CPU |
-ソフトウェアコンポジタ | ヘッドレス・CI・サーバ・低スペック |<br />
-|</p>
-<p><strong>SwiftShader</strong> | <code>swiftshader</code> |
-ソフトウェア GL（ANGLE→Vulkan→SwiftShader） | ソフトウェアコンポジタ |
-仮想マシン・安定優先 |<br />
-|</p>
-<p><strong>EGL ネイティブ</strong> | <code>egl</code> | ハードウェア
-GPU（Wayland EGL） | GPU コンポジタ | デスクトップ・本番 |</p>
 <h3 id="画面描画について">画面描画について</h3>
-<p><strong>v1.0.10 iter7 以降</strong>、3 モードすべてで GTK
-ウィンドウに Blink の<br />
-レンダリング結果が基本的に表示されます。</p>
-<ul>
-<li>v0.9 系: <code>--headless</code> が browser
-プロセスに強制付与され白画面になっていた</li>
-<li>v1.0.1 Issue #47: EGL mode 修正</li>
-<li>v1.0.10 iter2-iter7 Issue #53: SwiftShader mode 修正</li>
-<li>v1.0.10 iter5 Issue #54: EGL mode viz Skia readback 修正</li>
-<li>v1.0.10 iter7 Issue #55: EGL mode Context Lost 修正</li>
-</ul>
-<p>ただし、以下の既知事項は iter9 時点で追跡中です:</p>
-<ul>
-<li>Issue #58: HiDPI (<code>gtk_scale=2</code>)<br />
-環境で <code>wl_subsurface</code> のサイズが親 widget allocation
-に完全には追従しない</li>
-<li>Issue #59: 同一 WebView で<br />
-<code>blink_web_view_load_uri()</code> を繰返し呼ぶとリソース累積リーク
-(iter9 で 2 層<br />
-緩和済、深層は iter10 対応予定)</li>
-</ul>
+<p><strong>現行 (BlinkGTK 1.2.1 / Chromium 152) では、3 モードとも GTK
+ウィンドウに<br />
+Blink のレンダリング結果が表示されます。</strong></p>
+<p><strong>GPU が使えない機械では、EGL を指定しても自動で software
+へ退避します</strong><br />
+(v1.2.1-build2 以降)。描画データが 5
+秒間届かなければ切り替わり、理由を標準<br />
+エラー出力に記します。GPU が使える機械では切り替わりません。<br />
+無効化するには <code>BLINKGTK_EGL_AUTO_FALLBACK=0</code>
+を指定します<br />
+(白いままになる可能性があります)。</p>
+<h4 id="これまでに解決したもの-履歴">これまでに解決したもの (履歴)</h4>
+<table>
+<thead>
+<tr>
+<th>版</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.9 系</td>
+<td><code>--headless</code> が browser
+プロセスに強制付与され白画面になっていた</td>
+</tr>
+<tr>
+<td>v1.0.1</td>
+<td>Issue #47 — EGL モード修正</td>
+</tr>
+<tr>
+<td>v1.0.10 iter2-iter7</td>
+<td>Issue #53 — SwiftShader モード修正</td>
+</tr>
+<tr>
+<td>v1.0.10 iter5</td>
+<td>Issue #54 — EGL モード viz Skia readback 修正</td>
+</tr>
+<tr>
+<td>v1.0.10 iter7</td>
+<td>Issue #55 — EGL モード Context Lost 修正</td>
+</tr>
+<tr>
+<td><strong>v1.0.x (2026-04-20 解決)</strong></td>
+<td><strong>Issue #58 — HiDPI で親コンテナのサイズに追従しない
+(<code>size_allocate</code> vfunc の実装で解決)</strong></td>
+</tr>
+<tr>
+<td><strong>v1.1.x (2026-06-21 解決)</strong></td>
+<td><strong>Issue #59 — <code>blink_web_view_load_uri()</code>
+の繰返しでリソースが累積する</strong></td>
+</tr>
+<tr>
+<td>v1.2.0-build3 から</td>
+<td>GPU 描画が環境変数の指定だけで使えるようになった</td>
+</tr>
+<tr>
+<td>v1.2.1-build2 から</td>
+<td>GPU の無い機械での自動退避</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="2-モード別詳細">2. モード別詳細</h2>
 <h3 id="21-ソフトウェア-software">2.1 ソフトウェア
@@ -350,9 +402,10 @@ egl)</td>
 <td><strong>不可</strong> — プロセス再起動が必要</td>
 </tr>
 <tr>
-<td><strong>配送経路</strong> (software モード内部の画面転送経路)</td>
-<td>P1 (直接) ↔︎ P2 (mojo 共有メモリ)</td>
-<td><strong>可</strong> (v1.2.0-build9 以降) —
+<td><strong>配送経路</strong> (画面転送の経路)</td>
+<td>P1 (直接) ↔︎ P2 (mojo 共有メモリ) ↔︎ P3 (EGL dmabuf)</td>
+<td><strong>可</strong> (P1↔︎P2 は v1.2.0-build9 以降、P3 は
+v1.2.1-build3 以降) —
 <code>blink_web_view_switch_render_path()</code></td>
 </tr>
 </tbody>
@@ -370,12 +423,23 @@ handoff meta API（<code>blink_web_view_export_handoff_meta()</code>
 /<br />
 <code>import_handoff_meta()</code>）が使えます。表示スケールを含めて正準単位で<br />
 引き継ぐため、再起動後に「描画が小さい」が起きません。</p>
-<h3 id="52-配送経路のライブ切替-v120-build9-以降">5.2
-配送経路のライブ切替 (v1.2.0-build9 以降)</h3>
-<p>software モードの内部には画面転送の経路が複数あり<br />
-（P1 = 直接配送 / P2 = mojo
-共有メモリ配送）、これは<strong>再起動なしに</strong><br />
-切り替えられます。</p>
+<h3 id="52-配送経路のライブ切替">5.2 配送経路のライブ切替</h3>
+<p>画面転送の経路は複数あり（P1 = 直接配送 / P2 = mojo 共有メモリ配送
+/<br />
+P3 = EGL dmabuf
+配送）、これは<strong>再起動なしに</strong>切り替えられます。</p>
+<ul>
+<li><strong>P1 ↔︎ P2</strong> (software モード内部) … v1.2.0-build9
+以降</li>
+<li><strong>P3 (EGL) を含む往復</strong> … v1.2.1-build3
+以降。ただし<br />
+<strong><code>BLINKGTK_GPU_MODE=egl</code>
+で起動した場合だけ</strong>です。ソフトウェア描画で<br />
+起動したプロセスは EGL
+へ移れません（合成モードは上流でプロセス全体の<br />
+一方通行で、software 起動では GPU
+側の描画データがそもそも作られません）</li>
+</ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* 完了は &quot;render-path-changed&quot; シグナル。切替後の描画が確認できなければ</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * 自動で元の経路に戻ります (result=&quot;rollback&quot;、画面は壊れません) */</span></span></code></pre></div>
@@ -417,29 +481,37 @@ iter6 以前を使っている場合は更新してください。</p>
 <h3
 id="63-swiftshader-モードで描画されるがピクセルが-gtk-に届かない">6.3
 SwiftShader モードで描画されるがピクセルが GTK に届かない</h3>
-<p><strong>症状</strong>: <code>BLINK_LOAD_FINISHED</code> に到達、FPS
-も 60 前後、しかし GTK ウィンドウは<br />
-真っ黒または背景色のまま<br />
-<strong>原因</strong>: Issue #54 の CopyFromSurface ガードが SwiftShader
-にも過剰適用されている<br />
-可能性 ([Issue #54 follow-up])<br />
-<strong>対処</strong>: v1.0.10 iter10 以降の修正を待つ。当面は
-<code>software</code> または <code>egl</code> に<br />
-切替。</p>
+<p><strong>この症状は解消済みです</strong> (Issue #54、2026-04-19)。</p>
+<ul>
+<li><strong>症状</strong>: <code>BLINK_LOAD_FINISHED</code> に到達し FPS
+も 60 前後なのに、<br />
+GTK ウィンドウが真っ黒または背景色のまま</li>
+<li><strong>原因だったもの</strong>: CopyFromSurface のガードが
+SwiftShader にも<br />
+過剰に適用されていた</li>
+<li><strong>いま同じ症状が出る場合</strong>:
+版が古い可能性があります。<br />
+現行版 (1.2.1 以降)
+をお使いください。それでも出るときはご報告ください</li>
+</ul>
 <h3 id="64-egl-モードで描画範囲が左上にクリップされる-hidpi">6.4 EGL
 モードで描画範囲が左上にクリップされる (HiDPI)</h3>
-<p><strong>症状</strong>: <code>gtk_scale=2</code> 環境で EGL
-モード、親ウィジェットは 1536×785 logical px<br />
-あるのに Web コンテンツが約 400×360 physical px
-の左上領域のみに表示<br />
-<strong>原因</strong>: <code>size_allocate</code> 経由で Chromium
-側のビュー (RenderWidgetHostView) は正しく更新されるが、<br />
-<code>wl_subsurface</code> / <code>wp_viewport</code> の destination
-サイズが追従していない<br />
-(Issue #58)<br />
-<strong>対処</strong>: iter10 以降の修正を待つ。暫定的には window を
-800×600 以下にして全体<br />
-表示を確保。</p>
+<p><strong>この症状は解消済みです</strong> (Issue #58、2026-04-20)。</p>
+<ul>
+<li><strong>症状</strong>: <code>gtk_scale=2</code>
+の環境で、親ウィジェットは 1536×785 logical px<br />
+あるのに、Web コンテンツが左上のごく一部にしか表示されない</li>
+<li><strong>原因だったもの</strong>: Chromium 側のビューは
+<code>size_allocate</code> で正しく<br />
+更新されるのに、<code>wl_subsurface</code> / <code>wp_viewport</code> の
+destination サイズが<br />
+追従していなかった。<code>size_allocate</code> の vfunc
+を実装して解消しています</li>
+<li><strong>いま同じ症状が出る場合</strong>: 現行版 (1.2.1 以降)
+でも出るようでしたら、<br />
+window のサイズと <code>gtk_scale</code> を添えてご報告ください。<br />
+この 2 症状は更新のたびに自動検査しています</li>
+</ul>
 <h3 id="65-全モードで白画面">6.5 全モードで白画面</h3>
 <p>v1.0.10 iter7
 以降でも条件によっては発生することがあります。確認手順:</p>

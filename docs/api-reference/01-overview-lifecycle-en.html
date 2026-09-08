@@ -1,0 +1,651 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK API Reference Manual — Chapter 1: Overview and
+Lifecycle — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+<meta name="description" content="The authority on API semantics is the public header blink_gtk/blink_gtk.h and upstream review.">
+<link rel="canonical" href="https://blinkgtk.org/docs/api-reference/01-overview-lifecycle-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK API Reference Manual — Chapter 1: Overview and Lifecycle — BlinkGTK">
+<meta property="og:description" content="The authority on API semantics is the public header blink_gtk/blink_gtk.h and upstream review.">
+<meta property="og:url" content="https://blinkgtk.org/docs/api-reference/01-overview-lifecycle-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/api-reference/01-overview-lifecycle-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/api-reference/01-overview-lifecycle-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/api-reference/01-overview-lifecycle-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1
+id="blinkgtk-api-reference-manual--chapter-1-overview-and-lifecycle">BlinkGTK
+API Reference Manual — Chapter 1: Overview and Lifecycle</h1>
+<table>
+<tbody>
+<tr>
+<td>Author</td>
+<td>BlinkGTK-Readium project (consumer/embedder perspective, #121)</td>
+</tr>
+<tr>
+<td>Target version</td>
+<td>BlinkGTK 1.2.1 (Chromium 152.0.7977.64)</td>
+</tr>
+<tr>
+<td>Scope</td>
+<td>A user manual that includes what an embedder learned running
+BlinkGTK in production</td>
+</tr>
+</tbody>
+</table>
+<p>The authority on API semantics is the public header
+<code>blink_gtk/blink_gtk.h</code> and<br />
+upstream review.</p>
+<hr />
+<h2 id="11-what-blinkgtk-is">1.1 What BlinkGTK is</h2>
+<p>BlinkGTK is a library for embedding Chromium's Blink rendering engine
+into an<br />
+application as a GTK4 widget. It offers a C API
+(<code>BlinkWebView</code>) with the same<br />
+design philosophy as WebKitGTK. A GTK4 application can display web
+content,<br />
+navigate, talk to JavaScript, and serve custom URI schemes.<br />
+<strong>You do not need to build Chromium yourself</strong> — link
+against the prebuilt<br />
+package (shared libraries + headers + pkg-config). This manual is
+written from<br />
+the perspective of an embedder running BlinkGTK in production as an EPUB
+viewer<br />
+(BlinkGTK-Readium).</p>
+<h2 id="12-architecture-at-a-glance">1.2 Architecture at a glance</h2>
+<p>Top to bottom:</p>
+<ol type="1">
+<li><strong>Embedder (your application)</strong> — a GTK4 application.
+You build the chrome<br />
+(windows, menus) with GTK and place one <code>BlinkWebView</code> inside
+it as a child<br />
+widget.</li>
+<li><strong>BlinkWebView (BlinkGTK's public API layer)</strong> — a
+<code>GtkWidget</code> subclass<br />
+(GObject). Load-event signals, custom schemes and the JS bridge are
+all<br />
+handled here through the C API.</li>
+<li><strong>Chromium (multi-process)</strong> — under the browser
+process (which lives in your<br />
+process) child processes for the renderer, GPU and so on are started;
+they do<br />
+the actual layout and painting.</li>
+</ol>
+<p>The embedder only touches layers 1 and 2; Chromium's process model
+stays behind<br />
+the curtain. That said, the pitfalls in §1.5 (sandbox, profile, RUNPATH)
+all<br />
+stem from this multi-process structure, so being aware it exists makes
+trouble<br />
+much faster to diagnose.</p>
+<h3 id="header-and-linking">Header and linking</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1</span></code></pre></div>
+<blockquote>
+<p><strong>Include only <code>blink_gtk.h</code>.</strong></p>
+<p>On v1.2.0-build5 and earlier, the pre-GObject internal header
+<code>blink_web_view.h</code> (2025)<br />
+was also bundled. Including it alongside <code>blink_gtk.h</code> makes
+the same typedef<br />
+name refer to two different types, which fails to compile every
+time:</p>
+<pre><code>error: conflicting types for &#39;BlinkWebView&#39;; have &#39;struct BlinkWebView&#39;</code></pre>
+<p>There is no reason to ship a header that cannot be used, so
+<strong>it has not been<br />
+bundled since then</strong>. If you need something
+<code>blink_gtk.h</code> does not offer,<br />
+please raise an issue.</p>
+<p><strong>Your application should include
+<code>blink_gtk/blink_gtk.h</code> and nothing else.</strong></p>
+<p>The header is <strong>gone since v1.2.0-build6</strong> (verified
+2026-09-03 by unpacking<br />
+every devel package published at that time). The<br />
+headers shipped today are <code>blink_gtk.h</code>,
+<code>blinkgtk_export.h</code> and<br />
+<code>blinkgtk_version.h</code>.</p>
+</blockquote>
+<h3 id="thread-safety-policy">Thread-safety policy</h3>
+<p>Every public BlinkGTK API may be called <strong>only from the GTK
+main thread</strong><br />
+(see the Thread Safety Policy at the top of the header).<br />
+Callbacks — JavaScript results, cookies, printing — are likewise always
+invoked<br />
+on the GTK main thread. From a worker thread, dispatch to the main
+thread with<br />
+<code>g_idle_add()</code>.</p>
+<h2 id="13-the-lifecycle-as-a-whole">1.3 The lifecycle as a whole</h2>
+<p>An embedder process moves through these phases in one direction.</p>
+<table>
+<thead>
+<tr>
+<th>Phase</th>
+<th>Main API</th>
+<th>Notes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>(0) Pre-init configuration</td>
+<td><code>blink_gtk_set_resources_path()</code> and friends</td>
+<td>Must be called <strong>before
+<code>blink_gtk_init()</code></strong></td>
+</tr>
+<tr>
+<td>(1) Initialization</td>
+<td><code>blink_gtk_init()</code></td>
+<td>Once, on the main thread, before any GTK/GLib call</td>
+</tr>
+<tr>
+<td>(2) Creating the WebView</td>
+<td><code>blink_web_view_new()</code> /
+<code>_new_with_gpu_mode()</code> / <code>_new_container()</code></td>
+<td>Returns a GtkWidget</td>
+</tr>
+<tr>
+<td>(3) Registration before load</td>
+<td><code>blink_web_view_register_custom_scheme_full()</code>,
+<code>register_message_handler()</code>,
+<code>g_signal_connect(load-changed)</code></td>
+<td>Finish this <strong>before <code>load_uri()</code></strong></td>
+</tr>
+<tr>
+<td>(4) Placement and display</td>
+<td><code>gtk_window_set_child()</code>,
+<code>gtk_window_present()</code></td>
+<td>Treat it as an ordinary GTK4 widget</td>
+</tr>
+<tr>
+<td>(5) Load</td>
+<td><code>blink_web_view_load_uri()</code></td>
+<td>Progress arrives on the <code>load-changed</code> signal</td>
+</tr>
+<tr>
+<td>(6) Main loop</td>
+<td><code>blink_gtk_run_main_loop()</code> /
+<code>blink_gtk_quit_main_loop()</code></td>
+<td>Chromium's RunLoop, not GTK's</td>
+</tr>
+<tr>
+<td>(7) Shutdown</td>
+<td><code>blink_gtk_shutdown()</code></td>
+<td>After <code>run_main_loop()</code> returns (<strong>calling it
+explicitly is recommended</strong>; see below)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p><strong>Whether and when to call
+<code>blink_gtk_shutdown()</code></strong> (the official position
+from<br />
+the upstream <code>#123</code> review)</p>
+<table>
+<thead>
+<tr>
+<th>How you call it</th>
+<th>Assessment</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>After <code>run_main_loop()</code> returns</td>
+<td><strong>Recommended.</strong> Teardown order becomes deterministic
+(the complete example below takes this form)</td>
+</tr>
+<tr>
+<td><strong>While the RunLoop is running</strong>, e.g. from a window
+close handler</td>
+<td><strong>Safe.</strong> It does not deadlock; it switches to a
+deferred shutdown that runs once <code>run_main_loop()</code>
+returns</td>
+</tr>
+<tr>
+<td>Not at all</td>
+<td>It works (the <code>atexit</code> safety net catches it), but
+teardown is left to atexit and the <strong>order is
+non-deterministic</strong>. <strong>Not recommended</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Nothing breaks if you skip it because an <code>atexit</code> handler
+is registered once<br />
+<code>ContentMainRunner::Run</code> succeeds, so teardown happens
+automatically while the<br />
+AtExitManager is alive (issue <code>#102-C</code>). That is also why
+embedders that never<br />
+called it historically kept working. Even so, <strong>call it explicitly
+so the order<br />
+is deterministic</strong>.</p>
+</blockquote>
+<h3 id="0-pre-init-configuration">(0) Pre-init configuration</h3>
+<p>The header states explicitly that these must be called
+<strong>before<br />
+<code>blink_gtk_init()</code></strong>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_devtools_locale<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> locale<span class="op">);</span>   <span class="co">/* NULL = follow the system locale */</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_devtools_locale<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_icu_data_path<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path<span class="op">);</span>       <span class="co">/* absolute path to icudtl.dat */</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_resources_path<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path<span class="op">);</span>      <span class="co">/* root of the pak/snapshot files */</span></span></code></pre></div>
+<p>You normally do not need any of them: the installed location<br />
+<code>&lt;prefix&gt;/lib/chromium/</code> is detected automatically. Use
+<code>set_resources_path()</code><br />
+only for a non-standard layout, such as bundling the runtime inside your
+own<br />
+application. If both are given, <code>resources_path</code> takes
+precedence over<br />
+<code>set_icu_data_path()</code>.</p>
+<h3 id="1-initialization">(1) Initialization</h3>
+<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>gboolean blink_gtk_init<span class="op">(</span><span class="dt">int</span><span class="op">*</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">***</span> argv<span class="op">);</span></span></code></pre></div>
+<p>Passing <code>argc</code>/<code>argv</code> lets Chromium-style
+command-line flags (<code>--no-sandbox</code> and<br />
+so on) be parsed here. <code>FALSE</code> means initialization failed.
+Call it exactly once,<br />
+on the main thread, before any other GTK/GLib call.</p>
+<h3 id="2-creating-the-webview">(2) Creating the WebView</h3>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> blink_web_view_new<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BlinkGpuMode mode<span class="op">);</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> blink_web_view_new_container<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>BlinkGpuMode blink_web_view_get_gpu_mode<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>  BLINK_GPU_MODE_SOFTWARE    <span class="op">=</span> <span class="dv">0</span><span class="op">,</span>  <span class="co">/* CPU rendering only (default; no GPU needed) */</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  BLINK_GPU_MODE_SWIFTSHADER <span class="op">=</span> <span class="dv">1</span><span class="op">,</span>  <span class="co">/* GL emulation via SwiftShader */</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  BLINK_GPU_MODE_EGL         <span class="op">=</span> <span class="dv">2</span><span class="op">,</span>  <span class="co">/* native EGL, hardware GPU */</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkGpuMode<span class="op">;</span></span></code></pre></div>
+<ul>
+<li>The return type is <code>GtkWidget*</code>. Use the
+<code>BLINK_WEB_VIEW()</code> /<br />
+<code>BLINK_IS_WEB_VIEW()</code> macros for type-safe access.</li>
+<li><code>new_container()</code> is a convenience that builds a
+<code>GtkOverlay</code> + <code>GtkPicture</code><br />
+for you. Retrieve the inner <code>BlinkWebView*</code> with<br />
+<code>g_object_get_data(overlay, "blinkgtk-webview")</code>.</li>
+<li><strong>The GPU mode is process-wide</strong> (as implemented in
+v1.0.2). If you create<br />
+several WebViews with different modes in one process, the mode of the
+first<br />
+one applies to all of them.</li>
+<li><strong>In production we recommend
+<code>BLINK_GPU_MODE_SOFTWARE</code></strong> (it is what we use).<br />
+See <code>BLINKGTK_GPU_MODE</code> in Chapter 9 and Chapter 5
+(rendering) for detail.</li>
+</ul>
+<h3 id="3-registration-before-load">(3) Registration before load</h3>
+<p>Before calling <code>load_uri()</code>, put in place everything that
+receives events<br />
+originating from the content.</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Custom URI scheme (binary-capable variant; issue #103) */</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_register_custom_scheme_full<span class="op">(</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> scheme<span class="op">,</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    BlinkCustomSchemeBytesCallback callback<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="co">/* JS -&gt; C messages (window.blinkgtk.postMessage) */</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_register_message_handler<span class="op">(</span></span>
+<span id="cb8-8"><a href="#cb8-8" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span></span>
+<span id="cb8-9"><a href="#cb8-9" aria-hidden="true" tabindex="-1"></a>    BlinkMessageCallback callback<span class="op">,</span> gpointer user_data<span class="op">);</span></span></code></pre></div>
+<p>Load events arrive on the GObject signal
+<code>"load-changed"</code>.</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>  BLINK_LOAD_STARTED    <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  BLINK_LOAD_COMMITTED  <span class="op">=</span> <span class="dv">1</span><span class="op">,</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  BLINK_LOAD_FINISHED   <span class="op">=</span> <span class="dv">2</span><span class="op">,</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  BLINK_LOAD_REDIRECTED <span class="op">=</span> <span class="dv">3</span>  <span class="co">/* reserved; the current runtime never emits it */</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkLoadEvent<span class="op">;</span></span></code></pre></div>
+<p><strong>From the consumer's experience</strong>:
+<code>BLINK_LOAD_REDIRECTED</code> is reserved for the<br />
+future and is not emitted today. Also, the integer values of the enum
+were made<br />
+explicit in v1.0.10 iter14 to match <strong>the values actually
+emitted</strong> — before<br />
+that, a build existed in which <code>ev == BLINK_LOAD_FINISHED</code>
+silently evaluated to<br />
+false. Do not mix old packages with new ones.</p>
+<h3 id="4-5-placement-and-load">(4)-(5) Placement and load</h3>
+<p><code>BlinkWebView</code> is an ordinary GTK4 widget: place it
+with<br />
+<code>gtk_window_set_child()</code>, and call
+<code>blink_web_view_load_uri()</code> after<br />
+<code>gtk_window_present()</code>.</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_load_uri<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">);</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_load_html<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> html<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> base_uri<span class="op">);</span></span></code></pre></div>
+<h3 id="6-main-loop">(6) Main loop</h3>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span>  blink_gtk_run_main_loop<span class="op">(</span><span class="dt">void</span><span class="op">);</span>   <span class="co">/* 0 = success. Blocks until it returns */</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_quit_main_loop<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
+<p>This runs <strong>Chromium's base::RunLoop</strong>, not
+<code>g_application_run()</code>. The design<br />
+avoids a collision between the GTK and Chromium lifecycles and keeps
+the<br />
+shutdown order under control. GLib's <code>g_timeout_add()</code> /
+<code>g_idle_add()</code> still<br />
+fire under this loop (we use GLib timeouts routinely for recording
+and<br />
+diagnostics). Call <code>blink_gtk_quit_main_loop()</code> from wherever
+you want to end<br />
+it, such as a window's <code>close-request</code>.</p>
+<h3 id="7-shutdown">(7) Shutdown</h3>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_shutdown<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
+<p>Call it after <code>run_main_loop()</code> returns, just before the
+process exits.</p>
+<h2 id="14-a-minimal-complete-example-putting-it-on-gtk4">1.4 A minimal
+complete example (putting it on GTK4)</h2>
+<p>A compilable example, boiled down from the real flow of a production
+embedder<br />
+(BlinkGTK-Readium's readium-launcher). It serves a local directory over
+the<br />
+custom scheme <code>app://</code> and receives load completion through a
+signal.</p>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* minimal-embedder.c — a minimal BlinkGTK embedder (GTK4) */</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="co">/* Serve app://host/&lt;path&gt; from the current directory (binary is fine). NULL = 404 */</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> GBytes<span class="op">*</span> scheme_cb<span class="op">(</span>BlinkWebView<span class="op">*</span> wv<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>                         <span class="dt">char</span><span class="op">**</span> out_mime<span class="op">,</span> gpointer ud<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>wv<span class="op">;</span> <span class="op">(</span><span class="dt">void</span><span class="op">)</span>ud<span class="op">;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> p <span class="op">=</span> strstr<span class="op">(</span>uri<span class="op">,</span> <span class="st">&quot;://&quot;</span><span class="op">);</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>p<span class="op">)</span> <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> slash <span class="op">=</span> strchr<span class="op">(</span>p <span class="op">+</span> <span class="dv">3</span><span class="op">,</span> <span class="ch">&#39;/&#39;</span><span class="op">);</span>           <span class="co">/* the &#39;/&#39; after the host */</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>  <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> rel <span class="op">=</span> slash <span class="op">?</span> slash <span class="op">+</span> <span class="dv">1</span> <span class="op">:</span> <span class="st">&quot;index.html&quot;</span><span class="op">;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(*</span>rel <span class="op">==</span> <span class="ch">&#39;</span><span class="sc">\0</span><span class="ch">&#39;</span><span class="op">)</span> rel <span class="op">=</span> <span class="st">&quot;index.html&quot;</span><span class="op">;</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>strstr<span class="op">(</span>rel<span class="op">,</span> <span class="st">&quot;..&quot;</span><span class="op">))</span> <span class="cf">return</span> NULL<span class="op">;</span>               <span class="co">/* path-traversal guard */</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>  <span class="dt">char</span><span class="op">*</span> contents <span class="op">=</span> NULL<span class="op">;</span> gsize len <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>g_file_get_contents<span class="op">(</span>rel<span class="op">,</span> <span class="op">&amp;</span>contents<span class="op">,</span> <span class="op">&amp;</span>len<span class="op">,</span> NULL<span class="op">))</span> <span class="cf">return</span> NULL<span class="op">;</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>out_mime <span class="op">&amp;&amp;</span> g_str_has_suffix<span class="op">(</span>rel<span class="op">,</span> <span class="st">&quot;.html&quot;</span><span class="op">))</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a>    <span class="op">*</span>out_mime <span class="op">=</span> g_strdup<span class="op">(</span><span class="st">&quot;text/html&quot;</span><span class="op">);</span>              <span class="co">/* NULL = guess from the URI */</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> g_bytes_new_take<span class="op">(</span>contents<span class="op">,</span> len<span class="op">);</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> wv<span class="op">,</span> BlinkLoadEvent ev<span class="op">,</span> gpointer ud<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>ud<span class="op">;</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>ev <span class="op">==</span> BLINK_LOAD_FINISHED<span class="op">)</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;loaded: </span><span class="sc">%s</span><span class="st"> (title=</span><span class="sc">%s</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>            blink_web_view_get_uri<span class="op">(</span>wv<span class="op">),</span> blink_web_view_get_title<span class="op">(</span>wv<span class="op">));</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_close<span class="op">(</span>GtkWindow<span class="op">*</span> w<span class="op">,</span> gpointer ud<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>w<span class="op">;</span> <span class="op">(</span><span class="dt">void</span><span class="op">)</span>ud<span class="op">;</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>  blink_gtk_quit_main_loop<span class="op">();</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> FALSE<span class="op">;</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (0) For a non-standard layout, call blink_gtk_set_resources_path() here. */</span></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (1) Initialize (before any GTK/GLib call) */</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (2) Window + WebView (software rendering recommended) */</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> webview <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_SOFTWARE<span class="op">);</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (3) Register before loading */</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>  blink_web_view_register_custom_scheme_full<span class="op">(</span></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>      BLINK_WEB_VIEW<span class="op">(</span>webview<span class="op">),</span> <span class="st">&quot;app&quot;</span><span class="op">,</span> scheme_cb<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>webview<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>window<span class="op">,</span> <span class="st">&quot;close-request&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_close<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (4)-(5) Place, present, load */</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> webview<span class="op">);</span></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>  gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>  blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>webview<span class="op">),</span></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>                          argc <span class="op">&gt;</span> <span class="dv">1</span> <span class="op">?</span> argv<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">:</span> <span class="st">&quot;app://local/index.html&quot;</span><span class="op">);</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (6)-(7) Main loop, then shutdown */</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> rc <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>  blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> rc<span class="op">;</span></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Build and run:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$BLINKGTK_PKG</span><span class="st">/lib/pkgconfig:</span><span class="va">$PKG_CONFIG_PATH</span><span class="st">&quot;</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-O2</span> <span class="at">-Wall</span> <span class="at">-o</span> minimal-embedder minimal-embedder.c <span class="dt">\</span></span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>   <span class="at">-Wl,-rpath,</span><span class="st">&#39;$ORIGIN&#39;</span> <span class="dt">\</span></span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>   <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="co"># The surest arrangement is to run it from the same directory as the runtime</span></span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a><span class="co"># (the .so files and the Chromium resources)</span></span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a><span class="fu">cp</span> minimal-embedder <span class="st">&quot;</span><span class="va">$BLINKGTK_PKG</span><span class="st">/lib/chromium/&quot;</span></span>
+<span id="cb14-9"><a href="#cb14-9" aria-hidden="true" tabindex="-1"></a><span class="st">&quot;</span><span class="va">$BLINKGTK_PKG</span><span class="st">/lib/chromium/minimal-embedder&quot;</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
+<p>The next section explains why <code>-Wl,-rpath,'$ORIGIN'</code> and
+"place it in<br />
+lib/chromium and launch from there".</p>
+<h2 id="15-pitfalls-in-production-from-the-consumer">1.5 Pitfalls in
+production (from the consumer)</h2>
+<p>So that a new embedder starting from zero can get running in a single
+round<br />
+trip, here are the ones we actually walked into.</p>
+<h3
+id="a-runpath--library-resolution--instant-death-from-a-v8-snapshot-mismatch">(a)
+RUNPATH / library resolution — instant death from a V8 snapshot
+mismatch</h3>
+<p><code>libblinkgtk.so</code> must be paired strictly with the Chromium
+resources of the same<br />
+package (<code>v8_context_snapshot.bin</code> and so on). Do not build a
+binary with only<br />
+the absolute rpath that comes from the <code>.pc</code> file and then
+copy it into the<br />
+<code>lib/chromium/</code> of <strong>a different package</strong> and
+run it: it will load the <code>.so</code><br />
+from the package it was built against, and <strong>the renderer dies
+instantly on a V8<br />
+snapshot mismatch</strong> (we demonstrated this on 2026-07-07). Either
+of these avoids<br />
+it:</p>
+<ul>
+<li><strong>Recommended</strong>: bake <code>-Wl,-rpath,'$ORIGIN'</code>
+in first, then place the binary in<br />
+the <code>lib/chromium/</code> of the package you want to use and launch
+it there. The<br />
+<code>.so</code> files next to it always win, which makes the binary
+position-independent<br />
+with respect to swapping packages.</li>
+<li>Or set <code>LD_LIBRARY_PATH=&lt;pkg&gt;/lib/chromium</code>
+explicitly at launch.</li>
+</ul>
+<p>Sample binaries as distributed may have a build-time path baked into
+RUNPATH, so<br />
+if you intend to move or swap packages, building your own is the safe
+route.</p>
+<h3 id="b-the-profile-at-blink_gtk-is-shared-by-every-instance">(b) The
+profile at <code>~/.blink_gtk/</code> is shared by every instance</h3>
+<p>In our measurements, passing <code>--user-data-dir</code> does not
+separate profiles;<br />
+<code>~/.blink_gtk/</code> is shared by every BlinkGTK process belonging
+to the same user.<br />
+Furthermore, persistence to disk (localStorage and the like) happens
+only on a<br />
+clean exit path such as SIGTERM — with SIGKILL or <code>_exit()</code>
+it is lost. If a test<br />
+dirties the state, the practical remedy is to delete the relevant data
+under<br />
+<code>~/.blink_gtk/</code> by hand. If running several applications at
+once or separating<br />
+profiles is a requirement, design around this behaviour.</p>
+<h3 id="c-some-environments-need---no-sandbox---no-zygote">(c) Some
+environments need <code>--no-sandbox --no-zygote</code></h3>
+<p>Where the Chromium sandbox cannot be set up — containers, restricted
+user<br />
+namespaces, some development environments — the child processes will not
+start<br />
+unless the argv you hand to <code>blink_gtk_init()</code> includes
+<code>--no-sandbox --no-zygote</code>. Our production launch script
+always passes both. For the<br />
+equivalent through the environment, see <code>BLINKGTK_NO_SANDBOX</code>
+in Chapter 9. Use<br />
+it understanding the security implication (the sandbox is switched
+off).</p>
+<h3
+id="d-software-is-the-recommended-gpu-mode-and-there-is-one-per-process">(d)
+Software is the recommended GPU mode, and there is one per process</h3>
+<p>The EGL (hardware GPU) path is experimental; having evaluated it, we
+decided to<br />
+<strong>run on software for the time being</strong> (both rendering
+vertical-writing EPUB body<br />
+text and taking screenshots are stable on software). And, as noted
+above, the<br />
+mode is per process, so it cannot be switched per WebView.</p>
+<h3 id="e-an-offscreen-capture-is-not-what-you-see">(e) An offscreen
+capture is not "what you see"</h3>
+<p>The <code>blink_web_view_capture_screenshot()</code> family saves a
+frame re-rendered on the<br />
+renderer side, so a fault in the compositor/display stage — the display
+going<br />
+blank while the content is fine — may not appear in it. Do not accept
+a<br />
+display-side verification on the strength of a captured PNG alone. We
+hit a false<br />
+pass this way, and now also run a check that reads the GTK composition
+result<br />
+directly.</p>
+<h2 id="16-checking-the-version">1.6 Checking the version</h2>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>           <span class="co">/* e.g. &quot;1.2.1&quot; */</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_chromium_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>  <span class="co">/* e.g. &quot;152.0.7977.64&quot; */</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* Build number (since 1.2.2). The build number counts how many times the same</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * version was rebuilt. Behaviour can differ between builds of one version. */</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_build<span class="op">(</span><span class="dt">void</span><span class="op">);</span>             <span class="co">/* e.g. &quot;2&quot;. NULL if unknown */</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version_full<span class="op">(</span><span class="dt">void</span><span class="op">);</span>      <span class="co">/* e.g. &quot;1.2.1-build3&quot;. Never NULL */</span></span></code></pre></div>
+<p>These come from the <code>.so</code> linked at run time, not from
+compile-time macros<br />
+(<code>BLINKGTK_VERSION</code> / <code>CHROMIUM_VERSION</code>), so what
+you display follows the<br />
+library without rebuilding the consumer. We recommend always recording
+these<br />
+run-time values in logs and bug reports.</p>
+<h2 id="17-forward-references-to-other-chapters">1.7 Forward references
+to other chapters</h2>
+<ul>
+<li><strong>Chapter 2, Navigation and load events</strong> —
+<code>load_uri</code>, history, the detail of <code>load-changed</code>
+and <code>load-failed</code></li>
+<li><strong>Chapter 4, Custom URI schemes</strong> —
+<code>register_custom_scheme_full()</code>, serving binary data, the
+relationship with <code>fetch()</code></li>
+<li><strong>Chapter 5, Rendering and screenshots</strong> — GPU modes,
+the <code>capture_screenshot</code> family</li>
+<li><strong>Chapter 9, Environment variables</strong> — the
+authoritative list of publicly supported variables including
+<code>BLINKGTK_GPU_MODE</code>, with practical examples</li>
+</ul>
+<p>(Chapter titles are as planned at the time of the first instalment of
+the agreed<br />
+table of contents in #121; the final form follows upstream review.)</p>
+<h2 id="sources-for-this-chapter">Sources for this chapter</h2>
+<p>The first draft was written from the sources below. It was then
+<strong>re-verified<br />
+against the then-current distribution on 2026-09-03 and again on
+2026-09-08</strong>,<br />
+bringing the statements about bundled headers and the version examples
+in line<br />
+with the artifacts.</p>
+<ul>
+<li>Public header
+<code>include/blinkgtk-0.1/blink_gtk/blink_gtk.h</code>. Function<br />
+signatures were transcribed mechanically from it (the first draft used
+the<br />
+v1.1.0 / Chromium 150 distribution; the text now matches the releases
+named<br />
+above after the re-verifications)</li>
+<li>Existing documentation:
+<code>docs/04-user-guides/api-reference/c-api-reference-en.md</code></li>
+<li>Production example: BlinkGTK-Readium
+<code>app/native/readium-launcher.c</code> (a real<br />
+embedder) and its build/launch scripts</li>
+</ul>
+</body>
+</html>
+</div></div>

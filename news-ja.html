@@ -4,12 +4,14 @@
 <title>お知らせ · BlinkGTK</title>
 <link rel="alternate" type="application/atom+xml" title="BlinkGTK お知らせ" href="https://blinkgtk.org/feed-ja.xml">
 <link rel="stylesheet" href="docs/docs.css">
-<script src="/privacy-consent.js" defer></script>
 </head><body><div class="wrap">
 <div class="navbar"><a href="./">BlinkGTK</a> · <a href="docs/">ドキュメント</a> · <a href="news-en.html">English</a></div>
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3">v1.2.1-build3 を公開しました</a></h2>
+<p><small>2026-09-08 · リリース</small></p>
+<p>不具合を報告するときに、どの版で起きたかが実行時に分かるようになりました。これまで実行時に版を問い合わせると 1.2.1 としか返らず、build 番号が取れませんでした。同じ版でも build が違えば挙動が違うことがあり、外部の利用者はパッケージのファイル名から版を読むしかありませんでした。blink_gtk_get_version_full() が 1.2.1-build3 を返します。既存の blink_gtk_get_version() の戻り値は変わりません。あわせて、画面が出ないときの配送ログが実際に呼んだ操作と Wayland の buffer 識別子を記すようになり、測定を打ち切る枚数も伸ばせます。描画経路のライブ切替に EGL 経路が加わりました(BLINKGTK_GPU_MODE=egl で起動した場合のみ)。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build2">v1.2.1-build2 を公開しました</a></h2>
 <p><small>2026-08-30 · リリース</small></p>
 <p>GPU が使用できない環境でも、フォールバックによりソフトウェア描画で表示されるようになりました。ドライバが無い、仮想環境で GPU が見えないといった場合に、描画データが 5 秒間届かなければソフトウェア描画へ切り替え、その理由を標準エラー出力に記します。GPU が使える環境では切り替わりません。あわせて、画面を撮影した画像で赤と青が入れ替わることがある問題を修正しました。</p>

@@ -134,39 +134,95 @@ variables reference</a>.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td style="text-align: left;"><strong>Software</strong></td>
+<td style="text-align: center;"><code>software</code> (default)</td>
+<td style="text-align: left;">CPU</td>
+<td style="text-align: left;">Software compositor</td>
+<td style="text-align: left;">Headless, CI, servers, low-spec
+machines</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>SwiftShader</strong></td>
+<td style="text-align: center;"><code>swiftshader</code></td>
+<td style="text-align: left;">Software GL (ANGLE → Vulkan →
+SwiftShader)</td>
+<td style="text-align: left;">Software compositor</td>
+<td style="text-align: left;">Virtual machines, stability first</td>
+</tr>
+<tr>
+<td style="text-align: left;"><strong>Native EGL</strong></td>
+<td style="text-align: center;"><code>egl</code></td>
+<td style="text-align: left;">Hardware GPU (Wayland EGL)</td>
+<td style="text-align: left;">GPU compositor</td>
+<td style="text-align: left;">Desktop, production</td>
+</tr>
 </tbody>
 </table>
-<p>|</p>
-<p><strong>Software</strong> | <code>software</code> (default) | CPU |
-Software compositor | Headless, CI, servers, low-spec machines |<br />
-|</p>
-<p><strong>SwiftShader</strong> | <code>swiftshader</code> | Software GL
-(ANGLE → Vulkan → SwiftShader) | Software compositor | Virtual machines,
-stability first |<br />
-|</p>
-<p><strong>Native EGL</strong> | <code>egl</code> | Hardware GPU
-(Wayland EGL) | GPU compositor | Desktop, production |</p>
 <h3 id="on-screen-rendering">On-screen rendering</h3>
-<p><strong>Since v1.0.10 iter7</strong>, all three modes generally
-display Blink's rendering output in the GTK window.</p>
-<ul>
-<li>v0.9 series: <code>--headless</code> was forced onto the browser
-process, producing a white screen</li>
-<li>v1.0.1 Issue #47: EGL mode fix</li>
-<li>v1.0.10 iter2–iter7 Issue #53: SwiftShader mode fix</li>
-<li>v1.0.10 iter5 Issue #54: EGL mode viz Skia readback fix</li>
-<li>v1.0.10 iter7 Issue #55: EGL mode context-lost fix</li>
-</ul>
-<p>The following were still being tracked as of iter9:</p>
-<ul>
-<li>Issue #58: on HiDPI (<code>gtk_scale=2</code>), the<br />
-<code>wl_subsurface</code> size does not fully follow the parent widget
-allocation</li>
-<li>Issue #59: repeatedly calling<br />
-<code>blink_web_view_load_uri()</code> on the same WebView accumulates a
-resource leak (two layers mitigated in<br />
-iter9; the deeper cause was scheduled for iter10)</li>
-</ul>
+<p><strong>In the current release (BlinkGTK 1.2.1 / Chromium 152) all
+three modes display<br />
+Blink's rendering output in the GTK window.</strong></p>
+<p><strong>On machines without a usable GPU, asking for EGL falls back
+to software<br />
+automatically</strong> (since v1.2.1-build2). It switches when no frame
+arrives within<br />
+five seconds and writes the reason to standard error; it does not switch
+where<br />
+the GPU path works. Set <code>BLINKGTK_EGL_AUTO_FALLBACK=0</code> to
+disable it (the screen<br />
+may then stay white).</p>
+<h4 id="resolved-so-far-history">Resolved so far (history)</h4>
+<table>
+<thead>
+<tr>
+<th>Version</th>
+<th>Item</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>v0.9 series</td>
+<td><code>--headless</code> was forced onto the browser process,
+producing a white screen</td>
+</tr>
+<tr>
+<td>v1.0.1</td>
+<td>Issue #47 — EGL mode fix</td>
+</tr>
+<tr>
+<td>v1.0.10 iter2–iter7</td>
+<td>Issue #53 — SwiftShader mode fix</td>
+</tr>
+<tr>
+<td>v1.0.10 iter5</td>
+<td>Issue #54 — EGL mode viz Skia readback fix</td>
+</tr>
+<tr>
+<td>v1.0.10 iter7</td>
+<td>Issue #55 — EGL mode context-lost fix</td>
+</tr>
+<tr>
+<td><strong>v1.0.x (resolved 2026-04-20)</strong></td>
+<td><strong>Issue #58 — did not follow the parent container's size on
+HiDPI (fixed by implementing the <code>size_allocate</code>
+vfunc)</strong></td>
+</tr>
+<tr>
+<td><strong>v1.1.x (resolved 2026-06-21)</strong></td>
+<td><strong>Issue #59 — repeated <code>blink_web_view_load_uri()</code>
+accumulated resources</strong></td>
+</tr>
+<tr>
+<td>since v1.2.0-build3</td>
+<td>GPU rendering works with a single environment variable</td>
+</tr>
+<tr>
+<td>since v1.2.1-build2</td>
+<td>Automatic fallback on machines without a GPU</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="2-mode-details">2. Mode details</h2>
 <h3 id="21-software-software">2.1 Software (<code>software</code>)</h3>
@@ -343,10 +399,10 @@ page)</td>
 <td><strong>No</strong> — requires a process restart</td>
 </tr>
 <tr>
-<td><strong>Delivery path</strong> (inside software mode)</td>
-<td>P1 (direct) ↔︎ P2 (mojo shared memory)</td>
-<td><strong>Yes</strong> (v1.2.0-build9+) —
-<code>blink_web_view_switch_render_path()</code></td>
+<td><strong>Delivery path</strong> (how frames reach the screen)</td>
+<td>P1 (direct) ↔︎ P2 (mojo shared memory) ↔︎ P3 (EGL dmabuf)</td>
+<td><strong>Yes</strong> (P1↔︎P2 since v1.2.0-build9, P3 since
+v1.2.1-build3) — <code>blink_web_view_switch_render_path()</code></td>
 </tr>
 </tbody>
 </table>
@@ -365,12 +421,25 @@ the handoff meta API (<code>blink_web_view_export_handoff_meta()</code>
 <code>import_handoff_meta()</code>). It carries the display scale in
 canonical units, so<br />
 the restarted view does not come back undersized.</p>
-<h3 id="52-live-delivery-path-switching-v120-build9">5.2 Live
-delivery-path switching (v1.2.0-build9+)</h3>
-<p>Software mode has more than one internal delivery path (P1 =
-direct,<br />
-P2 = mojo shared memory), and these <strong>can</strong> be switched
-without a restart:</p>
+<h3 id="52-live-delivery-path-switching">5.2 Live delivery-path
+switching</h3>
+<p>There is more than one delivery path (P1 = direct, P2 = mojo shared
+memory,<br />
+P3 = EGL dmabuf), and these <strong>can</strong> be switched without a
+restart:</p>
+<ul>
+<li><strong>P1 ↔︎ P2</strong> (inside software mode) — since
+v1.2.0-build9</li>
+<li><strong>Round trips involving P3 (EGL)</strong> — since
+v1.2.1-build3, but <strong>only when the<br />
+process started with <code>BLINKGTK_GPU_MODE=egl</code></strong>. A
+process started under<br />
+software rendering cannot move to EGL: upstream treats the compositing
+mode<br />
+as one-way for the whole process, and under a software start no
+GPU-side<br />
+frames are produced at all</li>
+</ul>
 <div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
 <span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* Completion arrives on the &quot;render-path-changed&quot; signal. If the new path</span></span>
 <span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * fails its render check, the previous path is restored automatically</span></span>
@@ -417,28 +486,35 @@ ANGLE Vulkan (Issue #53). Upgrade if you are on<br />
 iter6 or earlier.</p>
 <h3 id="63-swiftshader-renders-but-pixels-never-reach-gtk">6.3
 SwiftShader renders, but pixels never reach GTK</h3>
-<p><strong>Symptom</strong>: <code>BLINK_LOAD_FINISHED</code> is reached
-and FPS is around 60, yet the GTK window stays black or<br />
-shows only the background color.<br />
-<strong>Cause</strong>: the <code>CopyFromSurface</code> guard from
-Issue #54 may be over-applied to SwiftShader<br />
-([Issue #54 follow-up]).<br />
-<strong>Fix</strong>: wait for the fix in v1.0.10 iter10 or later. In
-the meantime switch to <code>software</code> or <code>egl</code>.</p>
+<p><strong>This is resolved</strong> (Issue #54, 2026-04-19).</p>
+<ul>
+<li><strong>Symptom</strong>: <code>BLINK_LOAD_FINISHED</code> is
+reached and FPS is around 60, yet the<br />
+GTK window stays black or shows only the background colour</li>
+<li><strong>What caused it</strong>: the <code>CopyFromSurface</code>
+guard was over-applied to SwiftShader</li>
+<li><strong>If you still see it</strong>: your build may be old. Please
+use the current release<br />
+(1.2.1 or later); if it persists there, tell us</li>
+</ul>
 <h3 id="64-egl-rendering-is-clipped-to-the-top-left-corner-hidpi">6.4
 EGL rendering is clipped to the top-left corner (HiDPI)</h3>
-<p><strong>Symptom</strong>: in EGL mode with <code>gtk_scale=2</code>,
-the parent widget is 1536×785 logical px but web content<br />
-appears only in roughly the top-left 400×360 physical px.<br />
-<strong>Cause</strong>: the Chromium Chromium view
-(RenderWidgetHostView) is updated correctly through
-<code>size_allocate</code>, but the destination size of<br />
-<code>wl_subsurface</code> / <code>wp_viewport</code> does not
-follow<br />
-(Issue #58).<br />
-<strong>Fix</strong>: wait for the fix in iter10 or later. As a
-workaround, keep the window at 800×600 or smaller so<br />
-that the whole surface is visible.</p>
+<p><strong>This is resolved</strong> (Issue #58, 2026-04-20).</p>
+<ul>
+<li><strong>Symptom</strong>: with <code>gtk_scale=2</code>, the parent
+widget is 1536×785 logical px but<br />
+web content appears only in a small area at the top left</li>
+<li><strong>What caused it</strong>: the Chromium view was updated
+correctly through<br />
+<code>size_allocate</code>, but the <code>wl_subsurface</code> /
+<code>wp_viewport</code> destination size did<br />
+not follow. Implementing the <code>size_allocate</code> vfunc fixed
+it</li>
+<li><strong>If you still see it</strong> on the current release, report
+it with the window size<br />
+and <code>gtk_scale</code>. We check for these two symptoms
+automatically on every update</li>
+</ul>
 <h3 id="65-white-screen-in-every-mode">6.5 White screen in every
 mode</h3>
 <p>This can still occur under some conditions even on v1.0.10 iter7 and

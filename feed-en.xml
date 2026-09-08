@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-08-30T00:00:00Z</updated>
+  <updated>2026-09-08T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.1-build3 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3"/>
+    <id>tag:blinkgtk.org,2026:2026-09-08-build3-121:en</id>
+    <updated>2026-09-08T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>The build number is now available at run time when you report a problem. Until now, asking the library for its version returned only 1.2.1, with no build number. Behaviour can differ between builds of one version, and external users had no way to identify a build except by reading the package file name. blink_gtk_get_version_full() returns 1.2.1-build3; the return value of the existing blink_gtk_get_version() is unchanged. The frame-delivery log now records the operation actually performed and the Wayland buffer id, the measurement caps can be raised, and live render-path switching covers the EGL path (only when started with BLINKGTK_GPU_MODE=egl).</summary>
+  </entry>
   <entry>
     <title>v1.2.1-build2 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build2"/>

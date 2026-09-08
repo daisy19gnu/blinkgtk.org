@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.1-build2 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.1-build3 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -21,13 +21,78 @@
       vertical-align: middle;
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-08-30 / Chromium: 152.0.7977.64 / Language: English | 日本語">
+<meta name="description" content="Release date: 2026-09-08 / Chromium: 152.0.7977.64 / Language: English | 日本語">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.1-build2 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-08-30 / Chromium: 152.0.7977.64 / Language: English | 日本語">
+<meta property="og:title" content="BlinkGTK 1.2.1-build3 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-09-08 / Chromium: 152.0.7977.64 / Language: English | 日本語">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.1-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -42,14 +107,132 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-121-build2-release-notes">BlinkGTK 1.2.1-build2 Release
+<h1 id="blinkgtk-121-build3-release-notes">BlinkGTK 1.2.1-build3 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-08-30 /
+<p><strong>Release date</strong>: 2026-09-08 /
 <strong>Chromium</strong>: 152.0.7977.64 / Language: English | <a
 href="RELEASE_NOTES-1.2.1-ja.html">日本語</a></p>
 <p>The rendering engine has been updated to <strong>Chromium
 152</strong>, one upstream<br />
 generation on from Chromium 151 in the previous release (1.2.0).</p>
+<hr />
+<h2 id="what-build3-makes-possible">What build3 makes possible</h2>
+<h3
+id="the-exact-build-is-now-visible-at-run-time-when-you-report-a-problem">The
+exact build is now visible at run time when you report a problem</h3>
+<p>Until now, asking the library for its version at run time returned
+only<br />
+<code>1.2.1</code> -- <strong>the build number was not
+available</strong>. Behaviour can differ<br />
+between builds of one version: in v1.2.0, build2 and build3 use
+different<br />
+default EGL paths. The API could not tell them apart, so external users
+had<br />
+<strong>no way to identify a build except by reading the package file
+name</strong>. That<br />
+was our omission.</p>
+<p>Accessors for the build number have been added.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> full <span class="op">=</span> blink_gtk_get_version_full<span class="op">();</span>  <span class="co">/* &quot;1.2.1-build3&quot; */</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> b    <span class="op">=</span> blink_gtk_get_build<span class="op">();</span>         <span class="co">/* &quot;3&quot;, or NULL if unknown */</span></span></code></pre></div>
+<p><code>blink_gtk_get_version_full()</code> is <strong>never
+NULL</strong>. Quote this single string in<br />
+a bug report and the build is identified.
+<code>blink_gtk_get_version()</code> still<br />
+returns <code>1.2.1</code>, so <strong>existing callers are
+unaffected</strong>.</p>
+<p><code>blink_gtk_get_build()</code> returns <code>NULL</code> when the
+build number is unknown. It<br />
+never returns <code>"0"</code> or <code>"unknown"</code>, since those
+read as build numbers.</p>
+<h3
+id="blank-screen-causes-can-now-be-separated-from-the-log-alone">Blank-screen
+causes can now be separated from the log alone</h3>
+<p>The code that delivers frames on the EGL path has three branches, and
+one of<br />
+them <strong>discards the buffer without putting it on screen</strong>
+(GTK displays it<br />
+instead). The log said "attach" whichever branch ran. <strong>The
+instrument did not<br />
+report what it had done.</strong></p>
+<p>It now records the operation actually performed.</p>
+<pre><code>[CP-947 goal-3 deliver] dmabuf #1: op=attach+viewport wl_buffer=80 1280x553 ...
+[CP-947 goal-3 deliver] dmabuf #1: op=destroy wl_buffer=77 1280x553 ...</code></pre>
+<p>(These two lines come from <strong>two separate runs with different
+settings</strong>, one<br />
+line each. A single run never prints <code>#1</code> twice.)</p>
+<p><code>wl_buffer=</code> is the Wayland wire id, so these lines can be
+correlated with a<br />
+protocol log captured under <code>WAYLAND_DEBUG=1</code>.</p>
+<p>Two instruments that stopped after the first few frames can now be
+extended<br />
+when needed. <strong>The defaults are unchanged.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_DELIVER_LOG_MAX</code></td>
+<td>Maximum delivery log lines (default 5)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CONTENT_PROBE_MAX</code></td>
+<td>Frames to keep testing for content (default 8)</td>
+</tr>
+</tbody>
+</table>
+<p><code>BLINKGTK_CONTENT_PROBE_MAX</code> <strong>does not change
+display behaviour</strong>; it only<br />
+raises how many frames are measured, so you can check from outside
+whether the<br />
+steady state (frame 9 onward) is blank.</p>
+<p>The word used for the result has also changed. An empty frame used to
+be<br />
+recorded as <code>SKIP</code>, but <code>SKIP</code> names an
+<strong>action</strong> (skip displaying this<br />
+frame), not a <strong>measurement</strong>. Readers <strong>did take
+it</strong> to mean "the measurement<br />
+cap was reached", and <strong>we repeated the same mistake in a
+reply</strong>. It is now<br />
+<code>BLANK</code> (measured, and found empty).</p>
+<h3 id="the-egl-path-joined-live-render-path-switching">The EGL path
+joined live render-path switching</h3>
+<p><code>blink_web_view_switch_render_path()</code> now covers the EGL
+path. <strong>If the<br />
+process started under EGL, it can move back and forth to software
+rendering<br />
+without restarting.</strong></p>
+<p><strong>There is a limit.</strong> Round trips are possible
+<strong>only when the process started<br />
+with <code>BLINKGTK_GPU_MODE=egl</code></strong>. A process started
+under software rendering<br />
+cannot move to EGL: upstream treats the compositing mode as one-way for
+the<br />
+whole process, and under a software start no GPU-side frames are
+produced at<br />
+all.</p>
+<p><strong>No extra setting is needed.</strong>
+<code>BLINKGTK_KEEP_GPU_COMPOSITING</code> is read only<br />
+on a software start; it does nothing when the process starts under
+EGL.</p>
+<p>A soak of <strong>50 round trips (100 swaps)</strong> completed all
+100 swaps successfully,<br />
+with no increase in file descriptors. Memory grew by a median of 16
+KB<br />
+<strong>per swap</strong>. <strong>This does not amount to "no
+leak".</strong> It was measured on a development<br />
+machine in a headless environment, on a static page, for a single
+process<br />
+only; it has not been measured on real hardware.</p>
+<h3 id="fixed">Fixed</h3>
+<ul>
+<li>Some diagnostic environment variables did not turn off when set to
+<code>=0</code>.<br />
+The handling of negative values has been aligned</li>
+</ul>
 <hr />
 <h2 id="what-build2-makes-possible">What build2 makes possible</h2>
 <h3

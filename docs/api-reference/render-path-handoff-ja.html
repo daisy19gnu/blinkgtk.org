@@ -1,0 +1,397 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 描画経路のライブ切替と引き継ぎメタ (BlinkShift) —
+BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+<meta name="description" content="アプリケーションを再起動せずに描画経路を切り替える API と、切替を跨いで 状態を引き継ぐ Handoff Meta のリファレンスです。">
+<link rel="canonical" href="https://blinkgtk.org/docs/api-reference/render-path-handoff-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 描画経路のライブ切替と引き継ぎメタ (BlinkShift) — BlinkGTK">
+<meta property="og:description" content="アプリケーションを再起動せずに描画経路を切り替える API と、切替を跨いで 状態を引き継ぐ Handoff Meta のリファレンスです。">
+<meta property="og:url" content="https://blinkgtk.org/docs/api-reference/render-path-handoff-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/api-reference/render-path-handoff-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/api-reference/render-path-handoff-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/api-reference/render-path-handoff-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-描画経路のライブ切替と引き継ぎメタ-blinkshift">BlinkGTK
+描画経路のライブ切替と引き継ぎメタ (BlinkShift)</h1>
+<p><strong>バージョン</strong>: 1.2.1-build3<br />
+<strong>最終更新</strong>: 2026-09-01<br />
+<strong>言語</strong>: 日本語 |</p>
+<p><a href="./render-path-handoff-en.html">English</a></p>
+<hr />
+<h2 id="このページについて">このページについて</h2>
+<p>アプリケーションを再起動せずに<strong>描画経路を切り替える</strong>
+API と、切替を跨いで<br />
+状態を引き継ぐ <strong>Handoff Meta</strong> のリファレンスです。</p>
+<p>切替そのもの (<code>blink_web_view_switch_render_path()</code> と
+<code>render-path-changed</code><br />
+シグナル) の詳細は <a href="./signals-api-ja.html">signals-api-ja.md</a>
+にあります。本ページは<br />
+<strong>引き継ぎメタ</strong>を中心に、切替と組み合わせて使う形をまとめます。</p>
+<hr />
+<h2 id="1-何のための-api-か">1. 何のための API か</h2>
+<p>描画経路には長所と短所があります。CPU 合成は互換性が高く、GPU の
+dmabuf 直渡しは<br />
+帯域とCPU
+に有利です。読者の環境や場面によって、望ましい経路は変わります。</p>
+<p>従来は経路を変えるためにプロセスを起動し直していました。読者から見ると数秒の<br />
+中断です。BlinkShift
+はこれを<strong>同一プロセス内の切替</strong>にします。</p>
+<p>引き継ぎメタは「切替を跨いで何を保つか」を、経路に依存しない中間表現で表します。</p>
+<hr />
+<h2 id="2-単位の約束">2. 単位の約束</h2>
+<p><strong>幾何は論理 px と明示的な倍率で持ちます。</strong></p>
+<pre><code>物理 px = logical × device_scale_factor</code></pre>
+<p>物理 px
+をそのまま渡す形にしないのは、受け取る側が倍率を推測する必要をなくすため<br />
+です。倍率の解釈が両側でずれると、表示が半分の大きさになるなどの形で現れます。</p>
+<hr />
+<h2 id="3-構造体">3. 構造体</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define BLINK_HANDOFF_META_SCHEMA_VERSION </span><span class="dv">1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> _BlinkHandoffMeta <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   schema_version<span class="op">;</span>       <span class="co">/* == BLINK_HANDOFF_META_SCHEMA_VERSION */</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   logical_width<span class="op">;</span>        <span class="co">/* 幾何: 論理 px */</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   logical_height<span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   device_scale_factor<span class="op">;</span>  <span class="co">/* 物理 px = logical × これ */</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">char</span><span class="op">*</span> url<span class="op">;</span>                  <span class="co">/* 内容: 現在の URL (所有) */</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   scroll_x<span class="op">;</span>             <span class="co">/* 論理 px */</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   scroll_y<span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">char</span><span class="op">*</span> path_id<span class="op">;</span>              <span class="co">/* 出力経路: &quot;software&quot; / &quot;egl&quot; など (所有) */</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkHandoffMeta<span class="op">;</span></span></code></pre></div>
+<p><code>schema_version</code>
+は前方互換のためにあります。読み込む側は<strong>自分が知っている版と<br />
+一致するかを確かめてから</strong>内容を使ってください。</p>
+<hr />
+<h2 id="4-関数">4. 関数</h2>
+<table>
+<thead>
+<tr>
+<th>関数</th>
+<th>役割</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blink_web_view_export_handoff_meta()</code></td>
+<td>現在の状態をメタに書き出す。戻り値は呼出側が解放</td>
+</tr>
+<tr>
+<td><code>blink_web_view_import_handoff_meta()</code></td>
+<td>メタから状態を復元する</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_serialize()</code></td>
+<td>メタをテキストにする。戻り値は呼出側が解放</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_deserialize()</code></td>
+<td>テキストからメタを作る。戻り値は呼出側が解放</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_free()</code></td>
+<td>メタを解放する</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>BlinkHandoffMeta<span class="op">*</span> blink_web_view_export_handoff_meta<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>  blink_web_view_import_handoff_meta<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="dt">const</span> BlinkHandoffMeta<span class="op">*</span> meta<span class="op">);</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> blink_handoff_meta_serialize<span class="op">(</span><span class="dt">const</span> BlinkHandoffMeta<span class="op">*</span> meta<span class="op">);</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>BlinkHandoffMeta<span class="op">*</span> blink_handoff_meta_deserialize<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> text<span class="op">);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>  blink_handoff_meta_free<span class="op">(</span>BlinkHandoffMeta<span class="op">*</span> meta<span class="op">);</span></span></code></pre></div>
+<p><code>export</code> は失敗すると <code>NULL</code>
+を返します。<code>serialize</code> の戻り値は
+<code>free()</code>、<br />
+<code>deserialize</code> と <code>export</code> の戻り値は
+<code>blink_handoff_meta_free()</code> で解放します。</p>
+<p>直列化の形式は INI
+互換のテキストで、セッション保存ファイルと同じ読み方が<br />
+できます。</p>
+<hr />
+<h2 id="5-引き継ぐもの引き継がないもの">5.
+引き継ぐもの・引き継がないもの</h2>
+<p><strong>含むのは経路に依存しない意味状態だけです。</strong></p>
+<table>
+<thead>
+<tr>
+<th>含む</th>
+<th>含まない</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>幾何 (論理 px + 倍率)</td>
+<td>EGL コンテキスト</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>Wayland サーフェス</td>
+</tr>
+<tr>
+<td>スクロール位置 (論理 px)</td>
+<td>dmabuf のファイル記述子</td>
+</tr>
+<tr>
+<td>出力経路の id</td>
+<td>サーフェス識別子</td>
+</tr>
+</tbody>
+</table>
+<p>含まないものは切替のたびに作り直されます。生の資源を持ち回らないので、切替に<br />
+失敗しても前の経路へ戻せます。</p>
+<h3
+id="現時点でメタに載っていないもの">現時点でメタに載っていないもの</h3>
+<p>次の状態は<strong>エンジンからは意味を判定できない</strong>ため、メタには載せていません。</p>
+<ul>
+<li>ページ番号 (何ページ目か)</li>
+<li>文字サイズ・見開き・送りモード</li>
+<li>読書位置のような、アプリケーション固有の状態</li>
+</ul>
+<p>エンジンが値の正しさを検証できないものに型を付けると、型があるのに中身を保証<br />
+できない形になります。<strong>これらはアプリケーション側で保存・復元してください。</strong></p>
+<p>版面の幾何 (列ピッチなど) は縦書きメトリクスの API
+から取得できます。メタに<br />
+写しを持たせると、片方だけ古くなったときに気付けません。</p>
+<hr />
+<h2 id="6-使い方">6. 使い方</h2>
+<p>切替の前後でメタを採り、同じ状態に戻っているかを確かめる形です。切替は非同期<br />
+なので、<strong>完了はシグナルで受け取ります</strong>。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span>   g_seq <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> g_before <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_render_path_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> to<span class="op">,</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> result<span class="op">,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">int</span> gate_ms<span class="op">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">int</span> seq<span class="op">,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                                   gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>user_data<span class="op">;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>seq <span class="op">!=</span> g_seq<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span>  <span class="co">/* 別の切替の通知。鍵が違えば触らない */</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>strcmp<span class="op">(</span>result<span class="op">,</span> <span class="st">&quot;ok&quot;</span><span class="op">)</span> <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;切替できませんでした (</span><span class="sc">%s</span><span class="st">)。前の経路のままです</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> result<span class="op">);</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  BlinkHandoffMeta<span class="op">*</span> after <span class="op">=</span> blink_web_view_export_handoff_meta<span class="op">(</span>view<span class="op">);</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>after <span class="op">!=</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> text <span class="op">=</span> blink_handoff_meta_serialize<span class="op">(</span>after<span class="op">);</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;経路=</span><span class="sc">%s</span><span class="st">  </span><span class="sc">%d</span><span class="st"> ms</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> to<span class="op">,</span> gate_ms<span class="op">);</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;  前: </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> g_before <span class="op">!=</span> NULL <span class="op">?</span> g_before <span class="op">:</span> <span class="st">&quot;(採れず)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;  後: </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> text <span class="op">!=</span> NULL <span class="op">?</span> text <span class="op">:</span> <span class="st">&quot;(採れず)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    free<span class="op">(</span>text<span class="op">);</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    blink_handoff_meta_free<span class="op">(</span>after<span class="op">);</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> request_switch<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path_id<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  BlinkHandoffMeta<span class="op">*</span> before <span class="op">=</span> blink_web_view_export_handoff_meta<span class="op">(</span>view<span class="op">);</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>before <span class="op">!=</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    free<span class="op">(</span>g_before<span class="op">);</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    g_before <span class="op">=</span> blink_handoff_meta_serialize<span class="op">(</span>before<span class="op">);</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    blink_handoff_meta_free<span class="op">(</span>before<span class="op">);</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  g_seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> path_id<span class="op">);</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>g_seq <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;切替の要求が受け付けられませんでした</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">**</span> argv<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> widget <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  BlinkWebView<span class="op">*</span> view <span class="op">=</span> BLINK_WEB_VIEW<span class="op">(</span>widget<span class="op">);</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;render-path-changed&quot;</span><span class="op">,</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>                   G_CALLBACK<span class="op">(</span>on_render_path_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> widget<span class="op">);</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>  blink_web_view_load_uri<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>  gtk_widget_set_visible<span class="op">(</span>window<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  request_switch<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  free<span class="op">(</span>g_before<span class="op">);</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="通知を切替と結びつける">通知を切替と結びつける</h3>
+<p><code>blink_web_view_switch_render_path()</code>
+は受理した切替の<strong>通し番号</strong>を返します<br />
+(1 以上。0 は受理されなかったことを表します)。完了シグナルの
+<code>seq</code> 引数には<br />
+同じ番号が入ります。</p>
+<p>切替が続けて起きる場面では、<strong>時刻の近さで前後を結びつけると別の切替の記録を<br />
+突き合わせてしまいます</strong>。しかも一致したように見えるので、間違いに気付けません。<br />
+番号で結んでください。</p>
+<h3 id="結果の-3-値">結果の 3 値</h3>
+<table>
+<thead>
+<tr>
+<th><code>result</code></th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ok</code></td>
+<td>新しい経路で安定して描けている</td>
+</tr>
+<tr>
+<td><code>rollback</code></td>
+<td>新しい経路が確認に落ち、<strong>前の経路へ戻した</strong>。表示は保たれている</td>
+</tr>
+<tr>
+<td><code>fail</code></td>
+<td>前の経路へ戻せなかった。異常として扱う</td>
+</tr>
+</tbody>
+</table>
+<p><code>rollback</code> は失敗ですが、読者の画面は壊れません。</p>
+<hr />
+<h2 id="7-経路の-id">7. 経路の id</h2>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>P1</code></td>
+<td>CPU 合成の直接配送 (既定)</td>
+</tr>
+<tr>
+<td><code>P2</code></td>
+<td>CPU 合成の共有メモリ配送</td>
+</tr>
+<tr>
+<td><code>P3</code></td>
+<td>GPU の dmabuf 配送。出力層だけを差し替えるため、失敗すれば CPU
+合成へ戻せる</td>
+</tr>
+</tbody>
+</table>
+<p><code>blink_web_view_get_render_path()</code> は現在の経路 id
+を返します。値が変わるのは<br />
+切替が <code>ok</code> で完了したときだけです。</p>
+<hr />
+<h2 id="関連">関連</h2>
+<ul>
+<li><a href="./signals-api-ja.html">signals-api-ja.md</a> —
+<code>render-path-changed</code> シグナル</li>
+<li><a href="./c-api-reference-ja.html">c-api-reference-ja.md</a> — C API
+一覧</li>
+<li><a
+href="./environment-variables-ja.html">environment-variables-ja.md</a> —
+診断用の環境変数</li>
+</ul>
+</body>
+</html>
+</div></div>

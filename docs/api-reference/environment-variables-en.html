@@ -47,8 +47,9 @@ List) — BlinkGTK</title>
 id="blinkgtk-environment-variables-reference-canonical-supported-list">BlinkGTK
 Environment Variables Reference (Canonical Supported List)</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Last updated</strong>: 2026-08-01 (Chromium 151 baseline;
-canonical source for Chapter 9 of the API Reference Manual, #121)</p>
+<strong>Last updated</strong>: 2026-09-02 (BlinkGTK 1.2.1 / Chromium 152
+baseline; canonical source for Chapter 9 of the API Reference Manual,
+#121)</p>
 <p>Environment variables interpreted by BlinkGTK are defined in three
 tiers. <strong>Embedders may only depend on tier 1 (publicly
 supported).</strong></p>
@@ -133,6 +134,41 @@ set)</td>
 <td><code>0</code></td>
 <td>Number of diagnostic frame PNGs to save. <strong>Default 0 = save
 none.</strong> Set a count only when you need the diagnostics</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DISABLE_SITE_ISOLATION</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td><strong>Disables per-site process isolation. This weakens
+protection.</strong> Isolation is the boundary that stops a compromised
+page on one site from reading another site's data; without it, documents
+from several sites share one process. On by default since v1.2.0-build8
+— this variable exists as an escape hatch</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PRESENT_POLICY</code></td>
+<td><code>warm</code> / <code>warm-force</code></td>
+<td>unset</td>
+<td>Stops the work of putting frames on screen (compositing, capture,
+transfer) for a window nobody is watching. <strong>Layout and raster
+keep running, so look-ahead is preserved.</strong> <code>warm</code>
+applies only while the window is hidden; <code>warm-force</code> is
+<strong>for testing only</strong> and always applies. On resume the
+engine captures once unconditionally, so no stale frame is shown</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_LOG_LEVEL</code></td>
+<td><code>0</code> / <code>1</code> / <code>2</code></td>
+<td><code>0</code></td>
+<td>Diagnostic output volume: <code>0</code> everything, <code>1</code>
+much reduced, <code>2</code> nearly silent. <strong>Raise it if the logs
+feel noisy</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DIAG_VERBOSE</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td>Also emit per-frame diagnostics (suppressed by default)</td>
 </tr>
 </tbody>
 </table>
@@ -235,8 +271,93 @@ without notice.</p>
 <code>BLINKGTK_HARNESS_AUDIT</code> /
 <code>BLINKGTK_AURA_SHOW_IMMEDIATE</code> /
 <code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
-<code>BLINKGTK_CAPTURE_TRACE</code> /
-<code>BLINKGTK_MOJO_TRACE</code></p>
+<code>BLINKGTK_CAPTURE_TRACE</code> / <code>BLINKGTK_MOJO_TRACE</code> /
+<code>BLINKGTK_EGL_RECIPIENT_ALWAYS</code> (prototype: always create the
+EGL recipient surface, regardless of the active render path) /
+<code>BLINKGTK_DELIVER_LOG_MAX</code> (maximum EGL delivery log lines;
+default 5. Lets you follow which operation ran and which wl_buffer it
+used into the steady state when nothing appears on screen) /
+<code>BLINKGTK_CONTENT_PROBE_MAX</code> (extends <strong>measurement
+only</strong> into steady state; the display decision still uses the
+first 8 frames) / <code>BLINKGTK_TEST_ALLOC_LOG</code> /
+<code>BLINKGTK_TEST_GATE_FAKE_PRE</code> (negative control: substitutes
+the gate's baseline) / <code>BLINKGTK_TEST_FOCUS_LOG</code> /
+<code>BLINKGTK_TEST_SWITCH_PATH</code>
+(<code>&lt;path id&gt;:&lt;ms&gt;</code> — switch render path
+automatically) / <code>BLINKGTK_BLINKSHIFT_AUTOSWAP</code> /
+<code>BLINKGTK_BLINKSHIFT_EGL_RECREATE</code> /
+<code>BLINKGTK_BLINKSHIFT_NO_KICK</code> / <code>BLINKGTK_MINORI</code>
+/ <code>BLINKGTK_PROFILE_DIR</code> / <code>BLINKGTK_RESIZE_FIT</code> /
+<code>BLINKGTK_TRACE_PIXEL_SUPPLIER</code> /
+<code>BLINKGTK_TEST_COMPOSITOR_RECREATE</code> /
+<code>BLINKGTK_TEST_DISPOSE_QUIT_MS</code> /
+<code>BLINKGTK_TEST_EXECV_RESTART</code> /
+<code>BLINKGTK_TEST_OUTPUT_SWAP</code> /
+<code>BLINKGTK_TEST_OUTPUT_SWAP_SKIP</code></p>
+<h2 id="3b-bundled-demo-simple_browser-only">3b. Bundled demo
+(<code>simple_browser</code>) only</h2>
+<p><strong>These have no effect on the library.</strong> They apply only
+when running the bundled demo.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_RESTART_ACTIVATION=0</code></td>
+<td>Stops carrying the activation token across a restart (carrying it
+brings the new window to the front)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RESTART_LINGER_MS=&lt;ms&gt;</code></td>
+<td>Restart by forking and letting the parent linger for this long.
+<strong>Defaults to 0 (disabled)</strong>, which restarts via execv as
+before</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PERMISSION_ALLOW</code></td>
+<td>The demo auto-approves permission requests. <strong>The library
+itself denies by default</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_INSPECTOR_DASH</code></td>
+<td>Opens the inspector dashboard</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_TEST_SUITE</code> /
+<code>BLINKGTK_TEST_CAPTURE</code></td>
+<td>Demo verification modes</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEMO_NO_EBOOK</code> /
+<code>BLINKGTK_DEMO_NO_JLREQ</code></td>
+<td>Disable the demo's EBOOK setting / JLReq typesetting at startup</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_MUTTER_REACTIVATE</code> /
+<code>BLINKGTK_DEBUG_ISSUE_84</code></td>
+<td>For isolating window-raising behaviour</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CHROMIUM_VERSION</code></td>
+<td>Overrides the Chromium version the demo reports (for
+verification)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_AUTO_RESIZE=&lt;count&gt;</code></td>
+<td>The demo resizes its own window this many times (for verifying
+resize behaviour). <strong>It does not disable resizing</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_AUTO_FULLSCREEN=&lt;count&gt;</code></td>
+<td>The demo toggles fullscreen this many times, every 2.5 s, to produce
+a large single-step size change</td>
+</tr>
+</tbody>
+</table>
 <h2 id="4-deprecated">4. Deprecated</h2>
 <table>
 <thead>

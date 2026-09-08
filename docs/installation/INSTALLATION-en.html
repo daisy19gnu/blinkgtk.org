@@ -199,24 +199,30 @@ devel)</h2>
 </tr>
 </thead>
 <tbody>
-</tbody>
-</table>
-<p>|</p>
-<p><strong>blinkgtk-bin</strong> (runtime) | run apps |
-<code>/usr/lib64/libblinkgtk-0.1.so.0</code> (public ABI) +
+<tr>
+<td><strong>blinkgtk-bin</strong> (runtime)</td>
+<td>run apps</td>
+<td><code>/usr/lib64/libblinkgtk-0.1.so.0</code> (public ABI) +
 <code>/usr/lib64/blinkgtk-0.1/</code> (Chromium, private) +
 <code>/usr/libexec/blinkgtk-0.1/</code> (simple_browser) +
-<code>THIRD_PARTY_NOTICES.html</code> |<br />
-|</p>
-<p><strong>blinkgtk-bin-devel</strong> (devel) | build consumers |
-headers (<code>/usr/include/blinkgtk-0.1/</code>) + pkg-config
+<code>THIRD_PARTY_NOTICES.html</code></td>
+</tr>
+<tr>
+<td><strong>blinkgtk-bin-devel</strong> (devel)</td>
+<td>build consumers</td>
+<td>headers (<code>/usr/include/blinkgtk-0.1/</code>) + pkg-config
 (<code>/usr/lib64/pkgconfig/blinkgtk-0.1.pc</code>) + <code>.so</code>
-symlink |<br />
-|</p>
-<p><strong>blinkgtk-bin-gir</strong> (gir) | introspection
-(Python/Rust/…) | <code>BlinkGTK-0.1.typelib</code> | Install
-<strong>runtime only</strong> to run apps; add <strong>devel (+
-gir)</strong> to develop apps that<br />
+symlink</td>
+</tr>
+<tr>
+<td><strong>blinkgtk-bin-gir</strong> (gir)</td>
+<td>introspection (Python/Rust/…)</td>
+<td><code>BlinkGTK-0.1.typelib</code></td>
+</tr>
+</tbody>
+</table>
+<p>Install <strong>runtime only</strong> to run apps; add <strong>devel
+(+ gir)</strong> to develop apps that<br />
 embed BlinkGTK.</p>
 <hr />
 <h2 id="installation">Installation</h2>

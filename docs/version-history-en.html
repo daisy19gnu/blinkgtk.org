@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.1-build2 / Language: English | <a
+<p>Version: 1.2.1-build3 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,21 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.1-build2</strong> ← current</td>
-<td>2026-08-30</td>
+<td><strong>v1.2.1-build3</strong> ← current</td>
+<td>2026-09-08</td>
 <td><strong>152.0.7977.64</strong></td>
+<td>The build number is now available at run time when reporting a
+problem (blink_gtk_get_version_full / blink_gtk_get_build; behaviour can
+differ between builds of one version, and until now only the package
+file name identified a build). The frame-delivery log records the
+operation actually performed and the Wayland buffer id, and the
+measurement caps can be raised. Live render-path switching now covers
+the EGL path (when started under EGL)</td>
+</tr>
+<tr>
+<td>v1.2.1-build2</td>
+<td>2026-08-30</td>
+<td>152.0.7977.64</td>
 <td>Where the GPU path is unavailable, BlinkGTK now falls back to
 software rendering and keeps drawing. It switches when no frame arrives
 within five seconds and writes the reason to standard error, and it does

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Chromium 147 → 151 — What BlinkGTK Gained — BlinkGTK</title>
+  <title>Chromium 147 → 152 — What BlinkGTK Gained — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -26,7 +26,7 @@
 <meta name="description" content="BlinkGTK embeds Chromium&#x27;s rendering engine, Blink, as-is. When Chromium gains a new web capability, moving BlinkGTK to a newer base gives you that capability d">
 <link rel="canonical" href="https://blinkgtk.org/docs/chromium-feature-history-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Chromium 147 → 151 — What BlinkGTK Gained — BlinkGTK">
+<meta property="og:title" content="Chromium 147 → 152 — What BlinkGTK Gained — BlinkGTK">
 <meta property="og:description" content="BlinkGTK embeds Chromium&#x27;s rendering engine, Blink, as-is. When Chromium gains a new web capability, moving BlinkGTK to a newer base gives you that capability d">
 <meta property="og:url" content="https://blinkgtk.org/docs/chromium-feature-history-en.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -42,16 +42,16 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="chromium-147--151--what-blinkgtk-gained">Chromium 147 → 151 —
+<h1 id="chromium-147--152--what-blinkgtk-gained">Chromium 147 → 152 —
 What BlinkGTK Gained</h1>
-<p>Version: 1.2.1-build2 / Language: English | <a
+<p>Version: 1.2.1-build3 / Language: English | <a
 href="chromium-feature-history-ja.html">日本語</a></p>
 <p>BlinkGTK embeds Chromium's rendering engine, Blink, as-is. When
 Chromium gains a new<br />
 web capability, <strong>moving BlinkGTK to a newer base gives you that
 capability directly</strong>.<br />
 This document walks through what changed across Chromium 147, 148, 149,
-150 and 151 —<br />
+150, 151 and 152 —<br />
 the versions BlinkGTK has been built on — from the side of what you can
 actually do.</p>
 <p>It is not a digest of specifications. We diffed the engine source
@@ -476,6 +476,138 @@ them</td>
 </tbody>
 </table>
 <hr />
+<h2 id="151--152--ruby-placement-is-rebuilt">151 → 152 — Ruby placement
+is rebuilt</h2>
+<p><strong>In one line</strong>: the annotation space we flagged in 151
+as "worth watching" is on<br />
+by default in 152, and the ruby placement computation itself has been
+rebuilt.</p>
+<h3 id="what-this-gave-japanese-typography">What this gave Japanese
+typography</h3>
+<p><strong>Start-side annotation space
+(<code>AnnotationSpaceOnStart</code>) is now on by
+default.</strong><br />
+It was experimental in 151. When a block has no border on its start
+side, a ruby<br />
+annotation may now overflow into that margin — a way of placing ruby
+without<br />
+inflating the line height.</p>
+<p>There is a case where it <strong>does not apply</strong>. The
+implementation excludes balanced<br />
+columns. <strong>Do not rely on this path in multi-column vertical
+writing.</strong> The test<br />
+upstream added is horizontal (no <code>writing-mode</code>) and does not
+exercise page or<br />
+column fragmentation.</p>
+<p><strong>Ruby placement is now computed as a tree
+(<code>TreeRubyPlacement</code>).</strong> Instead of<br />
+laying annotation lines out flat, the engine builds a tree with
+parent/child<br />
+relationships and positions each line relative to the base. Annotations
+on both<br />
+sides, and nested ruby, now go through this path.</p>
+<p><strong>Tab stops inside a ruby base follow the specification
+(<code>TabSizeInRubyBase</code>).</strong><br />
+CSS Text 3 defines tab stops as multiples measured from the content edge
+of the<br />
+nearest block container ancestor; 152 matches that definition.</p>
+<p><strong>Not measured</strong>: for all three of the above we have
+confirmed that the flag and<br />
+the code exist. <strong>We have not measured how the typeset result
+changes.</strong> There is<br />
+no measured table for 152 like the emphasis-mark one for 150 → 151.
+<strong>Check on<br />
+your own pages before relying on it.</strong></p>
+<h3 id="css-2">CSS</h3>
+<p>Only two new properties, neither related to Japanese typography<br />
+(<code>row-rule-visibility-items</code>, <code>window-drag</code>).</p>
+<p>Some features moved from experimental to on-by-default:</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>151</th>
+<th>152</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CSSAlphaColorFunction</code></td>
+<td>experimental</td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td><code>CSSPseudoElementBackdrop</code> (<code>::backdrop</code>)</td>
+<td>experimental</td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td><code>CSSPseudoElementViewTransitions</code></td>
+<td>test</td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td><code>CompositeClipPathAnimation</code></td>
+<td>experimental</td>
+<td><strong>default</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="also-on-by-default">Also on by default</h3>
+<p>Shadow DOM (<code>ShadowRootReferenceTarget</code>,
+<code>ShadowRootSlotAssignment</code>), storage<br />
+access (<code>RequestStorageAccessFor</code>), the Range API
+(<code>OpaqueRange</code>,<br />
+<code>LegacyAbstractRange</code>, <code>RangeBoundaryFastPath</code>),
+audio selection in screen capture<br />
+(<code>GetDisplayMediaAudioSelection</code>), the streaming sanitizer,
+and others — <strong>43 in<br />
+total</strong> became default in 152.</p>
+<h3 id="migration-note--flags-that-disappeared">Migration note — flags
+that disappeared</h3>
+<p><strong>29 flags were removed</strong> in 152. <strong>25 of them
+were already default in 151</strong>,<br />
+which means the behaviour became permanent and <strong>the switch is
+gone</strong>.</p>
+<p><strong>If you were using one as an escape hatch, it no longer
+works.</strong> Notable ones:</p>
+<table>
+<thead>
+<tr>
+<th>Removed flag</th>
+<th>State in 151</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MulticolColumnWrapping</code></td>
+<td>default</td>
+</tr>
+<tr>
+<td><code>OffMainThreadCSSPaint</code></td>
+<td>default</td>
+</tr>
+<tr>
+<td><code>PageRevealEvent</code></td>
+<td>default</td>
+</tr>
+<tr>
+<td><code>PaintTimingMixin</code></td>
+<td>default</td>
+</tr>
+<tr>
+<td><code>SystemFallbackEmojiVSSupport</code></td>
+<td>default</td>
+</tr>
+</tbody>
+</table>
+<p>The remaining four were not default
+(<code>AudioContextPlayoutStats</code>,<br />
+<code>AutocorrectByDefault</code>,
+<code>HTMLImageElementActualNaturalSize</code>,<br />
+<code>WebAuthenticationImmediateGet</code>), and
+<code>ConnectionAllowlist</code> was replaced by<br />
+<code>ConnectionAllowlistEmbeddedEnforcement</code>.</p>
 <h2
 id="where-japanese-typography-stands--the-five-versions-at-a-glance">Where
 Japanese typography stands — the five versions at a glance</h2>

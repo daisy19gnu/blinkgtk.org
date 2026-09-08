@@ -46,8 +46,8 @@ BlinkGTK</title>
 <h1 id="blinkgtk-環境変数リファレンス公開サポート正リスト">BlinkGTK
 環境変数リファレンス(公開サポート正リスト)</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>最終更新</strong>: 2026-08-01(Chromium 151 baseline、#121 API
-リファレンス第 9 章の正本)</p>
+<strong>最終更新</strong>: 2026-09-02 (BlinkGTK 1.2.1 / Chromium 152
+baseline、#121 API リファレンス第 9 章の正本)</p>
 <p>BlinkGTK が解釈する環境変数を 3 区分で定義します。<strong>embedder
 が依存してよいのは第 1 区分(公開サポート)のみ</strong>です。</p>
 <ul>
@@ -125,6 +125,38 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td>診断用フレーム PNG の保存枚数。<strong>既定 0 =
 保存しない</strong>。診断が要るときだけ枚数を指定する</td>
 </tr>
+<tr>
+<td><code>BLINKGTK_DISABLE_SITE_ISOLATION</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td><strong>サイトごとのプロセス分離を無効化します。保護を弱めます。</strong>
+分離は、あるサイトのページが乗っ取られたときに別のサイトのデータを読ませないための境界です。無効にすると複数サイトの文書が同じプロセスに同居します。v1.2.0-build8
+から既定で有効で、これは不具合が出たときの逃げ道です</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PRESENT_POLICY</code></td>
+<td><code>warm</code> / <code>warm-force</code></td>
+<td>未設定</td>
+<td>見る人がいない窓に対して、画面へ出す仕事 (合成・キャプチャ・転送)
+を止めます。<strong>組版とラスタは止めないので先読みは保たれます</strong>。<code>warm</code>
+は窓が隠れている間だけ、<code>warm-force</code>
+は<strong>試験専用</strong>で常に止めます。復帰時は damage を待たず 1
+回無条件でキャプチャするため、古いフレームは残りません</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_LOG_LEVEL</code></td>
+<td><code>0</code> / <code>1</code> / <code>2</code></td>
+<td><code>0</code></td>
+<td>診断出力の量。<code>0</code> すべて / <code>1</code> 大幅に削減 /
+<code>2</code>
+ほぼ無音。<strong>ログが多いと感じたら上げてください</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DIAG_VERBOSE</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td>毎フレームの診断も出します (既定は抑止)</td>
+</tr>
 </tbody>
 </table>
 <h2 id="2-エスケープハッチ既定のまま推奨">2.
@@ -200,29 +232,144 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 </table>
 <h2 id="3-内部診断サポート対象外">3. 内部診断(サポート対象外)</h2>
 <p>以下は開発・調査用の内部変数です。<strong>一覧のみ掲載し、詳細仕様は公開しません</strong>。無保証・予告なく削除されます。</p>
-<p><code>BLINKGTK_120_CC_DIAG</code> /
+<table>
+<thead>
+<tr>
+<th>分野</th>
+<th>変数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>#120 の調査</td>
+<td><code>BLINKGTK_120_CC_DIAG</code> /
 <code>BLINKGTK_120_DISP_DIAG</code> /
 <code>BLINKGTK_120_CLIP_DIAG</code> / <code>BLINKGTK_120_DIAG</code> /
-<code>BLINKGTK_120_PAINT_KICK</code> /
-<code>BLINKGTK_120_FI_ROW1</code>(fault injection・検証専用)/
-<code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
+<code>BLINKGTK_120_PAINT_KICK</code> / <code>BLINKGTK_120_FI_ROW1</code>
+(fault injection・検証専用) / <code>BLINKGTK_120_TYPEB_FIX</code></td>
+</tr>
+<tr>
+<td>組版</td>
+<td><code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
 <code>BLINKGTK_LAYOUT_DEBUG</code> /
-<code>BLINKGTK_RUBY_RESERVE_EM</code> / <code>BLINKGTK_EGL_DIAG</code> /
+<code>BLINKGTK_RUBY_RESERVE_EM</code></td>
+</tr>
+<tr>
+<td>EGL 経路</td>
+<td><code>BLINKGTK_EGL_DIAG</code> /
 <code>BLINKGTK_EGL_MANUAL_VIEWPORT</code> /
 <code>BLINKGTK_EGL_BRIDGE_SETTLE_MS</code> /
 <code>BLINKGTK_EGL_GTK4_NATIVE</code> /
-<code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
-<code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
-<code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
+<code>BLINKGTK_EGL_RECIPIENT_ALWAYS</code> (EGL
+の受け面を経路によらず常に作る試作)</td>
+</tr>
+<tr>
+<td>出力層・合成</td>
+<td><code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
-<code>BLINKGTK_120_TYPEB_FIX</code> /
-<code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
-<code>BLINKGTK_HARNESS_AUDIT</code> /
-<code>BLINKGTK_AURA_SHOW_IMMEDIATE</code> /
 <code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
-<code>BLINKGTK_CAPTURE_TRACE</code> /
-<code>BLINKGTK_MOJO_TRACE</code></p>
+<code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
+<code>BLINKGTK_AURA_SHOW_IMMEDIATE</code></td>
+</tr>
+<tr>
+<td>経路のライブ切替</td>
+<td><code>BLINKGTK_BLINKSHIFT_AUTOSWAP</code> /
+<code>BLINKGTK_BLINKSHIFT_EGL_RECREATE</code> /
+<code>BLINKGTK_BLINKSHIFT_NO_KICK</code></td>
+</tr>
+<tr>
+<td>追跡・計測</td>
+<td><code>BLINKGTK_CAPTURE_TRACE</code> /
+<code>BLINKGTK_MOJO_TRACE</code> /
+<code>BLINKGTK_TRACE_PIXEL_SUPPLIER</code> /
+<code>BLINKGTK_HARNESS_AUDIT</code> / <code>BLINKGTK_MINORI</code> /
+<code>BLINKGTK_PROFILE_DIR</code> /
+<code>BLINKGTK_RESIZE_FIT</code></td>
+</tr>
+<tr>
+<td>検証専用</td>
+<td><code>BLINKGTK_DELIVER_LOG_MAX</code> (EGL 配送ログの行数上限。既定
+5。画面が出ないときに、どの操作が呼ばれたか・どの wl_buffer
+だったかを定常状態まで追える) / <code>BLINKGTK_CONTENT_PROBE_MAX</code>
+(定常状態の中身を <strong>計測だけ</strong> 延長する。表示の判定は先頭 8
+枚のまま変わらない) / <code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
+<code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
+<code>BLINKGTK_TEST_ALLOC_LOG</code> /
+<code>BLINKGTK_TEST_GATE_FAKE_PRE</code>
+(判定の基準を差し替える陰性対照) / <code>BLINKGTK_TEST_FOCUS_LOG</code>
+/ <code>BLINKGTK_TEST_SWITCH_PATH</code>
+(<code>&lt;経路 id&gt;:&lt;ms&gt;</code>) /
+<code>BLINKGTK_TEST_COMPOSITOR_RECREATE</code> /
+<code>BLINKGTK_TEST_DISPOSE_QUIT_MS</code> /
+<code>BLINKGTK_TEST_EXECV_RESTART</code> /
+<code>BLINKGTK_TEST_OUTPUT_SWAP</code> /
+<code>BLINKGTK_TEST_OUTPUT_SWAP_SKIP</code></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3b-同梱デモ-simple_browser-だけのもの">3b. 同梱デモ
+(<code>simple_browser</code>) だけのもの</h2>
+<p><strong>ライブラリには効きません。</strong>
+同梱デモを動かすときだけのものです。</p>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_RESTART_ACTIVATION=0</code></td>
+<td>再起動時に activation token
+を引き継ぐのをやめます(引き継ぐと新しい窓が前面に出ます)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RESTART_LINGER_MS=&lt;ms&gt;</code></td>
+<td>再起動を fork +
+親の残存で行い、その残存時間を指定します。<strong>既定は
+0(無効)</strong> で、従来どおり execv します</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PERMISSION_ALLOW</code></td>
+<td>デモが権限要求を自動で許可します。<strong>ライブラリ本体は既定で拒否します</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_INSPECTOR_DASH</code></td>
+<td>インスペクタのダッシュボードを開きます</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_TEST_SUITE</code> /
+<code>BLINKGTK_TEST_CAPTURE</code></td>
+<td>デモの検証モード</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEMO_NO_EBOOK</code> /
+<code>BLINKGTK_DEMO_NO_JLREQ</code></td>
+<td>デモ起動時の EBOOK 設定 / JLReq 組版の適用を止めます</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_MUTTER_REACTIVATE</code> /
+<code>BLINKGTK_DEBUG_ISSUE_84</code></td>
+<td>窓の前面化まわりの切り分け用</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CHROMIUM_VERSION</code></td>
+<td>デモが表示する Chromium 版数の上書き (検証用)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_AUTO_RESIZE=&lt;回数&gt;</code></td>
+<td>デモが窓を指定回数だけ自分でリサイズします
+(リサイズまわりの検証用)。<strong>止める指定ではありません</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_AUTO_FULLSCREEN=&lt;回数&gt;</code></td>
+<td>デモが 2.5
+秒ごとに全画面を指定回数だけ往復します。大きな一段のサイズ変化を作る検証用</td>
+</tr>
+</tbody>
+</table>
 <h2 id="4-廃止">4. 廃止</h2>
 <table>
 <thead>

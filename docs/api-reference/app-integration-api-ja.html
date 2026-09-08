@@ -112,7 +112,7 @@
 id="blinkgtk-アプリ連携-api-リファレンス--カスタムスキームメッセージングスクリプト注入">BlinkGTK
 アプリ連携 API リファレンス —
 カスタムスキーム・メッセージング・スクリプト注入</h1>
-<p><strong>バージョン</strong>: 1.2.1-build2<br />
+<p><strong>バージョン</strong>: 1.2.1-build3<br />
 <strong>最終更新</strong>: 2026-07-30</p>
 <p><a href="./app-integration-api-en.html">English</a></p>
 <hr />
@@ -373,11 +373,13 @@ id="blink_web_view_register_custom_scheme_full">blink_web_view_register_custom_s
 </tr>
 </tbody>
 </table>
-<p><strong>なぜ事前登録制か</strong>: スキームを「standard scheme
-(<code>scheme://host/path</code> の<br />
-構造を持ち、相対 URL が解決できる)」「secure context (HTTPS
-相当)」として<br />
-扱うための分類は、エンジン起動シーケンスの早い段階でしか登録できません。<br />
+<p><strong>なぜ事前登録制か</strong>: スキームには 2
+つの分類が要ります。<br />
+「standard scheme (<code>scheme://host/path</code> の構造を持ち、相対
+URL が解決できる)」と<br />
+「secure context (HTTPS
+相当)」です。<strong>この分類は、エンジン起動シーケンスの<br />
+早い段階でしか登録できません</strong>。<br />
 <code>register_custom_scheme()</code>
 は起動後に呼ばれるため、名前の追加はできず、<br />
 事前登録済みの名前に<strong>ハンドラを割り当てる</strong>操作になっています。</p>

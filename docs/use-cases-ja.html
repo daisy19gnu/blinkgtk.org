@@ -43,7 +43,7 @@
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
 <h1 id="blinkgtk-は何に使えるか">BlinkGTK は何に使えるか</h1>
-<p>バージョン: 1.2.1-build2 / 言語: 日本語 | <a
+<p>バージョン: 1.2.1-build3 / 言語: 日本語 | <a
 href="use-cases-en.html">English</a></p>
 <p>BlinkGTK は「<strong>画面を Web
 技術で作る</strong>」ための部品です。HTML・CSS・JavaScript で<br />
@@ -231,10 +231,14 @@ SoC
 日本語組版の要素を Chromium
 のレンダリングエンジンがそのまま扱います。</p>
 <p>どこまでできて何がまだかは、<a
-href="chromium-feature-history-ja.html">Chromium 147 → 151
+href="chromium-feature-history-ja.html">Chromium 147 → 152
 の新機能</a><br />
 に版ごとの実測付きでまとめています。たとえば Chromium 151 では、<br />
-<strong>圏点を付けても行送りが太らなくなりました</strong>(行間に余裕がある場合)。</p>
+<strong>圏点を付けても行送りが太らなくなりました</strong>(行間に余裕がある場合)。<br />
+現行の Chromium 152
+では、<strong>ルビの注記を行の高さを膨らませずに置く仕組み</strong>が<br />
+既定になり、ルビの配置計算そのものが作り直されています(縦書きの段組みでは<br />
+適用されない場面があります。詳細は上のリンク先)。</p>
 <hr />
 <h2 id="用途を問わず効く-6-つの性質">用途を問わず効く 6 つの性質</h2>
 <p>ここまでの用途に共通して効いている部分をまとめます。挙げていない用途でも、<br />
@@ -321,12 +325,14 @@ C++、JavaScript (GJS)、Vala、Go</strong>
 同じ API を呼べます。既存のチームが使っている言語に合わせられます。</p>
 <h3 id="5-外部の機器とつながる">5. 外部の機器とつながる</h3>
 <p>画面 (JavaScript) とアプリ本体 (C など)
-の間には、双方向の橋があります —<br />
-JavaScript から C へはメッセージ (<a
+の間には、双方向の橋があります。</p>
+<ul>
+<li><strong>JavaScript から C へ</strong>: メッセージ (<a
 href="./api-reference/app-integration-api-ja.html">アプリ連携
-API</a>)、<br />
-C から JavaScript へはスクリプトの実行と注入。つまり <strong>C
-から繋がる機器は、<br />
+API</a>)</li>
+<li><strong>C から JavaScript へ</strong>: スクリプトの実行と注入</li>
+</ul>
+<p>つまり <strong>C から繋がる機器は、<br />
 そのまま画面から使えます</strong>。プリンタ、カメラ、センサー、IC
 カードリーダー、<br />
 決済端末、シリアル機器 —

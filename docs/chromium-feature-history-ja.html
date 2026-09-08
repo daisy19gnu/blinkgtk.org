@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Chromium 147 → 151 — BlinkGTK に何が増えたか — BlinkGTK</title>
+  <title>Chromium 147 → 152 — BlinkGTK に何が増えたか — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -26,7 +26,7 @@
 <meta name="description" content="BlinkGTK は Chromium のレンダリングエンジン Blink をそのまま載せています。つまり Chromium が新しい版で獲得した Web の能力は、BlinkGTK を新しい版に上げるとそのまま 手に入ります。この文書は、BlinkGTK がベースにしてきた Chromium 147・148・149・">
 <link rel="canonical" href="https://blinkgtk.org/docs/chromium-feature-history-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Chromium 147 → 151 — BlinkGTK に何が増えたか — BlinkGTK">
+<meta property="og:title" content="Chromium 147 → 152 — BlinkGTK に何が増えたか — BlinkGTK">
 <meta property="og:description" content="BlinkGTK は Chromium のレンダリングエンジン Blink をそのまま載せています。つまり Chromium が新しい版で獲得した Web の能力は、BlinkGTK を新しい版に上げるとそのまま 手に入ります。この文書は、BlinkGTK がベースにしてきた Chromium 147・148・149・">
 <meta property="og:url" content="https://blinkgtk.org/docs/chromium-feature-history-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -42,16 +42,16 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="chromium-147--151--blinkgtk-に何が増えたか">Chromium 147 → 151 —
+<h1 id="chromium-147--152--blinkgtk-に何が増えたか">Chromium 147 → 152 —
 BlinkGTK に何が増えたか</h1>
-<p>バージョン: 1.2.1-build2 / 言語: 日本語 | <a
+<p>バージョン: 1.2.1-build3 / 言語: 日本語 | <a
 href="chromium-feature-history-en.html">English</a></p>
 <p>BlinkGTK は Chromium のレンダリングエンジン Blink
 をそのまま載せています。つまり<br />
 <strong>Chromium が新しい版で獲得した Web の能力は、BlinkGTK
 を新しい版に上げるとそのまま<br />
 手に入ります</strong>。この文書は、BlinkGTK がベースにしてきた Chromium
-147・148・149・150・151<br />
+147・148・149・150・151・152<br />
 の間で何が変わったのかを、実際にできるようになったことの側から辿ったものです。</p>
 <p>仕様書の抜粋ではありません。エンジンのソースツリーそのものを版ごとに突き合わせて<br />
 差分を取り、そこから読者に関係するものを選んでいます(取得方法は末尾に書きます)。</p>
@@ -449,6 +449,157 @@ v1.1.0 の土台になった版です。</p>
 </tbody>
 </table>
 <hr />
+<h2 id="151--152--ルビの置き方が作り直された版">151 → 152 —
+ルビの置き方が作り直された版</h2>
+<p><strong>一言で</strong>: 151
+で「次版以降の動きを注視する価値がある」と書いた注記のアキが、<br />
+152
+で既定になりました。あわせてルビの配置計算そのものが作り直されています。</p>
+<h3 id="日本語組版に効いたもの-3">日本語組版に効いたもの</h3>
+<p><strong>注記の開始側のアキ(<code>AnnotationSpaceOnStart</code>)が既定で有効になりました。</strong><br />
+151
+では試験段階でした。ブロックの開始側に境界線が無いとき、ルビの注記が<br />
+その余白へはみ出せるようになります。行の高さを膨らませずにルビを置くための<br />
+仕組みです。</p>
+<p>ただし<strong>適用されない場面があります</strong>。実装は列が均等割りのとき<br />
+(balanced
+columns)を除外条件にしています。<strong>縦書きの段組みでこの経路を<br />
+当てにしないでください。</strong>
+上流が付けたテストも横書き(<code>writing-mode</code> の<br />
+指定なし)で、ページや列の断片化を使っていません。</p>
+<p><strong>ルビの配置計算が木構造になりました(<code>TreeRubyPlacement</code>)。</strong><br />
+注記の行を平坦に並べて位置を決めるのではなく、親子関係のある木として組み立て、<br />
+基準となる行からの相対位置で配置します。上下両方に注記が付く場合や、<br />
+入れ子になったルビ(熟語ルビ・二重ルビ)の位置決めがこの経路を通ります。</p>
+<p><strong>ルビの親文字の中のタブ位置が仕様どおりになりました(<code>TabSizeInRubyBase</code>)。</strong><br />
+タブ位置は「最も近いブロックコンテナの content edge
+から数えた倍数」と<br />
+CSS Text 3 が定めています。152 でその定義に合わせました。</p>
+<p><strong>測っていないこと</strong>: 上の 3
+つは<strong>フラグとコードが実在することを確かめたもの</strong>で、<br />
+組版結果がどう変わるかは測っていません。150 → 151
+の圏点のような実測は、<br />
+152
+についてはまだありません。<strong>実際の版面で確かめてから使ってください。</strong></p>
+<h3 id="css-2">CSS</h3>
+<p>新しく増えたプロパティは 2
+つだけで、いずれも日本語組版には関係しません<br />
+(<code>row-rule-visibility-items</code> /
+<code>window-drag</code>)。</p>
+<p>試験段階から既定へ移ったものがあります。</p>
+<table>
+<thead>
+<tr>
+<th>機能</th>
+<th>151</th>
+<th>152</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CSSAlphaColorFunction</code>(色の alpha 指定)</td>
+<td>試験段階</td>
+<td><strong>既定</strong></td>
+</tr>
+<tr>
+<td><code>CSSPseudoElementBackdrop</code>(<code>::backdrop</code>)</td>
+<td>試験段階</td>
+<td><strong>既定</strong></td>
+</tr>
+<tr>
+<td><code>CSSPseudoElementViewTransitions</code>(ビュー遷移の擬似要素)</td>
+<td>開発中</td>
+<td><strong>既定</strong></td>
+</tr>
+<tr>
+<td><code>CompositeClipPathAnimation</code>(clip-path
+のアニメーション合成)</td>
+<td>試験段階</td>
+<td><strong>既定</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="そのほか既定になったもの">そのほか既定になったもの</h3>
+<p>151 で試験段階だったものを含め、<strong>43
+種</strong>が既定になりました。主なものです。</p>
+<table>
+<thead>
+<tr>
+<th>領域</th>
+<th>機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shadow DOM</td>
+<td><code>ShadowRootReferenceTarget</code> /
+<code>ShadowRootSlotAssignment</code></td>
+</tr>
+<tr>
+<td>ストレージアクセス</td>
+<td><code>RequestStorageAccessFor</code></td>
+</tr>
+<tr>
+<td>Range API</td>
+<td><code>OpaqueRange</code> / <code>LegacyAbstractRange</code> /
+<code>RangeBoundaryFastPath</code></td>
+</tr>
+<tr>
+<td>画面共有の音声選択</td>
+<td><code>GetDisplayMediaAudioSelection</code></td>
+</tr>
+<tr>
+<td>サニタイザ</td>
+<td><code>StreamingSanitizer</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="移行の注意--消えたフラグ">移行の注意 — 消えたフラグ</h3>
+<p>152 でフラグが <strong>29 種</strong>消えました。ただし、そのうち
+<strong>25 種は 151 の時点で既に既定 (stable) でした</strong>。<br />
+これは挙動が恒久化して、<strong>切り替える口が無くなった</strong>ことを意味します。</p>
+<p><strong>逃げ道として設定していた場合は効かなくなります。</strong>
+代表的なもの:</p>
+<table>
+<thead>
+<tr>
+<th>消えたフラグ</th>
+<th>151 での状態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MulticolColumnWrapping</code>(段組みの折り返し)</td>
+<td>既定</td>
+</tr>
+<tr>
+<td><code>OffMainThreadCSSPaint</code></td>
+<td>既定</td>
+</tr>
+<tr>
+<td><code>PageRevealEvent</code></td>
+<td>既定</td>
+</tr>
+<tr>
+<td><code>PaintTimingMixin</code></td>
+<td>既定</td>
+</tr>
+<tr>
+<td><code>SystemFallbackEmojiVSSupport</code></td>
+<td>既定</td>
+</tr>
+</tbody>
+</table>
+<p>残る 4 種は既定ではなかったものです。</p>
+<ul>
+<li><code>AudioContextPlayoutStats</code></li>
+<li><code>AutocorrectByDefault</code></li>
+<li><code>HTMLImageElementActualNaturalSize</code></li>
+<li><code>WebAuthenticationImmediateGet</code></li>
+</ul>
+<p><code>ConnectionAllowlist</code> は
+<code>ConnectionAllowlistEmbeddedEnforcement</code> に<br />
+置き換わりました。</p>
 <h2 id="日本語組版の現在地--5-版を通した俯瞰">日本語組版の現在地 — 5
 版を通した俯瞰</h2>
 <p>BlinkGTK

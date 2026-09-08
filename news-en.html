@@ -4,12 +4,14 @@
 <title>News · BlinkGTK</title>
 <link rel="alternate" type="application/atom+xml" title="BlinkGTK News" href="https://blinkgtk.org/feed-en.xml">
 <link rel="stylesheet" href="docs/docs.css">
-<script src="/privacy-consent.js" defer></script>
 </head><body><div class="wrap">
 <div class="navbar"><a href="./">BlinkGTK</a> · <a href="docs/">Documentation</a> · <a href="news-ja.html">日本語</a></div>
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3">v1.2.1-build3 released</a></h2>
+<p><small>2026-09-08 · Release</small></p>
+<p>The build number is now available at run time when you report a problem. Until now, asking the library for its version returned only 1.2.1, with no build number. Behaviour can differ between builds of one version, and external users had no way to identify a build except by reading the package file name. blink_gtk_get_version_full() returns 1.2.1-build3; the return value of the existing blink_gtk_get_version() is unchanged. The frame-delivery log now records the operation actually performed and the Wayland buffer id, the measurement caps can be raised, and live render-path switching covers the EGL path (only when started with BLINKGTK_GPU_MODE=egl).</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build2">v1.2.1-build2 released</a></h2>
 <p><small>2026-08-30 · Release</small></p>
 <p>Where the GPU path is unavailable — no driver, or no GPU visible inside a virtual machine — BlinkGTK now falls back to software rendering and keeps drawing. It switches when no frame arrives within five seconds and writes the reason to standard error, and it does not switch where the GPU path works. Captured screenshots no longer come out with red and blue exchanged.</p>

@@ -1,0 +1,427 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Live Render Path Switching and Handoff Meta
+(BlinkShift) — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+<meta name="description" content="This page documents the API that switches the render path without restarting the application, together with Handoff Meta, which carries state across a switch.">
+<link rel="canonical" href="https://blinkgtk.org/docs/api-reference/render-path-handoff-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK Live Render Path Switching and Handoff Meta (BlinkShift) — BlinkGTK">
+<meta property="og:description" content="This page documents the API that switches the render path without restarting the application, together with Handoff Meta, which carries state across a switch.">
+<meta property="og:url" content="https://blinkgtk.org/docs/api-reference/render-path-handoff-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/api-reference/render-path-handoff-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/api-reference/render-path-handoff-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/api-reference/render-path-handoff-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1
+id="blinkgtk-live-render-path-switching-and-handoff-meta-blinkshift">BlinkGTK
+Live Render Path Switching and Handoff Meta (BlinkShift)</h1>
+<p><strong>Version</strong>: 1.2.1-build3<br />
+<strong>Last updated</strong>: 2026-09-01<br />
+<strong>Language</strong>: | English</p>
+<p><a href="./render-path-handoff-ja.html">日本語</a></p>
+<hr />
+<h2 id="about-this-page">About this page</h2>
+<p>This page documents the API that <strong>switches the render path
+without restarting<br />
+the application</strong>, together with <strong>Handoff Meta</strong>,
+which carries state across a<br />
+switch.</p>
+<p>The switch itself (<code>blink_web_view_switch_render_path()</code>
+and the<br />
+<code>render-path-changed</code> signal) is described in<br />
+<a href="./signals-api-en.html">signals-api-en.md</a>. This page focuses
+on the handoff<br />
+metadata and how the two are used together.</p>
+<hr />
+<h2 id="1-what-this-api-is-for">1. What this API is for</h2>
+<p>Render paths differ in what they are good at. CPU compositing is
+broadly<br />
+compatible; handing dmabuf directly to the GPU is better for bandwidth
+and CPU<br />
+time. Which one is preferable depends on the reader's machine and the
+moment.</p>
+<p>Changing paths used to mean starting the process again. To a reader
+that is a<br />
+pause of several seconds. BlinkShift makes it <strong>a switch inside
+the running<br />
+process</strong>.</p>
+<p>Handoff Meta expresses what is carried across a switch, in a form
+that does not<br />
+depend on any particular path.</p>
+<hr />
+<h2 id="2-units">2. Units</h2>
+<p><strong>Geometry is carried as logical pixels plus an explicit
+scale.</strong></p>
+<pre><code>physical px = logical x device_scale_factor</code></pre>
+<p>Physical pixels are not passed on their own, so that the receiving
+side never<br />
+has to guess the scale. When the two sides disagree about scale, it
+shows up as<br />
+content drawn at half size.</p>
+<hr />
+<h2 id="3-structure">3. Structure</h2>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#define BLINK_HANDOFF_META_SCHEMA_VERSION </span><span class="dv">1</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> _BlinkHandoffMeta <span class="op">{</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   schema_version<span class="op">;</span>       <span class="co">/* == BLINK_HANDOFF_META_SCHEMA_VERSION */</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   logical_width<span class="op">;</span>        <span class="co">/* geometry: logical px */</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   logical_height<span class="op">;</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   device_scale_factor<span class="op">;</span>  <span class="co">/* physical px = logical x this */</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>  <span class="dt">char</span><span class="op">*</span> url<span class="op">;</span>                  <span class="co">/* content: current URL (owned) */</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   scroll_x<span class="op">;</span>             <span class="co">/* logical px */</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span>   scroll_y<span class="op">;</span></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>  <span class="dt">char</span><span class="op">*</span> path_id<span class="op">;</span>              <span class="co">/* output path: &quot;software&quot; / &quot;egl&quot; ... (owned) */</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkHandoffMeta<span class="op">;</span></span></code></pre></div>
+<p><code>schema_version</code> exists for forward compatibility. A
+reader of the structure<br />
+should <strong>check it against the version it knows</strong> before
+using the contents.</p>
+<hr />
+<h2 id="4-functions">4. Functions</h2>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Purpose</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blink_web_view_export_handoff_meta()</code></td>
+<td>Write the current state into a meta. The caller frees the
+result</td>
+</tr>
+<tr>
+<td><code>blink_web_view_import_handoff_meta()</code></td>
+<td>Restore state from a meta</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_serialize()</code></td>
+<td>Turn a meta into text. The caller frees the result</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_deserialize()</code></td>
+<td>Build a meta from text. The caller frees the result</td>
+</tr>
+<tr>
+<td><code>blink_handoff_meta_free()</code></td>
+<td>Free a meta</td>
+</tr>
+</tbody>
+</table>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>BlinkHandoffMeta<span class="op">*</span> blink_web_view_export_handoff_meta<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>  blink_web_view_import_handoff_meta<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>                                         <span class="dt">const</span> BlinkHandoffMeta<span class="op">*</span> meta<span class="op">);</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span><span class="op">*</span> blink_handoff_meta_serialize<span class="op">(</span><span class="dt">const</span> BlinkHandoffMeta<span class="op">*</span> meta<span class="op">);</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>BlinkHandoffMeta<span class="op">*</span> blink_handoff_meta_deserialize<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> text<span class="op">);</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>  blink_handoff_meta_free<span class="op">(</span>BlinkHandoffMeta<span class="op">*</span> meta<span class="op">);</span></span></code></pre></div>
+<p><code>export</code> returns <code>NULL</code> on failure. Free the
+result of <code>serialize</code> with<br />
+<code>free()</code>, and the results of <code>deserialize</code> and
+<code>export</code> with<br />
+<code>blink_handoff_meta_free()</code>.</p>
+<p>The serialized form is INI-compatible text and can be read the same
+way as the<br />
+session file.</p>
+<hr />
+<h2 id="5-what-is-carried-and-what-is-not">5. What is carried, and what
+is not</h2>
+<p><strong>Only path-independent semantic state is carried.</strong></p>
+<table>
+<thead>
+<tr>
+<th>Carried</th>
+<th>Not carried</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Geometry (logical px + scale)</td>
+<td>EGL context</td>
+</tr>
+<tr>
+<td>URL</td>
+<td>Wayland surface</td>
+</tr>
+<tr>
+<td>Scroll position (logical px)</td>
+<td>dmabuf file descriptors</td>
+</tr>
+<tr>
+<td>Output path id</td>
+<td>Surface identifiers</td>
+</tr>
+</tbody>
+</table>
+<p>Everything in the right column is recreated on each switch. Because
+no raw<br />
+resource is carried across, a failed switch can return to the previous
+path.</p>
+<h3 id="not-in-the-meta-today">Not in the meta today</h3>
+<p>The following state is <strong>not something the engine can judge the
+correctness<br />
+of</strong>, so it is not carried:</p>
+<ul>
+<li>Page number</li>
+<li>Font size, spread, and paging mode</li>
+<li>Reading position and other application-specific state</li>
+</ul>
+<p>Attaching a type to a value the engine cannot verify produces a field
+that<br />
+looks safe but whose contents nothing guarantees. <strong>Save and
+restore these in<br />
+the application.</strong></p>
+<p>Page geometry such as column pitch is available from the vertical
+writing<br />
+metrics API. Keeping a copy in the meta would mean two places holding
+the same<br />
+value, where one can go stale unnoticed.</p>
+<hr />
+<h2 id="6-using-it">6. Using it</h2>
+<p>Take a meta before and after the switch and compare them. The switch
+is<br />
+asynchronous, so <strong>completion arrives as a signal</strong>.</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdlib.h&gt;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">int</span>   g_seq <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> g_before <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_render_path_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> to<span class="op">,</span></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> result<span class="op">,</span></span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">int</span> gate_ms<span class="op">,</span></span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">int</span> seq<span class="op">,</span></span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a>                                   gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>user_data<span class="op">;</span></span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>seq <span class="op">!=</span> g_seq<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span>  <span class="co">/* a different switch; ignore when the key does not match */</span></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>strcmp<span class="op">(</span>result<span class="op">,</span> <span class="st">&quot;ok&quot;</span><span class="op">)</span> <span class="op">!=</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;switch did not take (</span><span class="sc">%s</span><span class="st">); the previous path is still in use</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> result<span class="op">);</span></span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>  BlinkHandoffMeta<span class="op">*</span> after <span class="op">=</span> blink_web_view_export_handoff_meta<span class="op">(</span>view<span class="op">);</span></span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>after <span class="op">!=</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span><span class="op">*</span> text <span class="op">=</span> blink_handoff_meta_serialize<span class="op">(</span>after<span class="op">);</span></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;path=</span><span class="sc">%s</span><span class="st">  </span><span class="sc">%d</span><span class="st"> ms</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> to<span class="op">,</span> gate_ms<span class="op">);</span></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;  before: </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> g_before <span class="op">!=</span> NULL <span class="op">?</span> g_before <span class="op">:</span> <span class="st">&quot;(unavailable)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;  after:  </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> text <span class="op">!=</span> NULL <span class="op">?</span> text <span class="op">:</span> <span class="st">&quot;(unavailable)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    free<span class="op">(</span>text<span class="op">);</span></span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    blink_handoff_meta_free<span class="op">(</span>after<span class="op">);</span></span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> request_switch<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path_id<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  BlinkHandoffMeta<span class="op">*</span> before <span class="op">=</span> blink_web_view_export_handoff_meta<span class="op">(</span>view<span class="op">);</span></span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>before <span class="op">!=</span> NULL<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    free<span class="op">(</span>g_before<span class="op">);</span></span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    g_before <span class="op">=</span> blink_handoff_meta_serialize<span class="op">(</span>before<span class="op">);</span></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    blink_handoff_meta_free<span class="op">(</span>before<span class="op">);</span></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>  g_seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> path_id<span class="op">);</span></span>
+<span id="cb4-43"><a href="#cb4-43" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>g_seq <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-44"><a href="#cb4-44" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;the switch request was not accepted</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb4-45"><a href="#cb4-45" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb4-46"><a href="#cb4-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb4-47"><a href="#cb4-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-48"><a href="#cb4-48" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">**</span> argv<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb4-49"><a href="#cb4-49" aria-hidden="true" tabindex="-1"></a>  blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb4-50"><a href="#cb4-50" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb4-51"><a href="#cb4-51" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> widget <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb4-52"><a href="#cb4-52" aria-hidden="true" tabindex="-1"></a>  BlinkWebView<span class="op">*</span> view <span class="op">=</span> BLINK_WEB_VIEW<span class="op">(</span>widget<span class="op">);</span></span>
+<span id="cb4-53"><a href="#cb4-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-54"><a href="#cb4-54" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;render-path-changed&quot;</span><span class="op">,</span></span>
+<span id="cb4-55"><a href="#cb4-55" aria-hidden="true" tabindex="-1"></a>                   G_CALLBACK<span class="op">(</span>on_render_path_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb4-56"><a href="#cb4-56" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> widget<span class="op">);</span></span>
+<span id="cb4-57"><a href="#cb4-57" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb4-58"><a href="#cb4-58" aria-hidden="true" tabindex="-1"></a>  blink_web_view_load_uri<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span>
+<span id="cb4-59"><a href="#cb4-59" aria-hidden="true" tabindex="-1"></a>  gtk_widget_set_visible<span class="op">(</span>window<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb4-60"><a href="#cb4-60" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  request_switch<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
+<span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  free<span class="op">(</span>g_before<span class="op">);</span></span>
+<span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="tying-a-notification-to-its-switch">Tying a notification to its
+switch</h3>
+<p><code>blink_web_view_switch_render_path()</code> returns the
+<strong>sequence number</strong> of the<br />
+accepted switch (1 or greater; 0 means the request was not accepted).
+The<br />
+completion signal carries the same number in its <code>seq</code>
+argument.</p>
+<p>When switches follow one another, <strong>matching before and after
+by how close the<br />
+timestamps are will pair records from different switches</strong>.
+Worse, the pairing<br />
+looks like agreement, so the mistake goes unnoticed. Use the number.</p>
+<h3 id="the-three-results">The three results</h3>
+<table>
+<thead>
+<tr>
+<th><code>result</code></th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>ok</code></td>
+<td>The new path is drawing stably</td>
+</tr>
+<tr>
+<td><code>rollback</code></td>
+<td>The new path failed its check and <strong>the previous path was
+restored</strong>. The display is intact</td>
+</tr>
+<tr>
+<td><code>fail</code></td>
+<td>The previous path could not be restored. Treat as an error</td>
+</tr>
+</tbody>
+</table>
+<p><code>rollback</code> is a failure, but the reader's screen is not
+broken by it.</p>
+<hr />
+<h2 id="7-path-ids">7. Path ids</h2>
+<table>
+<thead>
+<tr>
+<th>id</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>P1</code></td>
+<td>CPU compositing, direct delivery (default)</td>
+</tr>
+<tr>
+<td><code>P2</code></td>
+<td>CPU compositing, shared-memory delivery</td>
+</tr>
+<tr>
+<td><code>P3</code></td>
+<td>GPU dmabuf delivery. Only the output layer is exchanged, so a
+failure can return to CPU compositing</td>
+</tr>
+</tbody>
+</table>
+<p><code>blink_web_view_get_render_path()</code> returns the current
+path id. The value<br />
+changes only when a switch completes with <code>ok</code>.</p>
+<hr />
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="./signals-api-en.html">signals-api-en.md</a> - the
+<code>render-path-changed</code> signal</li>
+<li><a href="./c-api-reference-en.html">c-api-reference-en.md</a> - C API
+index</li>
+<li><a
+href="./environment-variables-en.html">environment-variables-en.md</a> -
+diagnostic environment variables</li>
+</ul>
+</body>
+</html>
+</div></div>

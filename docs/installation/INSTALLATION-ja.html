@@ -197,22 +197,28 @@ devel）</h2>
 </tr>
 </thead>
 <tbody>
-</tbody>
-</table>
-<p>|</p>
-<p><strong>blinkgtk-bin</strong>（runtime） | アプリ実行 |
-<code>/usr/lib64/libblinkgtk-0.1.so.0</code>（公開 ABI）+
+<tr>
+<td><strong>blinkgtk-bin</strong>（runtime）</td>
+<td>アプリ実行</td>
+<td><code>/usr/lib64/libblinkgtk-0.1.so.0</code>（公開 ABI）+
 <code>/usr/lib64/blinkgtk-0.1/</code>（Chromium 一式・private）+
 <code>/usr/libexec/blinkgtk-0.1/</code>（simple_browser）+
-<code>THIRD_PARTY_NOTICES.html</code> |<br />
-|</p>
-<p><strong>blinkgtk-bin-devel</strong>（devel） | consumer 開発 |
-ヘッダ（<code>/usr/include/blinkgtk-0.1/</code>）+
+<code>THIRD_PARTY_NOTICES.html</code></td>
+</tr>
+<tr>
+<td><strong>blinkgtk-bin-devel</strong>（devel）</td>
+<td>consumer 開発</td>
+<td>ヘッダ（<code>/usr/include/blinkgtk-0.1/</code>）+
 pkg-config（<code>/usr/lib64/pkgconfig/blinkgtk-0.1.pc</code>）+
-<code>.so</code> symlink |<br />
-|</p>
-<p><strong>blinkgtk-bin-gir</strong>（gir） | Python/Rust 等の
-introspection | <code>BlinkGTK-0.1.typelib</code> |</p>
+<code>.so</code> symlink</td>
+</tr>
+<tr>
+<td><strong>blinkgtk-bin-gir</strong>（gir）</td>
+<td>Python/Rust 等の introspection</td>
+<td><code>BlinkGTK-0.1.typelib</code></td>
+</tr>
+</tbody>
+</table>
 <p>アプリを動かすだけなら <strong>runtime のみ</strong>、BlinkGTK
 を組み込むアプリを開発する場合は<br />
 <strong>devel（+ gir）</strong> も導入します。</p>
@@ -337,14 +343,16 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href=
 <h3 id="tarball">Tarball</h3>
 <p>tarball は FHS
 配置のため、展開したファイルを手動で削除します（パッケージ<br />
-管理を使う RPM/DEB を推奨）。主な配置先:
-<code>/usr/lib64/libblinkgtk-0.1.so*</code>,<br />
-<code>/usr/lib64/blinkgtk-0.1/</code>,
-<code>/usr/libexec/blinkgtk-0.1/</code>,<br />
-<code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code>,
-<code>/usr/include/blinkgtk-0.1/</code>（devel）,<br />
-<code>/usr/lib64/pkgconfig/blinkgtk-0.1.pc</code>（devel）。削除後に
-<code>sudo ldconfig</code>。</p>
+管理を使う RPM/DEB を推奨）。主な配置先です。</p>
+<ul>
+<li><code>/usr/lib64/libblinkgtk-0.1.so*</code></li>
+<li><code>/usr/lib64/blinkgtk-0.1/</code></li>
+<li><code>/usr/libexec/blinkgtk-0.1/</code></li>
+<li><code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code></li>
+<li><code>/usr/include/blinkgtk-0.1/</code>（devel）</li>
+<li><code>/usr/lib64/pkgconfig/blinkgtk-0.1.pc</code>（devel）。削除後に
+<code>sudo ldconfig</code>。</li>
+</ul>
 <hr />
 <h2 id="トラブルシューティング">トラブルシューティング</h2>
 <h3 id="1-libblinkgtk-01so0-cannot-open-shared-object-file">1.
