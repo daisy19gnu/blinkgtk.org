@@ -9,6 +9,9 @@
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build1">v1.2.2-build1 を公開しました</a></h2>
+<p><small>2026-09-10 · リリース</small></p>
+<p>縦組みで閉じ括弧が行末に来ると行が途中で切れる現象が直りました。35 文字入る行に 17 文字しか入らず、text-align: justify が残りを引き伸ばすため字間が倍に開いていました。13 通りの設定のうち 8 通りで起きていたものがすべて解消します。横組みでは起きません。当方から上流へ報告し (crbug 542686223) Chromium 側で修正されたものです。レンダリングエンジンは Chromium 153.0.8010.36 になりました。同梱のデモが --version に応じるようになり、不具合を報告するときに版を一意に示せます。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3">v1.2.1-build3 を公開しました</a></h2>
 <p><small>2026-09-08 · リリース</small></p>
 <p>不具合を報告するときに、どの版で起きたかが実行時に分かるようになりました。これまで実行時に版を問い合わせると 1.2.1 としか返らず、build 番号が取れませんでした。同じ版でも build が違えば挙動が違うことがあり、外部の利用者はパッケージのファイル名から版を読むしかありませんでした。blink_gtk_get_version_full() が 1.2.1-build3 を返します。既存の blink_gtk_get_version() の戻り値は変わりません。あわせて、画面が出ないときの配送ログが実際に呼んだ操作と Wayland の buffer 識別子を記すようになり、測定を打ち切る枚数も伸ばせます。描画経路のライブ切替に EGL 経路が加わりました(BLINKGTK_GPU_MODE=egl で起動した場合のみ)。</p>

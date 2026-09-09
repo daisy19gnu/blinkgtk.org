@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.2-build1 Release Notes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Released: 2026-09-10 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.2-build1 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-09-10 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-122-build1-release-notes">BlinkGTK 1.2.2-build1 Release
+Notes</h1>
+<p><strong>Released</strong>: 2026-09-10 / <strong>Chromium</strong>:
+153.0.8010.36 / Language: <a href="RELEASE_NOTES-1.2.2-ja.html">日本語</a>
+| English</p>
+<p>The rendering engine is updated to <strong>Chromium 153</strong>.</p>
+<hr />
+<h2 id="what-build1-makes-possible">What build1 makes possible</h2>
+<h3 id="vertical-lines-now-fill-to-the-end">Vertical lines now fill to
+the end</h3>
+<p>In vertical writing, a line <strong>broke half-way when a closing
+bracket fell at the<br />
+line end</strong>. A line with room for 35 characters held only 17, and
+because<br />
+<code>text-align: justify</code> then spread the remainder, <strong>the
+inter-character advance<br />
+doubled (16px to 33.5px)</strong>. To a reader that line simply looks
+stretched.</p>
+<p>This release resolves it. Under the same conditions all 35 characters
+fit on<br />
+one line.</p>
+<p><strong>It does not occur in horizontal writing.</strong> The problem
+is specific to vertical<br />
+writing. Within vertical writing, however, it did not depend on
+the<br />
+configuration: it appeared with every font we tried (serif,
+sans-serif,<br />
+Noto Serif CJK JP, Noto Sans CJK JP), with ruby, and with
+<code>line-height: normal</code>.<br />
+<strong>Of 13 configurations, 8 exhibited it; all 8 are resolved in this
+release.</strong></p>
+<p>The characters spread out only when <code>text-align: justify</code>
+is in effect. Without<br />
+it the spacing is unchanged and the line simply ends early. Either way
+the line<br />
+stops half-way.</p>
+<p>We reported this upstream (crbug 542686223) and Chromium fixed it.
+The fix is in<br />
+Chromium 153.</p>
+<p>In the previous release (1.2.1 / Chromium 152) we carried our own
+workaround,<br />
+which improved the count from <strong>17 characters to 34</strong>. One
+character still moved<br />
+to the next line, so it was not complete. That workaround is no longer
+needed and<br />
+has been removed.</p>
+<h3 id="the-version-can-be-queried-at-run-time">The version can be
+queried at run time</h3>
+<p>The bundled demo answers <code>--version</code>. When reporting a
+problem, this single<br />
+line identifies the build.</p>
+<pre><code>$ blinkgtk_browser --version
+BlinkGTK 1.2.2-build1 (Chromium 153.0.8010.36)</code></pre>
+<p><code>--help</code> prints the usage and how to specify the URL to
+open.</p>
+<h3 id="also-in-this-release">Also in this release</h3>
+<p>Chromium 153 enables <code>EventTimingMatchingHTML</code> (which
+elements event timing<br />
+attributes to) by default, among others. For BlinkGTK users the change
+that<br />
+matters directly is the vertical-writing fix above.</p>
+<hr />
+<h2 id="what-does-not-change">What does not change</h2>
+<ul>
+<li>There are no public API changes. Applications built against the
+previous<br />
+release continue to run</li>
+<li>The render paths (software / EGL), their defaults and how you switch
+between<br />
+them, are unchanged</li>
+<li>The version query added in the previous release<br />
+(<code>blink_gtk_get_version_full()</code> /
+<code>blink_gtk_get_build()</code>) works the same way</li>
+</ul>
+<hr />
+<h2 id="what-we-verified">What we verified</h2>
+<ul>
+<li><strong>EGL path</strong>: passed the check that judges white
+output, undersized drawing and<br />
+abnormal termination from the log alone</li>
+<li><strong>Vertical line filling</strong>: we counted the characters on
+the first line while<br />
+sweeping the width in 1px steps, across four combinations of our own
+workaround<br />
+(present / absent) and the upstream fix (enabled / disabled)</li>
+<li>The same measurements reproduce on an official Google Chrome
+build<br />
+(154 canary), so this is not behaviour specific to BlinkGTK</li>
+</ul>
+</body>
+</html>
+</div></div>

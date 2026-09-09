@@ -45,7 +45,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.1-build3 / 言語: 日本語 | <a
+<p>バージョン: 1.2.2-build1 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -71,9 +71,22 @@ href="version-history-en.html">English</a></p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.1-build3</strong> ← 公開中</td>
+<td><strong>v1.2.2-build1</strong> ← 公開中</td>
+<td>2026-09-10</td>
+<td><strong>153.0.8010.36</strong></td>
+<td>レンダリングエンジンを Chromium 153
+に更新しました。縦組みで閉じ括弧が行末に来ると 行が途中で切れる現象 (35
+文字入る行に 17 文字しか入らず、text-align: justify が残りを
+引き伸ばすため字間が倍に開く) が解消します。13 通りの設定のうち 8
+通りで起きていたものが
+すべて直ります。横組みでは起きません。当方から上流へ報告し (crbug
+542686223) Chromium 側で修正されたものです。前版の独自回避 (17→34 文字)
+は不要になり取り除きました</td>
+</tr>
+<tr>
+<td>v1.2.1-build3</td>
 <td>2026-09-08</td>
-<td><strong>152.0.7977.64</strong></td>
+<td>152.0.7977.64</td>
 <td>不具合を報告するときに、どの版で起きたかが実行時に分かるようになりました
 (blink_gtk_get_version_full / blink_gtk_get_build。同じ版でも build
 が違えば挙動が違うことがあり、これまではパッケージ名でしか判別できませんでした)。画面が出ないときの配送ログが、実際に呼んだ操作と
@@ -366,7 +379,7 @@ GTK4 の <code>gtk-4.0</code>、WebKitGTK の <code>webkitgtk-6.0</code>
 <ul>
 <li><a href="chromium-feature-history-ja.html">Chromium 147 → 151
 の新機能</a> — 各 Chromium 版で何ができるようになったか</li>
-<li><a href="RELEASE_NOTES-1.2.1-ja.html">リリースノート</a></li>
+<li><a href="RELEASE_NOTES-1.2.2-ja.html">リリースノート</a></li>
 <li><a href="INSTALL.html">インストール</a></li>
 </ul>
 </body>

@@ -598,7 +598,7 @@ directly.</p>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* Build number (since 1.2.2). The build number counts how many times the same</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * version was rebuilt. Behaviour can differ between builds of one version. */</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_build<span class="op">(</span><span class="dt">void</span><span class="op">);</span>             <span class="co">/* e.g. &quot;2&quot;. NULL if unknown */</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version_full<span class="op">(</span><span class="dt">void</span><span class="op">);</span>      <span class="co">/* e.g. &quot;1.2.1-build3&quot;. Never NULL */</span></span></code></pre></div>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version_full<span class="op">(</span><span class="dt">void</span><span class="op">);</span>      <span class="co">/* e.g. &quot;1.2.2-build1&quot;. Never NULL */</span></span></code></pre></div>
 <p>These come from the <code>.so</code> linked at run time, not from
 compile-time macros<br />
 (<code>BLINKGTK_VERSION</code> / <code>CHROMIUM_VERSION</code>), so what

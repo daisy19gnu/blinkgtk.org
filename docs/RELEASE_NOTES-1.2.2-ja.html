@@ -1,0 +1,122 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.2-build1 リリースノート — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="リリース日: 2026-09-10 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.2-build1 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-09-10 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-122-build1-リリースノート">BlinkGTK 1.2.2-build1
+リリースノート</h1>
+<p><strong>リリース日</strong>: 2026-09-10 / <strong>Chromium</strong>:
+153.0.8010.36 / 言語: 日本語 | <a
+href="RELEASE_NOTES-1.2.2-en.html">English</a></p>
+<p>レンダリングエンジンを <strong>Chromium 153</strong>
+に更新しました。</p>
+<hr />
+<h2 id="build1-でできるようになったこと">build1
+でできるようになったこと</h2>
+<h3
+id="縦組みの行が最後まで埋まるようになりました">縦組みの行が、最後まで埋まるようになりました</h3>
+<p>縦書きで<strong>閉じ括弧が行末に来ると、行が途中で切れる</strong>現象がありました。<br />
+35 文字入る行に 17 文字しか入らず、しかも
+<code>text-align: justify</code> が残りを<br />
+引き伸ばすため、<strong>字間が倍 (16px → 33.5px)
+に開きます</strong>。読み手には、<br />
+そこだけ間延びした行として見えます。</p>
+<p>この版で解消します。同じ条件で 35 文字すべてが 1 行に収まります。</p>
+<p><strong>横組みでは起きません。</strong>
+縦組みに固有の現象です。ただし縦組みの中では<br />
+条件を選ばず、書体を変えても (serif / sans-serif / Noto Serif CJK JP
+/<br />
+Noto Sans CJK JP)、ルビを併用しても、<code>line-height: normal</code>
+でも同じように<br />
+起きていました。<strong>13 通りの設定のうち 8
+通りで発生し、この版ではすべて<br />
+解消しています。</strong></p>
+<p>字間が開くのは <code>text-align: justify</code>
+を指定している場合です。指定が無ければ<br />
+字間はそのままで、行が途中で終わります。どちらも行が半分で切れる点は同じです。</p>
+<p>この現象は当方から上流へ報告し (crbug 542686223)、Chromium
+側で修正されました。<br />
+修正は Chromium 153 に入っています。</p>
+<p>前版 (1.2.1 / Chromium 152) では、当方が独自の回避を入れて<br />
+<strong>17 文字 → 34 文字</strong>まで改善していました。ただし 1
+文字は次の行へ落ちたままで、<br />
+完全ではありませんでした。この版では回避が不要になり、取り除いています。</p>
+<h3
+id="版を実行時に尋ねられるようになりました">版を実行時に尋ねられるようになりました</h3>
+<p>同梱のデモが <code>--version</code>
+に応じます。不具合を報告する際は、この 1 行を貼れば<br />
+版が一意に決まります。</p>
+<pre><code>$ blinkgtk_browser --version
+BlinkGTK 1.2.2-build1 (Chromium 153.0.8010.36)</code></pre>
+<p><code>--help</code> で使い方と、開く URL の指定方法を表示します。</p>
+<h3 id="併せて">併せて</h3>
+<p>Chromium 153 では、ほかに <code>EventTimingMatchingHTML</code>
+(イベント計時の対象判定)<br />
+などが既定で有効になりました。BlinkGTK
+の利用者が直接触れる範囲での変更は<br />
+上記の縦組みが中心です。</p>
+<hr />
+<h2 id="この版で変わらないこと">この版で変わらないこと</h2>
+<ul>
+<li>公開 API
+に変更はありません。前版向けにビルドしたアプリはそのまま動きます</li>
+<li>描画経路 (software / EGL) の既定と切り替え方法は前版と同じです</li>
+<li>版を問い合わせる口 (<code>blink_gtk_get_version_full()</code>
+/<br />
+<code>blink_gtk_get_build()</code>)
+は前版で追加したもので、この版でも同じように使えます</li>
+</ul>
+<hr />
+<h2 id="動作を確かめた範囲">動作を確かめた範囲</h2>
+<ul>
+<li><strong>EGL 経路</strong>: 白画面・描画の縮小・異常終了の 3
+点をログで判定する検査に通しています</li>
+<li><strong>縦組みの行送り</strong>: 幅を 1px 刻みで変えながら 1
+行に入る文字数を数え、<br />
+当方の独自回避の有無と上流修正の有無の 4 通りで確かめました</li>
+<li>上記の測定は Google Chrome の公式ビルド (154 canary)
+でも同じ結果になることを<br />
+確認しています。BlinkGTK 固有の挙動ではありません</li>
+</ul>
+</body>
+</html>
+</div></div>

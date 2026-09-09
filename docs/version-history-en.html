@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.1-build3 / Language: English | <a
+<p>Version: 1.2.2-build1 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,22 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.1-build3</strong> ← current</td>
+<td><strong>v1.2.2-build1</strong> ← current</td>
+<td>2026-09-10</td>
+<td><strong>153.0.8010.36</strong></td>
+<td>The rendering engine is updated to Chromium 153. In vertical
+writing, a line no longer breaks half-way when a closing bracket falls
+at the line end (a line with room for 35 characters held only 17, and
+text-align: justify then doubled the inter-character advance). Of 13
+configurations, 8 exhibited it and all are now fixed. It does not occur
+in horizontal writing. We reported this upstream (crbug 542686223) and
+Chromium fixed it; our own workaround (17 to 34 characters) is no longer
+needed and has been removed</td>
+</tr>
+<tr>
+<td>v1.2.1-build3</td>
 <td>2026-09-08</td>
-<td><strong>152.0.7977.64</strong></td>
+<td>152.0.7977.64</td>
 <td>The build number is now available at run time when reporting a
 problem (blink_gtk_get_version_full / blink_gtk_get_build; behaviour can
 differ between builds of one version, and until now only the package
@@ -376,7 +389,7 @@ API revisions.</p>
 <ul>
 <li><a href="chromium-feature-history-en.html">Chromium 147 → 151</a> —
 what each Chromium version brought</li>
-<li><a href="RELEASE_NOTES-1.2.1-en.html">Release notes</a></li>
+<li><a href="RELEASE_NOTES-1.2.2-en.html">Release notes</a></li>
 <li><a href="INSTALL.html">Installation</a></li>
 </ul>
 </body>

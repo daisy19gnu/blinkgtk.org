@@ -518,7 +518,7 @@ API で取得してください。これにより <code>libblinkgtk.so</code>
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* 不具合を報告するときは、これ 1 つを貼れば版が一意に決まります (Since 1.2.2)。</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * build 番号は「同じ版を作り直した回数」で、同じ版でも build が違えば</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"> * 挙動が違うことがあります。 */</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> full_ver <span class="op">=</span> blink_gtk_get_version_full<span class="op">();</span>          <span class="co">/* 例 &quot;1.2.1-build3&quot; */</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> full_ver <span class="op">=</span> blink_gtk_get_version_full<span class="op">();</span>          <span class="co">/* 例 &quot;1.2.2-build1&quot; */</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">/* build 番号だけが要る場合。分からない場合は NULL を返します。</span></span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"> * &quot;0&quot; や &quot;unknown&quot; は返しません (build 番号と読めてしまうため)。 */</span></span>

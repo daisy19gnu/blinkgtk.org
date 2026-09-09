@@ -9,6 +9,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build1">v1.2.2-build1 released</a></h2>
+<p><small>2026-09-10 · Release</small></p>
+<p>In vertical writing, a line no longer breaks half-way when a closing bracket falls at the line end. A line with room for 35 characters held only 17, and text-align: justify then doubled the inter-character advance. Of 13 configurations, 8 exhibited it and all are now fixed; it does not occur in horizontal writing. We reported it upstream (crbug 542686223) and Chromium fixed it. The rendering engine is now Chromium 153.0.8010.36. The bundled demo answers --version, so a problem report can identify the build exactly.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3">v1.2.1-build3 released</a></h2>
 <p><small>2026-09-08 · Release</small></p>
 <p>The build number is now available at run time when you report a problem. Until now, asking the library for its version returned only 1.2.1, with no build number. Behaviour can differ between builds of one version, and external users had no way to identify a build except by reading the package file name. blink_gtk_get_version_full() returns 1.2.1-build3; the return value of the existing blink_gtk_get_version() is unchanged. The frame-delivery log now records the operation actually performed and the Wayland buffer id, the measurement caps can be raised, and live render-path switching covers the EGL path (only when started with BLINKGTK_GPU_MODE=egl).</p>

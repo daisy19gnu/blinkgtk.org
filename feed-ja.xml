@@ -7,6 +7,14 @@
   <updated>2026-09-08T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.2-build1 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build1"/>
+    <id>tag:blinkgtk.org,2026:2026-09-10-build1-122:ja</id>
+    <updated>2026-09-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>縦組みで閉じ括弧が行末に来ると行が途中で切れる現象が直りました。35 文字入る行に 17 文字しか入らず、text-align: justify が残りを引き伸ばすため字間が倍に開いていました。13 通りの設定のうち 8 通りで起きていたものがすべて解消します。横組みでは起きません。当方から上流へ報告し (crbug 542686223) Chromium 側で修正されたものです。レンダリングエンジンは Chromium 153.0.8010.36 になりました。同梱のデモが --version に応じるようになり、不具合を報告するときに版を一意に示せます。</summary>
+  </entry>
+  <entry>
     <title>v1.2.1-build3 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3"/>
     <id>tag:blinkgtk.org,2026:2026-09-08-build3-121:ja</id>
