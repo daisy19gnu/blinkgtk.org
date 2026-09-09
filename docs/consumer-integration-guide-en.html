@@ -534,7 +534,7 @@ rather than hardcoded, so it automatically tracks updates to
 <span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* Quote this single string in a bug report and the exact build is identified</span></span>
 <span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * (since 1.2.2). The build number counts how many times the same version was</span></span>
 <span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a><span class="co"> * rebuilt; behaviour can differ between builds of one version. */</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> full_ver <span class="op">=</span> blink_gtk_get_version_full<span class="op">();</span>          <span class="co">/* e.g. &quot;1.2.2-build1&quot; */</span></span>
+<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> full_ver <span class="op">=</span> blink_gtk_get_version_full<span class="op">();</span>          <span class="co">/* e.g. &quot;X.Y.Z-buildN&quot; */</span></span>
 <span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a><span class="co">/* If you only need the build number. Returns NULL when unknown -- never &quot;0&quot;</span></span>
 <span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a><span class="co"> * or &quot;unknown&quot;, since those read as build numbers. */</span></span>

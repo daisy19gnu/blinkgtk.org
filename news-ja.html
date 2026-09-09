@@ -4,11 +4,15 @@
 <title>お知らせ · BlinkGTK</title>
 <link rel="alternate" type="application/atom+xml" title="BlinkGTK お知らせ" href="https://blinkgtk.org/feed-ja.xml">
 <link rel="stylesheet" href="docs/docs.css">
+<script src="/privacy-consent.js" defer></script>
 </head><body><div class="wrap">
 <div class="navbar"><a href="./">BlinkGTK</a> · <a href="docs/">ドキュメント</a> · <a href="news-en.html">English</a></div>
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2">v1.2.2-build2 を公開しました</a></h2>
+<p><small>2026-09-10 · リリース</small></p>
+<p>同梱していたリリースノートの誤りを訂正しました。build1 の記述で「前版の回避を取り除いた」としていましたが、取り除いておらず、この版でも入ったままです。記述を実物に合わせました。プログラムの中身は build1 と同じで、組版の結果は変わりません (版数を名乗る文字列だけが 1.2.2-build2 になります)。誤りは BlinkGTK-Readium からの照会で判明しました。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build1">v1.2.2-build1 を公開しました</a></h2>
 <p><small>2026-09-10 · リリース</small></p>
 <p>縦組みで閉じ括弧が行末に来ると行が途中で切れる現象が直りました。35 文字入る行に 17 文字しか入らず、text-align: justify が残りを引き伸ばすため字間が倍に開いていました。13 通りの設定のうち 8 通りで起きていたものがすべて解消します。横組みでは起きません。当方から上流へ報告し (crbug 542686223) Chromium 側で修正されたものです。レンダリングエンジンは Chromium 153.0.8010.36 になりました。同梱のデモが --version に応じるようになり、不具合を報告するときに版を一意に示せます。測ったのは 1 行に入る文字数で、段組みの列末に残る余地は測っていません。</p>

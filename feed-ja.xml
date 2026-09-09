@@ -7,6 +7,14 @@
   <updated>2026-09-08T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.2-build2 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-09-10-build2-122:ja</id>
+    <updated>2026-09-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>同梱していたリリースノートの誤りを訂正しました。build1 の記述で「前版の回避を取り除いた」としていましたが、取り除いておらず、この版でも入ったままです。記述を実物に合わせました。プログラムの中身は build1 と同じで、組版の結果は変わりません (版数を名乗る文字列だけが 1.2.2-build2 になります)。誤りは BlinkGTK-Readium からの照会で判明しました。</summary>
+  </entry>
+  <entry>
     <title>v1.2.2-build1 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build1"/>
     <id>tag:blinkgtk.org,2026:2026-09-10-build1-122:ja</id>

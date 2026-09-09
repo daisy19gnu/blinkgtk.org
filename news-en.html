@@ -4,11 +4,15 @@
 <title>News · BlinkGTK</title>
 <link rel="alternate" type="application/atom+xml" title="BlinkGTK News" href="https://blinkgtk.org/feed-en.xml">
 <link rel="stylesheet" href="docs/docs.css">
+<script src="/privacy-consent.js" defer></script>
 </head><body><div class="wrap">
 <div class="navbar"><a href="./">BlinkGTK</a> · <a href="docs/">Documentation</a> · <a href="news-ja.html">日本語</a></div>
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2">v1.2.2-build2 released</a></h2>
+<p><small>2026-09-10 · Release</small></p>
+<p>Corrects an error in the release notes shipped with build1. They said our previous workaround had been removed; it had not, and it is still present in this release. The wording now matches the artifact. The program is otherwise identical to build1 and typeset output does not change; only the reported version string becomes 1.2.2-build2. The error was found through an enquiry from BlinkGTK-Readium.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build1">v1.2.2-build1 released</a></h2>
 <p><small>2026-09-10 · Release</small></p>
 <p>In vertical writing, a line no longer breaks half-way when a closing bracket falls at the line end. A line with room for 35 characters held only 17, and text-align: justify then doubled the inter-character advance. Of 13 configurations, 8 exhibited it and all are now fixed; it does not occur in horizontal writing. We reported it upstream (crbug 542686223) and Chromium fixed it. The rendering engine is now Chromium 153.0.8010.36. The bundled demo answers --version, so a problem report can identify the build exactly.We measured how many characters fit on one line; we did not measure how much room is left at the end of a column in multi-column layout.</p>

@@ -119,7 +119,7 @@ API リファレンスマニュアル — 第 1 章 概観とライフサイク�
 </tr>
 <tr>
 <td>対象バージョン</td>
-<td>BlinkGTK 1.2.1 (Chromium 152.0.7977.64)</td>
+<td>BlinkGTK 1.2.2-build2 (Chromium 153.0.8010.36)</td>
 </tr>
 <tr>
 <td>位置づけ</td>
@@ -535,12 +535,12 @@ software で安定)。また前述のとおりモードはプロセス単位な�
 False Pass を経験し、GTK 合成結果を直接読む検査を併用している)。</p>
 <h2 id="16-バージョン確認">1.6 バージョン確認</h2>
 <div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>           <span class="co">/* 例 &quot;1.2.1&quot; */</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_chromium_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>  <span class="co">/* 例 &quot;152.0.7977.64&quot; */</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_chromium_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>  <span class="co">/* 例 &quot;NNN.0.NNNN.N&quot; */</span></span>
 <span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* build 番号 (Since 1.2.2)。build 番号は「同じ版を作り直した回数」です。</span></span>
 <span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"> * 同じ版でも build が違えば挙動が違うことがあります。 */</span></span>
 <span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_build<span class="op">(</span><span class="dt">void</span><span class="op">);</span>             <span class="co">/* 例 &quot;2&quot;。不明なら NULL */</span></span>
-<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version_full<span class="op">(</span><span class="dt">void</span><span class="op">);</span>      <span class="co">/* 例 &quot;1.2.2-build1&quot;。必ず非 NULL */</span></span></code></pre></div>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version_full<span class="op">(</span><span class="dt">void</span><span class="op">);</span>      <span class="co">/* 例 &quot;X.Y.Z-buildN&quot;。必ず非 NULL */</span></span></code></pre></div>
 <p>コンパイル時マクロ(<code>BLINKGTK_VERSION</code> /
 <code>CHROMIUM_VERSION</code>)ではなく、実行時に<br />
 リンクされている .so から取得する(consumer

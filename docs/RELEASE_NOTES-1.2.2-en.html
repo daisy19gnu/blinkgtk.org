@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.2-build1 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.2-build2 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -26,7 +26,7 @@
 <meta name="description" content="Released: 2026-09-10 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.2-build1 Release Notes — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.2-build2 Release Notes — BlinkGTK">
 <meta property="og:description" content="Released: 2026-09-10 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -42,12 +42,23 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-122-build1-release-notes">BlinkGTK 1.2.2-build1 Release
+<h1 id="blinkgtk-122-build2-release-notes">BlinkGTK 1.2.2-build2 Release
 Notes</h1>
 <p><strong>Released</strong>: 2026-09-10 / <strong>Chromium</strong>:
 153.0.8010.36 / Language: <a href="RELEASE_NOTES-1.2.2-ja.html">日本語</a>
 | English</p>
 <p>The rendering engine is updated to <strong>Chromium 153</strong>.</p>
+<hr />
+<h2 id="what-build2-corrects">What build2 corrects</h2>
+<p>The release notes shipped with build1 were wrong. They said our
+previous<br />
+workaround had been removed; <strong>it had not</strong>, and it is
+still present in this<br />
+release. The wording now matches the artifact. <strong>The program is
+otherwise identical to<br />
+build1</strong> and typeset output does not change; only the version
+string it reports<br />
+becomes <code>1.2.2-build2</code>.</p>
 <hr />
 <h2 id="what-build1-makes-possible">What build1 makes possible</h2>
 <h3 id="vertical-lines-now-fill-to-the-end">Vertical lines now fill to
@@ -85,16 +96,34 @@ Chromium 153.</p>
 workaround,<br />
 which improved the count from <strong>17 characters to 34</strong>. One
 character still moved<br />
-to the next line, so it was not complete. That workaround is no longer
-needed and<br />
-has been removed.</p>
+to the next line, so it was not complete. That workaround is still
+present in this<br />
+release; with the upstream fix in effect it did not change the result
+within the<br />
+range we measured.</p>
+<h3 id="what-this-item-measures-and-what-it-does-not">What this item
+measures, and what it does not</h3>
+<p>We measured <strong>how many characters fit on one line</strong>. A
+single vertical paragraph<br />
+(35 characters) was laid out at heights from 544px to 564px in 1px
+steps, counting<br />
+the characters on the first line, across four fonts, with
+<code>text-align: justify</code>,<br />
+under software rendering.</p>
+<p><strong>We did not measure column filling.</strong> How much room is
+left at the end of a column<br />
+in multi-column layout (whether another line would still fit) is a
+different<br />
+quantity, and we cannot say it improved in this release. Columns not
+filling to<br />
+capacity is tracked separately.</p>
 <h3 id="the-version-can-be-queried-at-run-time">The version can be
 queried at run time</h3>
 <p>The bundled demo answers <code>--version</code>. When reporting a
 problem, this single<br />
 line identifies the build.</p>
 <pre><code>$ blinkgtk_browser --version
-BlinkGTK 1.2.2-build1 (Chromium 153.0.8010.36)</code></pre>
+BlinkGTK 1.2.2-build2 (Chromium 153.0.8010.36)</code></pre>
 <p><code>--help</code> prints the usage and how to specify the URL to
 open.</p>
 <h3 id="also-in-this-release">Also in this release</h3>

@@ -7,6 +7,14 @@
   <updated>2026-09-08T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.2-build2 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-09-10-build2-122:en</id>
+    <updated>2026-09-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Corrects an error in the release notes shipped with build1. They said our previous workaround had been removed; it had not, and it is still present in this release. The wording now matches the artifact. The program is otherwise identical to build1 and typeset output does not change; only the reported version string becomes 1.2.2-build2. The error was found through an enquiry from BlinkGTK-Readium.</summary>
+  </entry>
+  <entry>
     <title>v1.2.2-build1 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build1"/>
     <id>tag:blinkgtk.org,2026:2026-09-10-build1-122:en</id>

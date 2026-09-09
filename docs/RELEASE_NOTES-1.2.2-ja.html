@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.2-build1 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.2-build2 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -26,7 +26,7 @@
 <meta name="description" content="リリース日: 2026-09-10 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.2-build1 リリースノート — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.2-build2 リリースノート — BlinkGTK">
 <meta property="og:description" content="リリース日: 2026-09-10 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -42,13 +42,22 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-122-build1-リリースノート">BlinkGTK 1.2.2-build1
+<h1 id="blinkgtk-122-build2-リリースノート">BlinkGTK 1.2.2-build2
 リリースノート</h1>
 <p><strong>リリース日</strong>: 2026-09-10 / <strong>Chromium</strong>:
 153.0.8010.36 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.2-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 153</strong>
 に更新しました。</p>
+<hr />
+<h2 id="build2-でなおしたこと">build2 でなおしたこと</h2>
+<p>同梱していたリリースノートに誤りがありました。build1
+の記述で「前版の回避を<br />
+取り除いた」としていましたが、<strong>取り除いていません</strong>。この版でも入ったままです。<br />
+記述を実物に合わせました。<strong>プログラムの中身は build1
+と同じ</strong>で、組版の結果は<br />
+変わりません (版数を名乗る文字列だけが <code>1.2.2-build2</code>
+になります)。</p>
 <hr />
 <h2 id="build1-でできるようになったこと">build1
 でできるようになったこと</h2>
@@ -79,14 +88,27 @@ Noto Sans CJK JP)、ルビを併用しても、<code>line-height: normal</code>
 <p>前版 (1.2.1 / Chromium 152) では、当方が独自の回避を入れて<br />
 <strong>17 文字 → 34 文字</strong>まで改善していました。ただし 1
 文字は次の行へ落ちたままで、<br />
-完全ではありませんでした。この版では回避が不要になり、取り除いています。</p>
+完全ではありませんでした。この版にもその回避は入ったままです。上流の修正が<br />
+効いている状態では、当方の測定範囲でこの回避は結果を変えていません。</p>
+<h3
+id="この項目で測った量と測っていないこと">この項目で測った量と、測っていないこと</h3>
+<p>測ったのは <strong>1 行に入る文字数</strong>です。縦書き 1 段落 (35
+文字) を、高さ 544〜564px の<br />
+範囲で 1px 刻みに変えながら、1 行目に何文字入るかを数えました。書体は 4
+種、<br />
+<code>text-align: justify</code> あり、ソフトウェア描画です。</p>
+<p><strong>列の充填は測っていません。</strong>
+段組みで列末にどれだけ余地が残るか (もう 1 行<br />
+入る余りがあるか)
+は別の量で、この版で改善したとは言えません。段組みの列が<br />
+最後まで埋まらない件は別途扱っています。</p>
 <h3
 id="版を実行時に尋ねられるようになりました">版を実行時に尋ねられるようになりました</h3>
 <p>同梱のデモが <code>--version</code>
 に応じます。不具合を報告する際は、この 1 行を貼れば<br />
 版が一意に決まります。</p>
 <pre><code>$ blinkgtk_browser --version
-BlinkGTK 1.2.2-build1 (Chromium 153.0.8010.36)</code></pre>
+BlinkGTK 1.2.2-build2 (Chromium 153.0.8010.36)</code></pre>
 <p><code>--help</code> で使い方と、開く URL の指定方法を表示します。</p>
 <h3 id="併せて">併せて</h3>
 <p>Chromium 153 では、ほかに <code>EventTimingMatchingHTML</code>
