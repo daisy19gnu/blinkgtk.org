@@ -116,8 +116,9 @@ href="chromium-feature-history-en.html">English</a></p>
 現時点では「使えない」前提で版面を組んでください。</p>
 <hr />
 <h2 id="全体像">全体像</h2>
-<p>5 つの版で、エンジンが持つ機能フラグは 1,103 → 1,214
-に増えました。</p>
+<p>7 つの版で、エンジンが持つ機能フラグは 1,103 → 1,220
+になりました。152 で一度 1,240 まで増え、153
+で定着した切替フラグの整理により減っています。</p>
 <table>
 <thead>
 <tr>
@@ -174,12 +175,32 @@ href="chromium-feature-history-en.html">English</a></p>
 <td>64</td>
 <td>22</td>
 <td>822</td>
-<td>移行作業中 (2026-08)</td>
+<td>v1.2.0-build1 〜 build9</td>
+</tr>
+<tr>
+<td>152</td>
+<td>1,240</td>
+<td>41</td>
+<td>56</td>
+<td>29</td>
+<td>820</td>
+<td>v1.2.1-build1 〜 build3</td>
+</tr>
+<tr>
+<td>153</td>
+<td>1,220</td>
+<td>28</td>
+<td>39</td>
+<td>59</td>
+<td>824</td>
+<td>v1.2.2-build1 〜</td>
 </tr>
 </tbody>
 </table>
-<p>1 版あたり 30〜50 個の機能が既定で有効になり、20〜35
-個が消えています。<strong>削除がある</strong>という<br />
+<p>1 版あたり 28〜48 個の機能が既定で有効になり、20〜59
+個が消えています。153 の削除 59 件は他の版より多く、そのうち 48
+件は「すでに既定で有効だった切替フラグ」でした。<br />
+<strong>削除がある</strong>という<br />
 点は見落とされがちですが、上げるときに壊れる可能性があるのはむしろこちら側です。<br />
 各章の最後に「移行の注意」を置いたのはそのためです。</p>
 <hr />
@@ -600,7 +621,153 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <p><code>ConnectionAllowlist</code> は
 <code>ConnectionAllowlistEmbeddedEnforcement</code> に<br />
 置き換わりました。</p>
-<h2 id="日本語組版の現在地--5-版を通した俯瞰">日本語組版の現在地 — 5
+<h2 id="152--153--縦組みの行末に上流の手が入った版">152 → 153 —
+縦組みの行末に、上流の手が入った版</h2>
+<p><strong>この版の主役は、縦書きで行が途中までしか埋まらない現象の解消です。</strong><br />
+当方から上流へ報告し (<a
+href="https://issues.chromium.org/issues/542686223">crbug
+542686223</a>)、<br />
+Chromium 側で修正されました。</p>
+<p>差分の規模は、追加 39 件 (既定で有効 18 / 試験段階 14 / 開発中 3 /
+その他 4)、<br />
+削除 59 件、状態が変わったもの 19 件 (うち既定で有効へ昇格 10
+件)。<br />
+CSS プロパティは追加 5 件・削除 1 件です。</p>
+<h3
+id="縦組みで閉じ括弧が行末に来ても行が埋まります-既定で有効">縦組みで、閉じ括弧が行末に来ても行が埋まります
+(既定で有効)</h3>
+<p>縦書きの段落で、閉じ括弧が行末に来ると<strong>行が半分ほどで折り返す</strong>現象がありました。<br />
+35 文字入る行に 17 文字しか入らず、<code>text-align: justify</code>
+を指定していると<br />
+残りを引き伸ばすため、<strong>字間が倍 (16px → 33.5px)
+に開きます</strong>。読み手には、<br />
+そこだけ間延びした行として見えます。</p>
+<p>153 で <code>LineBreakerHanKerningEnd</code>
+という機能が新設され、<strong>最初から既定で有効</strong>です。<br />
+152 のツリーにはこの名前が 1 件も存在しません。</p>
+<p>実測 (縦書き 1 段落 35 文字、高さ 544〜564px を 1px
+刻み、ソフトウェア描画):</p>
+<table>
+<thead>
+<tr>
+<th>フラグ</th>
+<th>1 行に入る文字数 (552〜559px)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>既定 (何も指定しない)</td>
+<td><strong>35</strong></td>
+</tr>
+<tr>
+<td>明示的に有効化</td>
+<td>35 (既定と同じ)</td>
+</tr>
+<tr>
+<td>明示的に無効化</td>
+<td>17</td>
+</tr>
+</tbody>
+</table>
+<p><strong>明示的に無効化すると 17
+文字に戻ります</strong>。これが、この機能が効いていることの<br />
+裏付けです。存在しないフラグ名を渡した対照では 35
+のままで、スイッチそのものは<br />
+結果に影響しないことも確かめています。</p>
+<p><strong>横組みでは起きません</strong>。縦組みに固有の現象でした。ただし縦組みの中では条件を<br />
+選ばず、書体を変えても (serif / sans-serif / Noto Serif CJK JP / Noto
+Sans CJK JP)、<br />
+ルビを併用しても、<code>line-height: normal</code>
+でも同じように起きていました。<br />
+13 通りの設定のうち 8 通りで発生し、153 ではすべて解消しています。</p>
+<h3
+id="ぶら下げはこの版でもまだ使えません">ぶら下げは、この版でもまだ使えません</h3>
+<p>行末の句読点をぶら下げる <code>hanging-punctuation</code> は、149 で
+CSS プロパティとしての<br />
+受け皿が入って以来、<strong>149・150・151・152・153 と 5
+版続けて実装フラグが <code>test</code></strong><br />
+のままです。<code>CSS.supports()</code>
+は真を返しますが、行組版は変わりません。<br />
+機能検出に使うと外します。詳しくは冒頭の「この文書の読み方」を参照してください。</p>
+<p>ルビのはみ出し (<code>CSSRubyOverhang</code>) と圏点のルビ経路処理
+(<code>TextEmphasisAsRuby</code>) は<br />
+151 以降そのまま既定で有効です。この版で変わったところはありません。</p>
+<h3
+id="文字入力の自動修正がhtml-の指定どおりに働きます-既定で有効">文字入力の自動修正が、HTML
+の指定どおりに働きます (既定で有効)</h3>
+<p>HTML の <code>autocorrect</code> 属性が、プラットフォームの入力方式
+(IME) に反映されるように<br />
+なりました。自動修正は<strong>既定で有効</strong>で、URL・メールアドレス・パスワードの入力欄では<br />
+<strong>強制的に無効</strong>になります (<code>autocorrect=off</code>
+を持つフォームに属する場合も同様)。<br />
+仕様は <a
+href="https://html.spec.whatwg.org/multipage/interaction.html#autocorrection">HTML
+Standard</a> にあります。</p>
+<p>日本語入力そのものの挙動を変えるものではありませんが、氏名や住所のように<br />
+自動修正が邪魔になる欄を持つフォームでは、<code>autocorrect=off</code>
+の指定が効くように<br />
+なった、と考えてください。</p>
+<h3
+id="カメラとマイクの許可をページの中に置けます-既定で有効">カメラとマイクの許可を、ページの中に置けます
+(既定で有効)</h3>
+<p><code>&lt;camera&gt;</code> と <code>&lt;microphone&gt;</code> という
+HTML 要素が加わりました。カメラ・マイクの<br />
+使用許可を求める操作部品を、ブラウザのダイアログではなく<strong>ページの中に直接<br />
+埋め込める</strong>ようになります。</p>
+<h3 id="xml-の解析が-rust-の実装に替わりました-既定で有効">XML の解析が
+Rust の実装に替わりました (既定で有効)</h3>
+<p>JavaScript の <code>DOMParser</code> で XML
+を解析する場合と、<code>XMLHttpRequest</code> の<br />
+<code>responseXML</code> を使う場合に、Rust で書かれた XML
+パーサが使われるようになりました。<br />
+XSLT 処理が要らないと分かっている経路に限った切り替えです。<br />
+EPUB のように XML
+を多く扱う用途では、解析まわりの堅牢性に関わります。</p>
+<h3 id="追加された-css-プロパティ">追加された CSS プロパティ</h3>
+<table>
+<thead>
+<tr>
+<th>プロパティ</th>
+<th>状態</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text-decoration-inset</code></td>
+<td>試験段階</td>
+<td>下線などの位置を内側にずらす指定</td>
+</tr>
+<tr>
+<td><code>overscroll-container-type</code></td>
+<td>試験段階</td>
+<td>端を超えたスクロールの扱い</td>
+</tr>
+<tr>
+<td><code>max-content-sizing</code></td>
+<td><strong>開発中</strong></td>
+<td>プロパティは解釈されますが、<strong>描画には反映されません</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>-internal-</code> で始まる 2
+件はブラウザ内部用で、ページからは使えません。<br />
+<code>-internal-overscroll-area</code>
+は削除され、<code>-internal-overscroll-container</code> に<br />
+置き換わっています。</p>
+<h3 id="削除された-59-件について">削除された 59 件について</h3>
+<p>削除の 59 件は、その大半 (48 件)
+が<strong>すでに既定で有効だった切替フラグ</strong>です。<br />
+挙動が定着したあと、切り替える必要がなくなったものを整理したものと読めます。<br />
+機能が失われたわけではありません。</p>
+<p>なお、この差分の取り方と、載せる項目の選び方は末尾の「出典と、この差分の取り方」に<br />
+書いたとおりです。名前から意味を推測すると誤りが混ざるため、<strong>実装を確かめられなかった<br />
+ものは本文に載せていません</strong>。既定で有効へ昇格した 10
+件のうち本文で触れたのは<br />
+3
+件で、残りは確かめきれなかったか、ページの表示に関わらないものです。</p>
+<hr />
+<h2 id="日本語組版の現在地--7-版を通した俯瞰">日本語組版の現在地 — 7
 版を通した俯瞰</h2>
 <p>BlinkGTK
 の主な用途が日本語縦組みの電子書籍であることを踏まえて、<br />
@@ -614,15 +781,29 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <th>149</th>
 <th>150</th>
 <th>151</th>
+<th>152</th>
+<th>153</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>縦組みの行末で行が埋まる</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+</tr>
 <tr>
 <td>ルビのはみ出し (<code>ruby-overhang</code>)</td>
 <td>試験</td>
 <td>試験</td>
 <td>試験</td>
 <td>試験</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 </tr>
 <tr>
@@ -632,6 +813,28 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <td>—</td>
 <td>—</td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>ルビの置き方の再実装</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>ルビの親文字での <code>tab-size</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td><code>text-autospace</code> がルビ注記を無視</td>
@@ -639,6 +842,8 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 </tr>
 <tr>
@@ -648,6 +853,8 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <td>—</td>
 <td>—</td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>注記の開始側アキ</td>
@@ -656,12 +863,16 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <td>—</td>
 <td>—</td>
 <td>試験</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>入れ子リストの <code>text-box-trim</code></td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 </tr>
@@ -672,6 +883,8 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <td>—</td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>ルビ行での編集カーソル移動修正</td>
@@ -680,10 +893,14 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>下線が文字を避ける</td>
 <td>試験</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
@@ -696,12 +913,16 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <td>プロパティのみ (開発中)</td>
 <td>同左</td>
 <td>同左</td>
+<td>同左</td>
+<td>同左</td>
 </tr>
 <tr>
 <td>縦組み多段の分割 (BlinkGTK 独自)</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>試験</td>
+<td>試験</td>
 <td>試験</td>
 <td>試験</td>
 </tr>
@@ -785,6 +1006,16 @@ BlinkGTK はここを継続課題として追っています。</p>
 </tr>
 </tbody>
 </table>
+<p>153
+についても同じ確認をしています。<code>LineBreakerHanKerningEnd</code>
+は上流の宣言が<br />
+<code>stable</code>
+ですが、宣言を読むだけでは実際に効いているか分かりません。そこで<br />
+<strong>起動時にこのフラグを明示的に無効化して測り直し</strong>、1
+行に入る文字数が 35 から<br />
+17 に戻ることを確かめました。存在しないフラグ名を渡した対照では 35
+のままです。<br />
+つまりこのフラグが結果を作っていることが、宣言ではなく挙動で裏付けられています。</p>
 <p>本文の記述はこの実測と一致しています。ぶら下げが使えないと書いたのは、<br />
 上流の宣言だけでなく<strong>実際のビルドでも無効</strong>だからです。</p>
 <p>各版のツリーからこの 2 ファイルを解析して「機能名 →

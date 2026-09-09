@@ -249,6 +249,14 @@
 <p>出荷物で実測した例です (2026-09-03 採取、Chromium
 152.0.7977.64)。900x640 の窓、<code>column-width: 11em</code>、<br />
 <code>font: 16px/1.75 serif</code>、<code>column-gap: 2em</code>。</p>
+<p><strong>この値は Chromium 152 で採取したもので、153 (BlinkGTK 1.2.2)
+では測り直していません。</strong><br />
+153 で入った縦組みの行末処理 (<code>LineBreakerHanKerningEnd</code>) は
+1 行に入る文字数を変えますが、<br />
+ここに挙げているのは列の寸法 (列送り・原点・列数)
+で、別の量です。とはいえ確かめていない以上、<br />
+同じ値になるとは書けません。実際の値は下の API
+で実行時に取得してください。</p>
 <div class="sourceCode" id="cb4"><pre
 class="sourceCode json"><code class="sourceCode json"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">{</span></span>
 <span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&quot;stride&quot;</span><span class="fu">:</span> <span class="dv">272</span><span class="fu">,</span></span>

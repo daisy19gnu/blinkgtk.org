@@ -122,8 +122,9 @@ usable feature check here.<br />
 Design your pages as if the feature does not exist yet.</p>
 <hr />
 <h2 id="the-shape-of-it">The shape of it</h2>
-<p>Across five versions, the engine's feature flags grew from 1,103 to
-1,214.</p>
+<p>Across seven versions, the engine's feature flags went from 1,103 to
+1,220. They peaked at 1,240 in 152; 153 brought the number down by
+clearing out switches for behaviour that had settled.</p>
 <table>
 <thead>
 <tr>
@@ -180,11 +181,31 @@ Design your pages as if the feature does not exist yet.</p>
 <td>64</td>
 <td>22</td>
 <td>822</td>
-<td>migration in progress (2026-08)</td>
+<td>v1.2.0-build1 – build9</td>
+</tr>
+<tr>
+<td>152</td>
+<td>1,240</td>
+<td>41</td>
+<td>56</td>
+<td>29</td>
+<td>820</td>
+<td>v1.2.1-build1 – build3</td>
+</tr>
+<tr>
+<td>153</td>
+<td>1,220</td>
+<td>28</td>
+<td>39</td>
+<td>59</td>
+<td>824</td>
+<td>v1.2.2-build1 –</td>
 </tr>
 </tbody>
 </table>
-<p>Each version turns on 30–50 features by default and removes 20–35.
+<p>Each version turns on 28–48 features by default and removes 20–59.
+The 59 removals in 153 stand out; 48 of them were <strong>switches for
+behaviour that was already on by default</strong>.
 <strong>Removals</strong> are easy<br />
 to overlook, yet they are the more likely reason an upgrade breaks
 something. That is why<br />
@@ -608,9 +629,177 @@ works.</strong> Notable ones:</p>
 <code>WebAuthenticationImmediateGet</code>), and
 <code>ConnectionAllowlist</code> was replaced by<br />
 <code>ConnectionAllowlistEmbeddedEnforcement</code>.</p>
+<h2 id="152--153--upstream-reaches-the-end-of-the-vertical-line">152 →
+153 — Upstream reaches the end of the vertical line</h2>
+<p><strong>The headline of this release is the fix for vertical lines
+that only filled part way.</strong><br />
+We reported it upstream (<a
+href="https://issues.chromium.org/issues/542686223">crbug
+542686223</a>)<br />
+and Chromium fixed it.</p>
+<p>The size of the diff: 39 additions (18 on by default, 14
+experimental, 3 in development,<br />
+4 other), 59 removals, and 19 status changes, of which 10 were promoted
+to on by default.<br />
+CSS properties: 5 added, 1 removed.</p>
+<h3
+id="vertical-lines-now-fill-even-when-a-closing-bracket-falls-at-the-end-on-by-default">Vertical
+lines now fill even when a closing bracket falls at the end (on by
+default)</h3>
+<p>In a vertical paragraph, a closing bracket at the end of a line could
+<strong>wrap the line at<br />
+roughly half its length</strong>. A line with room for 35 characters
+held only 17, and with<br />
+<code>text-align: justify</code> the remainder was stretched, so the
+<strong>inter-character advance<br />
+doubled (16px to 33.5px)</strong>. To a reader, that one line looks
+stretched out.</p>
+<p>Chromium 153 introduces a feature named
+<code>LineBreakerHanKerningEnd</code>, and it is<br />
+<strong>on by default from the start</strong>. The name does not appear
+even once in the 152 tree.</p>
+<p>Measured (one vertical paragraph of 35 characters, heights 544-564px
+in 1px steps,<br />
+software rendering):</p>
+<table>
+<thead>
+<tr>
+<th>Flag</th>
+<th>Characters on the first line (552-559px)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Default (nothing specified)</td>
+<td><strong>35</strong></td>
+</tr>
+<tr>
+<td>Explicitly enabled</td>
+<td>35 (same as default)</td>
+</tr>
+<tr>
+<td>Explicitly disabled</td>
+<td>17</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Disabling it explicitly brings back 17 characters.</strong>
+That is our evidence the feature<br />
+is what does the work. A control run with a non-existent flag name
+stayed at 35, which<br />
+shows the switch itself does not affect the result.</p>
+<p><strong>It does not happen in horizontal writing.</strong> It was
+specific to vertical writing, but<br />
+within vertical writing it was insensitive to conditions: changing the
+typeface<br />
+(serif, sans-serif, Noto Serif CJK JP, Noto Sans CJK JP), adding ruby,
+or using<br />
+<code>line-height: normal</code> all reproduced it. Of 13
+configurations, 8 exhibited it, and all<br />
+are resolved in 153.</p>
+<h3 id="hanging-punctuation-is-still-not-usable-in-this-release">Hanging
+punctuation is still not usable in this release</h3>
+<p><code>hanging-punctuation</code>, which hangs a period or comma past
+the end of a line, has had a<br />
+CSS property since 149, but its implementation flag has stayed at
+<code>test</code> through<br />
+<strong>149, 150, 151, 152 and 153 - five releases</strong>.
+<code>CSS.supports()</code> returns true while line<br />
+layout does not change. Using it for feature detection will mislead you.
+See<br />
+"How to read this document" at the top.</p>
+<p>Ruby overhang (<code>CSSRubyOverhang</code>) and emphasis marks
+routed through ruby<br />
+(<code>TextEmphasisAsRuby</code>) remain on by default as they have been
+since 151. Nothing<br />
+changed for them in this release.</p>
+<h3
+id="autocorrection-now-follows-what-the-html-says-on-by-default">Autocorrection
+now follows what the HTML says (on by default)</h3>
+<p>The HTML <code>autocorrect</code> attribute is now reflected to the
+platform input method.<br />
+Autocorrection is <strong>on by default</strong> and is <strong>forced
+off</strong> for URL, email and password<br />
+inputs (and for controls belonging to a form owner with
+<code>autocorrect=off</code>). The<br />
+specification is in the<br />
+<a
+href="https://html.spec.whatwg.org/multipage/interaction.html#autocorrection">HTML
+Standard</a>.</p>
+<p>This does not change Japanese input itself. Read it as: for forms
+with fields where<br />
+autocorrection gets in the way, such as names and addresses,
+<code>autocorrect=off</code> now takes<br />
+effect.</p>
+<h3
+id="camera-and-microphone-permission-can-sit-inside-the-page-on-by-default">Camera
+and microphone permission can sit inside the page (on by default)</h3>
+<p>Two HTML elements were added: <code>&lt;camera&gt;</code> and
+<code>&lt;microphone&gt;</code>. Controls that request<br />
+permission to use the camera or microphone can now be <strong>embedded
+directly in the page</strong><br />
+rather than appearing only as a browser dialog.</p>
+<h3 id="xml-parsing-moved-to-a-rust-implementation-on-by-default">XML
+parsing moved to a Rust implementation (on by default)</h3>
+<p>Parsing XML through the JavaScript <code>DOMParser</code>, and
+<code>responseXML</code> on <code>XMLHttpRequest</code>,<br />
+now use an XML parser written in Rust. The switch is limited to paths
+where XSLT<br />
+processing is known not to be required. For work that handles a lot of
+XML, such as<br />
+EPUB, this bears on the robustness of parsing.</p>
+<h3 id="css-properties-added">CSS properties added</h3>
+<table>
+<thead>
+<tr>
+<th>Property</th>
+<th>State</th>
+<th>Note</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text-decoration-inset</code></td>
+<td>Experimental</td>
+<td>Insets the position of decorations such as underlines</td>
+</tr>
+<tr>
+<td><code>overscroll-container-type</code></td>
+<td>Experimental</td>
+<td>Handling of scrolling past the edge</td>
+</tr>
+<tr>
+<td><code>max-content-sizing</code></td>
+<td><strong>In development</strong></td>
+<td>The property parses, but <strong>it does not reach
+rendering</strong></td>
+</tr>
+</tbody>
+</table>
+<p>The two names beginning with <code>-internal-</code> are for browser
+internals and are not usable<br />
+from a page. <code>-internal-overscroll-area</code> was removed and
+replaced by<br />
+<code>-internal-overscroll-container</code>.</p>
+<h3 id="about-the-59-removals">About the 59 removals</h3>
+<p>Most of the 59 removals (48 of them) are <strong>switches for
+behaviour that was already on by<br />
+default</strong>. They read as clean-up of switches that were no longer
+needed once the<br />
+behaviour had settled. No functionality was lost.</p>
+<p>The way this diff was taken, and how items were selected for
+inclusion, is described in<br />
+"Sources, and how this diff was taken" at the end. Guessing meaning from
+a feature name<br />
+introduces errors, so <strong>items whose implementation we could not
+confirm are not listed<br />
+here</strong>. Of the 10 features promoted to on by default, 3 are
+covered above; the rest were<br />
+either unconfirmed or do not affect what a page displays.</p>
+<hr />
 <h2
-id="where-japanese-typography-stands--the-five-versions-at-a-glance">Where
-Japanese typography stands — the five versions at a glance</h2>
+id="where-japanese-typography-stands--the-seven-versions-at-a-glance">Where
+Japanese typography stands — the seven versions at a glance</h2>
 <p>Given that BlinkGTK is used mainly for Japanese vertical-writing
 e-books, here are the<br />
 relevant items alone. <strong>A dash means the item did not exist in
@@ -624,15 +813,29 @@ that version.</strong></p>
 <th>149</th>
 <th>150</th>
 <th>151</th>
+<th>152</th>
+<th>153</th>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Vertical lines fill at the line end</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+</tr>
 <tr>
 <td>Ruby overhang (<code>ruby-overhang</code>)</td>
 <td>exp.</td>
 <td>exp.</td>
 <td>exp.</td>
 <td>exp.</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 </tr>
 <tr>
@@ -642,6 +845,28 @@ that version.</strong></p>
 <td>—</td>
 <td>—</td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td>Ruby placement reimplemented</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td><code>tab-size</code> in a ruby base</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td><code>text-autospace</code> ignores ruby</td>
@@ -649,6 +874,8 @@ that version.</strong></p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 </tr>
 <tr>
@@ -658,6 +885,8 @@ that version.</strong></p>
 <td>—</td>
 <td>—</td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td>Annotation space on start</td>
@@ -666,12 +895,16 @@ that version.</strong></p>
 <td>—</td>
 <td>—</td>
 <td>exp.</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td><code>text-box-trim</code> in nested lists</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 </tr>
@@ -682,6 +915,8 @@ that version.</strong></p>
 <td>—</td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td>Caret movement across ruby lines</td>
@@ -690,10 +925,14 @@ that version.</strong></p>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td>Underlines skip descenders</td>
 <td>exp.</td>
+<td><strong>default</strong></td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
@@ -706,12 +945,16 @@ that version.</strong></p>
 <td>property only (in dev.)</td>
 <td>same</td>
 <td>same</td>
+<td>same</td>
+<td>same</td>
 </tr>
 <tr>
 <td>Vertical multi-column fragmentation (BlinkGTK)</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>exp.</td>
+<td>exp.</td>
 <td>exp.</td>
 <td>exp.</td>
 </tr>
@@ -799,6 +1042,16 @@ The table below is read from the generated code
 </tr>
 </tbody>
 </table>
+<p>We did the same for 153. <code>LineBreakerHanKerningEnd</code> is
+declared <code>stable</code> upstream, but<br />
+reading a declaration does not tell you whether it is doing any work. So
+we measured<br />
+again with the flag <strong>explicitly disabled at startup</strong>, and
+the count of characters on a<br />
+line fell from 35 back to 17. A control run with a non-existent flag
+name stayed at 35.<br />
+That is behaviour, not a declaration, showing this flag produces the
+result.</p>
 <p>The prose above matches these measurements. We say hanging
 punctuation is unusable<br />
 because it is off <strong>in the actual build</strong>, not merely by
