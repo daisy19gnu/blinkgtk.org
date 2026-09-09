@@ -12,7 +12,7 @@
     <id>tag:blinkgtk.org,2026:2026-09-10-build1-122:en</id>
     <updated>2026-09-10T00:00:00Z</updated>
     <category term="release"/>
-    <summary>In vertical writing, a line no longer breaks half-way when a closing bracket falls at the line end. A line with room for 35 characters held only 17, and text-align: justify then doubled the inter-character advance. Of 13 configurations, 8 exhibited it and all are now fixed; it does not occur in horizontal writing. We reported it upstream (crbug 542686223) and Chromium fixed it. The rendering engine is now Chromium 153.0.8010.36. The bundled demo answers --version, so a problem report can identify the build exactly.</summary>
+    <summary>In vertical writing, a line no longer breaks half-way when a closing bracket falls at the line end. A line with room for 35 characters held only 17, and text-align: justify then doubled the inter-character advance. Of 13 configurations, 8 exhibited it and all are now fixed; it does not occur in horizontal writing. We reported it upstream (crbug 542686223) and Chromium fixed it. The rendering engine is now Chromium 153.0.8010.36. The bundled demo answers --version, so a problem report can identify the build exactly.We measured how many characters fit on one line; we did not measure how much room is left at the end of a column in multi-column layout.</summary>
   </entry>
   <entry>
     <title>v1.2.1-build3 released</title>
