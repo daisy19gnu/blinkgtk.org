@@ -45,7 +45,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.2-build2 / 言語: 日本語 | <a
+<p>バージョン: 1.2.2-build3 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -71,9 +71,23 @@ href="version-history-en.html">English</a></p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.2-build1</strong> ← 公開中</td>
-<td>2026-09-10</td>
+<td><strong>v1.2.2-build3</strong> ← 公開中</td>
+<td>2026-09-11</td>
 <td><strong>153.0.8010.36</strong></td>
+<td>未完のナビゲーションを抱えたまま窓を閉じると落ちる問題を解消しました。ページの読み込みが
+終わる前に閉じると、ページの入れ物を壊す途中で配られる通知の受け口が、既に手放したものを
+見ていたためです。本を開いた直後に閉じる、といった普通の操作で当たっていました。あわせて、EGL
+で画面に出たかどうかを compositor に問い合わせる診断を追加しました
+(BLINKGTK_GX_LOG=1
+のときだけ出ます。既定では何も変わりません)。「中身が空だった」と「中身はあったが画面に出なかった」を区別できます。診断の記録が
+9
+枚目以降のフレームについて「表示しない」と書きながら実際には表示していた
+問題も是正しました</td>
+</tr>
+<tr>
+<td>v1.2.2-build1</td>
+<td>2026-09-10</td>
+<td>153.0.8010.36</td>
 <td>レンダリングエンジンを Chromium 153
 に更新しました。縦組みで閉じ括弧が行末に来ると 行が途中で切れる現象 (35
 文字入る行に 17 文字しか入らず、text-align: justify が残りを

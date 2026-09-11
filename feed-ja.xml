@@ -4,8 +4,15 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-09-08T00:00:00Z</updated>
+  <updated>2026-09-11T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.2-build3 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build3"/>
+    <id>tag:blinkgtk.org,2026:2026-09-11-build3-122:ja</id>
+    <updated>2026-09-11T00:00:00Z</updated>
+    <summary>ページの読み込みが終わる前に窓を閉じると落ちる問題を解消しました。本を開いた直後に閉じる、といった普通の操作で当たっていました。利用者側の回避 (閉じる前に完了を待つ) は要らなくなります。あわせて、画面に出たかどうかを compositor に問い合わせる診断を追加しました (BLINKGTK_GX_LOG=1 のときだけ記録し、既定では何も変わりません)。レンダリングエンジンは Chromium 153.0.8010.36 のままです。</summary>
+  </entry>
   <entry>
     <title>v1.2.2-build2 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2"/>

@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.2-build2 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.2-build3 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Released: 2026-09-10 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<meta name="description" content="Released: 2026-09-11 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.2-build2 Release Notes — BlinkGTK">
-<meta property="og:description" content="Released: 2026-09-10 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.2-build3 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-09-11 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -42,12 +42,87 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-122-build2-release-notes">BlinkGTK 1.2.2-build2 Release
+<h1 id="blinkgtk-122-build3-release-notes">BlinkGTK 1.2.2-build3 Release
 Notes</h1>
-<p><strong>Released</strong>: 2026-09-10 / <strong>Chromium</strong>:
+<p><strong>Released</strong>: 2026-09-11 / <strong>Chromium</strong>:
 153.0.8010.36 / Language: <a href="RELEASE_NOTES-1.2.2-ja.html">日本語</a>
 | English</p>
 <p>The rendering engine is updated to <strong>Chromium 153</strong>.</p>
+<hr />
+<h2 id="fixed-in-build3">Fixed in build3</h2>
+<h3 id="closing-the-window-no-longer-crashes">Closing the window no
+longer crashes</h3>
+<p><strong>Closing the window before a page finished loading could
+crash.</strong> Opening a<br />
+book and closing it right away — an ordinary action — triggered it.
+Closing<br />
+after the page had rendered did not, which made it easy to miss.</p>
+<p>The cause was ours. While the page container is being torn down,
+a<br />
+"navigation finished" notification is delivered, and our handler was
+still<br />
+looking at something we had already released. We now detach the
+handler<br />
+before the teardown.</p>
+<p><strong>The workaround (waiting for the load to finish before
+closing) is no longer<br />
+needed.</strong></p>
+<p>Reported by an external user. <strong>Verified across nine timings,
+from 50 ms to<br />
+3 seconds, all exiting cleanly.</strong></p>
+<p>A second failure with the same trigger (an abnormal-termination
+notice instead<br />
+of a crash) also stopped reproducing with the same fix.</p>
+<h3
+id="diagnostic-records-now-state-the-action-actually-taken">Diagnostic
+records now state the action actually taken</h3>
+<p>When drawing through EGL we check whether a buffer is empty. For
+frames past<br />
+the eighth, that record said "not displaying" <strong>while the frame
+was in fact<br />
+displayed</strong>.</p>
+<p>Anyone using the record to diagnose a problem would be <strong>led
+further astray<br />
+the more carefully they read it</strong>. That happened for about a
+month.</p>
+<p>The measurement and the decision taken from it are now written as
+separate<br />
+terms.</p>
+<h2 id="new-in-build3">New in build3</h2>
+<h3
+id="you-can-now-ask-the-compositor-whether-a-frame-reached-the-screen">You
+can now ask the compositor whether a frame reached the screen</h3>
+<p>Until now our records ended at "the buffer was submitted".
+<strong>Whether it<br />
+actually reached the screen was not recorded.</strong></p>
+<p>This build uses the Wayland presentation-time protocol to ask the
+compositor.<br />
+Every submission gets exactly one outcome: presented (with a timestamp)
+or<br />
+discarded.</p>
+<pre><code>BJGX commit  t=391 buf=36 submit=2 op=attach+viewport w=861 h=553 ...
+BJGX discard t=399 buf=36 submit=2</code></pre>
+<p><strong>"The content was empty" and "the content was there but never
+displayed" are<br />
+different events.</strong> The previous records could not tell them
+apart, which led<br />
+to misdiagnosis.</p>
+<p><strong>Nothing is printed by default.</strong> Set
+<code>BLINKGTK_GX_LOG=1</code> to enable it. With<br />
+it unset, neither rendering nor the display decision changes in any
+way.</p>
+<p>The format was agreed with an external user beforehand: one event per
+line,<br />
+<code>key=value</code> only, <code>=</code> as the sole separator. Lines
+are joined by the buffer id<br />
+and the submission counter.</p>
+<h3 id="porting-to-a-third-platform-got-easier">Porting to a third
+platform got easier</h3>
+<p>Alongside the Windows and MIU Darwin ports, the view implementations
+now have<br />
+platform-neutral names, removing per-platform branches from the shared
+code.<br />
+<strong>No user-visible change.</strong></p>
 <hr />
 <h2 id="what-build2-corrects">What build2 corrects</h2>
 <p>The release notes shipped with build1 were wrong. They said our
@@ -123,7 +198,7 @@ queried at run time</h3>
 problem, this single<br />
 line identifies the build.</p>
 <pre><code>$ blinkgtk_browser --version
-BlinkGTK 1.2.2-build2 (Chromium 153.0.8010.36)</code></pre>
+BlinkGTK 1.2.2-build3 (Chromium 153.0.8010.36)</code></pre>
 <p><code>--help</code> prints the usage and how to specify the URL to
 open.</p>
 <h3 id="also-in-this-release">Also in this release</h3>

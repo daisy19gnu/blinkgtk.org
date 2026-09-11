@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.2-build2 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.2-build3 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-09-10 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-09-11 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.2-build2 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-09-10 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.2-build3 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-09-11 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -42,13 +42,69 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-122-build2-リリースノート">BlinkGTK 1.2.2-build2
+<h1 id="blinkgtk-122-build3-リリースノート">BlinkGTK 1.2.2-build3
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-09-10 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-09-11 / <strong>Chromium</strong>:
 153.0.8010.36 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.2-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 153</strong>
 に更新しました。</p>
+<hr />
+<h2 id="build3-でなおしたこと">build3 でなおしたこと</h2>
+<h3
+id="閉じたときに落ちることがある問題を解消しました">閉じたときに落ちることがある問題を解消しました</h3>
+<p><strong>ページの読み込みが終わる前に窓を閉じると落ちていました。</strong>
+本を開いた直後に<br />
+閉じる、といった普通の操作で当たります。読み終わったあとに閉じる場合は<br />
+起きないため、気付きにくい形でした。</p>
+<p>原因は当方の作りにあります。ページの入れ物を壊す途中で「読み込みが終わった」<br />
+という通知が配られるのですが、その通知の受け口が、既に手放したものを見て<br />
+いました。受ける前に受け口を外すようにしました。</p>
+<p>利用者側の回避 (閉じる前に読み込みの完了を待つ)
+は、<strong>もう要りません</strong>。</p>
+<p>外部利用者からのご報告です。<strong>待ち時間を 50 ミリ秒から 3 秒まで
+9 通りに<br />
+変えて、すべて正常に終わることを確認しています。</strong></p>
+<p>同じ引き金で別の落ち方 (異常終了の通知が出る形)
+もありましたが、こちらも<br />
+同じ修正で起きなくなりました。</p>
+<h3
+id="診断の記録が行った操作を正しく言うようになりました">診断の記録が、行った操作を正しく言うようになりました</h3>
+<p>EGL で描画するとき、当方は buffer
+の中身が空かどうかを検査しています。<br />
+その記録が、<strong>9
+枚目以降のフレームについて「表示しない」と書きながら、<br />
+実際には表示していました。</strong></p>
+<p>利用者がこの記録を根拠に不具合を切り分けようとすると、<strong>正しく読むほど<br />
+誤った結論に導かれます</strong>。実際に 1
+か月ほど、そうなっていました。</p>
+<p>測った結果と、それを受けて何をしたかを、別の語で書くようにしました。</p>
+<h2 id="build3-でできるようになったこと">build3
+でできるようになったこと</h2>
+<h3
+id="画面に出たかどうかをcompositor-に聞けるようになりました">画面に出たかどうかを、compositor
+に聞けるようになりました</h3>
+<p>これまで当方の記録で分かるのは「buffer を送った」ところまでで、<br />
+<strong>それが実際に画面に出たのかは分かりませんでした。</strong></p>
+<p>この版から、Wayland の presentation-time という仕組みを使って、<br />
+compositor に問い合わせます。1 回の提出につき「出た (時刻つき)」か<br />
+「出なかった」のどちらかが必ず返ります。</p>
+<pre><code>BJGX commit  t=391 buf=36 submit=2 op=attach+viewport w=861 h=553 ...
+BJGX discard t=399 buf=36 submit=2</code></pre>
+<p><strong>「中身は空だった」と「中身はあったが画面に出なかった」は別の事象です。</strong><br />
+これまでの記録では区別できず、原因の取り違えが起きていました。</p>
+<p><strong>既定では 1 行も出ません。</strong>
+<code>BLINKGTK_GX_LOG=1</code> を指定したときだけ出ます。<br />
+指定しない通常の実行では、描画も表示の判定も一切変わりません。</p>
+<p>書式は外部利用者と事前に取り決めたもので、1 行 1
+事象・<code>key=value</code> のみ・<br />
+区切りは <code>=</code> のみです。buffer
+の識別子と提出の連番で、行どうしを結び付けられます。</p>
+<h3
+id="三つ目の環境への移植がしやすくなりました">三つ目の環境への移植がしやすくなりました</h3>
+<p>Windows 版 / MIU Darwin 版の作業に合わせて、画面まわりの実装に<br />
+環境非依存の名前を与えました。共通部分のコードから環境ごとの分岐が消えます。<br />
+<strong>利用者から見える変化はありません。</strong></p>
 <hr />
 <h2 id="build2-でなおしたこと">build2 でなおしたこと</h2>
 <p>同梱していたリリースノートに誤りがありました。build1
@@ -108,7 +164,7 @@ id="版を実行時に尋ねられるようになりました">版を実行時�
 に応じます。不具合を報告する際は、この 1 行を貼れば<br />
 版が一意に決まります。</p>
 <pre><code>$ blinkgtk_browser --version
-BlinkGTK 1.2.2-build2 (Chromium 153.0.8010.36)</code></pre>
+BlinkGTK 1.2.2-build3 (Chromium 153.0.8010.36)</code></pre>
 <p><code>--help</code> で使い方と、開く URL の指定方法を表示します。</p>
 <h3 id="併せて">併せて</h3>
 <p>Chromium 153 では、ほかに <code>EventTimingMatchingHTML</code>

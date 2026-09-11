@@ -4,8 +4,15 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-09-08T00:00:00Z</updated>
+  <updated>2026-09-11T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.2-build3 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build3"/>
+    <id>tag:blinkgtk.org,2026:2026-09-11-build3-122:en</id>
+    <updated>2026-09-11T00:00:00Z</updated>
+    <summary>Closing the window before a page finished loading no longer crashes. Opening a book and closing it right away triggered it; the workaround (waiting for the load to finish) is no longer needed. This build also adds a diagnostic that asks the compositor whether a frame reached the screen (printed only with BLINKGTK_GX_LOG=1; nothing changes by default). The rendering engine remains Chromium 153.0.8010.36.</summary>
+  </entry>
   <entry>
     <title>v1.2.2-build2 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2"/>

@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.2-build2 / Language: English | <a
+<p>Version: 1.2.2-build3 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,24 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.2-build1</strong> ← current</td>
-<td>2026-09-10</td>
+<td><strong>v1.2.2-build3</strong> ← current</td>
+<td>2026-09-11</td>
 <td><strong>153.0.8010.36</strong></td>
+<td>Closing the window while a navigation was still in flight no longer
+crashes. While the page container was being torn down, a notification
+was delivered to a handler that was already looking at something
+released. Opening a book and closing it right away triggered it. This
+build also adds a diagnostic that asks the compositor whether a frame
+reached the screen (printed only with BLINKGTK_GX_LOG=1; nothing changes
+by default), which distinguishes "the content was empty" from "the
+content was there but never displayed". A record that said "not
+displaying" for frames past the eighth while in fact displaying them has
+been corrected</td>
+</tr>
+<tr>
+<td>v1.2.2-build1</td>
+<td>2026-09-10</td>
+<td>153.0.8010.36</td>
 <td>The rendering engine is updated to Chromium 153. In vertical
 writing, a line no longer breaks half-way when a closing bracket falls
 at the line end (a line with room for 35 characters held only 17, and
