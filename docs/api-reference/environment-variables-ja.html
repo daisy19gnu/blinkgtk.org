@@ -157,6 +157,18 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td>未設定</td>
 <td>毎フレームの診断も出します (既定は抑止)</td>
 </tr>
+<tr>
+<td><code>BLINKGTK_A11Y</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td><strong>アクセシビリティを有効にします。</strong> 支援技術 (Orca 等)
+が Web ページの中身を読めるよう、ページの構造を AT-SPI
+に出します。既定では Chromium
+がページのアクセシビリティ情報を作らないため、出すものがありません。常時有効にすると全ページでその構築費用がかかるので、必要なときに開く形にしています。<strong>支援技術の接続を検知して自動で開く機能はまだありません</strong>
+(Orca を起動しておくだけでは有効になりません)。コマンドライン引数
+<code>--force-renderer-accessibility</code>
+でも同じことができますが、起動経路に依存しない環境変数のほうが確実です</td>
+</tr>
 </tbody>
 </table>
 <h2 id="2-エスケープハッチ既定のまま推奨">2.
@@ -280,7 +292,9 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 </tr>
 <tr>
 <td>追跡・計測</td>
-<td><code>BLINKGTK_CAPTURE_TRACE</code> /
+<td><code>BLINKGTK_GX_LOG</code> (EGL の配送を 1 行 1
+事象で出す診断ログ。<code>BJGX &lt;事象&gt; t=&lt;ms&gt; buf=&lt;wl_buffer の wire id&gt; submit=&lt;通番&gt;</code>
+形式) / <code>BLINKGTK_CAPTURE_TRACE</code> /
 <code>BLINKGTK_MOJO_TRACE</code> /
 <code>BLINKGTK_TRACE_PIXEL_SUPPLIER</code> /
 <code>BLINKGTK_HARNESS_AUDIT</code> / <code>BLINKGTK_MINORI</code> /

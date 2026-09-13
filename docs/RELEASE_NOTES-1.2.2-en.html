@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.2-build3 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.2-build4 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Released: 2026-09-11 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<meta name="description" content="Released: 2026-09-13 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.2-build3 Release Notes — BlinkGTK">
-<meta property="og:description" content="Released: 2026-09-11 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.2-build4 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-09-13 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -42,13 +42,53 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-122-build3-release-notes">BlinkGTK 1.2.2-build3 Release
+<h1 id="blinkgtk-122-build4-release-notes">BlinkGTK 1.2.2-build4 Release
 Notes</h1>
-<p><strong>Released</strong>: 2026-09-11 / <strong>Chromium</strong>:
+<p><strong>Released</strong>: 2026-09-13 / <strong>Chromium</strong>:
 153.0.8010.36 / Language: <a href="RELEASE_NOTES-1.2.2-ja.html">日本語</a>
 | English</p>
 <p>The rendering engine is updated to <strong>Chromium 153</strong>.</p>
 <hr />
+<h2 id="fixed-in-build4">Fixed in build4</h2>
+<h3 id="the-screen-no-longer-stays-blank-on-virtual-machines">The screen
+no longer stays blank on virtual machines</h3>
+<p>On systems using a <strong>Virtio GPU</strong> (virtual machines and
+the like), the GPU path<br />
+(<code>BLINKGTK_GPU_MODE=egl</code>) <strong>stayed blank from start to
+finish</strong>. Reported by an<br />
+external user.</p>
+<p>To decide whether a frame is empty, the engine reads the drawn image
+from the CPU<br />
+side. On this kind of GPU the drawing happens <strong>outside the
+machine</strong>, so that read<br />
+sees nothing. <strong>Frames that did have content were judged empty and
+withheld.</strong></p>
+<p>Pages without animation were the most affected: only a handful of
+frames are drawn<br />
+at startup, and if all of them are withheld the window <strong>stays
+blank for as long as<br />
+it is open</strong>. Animated pages appeared partway through.</p>
+<p>A frame that reads as all zeros is no longer treated as "empty" but
+as <strong>"we cannot<br />
+tell from here"</strong>, and display is withheld only when the frame is
+genuinely white.</p>
+<p><strong>We built an environment with the same GPU device id,
+reproduced the problem, and<br />
+confirmed the content appears after the fix.</strong> On real GPUs
+neither the judgement<br />
+nor the display changes.</p>
+<h3
+id="assistive-technology-started-after-the-application-now-works">Assistive
+technology started after the application now works</h3>
+<p>Until now the accessibility tree appeared only if a screen reader was
+<strong>already<br />
+running when the application started</strong>. By the time a user turned
+on a screen<br />
+reader it was too late, and the application had to be restarted.</p>
+<p>The engine now notices assistive technology appearing later and
+exposes the tree<br />
+from that point. The explicit switch (<code>BLINKGTK_A11Y=1</code>)
+still works as before.</p>
 <h2 id="fixed-in-build3">Fixed in build3</h2>
 <h3 id="closing-the-window-no-longer-crashes">Closing the window no
 longer crashes</h3>
@@ -198,7 +238,7 @@ queried at run time</h3>
 problem, this single<br />
 line identifies the build.</p>
 <pre><code>$ blinkgtk_browser --version
-BlinkGTK 1.2.2-build3 (Chromium 153.0.8010.36)</code></pre>
+BlinkGTK 1.2.2-build4 (Chromium 153.0.8010.36)</code></pre>
 <p><code>--help</code> prints the usage and how to specify the URL to
 open.</p>
 <h3 id="also-in-this-release">Also in this release</h3>

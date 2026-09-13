@@ -170,6 +170,21 @@ feel noisy</strong></td>
 <td>unset</td>
 <td>Also emit per-frame diagnostics (suppressed by default)</td>
 </tr>
+<tr>
+<td><code>BLINKGTK_A11Y</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td><strong>Enables accessibility.</strong> Exposes the page structure
+over AT-SPI so that assistive technologies (Orca and the like) can read
+the web content. By default Chromium does not build the accessibility
+information for the page, so there is nothing to expose. Building it for
+every page has a cost, so it is opened on request. <strong>Automatic
+activation on assistive-technology connection is not implemented
+yet</strong> (starting Orca alone does not enable it). The command-line
+switch <code>--force-renderer-accessibility</code> does the same thing,
+but the environment variable does not depend on how the program is
+launched</td>
+</tr>
 </tbody>
 </table>
 <h2 id="2-escape-hatches-leave-at-defaults">2. Escape Hatches (leave at
@@ -271,9 +286,11 @@ without notice.</p>
 <code>BLINKGTK_HARNESS_AUDIT</code> /
 <code>BLINKGTK_AURA_SHOW_IMMEDIATE</code> /
 <code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
-<code>BLINKGTK_CAPTURE_TRACE</code> / <code>BLINKGTK_MOJO_TRACE</code> /
-<code>BLINKGTK_EGL_RECIPIENT_ALWAYS</code> (prototype: always create the
-EGL recipient surface, regardless of the active render path) /
+<code>BLINKGTK_GX_LOG</code> (one line per EGL delivery event:
+<code>BJGX &lt;event&gt; t=&lt;ms&gt; buf=&lt;wl_buffer wire id&gt; submit=&lt;n&gt;</code>)
+/ <code>BLINKGTK_CAPTURE_TRACE</code> / <code>BLINKGTK_MOJO_TRACE</code>
+/ <code>BLINKGTK_EGL_RECIPIENT_ALWAYS</code> (prototype: always create
+the EGL recipient surface, regardless of the active render path) /
 <code>BLINKGTK_DELIVER_LOG_MAX</code> (maximum EGL delivery log lines;
 default 5. Lets you follow which operation ran and which wl_buffer it
 used into the steady state when nothing appears on screen) /

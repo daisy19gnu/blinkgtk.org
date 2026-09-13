@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.2-build3 / Language: English | <a
+<p>Version: 1.2.2-build4 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,23 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.2-build3</strong> ← current</td>
-<td>2026-09-11</td>
+<td><strong>v1.2.2-build4</strong> ← current</td>
+<td>2026-09-13</td>
 <td><strong>153.0.8010.36</strong></td>
+<td>Fixed a problem where the EGL mode stayed blank from start to finish
+on systems using a Virtio GPU (virtual machines and the like). The
+engine reads the image from the CPU side to decide whether a frame is
+empty, but on this kind of GPU the drawing happens outside the machine,
+so that read sees nothing. Frames that did have content were judged
+empty and withheld from display. Pages without animation were the most
+affected, staying blank for as long as they were open. Assistive
+technology started after the application now reaches the content as
+well; previously a screen reader had to be running before launch.</td>
+</tr>
+<tr>
+<td>v1.2.2-build3</td>
+<td>2026-09-11</td>
+<td>153.0.8010.36</td>
 <td>Closing the window while a navigation was still in flight no longer
 crashes. While the page container was being torn down, a notification
 was delivered to a handler that was already looking at something

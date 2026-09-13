@@ -7,6 +7,13 @@
   <updated>2026-09-11T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.2-build4 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build4"/>
+    <id>tag:blinkgtk.org,2026:2026-09-13-build4-122:ja</id>
+    <updated>2026-09-13T00:00:00Z</updated>
+    <summary>Virtio GPU を使う環境 (仮想機械など) で、GPU 描画 (BLINKGTK_GPU_MODE=egl) の画面が最初から最後まで白いままになる問題を解消しました。中身はあるのに空と判定し、表示を見送っていたためです。動きのないページほど当たりやすく、開いたまま白が続きます。あわせて、スクリーンリーダなどの支援技術を後から起動しても読み上げが効くようになりました。レンダリングエンジンは Chromium 153.0.8010.36 のままです。</summary>
+  </entry>
+  <entry>
     <title>v1.2.2-build3 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build3"/>
     <id>tag:blinkgtk.org,2026:2026-09-11-build3-122:ja</id>

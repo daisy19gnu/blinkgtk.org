@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.2-build3 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.2-build4 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-09-11 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-09-13 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.2-build3 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-09-11 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.2-build4 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-09-13 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -42,14 +42,42 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-122-build3-リリースノート">BlinkGTK 1.2.2-build3
+<h1 id="blinkgtk-122-build4-リリースノート">BlinkGTK 1.2.2-build4
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-09-11 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-09-13 / <strong>Chromium</strong>:
 153.0.8010.36 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.2-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 153</strong>
 に更新しました。</p>
 <hr />
+<h2 id="build4-でなおしたこと">build4 でなおしたこと</h2>
+<h3
+id="仮想機械で画面が白いままになる問題を解消しました">仮想機械で画面が白いままになる問題を解消しました</h3>
+<p><strong>Virtio GPU を使う環境 (仮想機械など) で、GPU 描画
+(<code>BLINKGTK_GPU_MODE=egl</code>) の<br />
+画面が最初から最後まで白いまま</strong>でした。外部利用者からのご報告です。</p>
+<p>エンジンは「この画面は空だ」と判定するために、描かれた画像を CPU
+側から読んで<br />
+います。ところがこの種の GPU
+では<strong>描画が機械の外側で行われる</strong>ため、読み取り側<br />
+には何も見えません。<strong>中身はあるのに空と判定し、表示を見送っていました。</strong></p>
+<p>動きのないページほど当たりやすい形です。起動直後は数枚しか描かれないため、<br />
+その数枚がすべて見送られると、<strong>開いたまま白が続きます</strong>。動き続けるページは<br />
+途中から出ていました。</p>
+<p>全部がゼロに見える状態は「空」ではなく「<strong>こちらからは確かめられない</strong>」として<br />
+扱い、表示を止めるのは本当に真っ白なときだけにしました。</p>
+<p><strong>同じ device id の GPU
+を持つ環境を用意して再現し、直したあとに出ることを<br />
+確認しています。</strong> 実 GPU
+の環境では、判定も表示も従来と変わりません。</p>
+<h3
+id="支援技術を後から起動しても読み上げが効くようになりました">支援技術を後から起動しても読み上げが効くようになりました</h3>
+<p>これまでは、<strong>アプリを起動した時点でスクリーンリーダが動いていないと</strong><br />
+アクセシビリティの木が出ませんでした。読み上げを使い始めたときには手遅れで、<br />
+アプリを開き直す必要がありました。</p>
+<p>起動後に支援技術が現れたことを受け取って、そこから木を出すようにしました。<br />
+環境変数での明示 (<code>BLINKGTK_A11Y=1</code>)
+も従来どおり使えます。</p>
 <h2 id="build3-でなおしたこと">build3 でなおしたこと</h2>
 <h3
 id="閉じたときに落ちることがある問題を解消しました">閉じたときに落ちることがある問題を解消しました</h3>
@@ -164,7 +192,7 @@ id="版を実行時に尋ねられるようになりました">版を実行時�
 に応じます。不具合を報告する際は、この 1 行を貼れば<br />
 版が一意に決まります。</p>
 <pre><code>$ blinkgtk_browser --version
-BlinkGTK 1.2.2-build3 (Chromium 153.0.8010.36)</code></pre>
+BlinkGTK 1.2.2-build4 (Chromium 153.0.8010.36)</code></pre>
 <p><code>--help</code> で使い方と、開く URL の指定方法を表示します。</p>
 <h3 id="併せて">併せて</h3>
 <p>Chromium 153 では、ほかに <code>EventTimingMatchingHTML</code>
