@@ -7,6 +7,13 @@
   <updated>2026-09-11T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.2-build5 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build5"/>
+    <id>tag:blinkgtk.org,2026:2026-09-14-build5-122:en</id>
+    <updated>2026-09-14T00:00:00Z</updated>
+    <summary>The rendering path can now be chosen from the API. Call blink_gtk_set_gpu_mode() before blink_gtk_init() and the engine starts on that path. Asking for EGL through blink_web_view_new_with_gpu_mode() did not change the path, so applications that did not also set BLINKGTK_GPU_MODE were running on the CPU pixel path. blink_web_view_get_gpu_mode() now reports the path actually in use. The rendering engine remains Chromium 153.0.8010.36.</summary>
+  </entry>
+  <entry>
     <title>v1.2.2-build4 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build4"/>
     <id>tag:blinkgtk.org,2026:2026-09-13-build4-122:en</id>
