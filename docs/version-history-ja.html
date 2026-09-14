@@ -45,7 +45,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.2-build4 / 言語: 日本語 | <a
+<p>バージョン: 1.2.2-build5 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -71,9 +71,24 @@ href="version-history-en.html">English</a></p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.2-build4</strong> ← 公開中</td>
-<td>2026-09-13</td>
+<td><strong>v1.2.2-build5</strong> ← 公開中</td>
+<td>2026-09-14</td>
 <td><strong>153.0.8010.36</strong></td>
+<td>描画経路を API から選べるようになりました。blink_gtk_set_gpu_mode()
+を blink_gtk_init() の前に呼ぶと、その経路で起動します。これまで
+blink_web_view_new_with_gpu_mode() で EGL
+を指定しても、経路は切り替わりませんでした。描画経路はエンジンの初期化中に確定し、GPU
+プロセスへ渡す起動フラグもそこで決まるため、WebView
+を作る時点ではもう変えられません。起動ログはどちらの場合も EGL
+と表示するので、指定が効いているかを外から確かめる手段もありませんでした。環境変数
+BLINKGTK_GPU_MODE を併用していない場合、EGL を指定したつもりで CPU
+ピクセル経路で動いていました。blink_web_view_get_gpu_mode()
+は初期化の後、実際に動いている経路を返します。起動完了のログにも描画経路が出ます。</td>
+</tr>
+<tr>
+<td>v1.2.2-build4</td>
+<td>2026-09-13</td>
+<td>153.0.8010.36</td>
 <td>Virtio GPU を使う環境 (仮想機械など) で、EGL
 モードの画面が最初から最後まで白いままになる問題を解消しました。エンジンが「この画面は空だ」と判定するために画像を
 CPU 側から読んでいましたが、この種の GPU
