@@ -406,13 +406,13 @@ are not displayed</li>
 </ul>
 <p><strong>How to check</strong>:</p>
 <div class="sourceCode" id="cb9"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for [CP-01] blink_gtk_init(&amp;argc, &amp;argv) completed in the log</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;CP-0[0-9]|FATAL|set_dmabuf_pixels&quot;</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for the line where blink_gtk_init completed, and the line that hands pixels to the screen</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;blink_gtk_init|FATAL|set_dmabuf_pixels&quot;</span></span></code></pre></div>
 <ul>
-<li>No line containing <code>[CP-01]</code> and
-<code>blink_gtk_init</code> → resources are missing</li>
-<li>No line containing <code>[CP-167b] set_dmabuf_pixels</code> → the
-rendering pipeline never started</li>
+<li>No line containing <code>blink_gtk_init</code> → resources are
+missing</li>
+<li>No line containing <code>set_dmabuf_pixels</code> → the rendering
+pipeline never started</li>
 <li><code>set_dmabuf_pixels</code> appears but every pixel is white →
 the loaded HTML may simply have an empty<br />
 background</li>

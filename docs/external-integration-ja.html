@@ -404,12 +404,11 @@ style="text-align: left;">ヘッドレス・サーバ・CI・低スペック環�
 </ul>
 <p><strong>確認方法</strong>:</p>
 <div class="sourceCode" id="cb9"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ログに [CP-01] blink_gtk_init(&amp;argc, &amp;argv) completed が出ているか</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;CP-0[0-9]|FATAL|set_dmabuf_pixels&quot;</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># blink_gtk_init が完了した行と、画面へ渡した行が出ているか</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;blink_gtk_init|FATAL|set_dmabuf_pixels&quot;</span></span></code></pre></div>
 <ul>
-<li><code>[CP-01]</code> と <code>blink_gtk_init</code> を含む行が出ない
-→ リソース不足</li>
-<li><code>[CP-167b] set_dmabuf_pixels #N</code> が出ない →
+<li><code>blink_gtk_init</code> を含む行が出ない → リソース不足</li>
+<li><code>set_dmabuf_pixels</code> を含む行が出ない →
 レンダリングパイプライン未起動</li>
 <li><code>set_dmabuf_pixels</code> は出るがピクセルが全白 → ロード中の
 HTML が空背景の可能性</li>

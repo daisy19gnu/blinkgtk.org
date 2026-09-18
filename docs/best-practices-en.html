@@ -110,8 +110,8 @@
 <h1 id="blinkgtk-best-practices">BlinkGTK Best Practices</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
 <strong>Last updated</strong>: 2026-05-12<br />
-<strong>Audience</strong>: application developers building on BlinkGTK
-Build 682+</p>
+<strong>Audience</strong>: application developers building on
+BlinkGTK</p>
 <hr />
 <h2 id="introduction">Introduction</h2>
 <p>This document collects implementation patterns learned from building
@@ -213,8 +213,8 @@ during JS-driven DOM manipulation</li>
 id="22-recommended-persistent-re-injection-with-inject_user_stylesheet">2.2
 Recommended: persistent re-injection with
 <code>inject_user_stylesheet</code></h3>
-<p><code>blink_web_view_inject_user_stylesheet()</code>, available from
-Build 682 onward, automatically re-injects<br />
+<p><code>blink_web_view_inject_user_stylesheet()</code> (since v1.0.0)
+automatically re-injects<br />
 after navigation, so a <strong>single call at startup</strong> applies
 to every page.</p>
 <div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// At startup (called once, after BLINK_LOAD_FINISHED)</span></span>
