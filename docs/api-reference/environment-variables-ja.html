@@ -89,9 +89,13 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 </tr>
 <tr>
 <td><code>BLINKGTK_NO_SANDBOX</code></td>
-<td><code>1</code></td>
+<td><code>1</code> / <code>0</code></td>
 <td>未設定</td>
-<td>Chromium sandbox を無効化。コンテナ等 sandbox 非対応環境向け</td>
+<td><code>1</code> = 無条件で無効化。<code>0</code> =
+無条件で有効のまま。<strong>未設定 = 自動判定</strong> —
+<code>/proc/sys/user/max_user_namespaces</code> を読み、<code>0</code>
+か読めなければ<strong>無効化されます</strong>。効いたかは
+<code>blink_gtk_is_sandboxed()</code> で問い合わせられます</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EXTRA_SCHEMES</code></td>
@@ -102,9 +106,11 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 </tr>
 <tr>
 <td><code>BLINKGTK_SCROLL_SPEED</code></td>
-<td>数値(倍率)</td>
-<td><code>1.0</code></td>
-<td>ホイールスクロール速度の倍率</td>
+<td>—</td>
+<td>—</td>
+<td><strong>廃止</strong>。設定しても効きません。スクロール量は固定の係数で決まります
+(2026-09-15
+実測)。該当コードは残っていますが、どの出荷物にも入っていません</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_DMABUF_PATH</code></td>
@@ -370,7 +376,7 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 </tr>
 <tr>
 <td><code>BLINKGTK_CHROMIUM_VERSION</code></td>
-<td>デモが表示する Chromium 版数の上書き (検証用)</td>
+<td><strong>廃止</strong>。同梱しない内部デモ専用の変数でした。配布物では効きません</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_AUTO_RESIZE=&lt;回数&gt;</code></td>

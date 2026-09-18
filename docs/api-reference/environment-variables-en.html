@@ -97,10 +97,13 @@ default. <code>egl</code> is the GPU path (experimental);
 </tr>
 <tr>
 <td><code>BLINKGTK_NO_SANDBOX</code></td>
-<td><code>1</code></td>
+<td><code>1</code> / <code>0</code></td>
 <td>unset</td>
-<td>Disables the Chromium sandbox. For environments (e.g. containers)
-where the sandbox is unavailable</td>
+<td><code>1</code> = always disable. <code>0</code> = always keep it
+enabled. <strong>Unset = decided automatically</strong> —
+<code>/proc/sys/user/max_user_namespaces</code> is read, and the sandbox
+is <strong>disabled</strong> if it is <code>0</code> or unreadable. Ask
+<code>blink_gtk_is_sandboxed()</code> for the result</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EXTRA_SCHEMES</code></td>
@@ -111,9 +114,11 @@ where the sandbox is unavailable</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_SCROLL_SPEED</code></td>
-<td>number (multiplier)</td>
-<td><code>1.0</code></td>
-<td>Wheel scroll speed multiplier</td>
+<td>—</td>
+<td>—</td>
+<td><strong>Deprecated.</strong> Setting it has no effect. Scroll
+distance is decided by fixed coefficients (measured 2026-09-15). The
+code still exists but is not present in any shipped binary</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_DMABUF_PATH</code></td>
@@ -360,8 +365,8 @@ itself denies by default</strong></td>
 </tr>
 <tr>
 <td><code>BLINKGTK_CHROMIUM_VERSION</code></td>
-<td>Overrides the Chromium version the demo reports (for
-verification)</td>
+<td><strong>Deprecated.</strong> It belonged to an internal demo that is
+not shipped. It has no effect in the distribution</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_AUTO_RESIZE=&lt;count&gt;</code></td>

@@ -4,36 +4,39 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-09-11T00:00:00Z</updated>
+  <updated>2026-09-19T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.2-build6 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build6"/>
+    <id>tag:blinkgtk.org,2026:2026-09-19-build6-122:ja</id>
+    <updated>2026-09-19T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>view ごとに profile と cache を分けられるようになりました。これまでは 1 プロセスの全 WebView が profile と cache を共有していたため、同じ URL を複数の view で開くと 2 つ目以降はキャッシュに当たり、実際の読み込みは 1 回しか起きませんでした。blink_web_view_new_with_profile(&quot;tab1&quot;) のように名前を渡すと、その view は HTTP キャッシュ・cookie・localStorage・IndexedDB を専有します。名前に使えるのは英数字と - _ のみで、同じ名前なら同じ profile です。名前付き profile はキャッシュを profiles/名前/Cache に置くため終了後も残ります。既定の blink_web_view_new() の動きは変わりません。あわせて permission-request シグナルの種別名が 13 種から 40 種になり、これまで unknown で届いていた 27 種 (screen-wake-lock、local-fonts、persistent-storage、automatic-fullscreen、pointer-lock など) を見分けられます。</summary>
+  </entry>
   <entry>
     <title>v1.2.2-build5 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build5"/>
     <id>tag:blinkgtk.org,2026:2026-09-14-build5-122:ja</id>
     <updated>2026-09-14T00:00:00Z</updated>
-    <summary>描画経路を API から選べるようになりました。blink_gtk_set_gpu_mode() を blink_gtk_init() の前に呼ぶと、その経路で起動します。これまで blink_web_view_new_with_gpu_mode() で EGL を指定しても経路は切り替わらず、環境変数 BLINKGTK_GPU_MODE を併用していない場合は CPU ピクセル経路で動いて いました。blink_web_view_get_gpu_mode() は初期化の後、実際に動いている経路を 返します。レンダリングエンジンは Chromium 153.0.8010.36 のままです。</summary>
+    <category term="release"/>
+    <summary>描画経路を API から選べるようになりました。blink_gtk_set_gpu_mode() を blink_gtk_init() の前に呼ぶと、その経路で起動します。これまで blink_web_view_new_with_gpu_mode() で EGL を指定しても、経路は切り替わりませんでした。描画経路はエンジンの初期化中に確定し、GPU プロセスへ渡す起動フラグもそこで決まるため、WebView を作る時点ではもう変えられません。起動ログはどちらの場合も EGL と表示するので、指定が効いているかを外から確かめる手段もありませんでした。環境変数 BLINKGTK_GPU_MODE を併用していない場合、EGL を指定したつもりで CPU ピクセル経路で動いていました。ゼロコピーの経路とは性能特性が異なります。blink_web_view_get_gpu_mode() は初期化の後、実際に動いている経路を返します。起動完了のログにも描画経路が出ます。外部利用者からのご報告です。レンダリングエンジンは Chromium 153.0.8010.36 のままで、組版の結果は build4 と変わりません。</summary>
   </entry>
   <entry>
     <title>v1.2.2-build4 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build4"/>
     <id>tag:blinkgtk.org,2026:2026-09-13-build4-122:ja</id>
     <updated>2026-09-13T00:00:00Z</updated>
-    <summary>Virtio GPU を使う環境 (仮想機械など) で、GPU 描画 (BLINKGTK_GPU_MODE=egl) の画面が最初から最後まで白いままになる問題を解消しました。中身はあるのに空と判定し、表示を見送っていたためです。動きのないページほど当たりやすく、開いたまま白が続きます。あわせて、スクリーンリーダなどの支援技術を後から起動しても読み上げが効くようになりました。レンダリングエンジンは Chromium 153.0.8010.36 のままです。</summary>
+    <category term="release"/>
+    <summary>Virtio GPU を使う環境 (仮想機械など) で、GPU 描画 (BLINKGTK_GPU_MODE=egl) の画面が最初から最後まで白いままになる問題を解消しました。エンジンは「この画面は空だ」と判定するために描かれた画像を CPU 側から読んでいますが、この種の GPU では描画が機械の外側で行われるため、読み取り側には何も見えません。中身はあるのに空と判定し、表示を見送っていました。動きのないページほど当たりやすく、開いたまま白が続きます。全部がゼロに見える状態は「空」ではなく「こちらからは確かめられない」として扱い、表示を止めるのは本当に真っ白なときだけにしました。あわせて、スクリーンリーダなどの支援技術を後から起動しても読み上げが効くようになりました。これまではアプリを起動した時点で支援技術が動いている必要があり、読み上げを使い始めたときには手遅れでした。レンダリングエンジンは Chromium 153.0.8010.36 のままです。</summary>
   </entry>
   <entry>
     <title>v1.2.2-build3 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build3"/>
     <id>tag:blinkgtk.org,2026:2026-09-11-build3-122:ja</id>
     <updated>2026-09-11T00:00:00Z</updated>
-    <summary>ページの読み込みが終わる前に窓を閉じると落ちる問題を解消しました。本を開いた直後に閉じる、といった普通の操作で当たっていました。利用者側の回避 (閉じる前に完了を待つ) は要らなくなります。あわせて、画面に出たかどうかを compositor に問い合わせる診断を追加しました (BLINKGTK_GX_LOG=1 のときだけ記録し、既定では何も変わりません)。レンダリングエンジンは Chromium 153.0.8010.36 のままです。</summary>
-  </entry>
-  <entry>
-    <title>v1.2.2-build2 を公開しました</title>
-    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2"/>
-    <id>tag:blinkgtk.org,2026:2026-09-10-build2-122:ja</id>
-    <updated>2026-09-10T00:00:00Z</updated>
     <category term="release"/>
-    <summary>同梱していたリリースノートの誤りを訂正しました。build1 の記述で「前版の回避を取り除いた」としていましたが、取り除いておらず、この版でも入ったままです。記述を実物に合わせました。あわせて、API リファレンスの見出しが 1 版前の「対象バージョン BlinkGTK 1.2.1 (Chromium 152.0.7977.64)」のままだったのを、実際の版数に直しました。プログラムの中身は build1 と同じで、組版の結果は変わりません (同梱書類の版数表記と、版数を名乗る文字列が 1.2.2-build2 になります)。誤りは BlinkGTK-Readium からの照会で判明しました。</summary>
+    <summary>ページの読み込みが終わる前に窓を閉じると落ちる問題を解消しました。本を開いた直後に閉じる、といった普通の操作で当たっていました。読み終わってから閉じる場合は起きないため、気付きにくい形でした。原因は当方の作りで、ページの入れ物を壊す途中で配られる通知の受け口が、既に手放したものを見ていました。受ける前に受け口を外すようにしています。利用者側の回避 (閉じる前に読み込みの完了を待つ) は、もう要りません。外部利用者からのご報告です。あわせて、画面に出たかどうかを compositor に問い合わせる診断を追加しました。これまでは buffer を送ったところまでしか分からず、中身が空だったのか、中身はあったが画面に出なかったのかを区別できませんでした。BLINKGTK_GX_LOG=1 を指定したときだけ記録し、既定では描画も表示判定も変わりません。レンダリングエンジンは Chromium 153.0.8010.36 のままで、組版の結果は build2 と変わりません。</summary>
   </entry>
   <entry>
     <title>v1.2.2-build1 を公開しました</title>
@@ -42,6 +45,14 @@
     <updated>2026-09-10T00:00:00Z</updated>
     <category term="release"/>
     <summary>縦組みで閉じ括弧が行末に来ると行が途中で切れる現象が直りました。35 文字入る行に 17 文字しか入らず、text-align: justify が残りを引き伸ばすため字間が倍に開いていました。13 通りの設定のうち 8 通りで起きていたものがすべて解消します。横組みでは起きません。当方から上流へ報告し (crbug 542686223) Chromium 側で修正されたものです。レンダリングエンジンは Chromium 153.0.8010.36 になりました。同梱のデモが --version に応じるようになり、不具合を報告するときに版を一意に示せます。測ったのは 1 行に入る文字数で、段組みの列末に残る余地は測っていません。</summary>
+  </entry>
+  <entry>
+    <title>v1.2.2-build2 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-09-10-build2-122:ja</id>
+    <updated>2026-09-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>同梱していたリリースノートの誤りを訂正しました。build1 の記述で「前版の回避を取り除いた」としていましたが、取り除いておらず、この版でも入ったままです。記述を実物に合わせました。あわせて、API リファレンスの見出しが 1 版前の「対象バージョン BlinkGTK 1.2.1 (Chromium 152.0.7977.64)」のままだったのを、実際の版数に直しました。プログラムの中身は build1 と同じで、組版の結果は変わりません (同梱書類の版数表記と、版数を名乗る文字列が 1.2.2-build2 になります)。誤りは BlinkGTK-Readium からの照会で判明しました。</summary>
   </entry>
   <entry>
     <title>v1.2.1-build3 を公開しました</title>

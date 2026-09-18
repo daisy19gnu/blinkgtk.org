@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.2-build5 / Language: English | <a
+<p>Version: 1.2.2-build6 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,17 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.2-build5</strong> ← current</td>
-<td>2026-09-14</td>
+<td><strong>v1.2.2-build6</strong> ← current</td>
+<td>2026-09-19</td>
 <td><strong>153.0.8010.36</strong></td>
+<td>Views can now have their own profile and cache
+(blink_web_view_new_with_profile), so opening the same page in several
+views no longer serves all but the first from a shared cache</td>
+</tr>
+<tr>
+<td>v1.2.2-build5</td>
+<td>2026-09-14</td>
+<td>153.0.8010.36</td>
 <td>The rendering path can now be chosen from the API. Call
 blink_gtk_set_gpu_mode() before blink_gtk_init() and the engine starts
 on that path. Until now, asking for EGL through

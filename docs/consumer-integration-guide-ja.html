@@ -398,7 +398,7 @@ Chromium 148 以降で描画されません（#90
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_SOFTWARE<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span>  <span class="co">/* 経路は init より前に blink_gtk_set_gpu_mode() で選ぶ */</span></span></code></pre></div>
 <p>環境変数 <code>BLINKGTK_GPU_MODE=software|swiftshader|egl</code>
 でも指定できます。<strong>まず software で<br />
 動作確認すること</strong>を推奨します。egl は <strong>v1.2.0-build2

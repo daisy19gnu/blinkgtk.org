@@ -109,7 +109,7 @@
 </div><div class="card doc">
 <h1 id="blinkwebview-ウィジェット">BlinkWebView ウィジェット</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>バージョン</strong>: 1.2.2-build5</p>
+<strong>バージョン</strong>: 1.2.2-build6</p>
 <p><code>BlinkWebView</code> は、Chromium/Blink
 のレンダリング結果を表示する GTK4 ウィジェットです。<br />
 GtkWidget を継承しているので、他の GTK ウィジェットと同じように扱えます
@@ -167,7 +167,9 @@ GtkWidget を継承しているので、他の GTK ウィジェットと同じ�
 <tr>
 <td><code>blink_web_view_new_with_gpu_mode()</code></td>
 <td><code>BlinkWebView</code> (GtkWidget*)</td>
-<td>描画経路を明示して作る</td>
+<td><strong>経路は選べません</strong> (init
+で確定済)。<code>blink_gtk_set_gpu_mode()</code> を init
+より前に呼ぶこと</td>
 </tr>
 </tbody>
 </table>

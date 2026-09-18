@@ -393,7 +393,7 @@ pitfalls</h2>
 </tr>
 </tbody>
 </table>
-<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_SOFTWARE<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span>  <span class="co">/* choose the path with blink_gtk_set_gpu_mode() before init */</span></span></code></pre></div>
 <p>You can also select via the environment variable
 <code>BLINKGTK_GPU_MODE=software|swiftshader|egl</code>. We<br />
 recommend <strong>verifying with software first</strong>. egl shows a

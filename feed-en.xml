@@ -4,36 +4,39 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-09-11T00:00:00Z</updated>
+  <updated>2026-09-19T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.2-build6 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build6"/>
+    <id>tag:blinkgtk.org,2026:2026-09-19-build6-122:en</id>
+    <updated>2026-09-19T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Each view can now have its own profile and cache. Until now every WebView in a process shared one profile and one cache, so opening the same URL in several views served all but the first from the cache and only one real load took place. Pass a name — blink_web_view_new_with_profile(&quot;tab1&quot;) — and that view gets its own HTTP cache, cookies, localStorage and IndexedDB. Names may contain letters, digits, - and _ ; the same name means the same profile. A named profile keeps its HTTP cache under profiles/NAME/Cache, so it survives across runs. The default blink_web_view_new() behaves as before. The permission-request signal also now names 40 permission types instead of 13, so the 27 that previously arrived as unknown (screen-wake-lock, local-fonts, persistent-storage, automatic-fullscreen, pointer-lock and others) can be told apart.</summary>
+  </entry>
   <entry>
     <title>v1.2.2-build5 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build5"/>
     <id>tag:blinkgtk.org,2026:2026-09-14-build5-122:en</id>
     <updated>2026-09-14T00:00:00Z</updated>
-    <summary>The rendering path can now be chosen from the API. Call blink_gtk_set_gpu_mode() before blink_gtk_init() and the engine starts on that path. Asking for EGL through blink_web_view_new_with_gpu_mode() did not change the path, so applications that did not also set BLINKGTK_GPU_MODE were running on the CPU pixel path. blink_web_view_get_gpu_mode() now reports the path actually in use. The rendering engine remains Chromium 153.0.8010.36.</summary>
+    <category term="release"/>
+    <summary>The rendering path can now be chosen from the API. Call blink_gtk_set_gpu_mode() before blink_gtk_init() and the engine starts on that path. Until now, asking for EGL through blink_web_view_new_with_gpu_mode() did not change the path. The rendering path is settled during engine initialisation, together with the startup flags handed to the GPU process, so it can no longer be changed by the time a WebView is created. The startup log named EGL in both cases, so there was no way to tell from outside whether the request had taken effect. Without also setting BLINKGTK_GPU_MODE, applications asking for EGL were running on the CPU pixel path, which has different performance characteristics from the zero-copy path. After initialisation, blink_web_view_get_gpu_mode() reports the path actually in use, and the startup log names it as well. Reported by an external user. The rendering engine remains Chromium 153.0.8010.36, and typesetting results are unchanged from build4.</summary>
   </entry>
   <entry>
     <title>v1.2.2-build4 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build4"/>
     <id>tag:blinkgtk.org,2026:2026-09-13-build4-122:en</id>
     <updated>2026-09-13T00:00:00Z</updated>
-    <summary>Fixed a problem where the GPU path (BLINKGTK_GPU_MODE=egl) stayed blank from start to finish on systems using a Virtio GPU, such as virtual machines: frames that did have content were judged empty and withheld from display. Pages without animation were the most affected, staying blank for as long as they were open. Assistive technology started after the application now reaches the content as well.  The rendering engine remains Chromium 153.0.8010.36.</summary>
+    <category term="release"/>
+    <summary>Fixed a problem where the GPU path (BLINKGTK_GPU_MODE=egl) stayed blank from start to finish on systems using a Virtio GPU, such as virtual machines. To decide whether a frame is empty, the engine reads the drawn image from the CPU side; on this kind of GPU the drawing happens outside the machine, so that read sees nothing, and frames that did have content were judged empty and withheld. Pages without animation were the most affected, staying blank for as long as they were open. A frame that reads as all zeros is no longer treated as empty but as &quot;we cannot tell from here&quot;, and display is withheld only when the frame is genuinely white. Assistive technology started after the application now reaches the content as well; until now a screen reader had to be running before launch, so turning one on was too late. The rendering engine remains Chromium 153.0.8010.36.</summary>
   </entry>
   <entry>
     <title>v1.2.2-build3 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build3"/>
     <id>tag:blinkgtk.org,2026:2026-09-11-build3-122:en</id>
     <updated>2026-09-11T00:00:00Z</updated>
-    <summary>Closing the window before a page finished loading no longer crashes. Opening a book and closing it right away triggered it; the workaround (waiting for the load to finish) is no longer needed. This build also adds a diagnostic that asks the compositor whether a frame reached the screen (printed only with BLINKGTK_GX_LOG=1; nothing changes by default). The rendering engine remains Chromium 153.0.8010.36.</summary>
-  </entry>
-  <entry>
-    <title>v1.2.2-build2 released</title>
-    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2"/>
-    <id>tag:blinkgtk.org,2026:2026-09-10-build2-122:en</id>
-    <updated>2026-09-10T00:00:00Z</updated>
     <category term="release"/>
-    <summary>Corrects an error in the release notes shipped with build1. They said our previous workaround had been removed; it had not, and it is still present in this release. The wording now matches the artifact. The API reference heading also still read “Target version: BlinkGTK 1.2.1 (Chromium 152.0.7977.64)” from one release back; it now states the actual version. The program is otherwise identical to build1 and typeset output does not change; what changes is the version shown in the bundled documents and the reported version string, now 1.2.2-build2. The error was found through an enquiry from BlinkGTK-Readium.</summary>
+    <summary>Closing the window before a page finished loading no longer crashes. Opening a book and closing it right away — an ordinary action — triggered it; closing after the page had rendered did not, which made it easy to miss. The cause was ours: while the page container was being torn down, a notification was delivered to a handler that was already looking at something released. The handler is now detached first. The workaround (waiting for the load to finish before closing) is no longer needed. Reported by an external user. This build also adds a diagnostic that asks the compositor whether a frame reached the screen — previously our records ended at &quot;the buffer was submitted&quot;, so &quot;the content was empty&quot; and &quot;the content was there but never displayed&quot; could not be told apart. It is printed only with BLINKGTK_GX_LOG=1; nothing changes by default. The rendering engine remains Chromium 153.0.8010.36 and typesetting is unchanged from build2.</summary>
   </entry>
   <entry>
     <title>v1.2.2-build1 released</title>
@@ -42,6 +45,14 @@
     <updated>2026-09-10T00:00:00Z</updated>
     <category term="release"/>
     <summary>In vertical writing, a line no longer breaks half-way when a closing bracket falls at the line end. A line with room for 35 characters held only 17, and text-align: justify then doubled the inter-character advance. Of 13 configurations, 8 exhibited it and all are now fixed; it does not occur in horizontal writing. We reported it upstream (crbug 542686223) and Chromium fixed it. The rendering engine is now Chromium 153.0.8010.36. The bundled demo answers --version, so a problem report can identify the build exactly.We measured how many characters fit on one line; we did not measure how much room is left at the end of a column in multi-column layout.</summary>
+  </entry>
+  <entry>
+    <title>v1.2.2-build2 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-09-10-build2-122:en</id>
+    <updated>2026-09-10T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Corrects an error in the release notes shipped with build1. They said our previous workaround had been removed; it had not, and it is still present in this release. The wording now matches the artifact. The API reference heading also still read “Target version: BlinkGTK 1.2.1 (Chromium 152.0.7977.64)” from one release back; it now states the actual version. The program is otherwise identical to build1 and typeset output does not change; what changes is the version shown in the bundled documents and the reported version string, now 1.2.2-build2. The error was found through an enquiry from BlinkGTK-Readium.</summary>
   </entry>
   <entry>
     <title>v1.2.1-build3 released</title>

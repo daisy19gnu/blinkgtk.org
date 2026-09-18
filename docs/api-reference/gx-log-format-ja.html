@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>EGL 配送の診断ログ (`BLINKGTK_GX_LOG`) の読み方 —
+BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+<meta name="description" content="BLINKGTK_GX_LOG=1 を付けて起動すると、EGL 経路の配送を 1 行 1 事象で 出します。画面が出ないとき・表示が遅いときに、どこまで進んだかを外から 追うためのものです。">
+<link rel="canonical" href="https://blinkgtk.org/docs/api-reference/gx-log-format-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="EGL 配送の診断ログ (`BLINKGTK_GX_LOG`) の読み方 — BlinkGTK">
+<meta property="og:description" content="BLINKGTK_GX_LOG=1 を付けて起動すると、EGL 経路の配送を 1 行 1 事象で 出します。画面が出ないとき・表示が遅いときに、どこまで進んだかを外から 追うためのものです。">
+<meta property="og:url" content="https://blinkgtk.org/docs/api-reference/gx-log-format-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/api-reference/gx-log-format-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/api-reference/gx-log-format-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/api-reference/gx-log-format-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="egl-配送の診断ログ-blinkgtk_gx_log-の読み方">EGL 配送の診断ログ
+(<code>BLINKGTK_GX_LOG</code>) の読み方</h1>
+<p><code>BLINKGTK_GX_LOG=1</code> を付けて起動すると、EGL 経路の配送を
+<strong>1 行 1 事象</strong>で<br />
+出します。画面が出ないとき・表示が遅いときに、どこまで進んだかを外から<br />
+追うためのものです。</p>
+<pre><code>BJGX &lt;事象&gt; t=&lt;起動からの ms&gt; buf=&lt;wl_buffer の wire id&gt; submit=&lt;通番&gt; …</code></pre>
+<ul>
+<li><code>buf=</code> は compositor 側の wl_buffer の wire id</li>
+<li><code>submit=</code> は commit ごとに振る通番。<code>buf=</code>
+と対にして 1 回の提出を指す</li>
+<li><strong><code>submit=</code> は常に数字とは限りません。</strong>
+通番が振られなかった行は <code>submit=-</code><br />
+になります。数値としてパースすると、その行で止まります</li>
+<li><code>t=</code> は BlinkGTK 内部の経過 ms。compositor
+の時刻ではありません</li>
+</ul>
+<h2 id="事象と項目">事象と項目</h2>
+<!-- BEGIN GENERATED: gen-gx-log-format.sh -->
+
+<table>
+<thead>
+<tr>
+<th>事象</th>
+<th>行に出る項目</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bind</code></td>
+<td><code>t=</code> <code>iface=</code> <code>name=</code></td>
+</tr>
+<tr>
+<td><code>clock</code></td>
+<td><code>t=</code> <code>clk_id=</code></td>
+</tr>
+<tr>
+<td><code>commit</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>op=</code> <code>w=</code> <code>h=</code> <code>stride=</code>
+<code>fmt=</code> <code>mod=</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>op=</code> <code>w=</code> <code>h=</code> <code>src=</code></td>
+</tr>
+<tr>
+<td><code>discard</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code></td>
+</tr>
+<tr>
+<td><code>present</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>tv=</code> <code>refresh=</code> <code>msc=</code>
+<code>flags=</code> <code>flagnames=</code> <code>clk=</code></td>
+</tr>
+<tr>
+<td><code>probe</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>result=</code> <code>w=</code> <code>h=</code>
+<code>stride=</code></td>
+</tr>
+<tr>
+<td><code>release</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code></td>
+</tr>
+<tr>
+<td><code>skip</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>reason=</code></td>
+</tr>
+</tbody>
+</table>
+<!-- END GENERATED -->
+
+<h2 id="事象の意味">事象の意味</h2>
+<table>
+<thead>
+<tr>
+<th>事象</th>
+<th>いつ出るか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commit</code></td>
+<td>buffer を surface に付けて commit した</td>
+</tr>
+<tr>
+<td><code>present</code></td>
+<td>compositor が「表示した」と返した</td>
+</tr>
+<tr>
+<td><code>discard</code></td>
+<td>compositor が「表示しなかった」と返した</td>
+</tr>
+<tr>
+<td><code>release</code></td>
+<td>compositor が buffer を返した (再利用してよい)</td>
+</tr>
+<tr>
+<td><code>skip</code></td>
+<td>送らなかった。<code>reason=</code> に理由</td>
+</tr>
+<tr>
+<td><code>probe</code></td>
+<td>中身の検査結果。<code>result=</code> に判定</td>
+</tr>
+<tr>
+<td><code>bind</code></td>
+<td>Wayland の interface を掴んだ</td>
+</tr>
+<tr>
+<td><code>clock</code></td>
+<td>表示時刻の基準時計の id</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>present</code> と <code>discard</code>
+は排他</strong>です。1 つの内容更新に、どちらか一方だけ来ます。</p>
+<h2 id="気をつけるところ">気をつけるところ</h2>
+<ul>
+<li><strong><code>op=</code> は <code>commit</code>
+行にだけあります。</strong> <code>present</code> 行には出ません。<br />
+<code>present</code> 行にあるのは <code>clk=</code> (下記) です</li>
+<li><code>op=</code> に入りうる値は <code>attach+viewport</code> /
+<code>attach</code> / <code>destroy</code> / <code>none</code></li>
+<li><code>commit</code> 行の後半は経路で変わります。dmabuf 経路は
+<code>stride= fmt= mod=</code>、<br />
+software (shm) 経路は <code>src=shm</code> で <code>stride=</code>
+<code>fmt=</code> <code>mod=</code> は出ません</li>
+<li><code>clk=</code> は <code>present</code> 行の <code>tv=</code>
+がどの時計に基づくかを示す POSIX の clockid_t<br />
+(1=CLOCK_MONOTONIC / 4=CLOCK_MONOTONIC_RAW)。compositor
+が教えてこなければ <code>-</code></li>
+</ul>
+<h2 id="表示できているかを判定する">表示できているかを判定する</h2>
+<p><strong><code>present</code> 行の有無で見てください。</strong></p>
+<p><code>content_present</code> (<code>probe#N=YES/BLANK</code>)
+は、buffer の中身を CPU から読んで<br />
+判定します。<strong>環境によっては原理的に読めません</strong> (仮想 GPU
+など)。読めない<br />
+環境では <code>UNKNOWN</code>
+のまま変わらないので、これを判定材料にすると<br />
+「表示できていない」と読み違えます。</p>
+<p><code>present</code> は compositor
+からの返事なので、その環境でも成立します。</p>
+<h2
+id="この表は実装から起こしています">この表は実装から起こしています</h2>
+<p>上の「事象と項目」は
+<code>release/scripts/gen-gx-log-format.sh</code>
+が実装の書式文字列<br />
+から生成しています。書き写した表は実装とずれるので、生成物にしてあります。</p>
+</body>
+</html>
+</div></div>

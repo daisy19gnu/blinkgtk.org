@@ -109,7 +109,7 @@
 </div><div class="card doc">
 <h1 id="困ったときは">困ったときは</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>バージョン</strong>: 1.2.2-build5</p>
+<strong>バージョン</strong>: 1.2.2-build6</p>
 <p>うまくいかないときのためのページです。症状から引けるように並べてあります。</p>
 <p>ここに載っていない症状に出会われたら、<strong>お知らせください</strong>。再現手順が<br />
 1 つあれば追いかけられます。連絡先はこのページの末尾にあります。</p>
@@ -194,16 +194,52 @@ BlinkGTK でも開けません。</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ldd</span> ./your-app <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-i</span> blink</span></code></pre></div>
 <p><code>not found</code>
 と出ていれば、そのライブラリの場所を教えます。</p>
-<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/usr/lib64:<span class="va">$LD_LIBRARY_PATH</span></span></code></pre></div>
-<p>パッケージから入れた場合は、通常この設定は要りません。それでも見つからない<br />
-ときは、インストールが途中で失敗している可能性があります。</p>
+<p>パッケージから入れた場合、通常この設定は要りません<br />
+(<code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code>
+が場所を教えています)。<br />
+それでも見つからないときは、インストールが途中で失敗している可能性があります。</p>
+<p>自分で置いた場所を教える場合は、<strong>BlinkGTK の private
+ディレクトリを先頭に</strong><br />
+書いてください。</p>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/usr/lib64/blinkgtk-0.1:/usr/lib64/blinkgtk-0.1/chromium<span class="va">${LD_LIBRARY_PATH</span><span class="op">:+</span>:<span class="va">$LD_LIBRARY_PATH}</span></span></code></pre></div>
+<p><strong><code>/usr/lib64</code> を先頭に置かないでください。</strong>
+BlinkGTK が同梱する<br />
+<code>libicuuc.so</code>
+は、システムにある同名のライブラリと名前が同じです。<br />
+<code>/usr/lib64</code>
+が先だと<strong>システム側が同梱版を隠し</strong>、次で落ちます。</p>
+<pre><code>symbol lookup error: .../libthird_party_icu_icui18n.so:
+  undefined symbol: _ZNK6icu_787UObject17getDynamicClassIDEv</code></pre>
+<p>実測で確認しています (2026-09-15、v1.2.2-build5):</p>
+<table>
+<thead>
+<tr>
+<th><code>LD_LIBRARY_PATH</code></th>
+<th>結果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>設定しない (RPATH に任せる)</td>
+<td>起動する</td>
+</tr>
+<tr>
+<td>private ディレクトリのみ</td>
+<td>起動する</td>
+</tr>
+<tr>
+<td><code>/usr/lib64</code> を先頭</td>
+<td><strong>落ちる</strong> (上の undefined symbol)</td>
+</tr>
+</tbody>
+</table>
 <h3 id="wayland-に繋がらない">Wayland に繋がらない</h3>
 <pre><code>Failed to open Wayland display</code></pre>
 <p>BlinkGTK は <strong>Wayland 専用</strong>です。X11
 では動きません。</p>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$WAYLAND_DISPLAY</span>      <span class="co"># wayland-0 などが出れば OK</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$XDG_SESSION_TYPE</span>     <span class="co"># wayland と出れば OK</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$WAYLAND_DISPLAY</span>      <span class="co"># wayland-0 などが出れば OK</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="bu">echo</span> <span class="va">$XDG_SESSION_TYPE</span>     <span class="co"># wayland と出れば OK</span></span></code></pre></div>
 <p>空だったり <code>x11</code> と出る場合は、Wayland
 セッションでログインし直してください。<br />
 GNOME・KDE Plasma・Sway などは既定で Wayland です。</p>
@@ -218,8 +254,8 @@ Check failed: ... (PA_NOTREACHED)</code></pre>
 <code>libv8.so</code> と <code>snapshot_blob.bin</code> /
 <code>v8_context_snapshot.bin</code> は、<br />
 <strong>同じビルドのものを揃えて</strong>使う必要があります。</p>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-la</span> /usr/lib64/libv8.so /usr/lib64/blinkgtk/<span class="pp">*</span>.bin</span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="fu">ls</span> <span class="at">-la</span> /usr/lib64/libv8.so /usr/lib64/blinkgtk/<span class="pp">*</span>.bin</span></code></pre></div>
 <p>日付が大きく食い違っていたら、混ざっています。パッケージを入れ直すのが<br />
 確実です。tarball
 を展開して使っている場合は、<strong>中身を混ぜずに</strong>、<br />
@@ -229,13 +265,13 @@ id="組み込んだアプリだけが白くなる">組み込んだアプリだ�
 <p>同梱サンプルは動くのに、ご自分のアプリだけ白い —
 という場合、リンクの仕方が<br />
 原因のことがあります。</p>
-<div class="sourceCode" id="cb14"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your-app <span class="kw">|</span> <span class="fu">grep</span> NEEDED</span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your-app <span class="kw">|</span> <span class="fu">grep</span> NEEDED</span></code></pre></div>
 <p><code>libbase_allocator_partition_allocator_...allocator_shim.so</code>
 が並んでいるか<br />
 確かめてください。無ければ、リンク指定が不足しています。</p>
-<div class="sourceCode" id="cb15"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> app app.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> app app.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
 <p><code>pkg-config</code>
 を通せば必要なものが揃います。<code>-lblinkgtk</code>
 だけを手で書くと<br />
@@ -246,33 +282,33 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb15-1"><a href="#
 が見つけてくれない</h3>
 <pre><code>Package blinkgtk-0.1 was not found in the pkg-config search path</code></pre>
 <p><code>.pc</code> ファイルの場所を確かめます。</p>
-<div class="sourceCode" id="cb17"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> / <span class="at">-name</span> <span class="st">&#39;blinkgtk-0.1.pc&#39;</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null</span></code></pre></div>
-<p>見つかったら、そのディレクトリを教えます。</p>
 <div class="sourceCode" id="cb18"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1</span></code></pre></div>
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="fu">find</span> / <span class="at">-name</span> <span class="st">&#39;blinkgtk-0.1.pc&#39;</span> <span class="dv">2</span><span class="op">&gt;</span>/dev/null</span></code></pre></div>
+<p>見つかったら、そのディレクトリを教えます。</p>
+<div class="sourceCode" id="cb19"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1</span></code></pre></div>
 <p>そもそも見つからない場合は、<strong>開発用パッケージ</strong>が入っていません。配布物の<br />
 ダウンロードページから取得して入れてください。</p>
-<div class="sourceCode" id="cb19"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>版<span class="op">&gt;</span>.fc44.x86_64.rpm</span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
-<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_<span class="op">&lt;</span>版<span class="op">&gt;</span>_amd64.deb</span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora</span></span>
+<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>版<span class="op">&gt;</span>.fc44.x86_64.rpm</span>
+<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
+<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_<span class="op">&lt;</span>版<span class="op">&gt;</span>_amd64.deb</span></code></pre></div>
 <p>手順の詳細は <a href="./INSTALL.html">インストール</a> にあります。</p>
 <h3 id="undefined-reference-が出る">undefined reference が出る</h3>
 <p>リンク指定の順序が原因のことがあります。ライブラリは<strong>ソースより後ろ</strong>に<br />
 置いてください。</p>
-<div class="sourceCode" id="cb20"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> app app.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span>   <span class="co"># 正しい</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span> <span class="at">-o</span> app app.c            <span class="co"># 順序が逆</span></span></code></pre></div>
+<div class="sourceCode" id="cb21"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="at">-o</span> app app.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span>   <span class="co"># 正しい</span></span>
+<span id="cb21-2"><a href="#cb21-2" aria-hidden="true" tabindex="-1"></a><span class="fu">gcc</span> <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span> <span class="at">-o</span> app app.c            <span class="co"># 順序が逆</span></span></code></pre></div>
 <h3 id="python-から-import-できない">Python から import できない</h3>
 <pre><code>ValueError: Namespace BlinkGTK not available</code></pre>
 <p>typelib の場所を教えます。</p>
-<div class="sourceCode" id="cb22"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb22-1"><a href="#cb22-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GI_TYPELIB_PATH</span><span class="op">=</span>/usr/lib64/girepository-1.0:<span class="va">$GI_TYPELIB_PATH</span></span>
-<span id="cb22-2"><a href="#cb22-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-c</span> <span class="st">&quot;import gi; gi.require_version(&#39;BlinkGTK&#39;,&#39;0.1&#39;); print(&#39;ok&#39;)&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb23"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GI_TYPELIB_PATH</span><span class="op">=</span>/usr/lib64/girepository-1.0:<span class="va">$GI_TYPELIB_PATH</span></span>
+<span id="cb23-2"><a href="#cb23-2" aria-hidden="true" tabindex="-1"></a><span class="ex">python3</span> <span class="at">-c</span> <span class="st">&quot;import gi; gi.require_version(&#39;BlinkGTK&#39;,&#39;0.1&#39;); print(&#39;ok&#39;)&quot;</span></span></code></pre></div>
 <hr />
 <h2
 id="表示はされるが様子がおかしい">表示はされるが、様子がおかしい</h2>
@@ -280,8 +316,8 @@ id="表示はされるが様子がおかしい">表示はされるが、様子�
 <p>表示倍率が絡んでいることがあります。倍率 1.25 や 1.5
 のような分数倍率の環境では、<br />
 まだ調整中の箇所が残っています。</p>
-<div class="sourceCode" id="cb23"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb23-1"><a href="#cb23-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>software <span class="ex">./your-app</span></span></code></pre></div>
+<div class="sourceCode" id="cb24"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>software <span class="ex">./your-app</span></span></code></pre></div>
 <p>で改善するかをお試しください。改善する／しないのどちらであっても、<br />
 <strong>環境(ディストリビューション・デスクトップ・倍率)を添えてお知らせいただけると<br />
 大変助かります。</strong></p>
@@ -293,9 +329,9 @@ id="縦書きやルビの組み方が期待と違う">縦書きやルビの組�
 再現用の HTML をいただければ、そのまま検証に使わせていただきます。</p>
 <h3 id="動作が重い">動作が重い</h3>
 <p>まず描画経路を確かめてください。</p>
-<div class="sourceCode" id="cb24"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb24-1"><a href="#cb24-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>software <span class="ex">./your-app</span>   <span class="co"># CPU 描画</span></span>
-<span id="cb24-2"><a href="#cb24-2" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./your-app</span>        <span class="co"># GPU 描画</span></span></code></pre></div>
+<div class="sourceCode" id="cb25"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>software <span class="ex">./your-app</span>   <span class="co"># CPU 描画</span></span>
+<span id="cb25-2"><a href="#cb25-2" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./your-app</span>        <span class="co"># GPU 描画</span></span></code></pre></div>
 <p>環境によって速いほうが変わります。</p>
 <p>メモリ使用量は、Chromium
 がプロセスを分けて動く都合上、どうしても大きめに<br />
@@ -345,11 +381,11 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb24-1"><a href="#
 </table>
 <p>ログは必ず<strong>ファイルに残して</strong>からご確認ください。端末の履歴は流れてしまい、<br />
 肝心の最初の数行が消えていることがよくあります。</p>
-<div class="sourceCode" id="cb25"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb25-1"><a href="#cb25-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./your-app</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> blinkgtk.log</span></code></pre></div>
-<p>描画の様子まで見たいときは、フレームを画像として書き出せます。</p>
 <div class="sourceCode" id="cb26"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_FRAME_PNG_DIR</span><span class="op">=</span>/tmp/frames <span class="ex">./your-app</span></span></code></pre></div>
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb26-1"><a href="#cb26-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./your-app</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">tee</span> blinkgtk.log</span></code></pre></div>
+<p>描画の様子まで見たいときは、フレームを画像として書き出せます。</p>
+<div class="sourceCode" id="cb27"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb27-1"><a href="#cb27-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_FRAME_PNG_DIR</span><span class="op">=</span>/tmp/frames <span class="ex">./your-app</span></span></code></pre></div>
 <p>出力された PNG
 が真っ白なら描画そのものが行われておらず、絵が写っているのに<br />
 画面に出ないなら、その先の受け渡しの問題だと切り分けられます。<br />

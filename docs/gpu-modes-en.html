@@ -370,14 +370,27 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Native EGL mode</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
-<p>Selecting the mode from code (v1.0.2 and later):</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> view <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span></span></code></pre></div>
-<p>Note that <code>blink_web_view_new_with_gpu_mode()</code> sets
-<code>BLINKGTK_GPU_MODE</code> for the process and therefore<br />
-affects renderer processes launched afterwards; it is not per-WebView
-isolation. For deterministic<br />
-behavior, set the environment variable before
-<code>blink_gtk_init(&amp;argc, &amp;argv)</code>.</p>
+<p>Selecting the path from code (v1.2.2-build5 and later):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* before blink_gtk_init */</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
+<p><strong>Note: <code>blink_web_view_new_with_gpu_mode()</code> cannot
+select the path.</strong> The<br />
+rendering path is fixed at <code>blink_gtk_init()</code>, and so are the
+launch flags handed<br />
+to the GPU process. By the time a WebView is created it can no longer
+change, so<br />
+passing a mode there has no effect — it only emits a warning. (Found
+on<br />
+2026-09-14 from an external report; until then it was possible to
+measure the<br />
+software path while believing EGL was in use.)</p>
+<p>There is one path per process. It cannot differ between WebViews in
+the same<br />
+process.</p>
+<p>Confirm what took effect with
+<code>blink_web_view_get_gpu_mode()</code>; the startup log<br />
+also prints the path. Setting <code>BLINKGTK_GPU_MODE</code> before
+launch still works.</p>
 <hr />
 <h2 id="5-switching-modes-and-paths--what-can-change-at-runtime">5.
 Switching modes and paths — what can change at runtime</h2>

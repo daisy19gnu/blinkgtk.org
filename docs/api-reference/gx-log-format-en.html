@@ -1,0 +1,213 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Reading the EGL delivery trace (`BLINKGTK_GX_LOG`) —
+BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+<meta name="description" content="Start with BLINKGTK_GX_LOG=1 and BlinkGTK writes one line per event for the EGL delivery path. Use it to see how far a frame got when nothing appears on screen,">
+<link rel="canonical" href="https://blinkgtk.org/docs/api-reference/gx-log-format-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Reading the EGL delivery trace (`BLINKGTK_GX_LOG`) — BlinkGTK">
+<meta property="og:description" content="Start with BLINKGTK_GX_LOG=1 and BlinkGTK writes one line per event for the EGL delivery path. Use it to see how far a frame got when nothing appears on screen,">
+<meta property="og:url" content="https://blinkgtk.org/docs/api-reference/gx-log-format-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/api-reference/gx-log-format-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/api-reference/gx-log-format-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/api-reference/gx-log-format-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="reading-the-egl-delivery-trace-blinkgtk_gx_log">Reading the EGL
+delivery trace (<code>BLINKGTK_GX_LOG</code>)</h1>
+<p>Start with <code>BLINKGTK_GX_LOG=1</code> and BlinkGTK writes
+<strong>one line per event</strong> for the<br />
+EGL delivery path. Use it to see how far a frame got when nothing
+appears on<br />
+screen, or when presentation is slow.</p>
+<pre><code>BJGX &lt;event&gt; t=&lt;ms since start&gt; buf=&lt;wl_buffer wire id&gt; submit=&lt;serial&gt; …</code></pre>
+<ul>
+<li><code>buf=</code> is the wire id of the wl_buffer on the compositor
+side</li>
+<li><code>submit=</code> is a serial we assign per commit; the pair
+(<code>buf=</code>, <code>submit=</code>)<br />
+identifies one submission</li>
+<li><strong><code>submit=</code> is not always a number.</strong> Lines
+where no serial was assigned carry<br />
+<code>submit=-</code>. Parsing it as an integer will stop on those
+lines</li>
+<li><code>t=</code> is BlinkGTK's own elapsed milliseconds, not the
+compositor clock</li>
+</ul>
+<h2 id="events-and-fields">Events and fields</h2>
+<!-- BEGIN GENERATED: gen-gx-log-format.sh -->
+
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>Fields on the line</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>bind</code></td>
+<td><code>t=</code> <code>iface=</code> <code>name=</code></td>
+</tr>
+<tr>
+<td><code>clock</code></td>
+<td><code>t=</code> <code>clk_id=</code></td>
+</tr>
+<tr>
+<td><code>commit</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>op=</code> <code>w=</code> <code>h=</code> <code>stride=</code>
+<code>fmt=</code> <code>mod=</code></td>
+</tr>
+<tr>
+<td></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>op=</code> <code>w=</code> <code>h=</code> <code>src=</code></td>
+</tr>
+<tr>
+<td><code>discard</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code></td>
+</tr>
+<tr>
+<td><code>present</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>tv=</code> <code>refresh=</code> <code>msc=</code>
+<code>flags=</code> <code>flagnames=</code> <code>clk=</code></td>
+</tr>
+<tr>
+<td><code>probe</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>result=</code> <code>w=</code> <code>h=</code>
+<code>stride=</code></td>
+</tr>
+<tr>
+<td><code>release</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code></td>
+</tr>
+<tr>
+<td><code>skip</code></td>
+<td><code>t=</code> <code>buf=</code> <code>submit=</code>
+<code>reason=</code></td>
+</tr>
+</tbody>
+</table>
+<!-- END GENERATED -->
+
+<h2 id="what-each-event-means">What each event means</h2>
+<table>
+<thead>
+<tr>
+<th>Event</th>
+<th>When it appears</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>commit</code></td>
+<td>A buffer was attached to the surface and committed</td>
+</tr>
+<tr>
+<td><code>present</code></td>
+<td>The compositor reported that it was displayed</td>
+</tr>
+<tr>
+<td><code>discard</code></td>
+<td>The compositor reported that it was not displayed</td>
+</tr>
+<tr>
+<td><code>release</code></td>
+<td>The compositor returned the buffer (safe to reuse)</td>
+</tr>
+<tr>
+<td><code>skip</code></td>
+<td>Nothing was sent. <code>reason=</code> says why</td>
+</tr>
+<tr>
+<td><code>probe</code></td>
+<td>Content inspection result. <code>result=</code> carries the
+verdict</td>
+</tr>
+<tr>
+<td><code>bind</code></td>
+<td>A Wayland interface was bound</td>
+</tr>
+<tr>
+<td><code>clock</code></td>
+<td>Clock id used for presentation timestamps</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>present</code> and <code>discard</code> are mutually
+exclusive</strong> — exactly one of them arrives<br />
+for a given content update.</p>
+<h2 id="things-that-trip-parsers">Things that trip parsers</h2>
+<ul>
+<li><strong><code>op=</code> appears only on <code>commit</code>
+lines.</strong> It is not present on <code>present</code> lines.<br />
+What <code>present</code> carries instead is <code>clk=</code>
+(below)</li>
+<li><code>op=</code> takes one of <code>attach+viewport</code>,
+<code>attach</code>, <code>destroy</code>, <code>none</code></li>
+<li>The tail of a <code>commit</code> line depends on the path: the
+dmabuf path carries<br />
+<code>stride= fmt= mod=</code>, while the software (shm) path carries
+<code>src=shm</code> and omits<br />
+<code>stride=</code>, <code>fmt=</code> and <code>mod=</code></li>
+<li><code>clk=</code> tells you which clock the <code>tv=</code>
+timestamp on a <code>present</code> line is based<br />
+on — a POSIX clockid_t (1 = CLOCK_MONOTONIC, 4 =
+CLOCK_MONOTONIC_RAW).<br />
+It is <code>-</code> when the compositor did not report one</li>
+</ul>
+<h2 id="deciding-whether-content-reached-the-screen">Deciding whether
+content reached the screen</h2>
+<p><strong>Look for <code>present</code> lines.</strong></p>
+<p><code>content_present</code> (<code>probe#N=YES/BLANK</code>) judges
+by reading buffer contents from<br />
+the CPU side. <strong>On some systems that read is not possible at
+all</strong> (virtualised<br />
+GPUs, for example). There it stays <code>UNKNOWN</code>, so using it as
+the criterion reads<br />
+as "nothing was displayed" when in fact everything was.</p>
+<p><code>present</code> comes from the compositor, so it holds on those
+systems too.</p>
+<h2 id="this-table-is-generated-from-the-implementation">This table is
+generated from the implementation</h2>
+<p>The table above is produced by
+<code>release/scripts/gen-gx-log-format.sh</code> from the<br />
+format strings in the source. A hand-copied table drifts from the code,
+so it is<br />
+a generated artifact.</p>
+</body>
+</html>
+</div></div>

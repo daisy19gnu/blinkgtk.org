@@ -1,0 +1,278 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK Resize Behavior — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Starting from v1.0.10 iter8, BlinkWebView automatically follows its parent container&#x27;s size. This document covers the behavior specification, migration notes, a">
+<link rel="canonical" href="https://blinkgtk.org/docs/resize-behavior-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK Resize Behavior — BlinkGTK">
+<meta property="og:description" content="Starting from v1.0.10 iter8, BlinkWebView automatically follows its parent container&#x27;s size. This document covers the behavior specification, migration notes, a">
+<meta property="og:url" content="https://blinkgtk.org/docs/resize-behavior-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/resize-behavior-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/resize-behavior-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/resize-behavior-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-resize-behavior">BlinkGTK Resize Behavior</h1>
+<p>Starting from v1.0.10 iter8, <code>BlinkWebView</code> automatically
+follows its parent<br />
+container's size. This document covers the behavior specification,
+migration<br />
+notes, and differences from previous versions.</p>
+<hr />
+<h2 id="1-overview">1. Overview</h2>
+<p><code>BlinkWebView</code> inherits directly from
+<code>GtkWidget</code> and uses the canonical GTK4<br />
+<code>size_allocate</code> vfunc to receive size change notifications.
+Internally, it<br />
+invokes <code>RenderWidgetHostView::SetSize()</code> to automatically
+update Chromium's<br />
+rendering resolution.</p>
+<p><strong>You do not need to manually call
+<code>blink_web_view_set_canvas_size()</code></strong> in your<br />
+application code.</p>
+<hr />
+<h2 id="2-specification">2. Specification</h2>
+<h3 id="21-auto-follow-triggers">2.1 Auto-follow Triggers</h3>
+<p>The following events automatically update the size of Chromium's view
+(RenderWidgetHostView):</p>
+<table>
+<thead>
+<tr>
+<th>Trigger</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Window resize</td>
+<td><code>gtk_window_set_default_size()</code> or user drag-resize</td>
+</tr>
+<tr>
+<td>Parent layout reflow</td>
+<td>Siblings added/removed in <code>GtkBox</code> /
+<code>GtkGrid</code></td>
+</tr>
+<tr>
+<td><code>notify::scale-factor</code></td>
+<td>HiDPI scale changes (dragging to different monitor)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="22-coordinate-system">2.2 Coordinate System</h3>
+<ul>
+<li><code>size_allocate(w, h, baseline)</code> receives <code>w</code>,
+<code>h</code> in <strong>GTK4 logical (CSS)<br />
+pixels</strong></li>
+<li>Chromium accepts logical pixels; internally multiplies by<br />
+<code>device_scale_factor</code> for physical pixels</li>
+<li>On HiDPI (<code>gtk_scale_factor=2</code>), logical 1280x800 →
+physical 2560x1600</li>
+</ul>
+<h3 id="23-minimal-example">2.3 Minimal Example</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a>  blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span>  <span class="co">/* GTK4 は引数なし */</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1280</span><span class="op">,</span> <span class="dv">800</span><span class="op">);</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>  BlinkWebView<span class="op">*</span> view <span class="op">=</span> BLINK_WEB_VIEW<span class="op">(</span>blink_web_view_new<span class="op">());</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> GTK_WIDGET<span class="op">(</span>view<span class="op">));</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>  gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>  blink_web_view_load_uri<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;https://www.example.com&quot;</span><span class="op">);</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>No extra code is needed for resize handling.
+<code>BlinkWebView</code> automatically<br />
+follows the parent container.</p>
+<hr />
+<h2 id="3-differences-from-previous-versions">3. Differences from
+Previous Versions</h2>
+<h3 id="31-v1010-iter7-and-earlier-issue-58">3.1 v1.0.10 iter7 and
+Earlier (Issue #58)</h3>
+<p>Before iter8, <code>BlinkWebView</code> did not follow parent size
+and was <strong>stuck at the<br />
+Chromium default 800x600</strong>. On HiDPI systems, this 800x600 was
+treated as<br />
+device pixels, resulting in an effective display of roughly 400x300 CSS
+pixels<br />
+in the top-left quarter of the window.</p>
+<p>Applications had to manually call
+<code>blink_web_view_set_canvas_size(view, w, h)</code><br />
+to work around this. However, GTK4's <code>size-allocate</code> signal
+is deprecated and<br />
+overriding <code>GtkWidgetClass::size_allocate_vfunc</code> from C
+application code is<br />
+impractical.</p>
+<h3 id="32-v1010-iter8-and-later">3.2 v1.0.10 iter8 and Later</h3>
+<p><code>blink_gtk_api.cc</code> now implements:</p>
+<ol type="1">
+<li><strong><code>GtkWidgetClass::size_allocate</code> vfunc override in
+the BlinkWebView class</strong>
+<ul>
+<li>Receives allocation notifications from the parent and internally
+calls<br />
+<code>SetCanvasSize()</code></li>
+</ul></li>
+<li><strong><code>measure</code> vfunc natural size changed to
+0x0</strong>
+<ul>
+<li>Combined with internally-set <code>hexpand=TRUE</code> /
+<code>vexpand=TRUE</code>, this causes<br />
+the widget to fill the available parent area cleanly</li>
+</ul></li>
+<li><strong><code>notify::scale-factor</code> handler</strong>
+<ul>
+<li>Re-notifies the current size on HiDPI scale changes</li>
+</ul></li>
+</ol>
+<p>Details: <a href="https://blinkgtk.org/">Issue #58</a><br />
+Fix commit: <a href="https://blinkgtk.org/">bdb709c</a></p>
+<hr />
+<h2 id="4-caveats">4. Caveats</h2>
+<h3 id="41-minimum-size-reduced-to-0">4.1 Minimum Size Reduced to 0</h3>
+<p>Because <code>measure</code> returns natural=0, the widget can
+collapse to 0x0 if the<br />
+parent container doesn't enforce a minimum size. In practice, use<br />
+<code>gtk_window_set_default_size()</code> or
+<code>gtk_widget_set_size_request()</code> to set a<br />
+floor size.</p>
+<h3 id="42-set_canvas_size-still-available">4.2
+<code>set_canvas_size()</code> Still Available</h3>
+<p>For use cases that require <strong>manual size control</strong>
+(headless testing,<br />
+automated resize diagnostics),
+<code>blink_web_view_set_canvas_size(view, w, h)</code><br />
+is still available. Manual invocations coexist with automatic updates
+via<br />
+<code>size_allocate</code>.</p>
+<h3 id="43-redundant-same-size-calls-are-suppressed">4.3 Redundant
+Same-Size Calls Are Suppressed</h3>
+<p>GTK may invoke <code>size_allocate</code> multiple times with the
+same dimensions during<br />
+a layout pass. An internal check suppresses redundant Chromium IPC
+calls, so<br />
+there is no performance penalty.</p>
+<hr />
+<h2 id="5-regression-detection">5. Regression Detection</h2>
+<p>BlinkGTK release builds are automatically verified by<br />
+<code>release/scripts/check-resize-follow.sh</code>:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">bash</span> release/scripts/check-resize-follow.sh <span class="at">--tarball</span> blinkgtk-<span class="pp">*</span>.tar.gz</span></code></pre></div>
+<p>This confirms that a window resize from 1280x800 to 1600x1000
+triggers both<br />
+the <code>size_allocate</code> vfunc and the Chromium view's bounds
+update. Failure to follow is a<br />
+release blocker.</p>
+<hr />
+<h2 id="related">Related</h2>
+<ul>
+<li><a href="https://blinkgtk.org/">Issue #58 (fix)</a></li>
+<li><a href="./gpu-modes-en.html">GPU Modes</a></li>
+<li><a href="./external-integration-en.html">External Integration</a></li>
+</ul>
+<hr />
+<p><strong>Last updated</strong>: 2026-04-20 (v1.0.10 iter8)<br />
+<strong>Author</strong>: BlinkGTK Project</p>
+</body>
+</html>
+</div></div>

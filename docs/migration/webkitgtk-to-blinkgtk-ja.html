@@ -323,7 +323,10 @@ href="../building-with-blinkgtk-ja.html">アプリのビルド</a>
 <code>get_title()</code></td>
 <td><code>blink_web_view_get_uri()</code> /
 <code>get_title()</code></td>
-<td>戻り値は <code>g_free()</code> が必要</td>
+<td><strong>戻り値を解放しないこと。</strong>
+内部の静的バッファを返すので、次に同じ関数を呼ぶと上書きされます。持ち越すなら自分で複製してください。複製が欲しければプロパティ
+(<code>g_object_get(view, "uri", &amp;s, NULL)</code>) を使うと
+<code>g_free()</code> できる文字列が得られます</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_get_estimated_load_progress()</code></td>

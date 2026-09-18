@@ -119,7 +119,7 @@ API リファレンスマニュアル — 第 1 章 概観とライフサイク�
 </tr>
 <tr>
 <td>対象バージョン</td>
-<td>BlinkGTK 1.2.2-build5 (Chromium 153.0.8010.36)</td>
+<td>BlinkGTK 1.2.2-build6 (Chromium 153.0.8010.36)</td>
 </tr>
 <tr>
 <td>位置づけ</td>
@@ -430,30 +430,32 @@ Chromium
 <span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
 <span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (0) 非標準配置なら blink_gtk_set_resources_path() をここで。 */</span></span>
 <span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (1) 初期化(全 GTK/GLib 呼び出しより前) */</span></span>
-<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
-<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (2) ウィンドウ + WebView(software 描画を推奨) */</span></span>
-<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
-<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
-<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> webview <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_SOFTWARE<span class="op">);</span></span>
-<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (3) ロード前登録 */</span></span>
-<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>  blink_web_view_register_custom_scheme_full<span class="op">(</span></span>
-<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>      BLINK_WEB_VIEW<span class="op">(</span>webview<span class="op">),</span> <span class="st">&quot;app&quot;</span><span class="op">,</span> scheme_cb<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>webview<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>window<span class="op">,</span> <span class="st">&quot;close-request&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_close<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (4)〜(5) 配置・表示・ロード */</span></span>
-<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> webview<span class="op">);</span></span>
-<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>  gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
-<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>  blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>webview<span class="op">),</span></span>
-<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>                          argc <span class="op">&gt;</span> <span class="dv">1</span> <span class="op">?</span> argv<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">:</span> <span class="st">&quot;app://local/index.html&quot;</span><span class="op">);</span></span>
-<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (6)〜(7) メインループ → 終了 */</span></span>
-<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> rc <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
-<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>  blink_gtk_shutdown<span class="op">();</span></span>
-<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> rc<span class="op">;</span></span>
-<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (1b) 描画経路は init より前に決める。後では効かない */</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>  blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_SOFTWARE<span class="op">);</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (2) ウィンドウ + WebView */</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">1024</span><span class="op">,</span> <span class="dv">768</span><span class="op">);</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> webview <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (3) ロード前登録 */</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>  blink_web_view_register_custom_scheme_full<span class="op">(</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>      BLINK_WEB_VIEW<span class="op">(</span>webview<span class="op">),</span> <span class="st">&quot;app&quot;</span><span class="op">,</span> scheme_cb<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>webview<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>window<span class="op">,</span> <span class="st">&quot;close-request&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_close<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (4)〜(5) 配置・表示・ロード */</span></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> webview<span class="op">);</span></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>  gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>  blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>webview<span class="op">),</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>                          argc <span class="op">&gt;</span> <span class="dv">1</span> <span class="op">?</span> argv<span class="op">[</span><span class="dv">1</span><span class="op">]</span> <span class="op">:</span> <span class="st">&quot;app://local/index.html&quot;</span><span class="op">);</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (6)〜(7) メインループ → 終了 */</span></span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> rc <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>  blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> rc<span class="op">;</span></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>ビルドと起動:</p>
 <div class="sourceCode" id="cb14"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$BLINKGTK_PKG</span><span class="st">/lib/pkgconfig:</span><span class="va">$PKG_CONFIG_PATH</span><span class="st">&quot;</span></span>

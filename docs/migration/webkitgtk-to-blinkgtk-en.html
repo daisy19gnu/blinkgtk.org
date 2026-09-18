@@ -332,7 +332,12 @@ Details:<br />
 <code>get_title()</code></td>
 <td><code>blink_web_view_get_uri()</code> /
 <code>get_title()</code></td>
-<td>Returned strings need <code>g_free()</code></td>
+<td><strong>Do not free the returned string.</strong> It points at an
+internal static buffer and is overwritten by the next call to the same
+function. Copy it if you need to keep it. If you want an owned string,
+read the property instead
+(<code>g_object_get(view, "uri", &amp;s, NULL)</code>) — that one you do
+<code>g_free()</code></td>
 </tr>
 <tr>
 <td><code>webkit_web_view_get_estimated_load_progress()</code></td>

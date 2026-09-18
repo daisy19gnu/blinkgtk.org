@@ -369,19 +369,26 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># EGL ネイティブモード</span></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
-<p>コード内から指定する場合（v1.0.2 以降）:</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> view <span class="op">=</span> blink_web_view_new_with_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span></span></code></pre></div>
-<p><strong>注意</strong>: この関数は <code>BLINKGTK_GPU_MODE</code>
-を<strong>プロセス全体に対して</strong>設定します。<br />
-同一プロセス内で複数の WebView
-を異なるモードで作っても、<strong>最初に作られた<br />
-WebView のモードが全体に適用されます</strong>。WebView
-単位の分離は将来の課題です<br />
-(公開ヘッダ <code>blink_web_view_new_with_gpu_mode</code>
-の注記どおり)。</p>
-<p>確実に意図したモードで動かすには、<code>blink_gtk_init(&amp;argc, &amp;argv)</code>
-を呼ぶ<strong>前に</strong><br />
-環境変数を設定してください。</p>
+<p>コード内から指定する場合 (v1.2.2-build5 以降):</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* blink_gtk_init より前 */</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
+<p><strong>注意: <code>blink_web_view_new_with_gpu_mode()</code>
+では経路を選べません。</strong><br />
+描画経路は <code>blink_gtk_init()</code> の時点で決まり、GPU
+プロセスへ渡す起動フラグも<br />
+そこで確定します。WebView
+を作る時点ではもう変えられないので、この関数に<br />
+モードを渡しても効かず、警告だけが出ます (2026-09-14
+に外部利用者の報告で判明。<br />
+それまで「EGL のつもりで software を測る」ことが起きていました)。</p>
+<p>経路はプロセス全体に 1 つです。同一プロセス内で WebView
+ごとに変えることは<br />
+できません。</p>
+<p>効いたかどうかは <code>blink_web_view_get_gpu_mode()</code>
+で確かめられます。<br />
+起動完了のログにも「描画経路=<mode>」が出ます。<br />
+環境変数 <code>BLINKGTK_GPU_MODE</code>
+を起動前に設定する方法も従来どおり使えます。</p>
 <hr />
 <h2 id="5-モードと経路の切り替え--何が実行中に変えられるか">5.
 モードと経路の切り替え — 何が実行中に変えられるか</h2>

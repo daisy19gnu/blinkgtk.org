@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.2-build5 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.2-build6 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Released: 2026-09-14 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<meta name="description" content="Released: 2026-09-19 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.2-build5 Release Notes — BlinkGTK">
-<meta property="og:description" content="Released: 2026-09-14 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.2-build6 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-09-19 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,12 +107,69 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-122-build5-release-notes">BlinkGTK 1.2.2-build5 Release
+<h1 id="blinkgtk-122-build6-release-notes">BlinkGTK 1.2.2-build6 Release
 Notes</h1>
-<p><strong>Released</strong>: 2026-09-14 / <strong>Chromium</strong>:
+<p><strong>Released</strong>: 2026-09-19 / <strong>Chromium</strong>:
 153.0.8010.36 / Language: <a href="RELEASE_NOTES-1.2.2-ja.html">日本語</a>
 | English</p>
 <p>The rendering engine is updated to <strong>Chromium 153</strong>.</p>
+<hr />
+<h2 id="what-build6-adds">What build6 adds</h2>
+<h3 id="each-view-can-have-its-own-profile-and-cache">Each view can have
+its own profile and cache</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>a <span class="op">=</span> blink_web_view_new_with_profile<span class="op">(</span><span class="st">&quot;tab1&quot;</span><span class="op">);</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>b <span class="op">=</span> blink_web_view_new_with_profile<span class="op">(</span><span class="st">&quot;tab2&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Until now every WebView in a process shared one profile and cache.
+Opening the same<br />
+URL in several views served all but the first from that cache, so
+<strong>only one load<br />
+actually happened</strong>. That made it impossible to measure what an
+additional view costs.</p>
+<ul>
+<li>The same name means the same profile; different names are
+separate</li>
+<li>Names may contain letters, digits, <code>-</code> and <code>_</code>
+only</li>
+<li>Separated: HTTP cache, cookies, localStorage, IndexedDB</li>
+<li>A named profile keeps its <strong>HTTP cache on disk</strong> at
+<code>profiles/&lt;name&gt;/Cache</code>.<br />
+Views from <code>blink_web_view_new()</code> keep an in-memory cache as
+before</li>
+<li><strong>The cache survives shutdown.</strong> Remove the profile
+directory first when a run<br />
+must start cold</li>
+<li>What <code>blink_gtk_get_profile_path()</code> reports does not
+change</li>
+</ul>
+<h3 id="permission-requests-can-be-told-apart">Permission requests can
+be told apart</h3>
+<p>The <code>permission-request</code> signal now names <strong>40
+kinds</strong> instead of 13. The 27 kinds<br />
+that used to arrive as <code>"unknown"</code> have names, so an
+application can decide based on<br />
+what is being asked for.</p>
+<p>That includes what a reading application actually uses —
+<code>screen-wake-lock</code> (keep the<br />
+screen on while reading), <code>local-fonts</code>,
+<code>persistent-storage</code>, <code>automatic-fullscreen</code><br />
+and <code>pointer-lock</code>.</p>
+<h2 id="what-build6-fixes">What build6 fixes</h2>
+<ul>
+<li>Two observer callbacks could reference an already-destroyed
+WebContents during<br />
+shutdown and crash</li>
+<li>Hyphenation dictionaries are now located once at startup. The lookup
+ran<br />
+synchronous I/O on the UI thread and aborted on builds with diagnostics
+enabled</li>
+<li>The Windows check in the distributed header took the wrong branch
+when the header<br />
+was used from an outside project</li>
+<li>The header said <code>execute_javascript</code> could yield
+<code>NULL</code>; the implementation never<br />
+passes it. It is an empty string, or the four characters
+<code>null</code></li>
+</ul>
 <hr />
 <h2 id="new-in-build5">New in build5</h2>
 <h3 id="the-rendering-path-can-be-chosen-from-the-api">The rendering
@@ -120,8 +177,8 @@ path can be chosen from the API</h3>
 <p>Call <code>blink_gtk_set_gpu_mode()</code> <strong>before</strong>
 <code>blink_gtk_init()</code> and the engine<br />
 starts on that path.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* before init */</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* before init */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
 <p>After initialisation, <code>blink_web_view_get_gpu_mode()</code>
 reports the path <strong>actually in<br />
 use</strong>, and the startup log names it ("描画経路=<mode>"), so you
@@ -369,7 +426,7 @@ queried at run time</h3>
 problem, this single<br />
 line identifies the build.</p>
 <pre><code>$ blinkgtk_browser --version
-BlinkGTK 1.2.2-build5 (Chromium 153.0.8010.36)</code></pre>
+BlinkGTK 1.2.2-build6 (Chromium 153.0.8010.36)</code></pre>
 <p><code>--help</code> prints the usage and how to specify the URL to
 open.</p>
 <h3 id="also-in-this-release">Also in this release</h3>

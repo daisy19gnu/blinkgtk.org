@@ -1,0 +1,414 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK ベストプラクティス集 — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="BlinkGTK を用いたアプリケーション開発で得られた実装パターンを集約した ベストプラクティス集です。本書は BlinkGTK 本体の API リファレンス (docs/04-user-guides/api-reference/) と併せて参照してください。">
+<link rel="canonical" href="https://blinkgtk.org/docs/best-practices-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK ベストプラクティス集 — BlinkGTK">
+<meta property="og:description" content="BlinkGTK を用いたアプリケーション開発で得られた実装パターンを集約した ベストプラクティス集です。本書は BlinkGTK 本体の API リファレンス (docs/04-user-guides/api-reference/) と併せて参照してください。">
+<meta property="og:url" content="https://blinkgtk.org/docs/best-practices-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/best-practices-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/best-practices-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/best-practices-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-ベストプラクティス集">BlinkGTK
+ベストプラクティス集</h1>
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>最終更新</strong>: 2026-05-12<br />
+<strong>対象</strong>: BlinkGTK Build 682+
+を使ったアプリケーション開発者</p>
+<hr />
+<h2 id="はじめに">はじめに</h2>
+<p>BlinkGTK
+を用いたアプリケーション開発で得られた実装パターンを集約した<br />
+ベストプラクティス集です。本書は BlinkGTK 本体の API リファレンス<br />
+(<code>docs/04-user-guides/api-reference/</code>)
+と併せて参照してください。</p>
+<p>クライアント実装者からの提案 (Issue #81 ほか) を反映しています。</p>
+<hr />
+<h2 id="1-固定遅延ゼロのイベント駆動パターン">1.
+固定遅延ゼロのイベント駆動パターン</h2>
+<h3 id="11-アンチパターン-固定遅延での-dom-操作">1.1 アンチパターン:
+固定遅延での DOM 操作</h3>
+<p>ページロード後の zoom
+設定、初期ハイライト、スクロール位置調整等を、<br />
+「安全のため」に <code>g_timeout_add()</code>
+で遅延させる実装は推奨できません。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// アンチパターン (固定遅延)</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>g_timeout_add<span class="op">(</span><span class="dv">400</span><span class="op">,</span> deferred_zoom_and_highlight_cb<span class="op">,</span> self<span class="op">);</span></span></code></pre></div>
+<p><strong>問題点</strong>:</p>
+<ol type="1">
+<li><strong>DOM 完成前に scrollIntoView が走る経路がある</strong> —
+GTK<br />
+<code>gtk_widget_compute_point</code> の assertion が連発する可能性</li>
+<li><strong>環境/負荷によって遅延が足りない</strong> — 挙動が不安定</li>
+<li><strong>遅延中に shutting_down 状態に入る</strong> — use-after-free
+のリスク</li>
+</ol>
+<h3 id="12-推奨パターン-load-changed-シグナル--blink_load_finished">1.2
+推奨パターン: <code>load-changed</code> シグナル +
+<code>BLINK_LOAD_FINISHED</code></h3>
+<p><code>BlinkWebView</code> の <code>load-changed</code> シグナルから
+<code>BLINK_LOAD_FINISHED</code><br />
+を捕捉して同期実行する形が安全です。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> self<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>                            BlinkLoadEvent ev<span class="op">,</span></span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>ev <span class="op">!=</span> BLINK_LOAD_FINISHED<span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a>    MyAppView<span class="op">*</span> self <span class="op">=</span> MY_APP_VIEW<span class="op">(</span>user_data<span class="op">);</span></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>self<span class="op">-&gt;</span>shutting_down<span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    apply_zoom_and_pending_highlight<span class="op">(</span>self<span class="op">);</span></span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    <span class="co">// autoplay 連鎖等もここで消費</span></span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<h3 id="13-blink_load_finished-時点で保証されること">1.3
+<code>BLINK_LOAD_FINISHED</code> 時点で保証されること</h3>
+<ul>
+<li><strong>DOM 完成済み</strong> — <code>document.body.innerHTML</code>
+等が確定</li>
+<li><strong>widget realize 済み</strong> — GdkSurface / wl_surface
+確立済</li>
+</ul>
+<p>両方が保証されるため、<code>scrollIntoView</code> /
+<code>execute_javascript</code> 系を<br />
+安全に発行できます。固定遅延を撤廃して以降、ロード後の assertion<br />
+発火が顕著に減少することが確認されています。</p>
+<h3 id="14-補足-gstreamer-など他のサブシステムでも同様">1.4 補足:
+GStreamer など他のサブシステムでも同様</h3>
+<p>GStreamer の preroll 完了待ちも同じ思想で <code>ASYNC_DONE</code>
++<br />
+<code>STATE_CHANGED → PAUSED</code> の双方を拾って deferred seek
+を実行する<br />
+実装に置き換えると、固定遅延ゼロで preroll 完了を捕捉できます。</p>
+<p>アプリ全体で「<strong>タイマーよりイベント駆動</strong>」の方針を貫くと、<br />
+タイミング起因のバグが大幅に減ります。</p>
+<hr />
+<h2 id="2-永続的な-css-注入-blink_web_view_inject_user_stylesheet">2.
+永続的な CSS 注入:
+<code>blink_web_view_inject_user_stylesheet()</code></h2>
+<h3 id="21-アンチパターン-ページごとの-javascript-で-style-注入">2.1
+アンチパターン: ページごとの JavaScript で <code>&lt;style&gt;</code>
+注入</h3>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">// アンチパターン (ページごとに JS で注入)</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> BlinkLoadEvent ev<span class="op">,</span> <span class="op">...)</span> <span class="op">{</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>ev <span class="op">!=</span> BLINK_LOAD_FINISHED<span class="op">)</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a>    blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;var s = document.createElement(&#39;style&#39;);&quot;</span></span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;s.textContent = &#39;...&#39;;&quot;</span></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;document.head.appendChild(s);&quot;</span><span class="op">,</span></span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>        NULL<span class="op">);</span></span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>問題点</strong>:</p>
+<ol type="1">
+<li>ページ遷移ごとの IPC コール (<code>execute_javascript</code>)
+が発生</li>
+<li>JS による DOM 操作中に <code>gtk_widget_compute_point</code>
+assertion を<br />
+踏むリスク</li>
+<li>JS タイミングずれで一瞬「無スタイル状態」が見える</li>
+</ol>
+<h3 id="22-推奨パターン-inject_user_stylesheet-の永続再注入">2.2
+推奨パターン: <code>inject_user_stylesheet</code> の永続再注入</h3>
+<p>Build 682+ で利用可能な<br />
+<code>blink_web_view_inject_user_stylesheet()</code>
+は、ページ遷移後の自動<br />
+再注入が効くため、<strong>起動時 1
+回</strong>呼び出すだけで全ページに適用<br />
+されます。</p>
+<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 起動時 (BLINK_LOAD_FINISHED 後の 1 回のみ呼出)</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">const</span> gchar<span class="op">*</span> CUSTOM_CSS <span class="op">=</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;body, p, span, div, ruby {&quot;</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;  font-family: &#39;Noto Serif CJK JP&#39;, serif !important;&quot;</span></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;}&quot;</span></span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;*[style*=&#39;vertical&#39;], .vertical-rl {&quot;</span></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;  font-feature-settings: &#39;vert&#39; 1, &#39;vrt2&#39; 1;&quot;</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;}&quot;</span><span class="op">;</span></span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a>blink_web_view_inject_user_stylesheet<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a>                                      CUSTOM_CSS<span class="op">);</span></span></code></pre></div>
+<h3 id="23-効果">2.3 効果</h3>
+<table>
+<thead>
+<tr>
+<th>観点</th>
+<th>アンチパターン</th>
+<th>推奨パターン</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ページ遷移時の IPC コール</td>
+<td>毎回発生</td>
+<td>不要 (自動再注入)</td>
+</tr>
+<tr>
+<td>縦書きフォント機能の適用率</td>
+<td>タイミング次第で漏れ</td>
+<td>100%</td>
+</tr>
+<tr>
+<td>JS DOM 操作リスク</td>
+<td>あり (Issue #78 系 assertion)</td>
+<td>なし</td>
+</tr>
+<tr>
+<td>「無スタイル状態」の瞬間</td>
+<td>発生する可能性</td>
+<td>発生しない</td>
+</tr>
+</tbody>
+</table>
+<p>EPUB / DAISY のような複数 XHTML
+を持つコンテンツでは特に有効です。</p>
+<hr />
+<h2 id="3-1-ディレクトリ完結ポータブルバンドル">3. 1
+ディレクトリ完結ポータブルバンドル</h2>
+<p>BlinkGTK ランタイム (約 617MB、513 個の .so + データファイル)
+を<br />
+含むアプリを、ユーザーが好きな場所に展開するだけで動くポータブル<br />
+バンドルにする方法です。</p>
+<h3 id="31-配布ディレクトリ構成">3.1 配布ディレクトリ構成</h3>
+<pre><code>my-app-X.Y.Z/
+├── bin/
+│   └── my-app                  (rpath = $ORIGIN/../lib)
+├── lib/
+│   ├── libblinkgtk.so
+│   ├── libblink_*.so (513 個)
+│   ├── icudtl.dat
+│   ├── content_shell.pak
+│   ├── snapshot_blob.bin
+│   └── v8_context_snapshot.bin
+├── share/my-app/
+│   └── resources/
+├── my-app.sh                   (起動ラッパー)
+├── README.txt
+└── VERSION</code></pre>
+<h3 id="32-バイナリ側の-rpath-設定-makefile">3.2 バイナリ側の rpath 設定
+(Makefile)</h3>
+<pre class="make"><code>BLINKGTK_LIBS = -L$(BLINKGTK_REAL_LIBDIR) \
+                -Wl,-rpath,&#39;$$ORIGIN/../lib&#39; \
+                -Wl,-rpath,$(BLINKGTK_REAL_LIBDIR) \
+                -Wl,-rpath-link,$(BLINKGTK_REAL_LIBDIR) \
+                -lblinkgtk</code></pre>
+<p><code>$ORIGIN/../lib</code>
+で<strong>バイナリ位置基準</strong>にライブラリを解決するため、<br />
+ユーザーがバンドルディレクトリを任意の場所に展開しても動作します。<br />
+絶対パス rpath はフォールバックとして残し、開発ビルド時の<br />
+<code>make run</code> でも動くようにしておくと開発体験が向上します。</p>
+<h3 id="33-起動ラッパー">3.3 起動ラッパー</h3>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/bin/sh</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="va">APP_DIR</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$(</span><span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$(</span><span class="fu">dirname</span> <span class="st">&quot;</span><span class="va">$0</span><span class="st">&quot;</span><span class="va">)</span><span class="st">&quot;</span> <span class="kw">&amp;&amp;</span> <span class="bu">pwd</span><span class="va">)</span><span class="st">&quot;</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$APP_DIR</span><span class="st">/lib:</span><span class="va">$LD_LIBRARY_PATH</span><span class="st">&quot;</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">GDK_BACKEND</span><span class="op">=</span><span class="st">&quot;</span><span class="va">${GDK_BACKEND</span><span class="op">:-</span>wayland<span class="va">}</span><span class="st">&quot;</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">MYAPP_DATA_DIR</span><span class="op">=</span><span class="st">&quot;</span><span class="va">$APP_DIR</span><span class="st">/share/my-app&quot;</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="st">&quot;</span><span class="va">$APP_DIR</span><span class="st">/share/my-app&quot;</span> <span class="kw">||</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a><span class="bu">exit</span> 1</span>
+<span id="cb7-9"><a href="#cb7-9" aria-hidden="true" tabindex="-1"></a><span class="bu">exec</span> <span class="st">&quot;</span><span class="va">$APP_DIR</span><span class="st">/bin/my-app&quot;</span> <span class="st">&quot;</span><span class="va">$@</span><span class="st">&quot;</span></span></code></pre></div>
+<h3 id="34-リソースパス解決ヘルパー">3.4 リソースパス解決ヘルパー</h3>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>gchar<span class="op">*</span> my_app_resolve_resource<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> relative<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> base <span class="op">=</span> g_getenv<span class="op">(</span><span class="st">&quot;MYAPP_DATA_DIR&quot;</span><span class="op">);</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>base <span class="op">&amp;&amp;</span> <span class="op">*</span>base<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> g_build_filename<span class="op">(</span>base<span class="op">,</span> relative<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g_strdup<span class="op">(</span>relative<span class="op">);</span>  <span class="co">// 開発時は CWD 互換</span></span>
+<span id="cb8-7"><a href="#cb8-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>開発ビルド (<code>make run</code>) では環境変数なしで CWD
+基準、バンドル起動<br />
+ではラッパーが <code>MYAPP_DATA_DIR</code> を設定してバンドル内<br />
+<code>share/my-app/resources/...</code>
+を参照、という二刀流が便利です。</p>
+<h3 id="35-配布サイズと検証">3.5 配布サイズと検証</h3>
+<p><code>tar.gz</code> 圧縮で 220MB 前後、展開後 650MB
+前後が一例です。</p>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> <span class="at">-xzf</span> my-app-X.Y.Z-linux-x64.tar.gz</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> my-app-X.Y.Z/</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="ex">./my-app.sh</span></span></code></pre></div>
+<p>システム依存は GTK4 / GStreamer / libxml2 等 OS 標準のみで、<br />
+Fedora 44 で追加インストール不要で動作する事例が報告されています。</p>
+<hr />
+<h2 id="4-共通原則-タイマーよりイベント駆動js-dom-操作より-c-api">4.
+共通原則: 「タイマーよりイベント駆動」「JS DOM 操作より C API」</h2>
+<p>本書の 3 つのパターンは、いずれも以下の共通原則を体現しています:</p>
+<ol type="1">
+<li><strong>タイマー (<code>g_timeout_add</code>)
+よりイベント駆動シグナル</strong></li>
+<li><strong>JS による DOM 操作より、BlinkGTK が提供する C
+API</strong></li>
+<li><strong>ハードコードされた絶対パスより、<code>$ORIGIN</code> +
+環境変数</strong></li>
+</ol>
+<p>BlinkGTK は GTK4 ネイティブの GObject 型として設計されており、<br />
+シグナル / プロパティ / C API がしっかり用意されています。これらを<br />
+活用することで、アプリ実装は短く・安定したものになります。</p>
+<hr />
+<h2 id="5-関連-api-リファレンス">5. 関連 API リファレンス</h2>
+<table>
+<thead>
+<tr>
+<th>API</th>
+<th>用途</th>
+<th>パターン</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blink_web_view_new()</code></td>
+<td>Widget 生成</td>
+<td>§1 起動時</td>
+</tr>
+<tr>
+<td><code>load-changed</code> signal</td>
+<td>DOM 完成検知</td>
+<td>§1.2</td>
+</tr>
+<tr>
+<td><code>BLINK_LOAD_FINISHED</code> event</td>
+<td>完成タイミング判定</td>
+<td>§1.2</td>
+</tr>
+<tr>
+<td><code>blink_web_view_inject_user_stylesheet()</code></td>
+<td>永続 CSS 注入</td>
+<td>§2.2</td>
+</tr>
+<tr>
+<td><code>blink_web_view_execute_javascript()</code></td>
+<td>JS 実行 (必要時のみ)</td>
+<td>§2.1 (アンチパターン)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_load_uri()</code></td>
+<td>URL 読み込み</td>
+<td>§1</td>
+</tr>
+</tbody>
+</table>
+<p>詳細は <code>docs/04-user-guides/api-reference/</code> を参照。</p>
+<hr />
+<h2 id="6-今後の追加パターン">6. 今後の追加パターン</h2>
+<p>本書はクライアント実装者からの提案を継続的に反映します。<br />
+新規パターン提案は GitHub Issue でお寄せください。</p>
+<h3 id="反映予定-将来">反映予定 (将来)</h3>
+<ul>
+<li>ヘッドレステスト自動化 (Weston headless + ピクセル解析)</li>
+<li>DevTools 連携</li>
+<li>多言語バインディング使い分け (Rust / Python / Node.js / Go)</li>
+</ul>
+<hr />
+<h2 id="7-関連文書">7. 関連文書</h2>
+<ul>
+<li><code>docs/04-user-guides/api-reference/</code> (C API
+リファレンス)</li>
+<li><code>docs/04-user-guides/getting-started/</code> (導入ガイド)</li>
+<li><code>docs/04-user-guides/troubleshooting-ja.md</code>
+(トラブルシューティング)</li>
+<li>Issue #81 (本書の出発点となった提案)</li>
+</ul>
+<hr />
+<p><strong>Reported originally by</strong>:
+クライアント実装者コミュニティ (Issue #81)<br />
+<strong>整理・公開</strong>: BlinkGTK Project</p>
+</body>
+</html>
+</div></div>

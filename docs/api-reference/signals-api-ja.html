@@ -109,7 +109,7 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-gobject-signals-api-リファレンス">BlinkGTK GObject
 Signals API リファレンス</h1>
-<p><strong>バージョン</strong>: 1.2.2-build5<br />
+<p><strong>バージョン</strong>: 1.2.2-build6<br />
 <strong>最終更新</strong>: 2026-07-30<br />
 <strong>言語</strong>: 日本語 |</p>
 <p><a href="./signals-api-en.html">English</a></p>
@@ -121,7 +121,7 @@ Signals API リファレンス</h1>
 からのメッセージ、<br />
 権限要求を受け取れます。</p>
 <p>本ページはエンジン実装を実測して書かれています。ハンドラやシグナルの状況は<br />
-1.2.2-build5 時点で再確認しました。</p>
+1.2.2-build6 時点で再確認しました。</p>
 <blockquote>
 <p><strong>旧版 (2026-07-29 以前) からの重大な訂正</strong>: 旧版は
 <code>title-changed</code> /<br />
@@ -646,21 +646,225 @@ WebView を対象 URL へナビゲートし始めています</strong>。</p>
 してアプリの設定画面へ誘導し、<br />
 設定変更後の要求で allow する」構成にしてください</li>
 <li><code>blink_permission_request_get_type_name()</code>
-が要求種別を返します:<br />
-<code>"geolocation"</code> / <code>"notifications"</code> /
-<code>"audio-capture"</code> /<br />
-<code>"video-capture"</code> / <code>"midi"</code> /
-<code>"clipboard"</code> / <code>"unknown"</code></li>
+が要求種別を返します (下表の<br />
+38 種のいずれか、または
+<code>"unknown"</code>)。<strong>種別を見ずに一律 allow
+しないでください</strong></li>
 <li>ハンドラが <code>TRUE</code> を返さなければ要求は拒否されます
 (deny-by-default)</li>
 <li>このシグナルは C 専用です
 (引数が生ポインタのため、言語バインディング<br />
 からは現在利用できません)</li>
 </ul>
+<h4 id="要求種別の一覧-v122-build6-以降">要求種別の一覧 (v1.2.2-build6
+以降)</h4>
+<p>読書アプリが実際に使うもの:</p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>何を求めているか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"screen-wake-lock"</code></td>
+<td>読書中に画面を消させない</td>
+</tr>
+<tr>
+<td><code>"system-wake-lock"</code></td>
+<td>端末を休止させない</td>
+</tr>
+<tr>
+<td><code>"local-fonts"</code></td>
+<td>端末に入っているフォントの一覧を読む</td>
+</tr>
+<tr>
+<td><code>"persistent-storage"</code></td>
+<td>しおり・注釈を自動削除の対象から外す</td>
+</tr>
+<tr>
+<td><code>"automatic-fullscreen"</code></td>
+<td>操作なしで全画面へ入る</td>
+</tr>
+<tr>
+<td><code>"pointer-lock"</code> / <code>"keyboard-lock"</code></td>
+<td>ページ送りの操作を占有する</td>
+</tr>
+<tr>
+<td><code>"storage-access"</code> /
+<code>"top-level-storage-access"</code></td>
+<td>別オリジンの保存領域を読む</td>
+</tr>
+</tbody>
+</table>
+<p>ネットワーク:</p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>何を求めているか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"local-network-access"</code></td>
+<td>ローカルまたはループバックのアドレスへ接続する</td>
+</tr>
+<tr>
+<td><code>"local-network"</code></td>
+<td>ローカルアドレスへ接続する</td>
+</tr>
+<tr>
+<td><code>"loopback-network"</code></td>
+<td>ループバック (127.0.0.1 等) へ接続する</td>
+</tr>
+<tr>
+<td><code>"background-fetch"</code></td>
+<td>ページを閉じても続く転送を始める</td>
+</tr>
+<tr>
+<td><code>"background-sync"</code> /
+<code>"periodic-background-sync"</code></td>
+<td>後から / 定期的に同期する</td>
+</tr>
+<tr>
+<td><code>"payment-handler"</code></td>
+<td>支払いの処理を引き受ける</td>
+</tr>
+</tbody>
+</table>
+<p>入出力・機器:</p>
+<table>
+<thead>
+<tr>
+<th>名前</th>
+<th>何を求めているか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"geolocation"</code> /
+<code>"geolocation-approximate"</code></td>
+<td>現在地 / おおよその現在地</td>
+</tr>
+<tr>
+<td><code>"notifications"</code></td>
+<td>通知を出す</td>
+</tr>
+<tr>
+<td><code>"audio-capture"</code> / <code>"video-capture"</code></td>
+<td>マイク / カメラ</td>
+</tr>
+<tr>
+<td><code>"camera-pan-tilt-zoom"</code></td>
+<td>カメラの向きと倍率を動かす</td>
+</tr>
+<tr>
+<td><code>"display-capture"</code></td>
+<td>画面を取り込む</td>
+</tr>
+<tr>
+<td><code>"captured-surface-control"</code></td>
+<td>取り込んだ画面を操作する</td>
+</tr>
+<tr>
+<td><code>"speaker-selection"</code></td>
+<td>出力先のスピーカーを選ぶ</td>
+</tr>
+<tr>
+<td><code>"midi"</code></td>
+<td>MIDI 機器</td>
+</tr>
+<tr>
+<td><code>"sensors"</code></td>
+<td>加速度・傾きなどのセンサー</td>
+</tr>
+<tr>
+<td><code>"nfc"</code></td>
+<td>NFC</td>
+</tr>
+<tr>
+<td><code>"smart-card"</code></td>
+<td>スマートカード</td>
+</tr>
+<tr>
+<td><code>"web-printing"</code></td>
+<td>印刷</td>
+</tr>
+<tr>
+<td><code>"clipboard"</code></td>
+<td>クリップボードの読み書き</td>
+</tr>
+<tr>
+<td><code>"idle-detection"</code></td>
+<td>利用者が離席したかを知る</td>
+</tr>
+<tr>
+<td><code>"window-management"</code></td>
+<td>画面の配置とウィンドウの位置</td>
+</tr>
+<tr>
+<td><code>"vr"</code> / <code>"ar"</code> /
+<code>"hand-tracking"</code></td>
+<td>WebXR</td>
+</tr>
+<tr>
+<td><code>"protected-media-identifier"</code></td>
+<td>保護された再生の識別子</td>
+</tr>
+<tr>
+<td><code>"web-app-installation"</code></td>
+<td>アプリとしての導入</td>
+</tr>
+</tbody>
+</table>
+<p><strong><code>"unknown"</code> が返るのは、Chromium
+側に新しい種別が増えて BlinkGTK が<br />
+追随していない場合だけです。</strong> その状態は<br />
+<code>release/scripts/check-permission-type-names.sh</code>
+が検出します。</p>
+<h3 id="view-ごとに-profile--cache-を分ける-v122-build6-以降">view
+ごとに profile / cache を分ける (v1.2.2-build6 以降)</h3>
+<p><code>blink_web_view_new()</code> で作った view は、<strong>1
+プロセス内で profile と cache を<br />
+共有します</strong>。同じ URL を複数の view で開くと、2
+つ目以降はキャッシュに当たり、<br />
+サーバへの要求は 1 回に畳まれます。</p>
+<p>分けたい場合は <code>blink_web_view_new_with_profile()</code>
+を使います。</p>
+<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>a <span class="op">=</span> blink_web_view_new_with_profile<span class="op">(</span><span class="st">&quot;tab1&quot;</span><span class="op">);</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>b <span class="op">=</span> blink_web_view_new_with_profile<span class="op">(</span><span class="st">&quot;tab2&quot;</span><span class="op">);</span></span></code></pre></div>
+<ul>
+<li>同じ名前なら同じ profile、違う名前なら別々になります</li>
+<li>置き場は プロセスの profile の下の
+<code>profiles/&lt;name&gt;</code></li>
+<li>名前に使えるのは <strong>英数字と <code>-</code> <code>_</code>
+のみ</strong>。それ以外は <code>NULL</code> が返ります</li>
+<li>分かれるもの: HTTP キャッシュ / cookie / localStorage /
+IndexedDB</li>
+<li><strong>分かれないもの</strong>:
+描画プロセスの共用など、プロセスが共有しているもの</li>
+<li>ディレクトリは最初の使用時に作られ、<code>blink_gtk_shutdown()</code>
+後も<strong>残ります</strong>。<br />
+毎回まっさらにしたい場合は名前を変えるか、ディレクトリを消してください</li>
+<li><code>blink_gtk_get_profile_path()</code>
+が返す値は<strong>変わりません</strong> (プロセスの profile)</li>
+<li><strong>HTTP キャッシュはこの profile の下
+(<code>profiles/&lt;name&gt;/Cache</code>) に置かれます。</strong><br />
+既定の view (<code>blink_web_view_new()</code>)
+はメモリ上のままです</li>
+<li><strong>キャッシュは <code>blink_gtk_shutdown()</code>
+後も残ります。</strong> 次の実行は温まった<br />
+状態から始まります。毎回まっさらから始めたい場合は、profile
+ディレクトリを<br />
+消してから起動してください</li>
+</ul>
+<hr />
 <h3 id="api">API</h3>
-<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_permission_request_get_type_name<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>        blink_permission_request_allow<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>        blink_permission_request_deny<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_permission_request_get_type_name<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>        blink_permission_request_allow<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>        blink_permission_request_deny<span class="op">(</span>BlinkPermissionRequest<span class="op">*</span> request<span class="op">);</span></span></code></pre></div>
 <hr />
 <h2 id="render-path-changed-v120-build9-以降">render-path-changed
 (v1.2.0-build9 以降)</h2>
@@ -669,24 +873,24 @@ WebView を対象 URL へナビゲートし始めています</strong>。</p>
 (BlinkShift)
 の<strong>完了通知</strong>です。切替は非同期で、結果はこのシグナルだけが<br />
 正本です (関数の返り値は「要求を受理したか」のみ)。</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_render_path_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>path_id<span class="op">,</span>   <span class="co">/* &quot;P1&quot; / &quot;P2&quot; */</span></span>
-<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>result<span class="op">,</span>    <span class="co">/* 下表 */</span></span>
-<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">int</span> gate_ms<span class="op">,</span>           <span class="co">/* 切替に要した ms */</span></span>
-<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">int</span> seq<span class="op">,</span>               <span class="co">/* この swap の通し番号 */</span></span>
-<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>                                   gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;render path -&gt; </span><span class="sc">%s</span><span class="st"> (</span><span class="sc">%s</span><span class="st">, </span><span class="sc">%d</span><span class="st"> ms, seq=</span><span class="sc">%d</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span></span>
-<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a>            path_id<span class="op">,</span> result<span class="op">,</span> gate_ms<span class="op">,</span> seq<span class="op">);</span></span>
-<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;render-path-changed&quot;</span><span class="op">,</span></span>
-<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_render_path_changed<span class="op">),</span> NULL<span class="op">);</span></span>
-<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
-<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>seq <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
-<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>    g_warning<span class="op">(</span><span class="st">&quot;switch 要求が受理されなかった&quot;</span><span class="op">);</span></span>
-<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a><span class="co">/* seq は要求受理時に同期で確定します。完了 signal の seq 引数に同じ番号が</span></span>
-<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a><span class="co"> * 載るため、swap の前後で採った記録 (ページ位置など) を「当の swap」に</span></span>
-<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a><span class="co"> * 鍵付けできます。連続 swap では時刻の近さでの突き合わせは当てになりません */</span></span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_render_path_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>path_id<span class="op">,</span>   <span class="co">/* &quot;P1&quot; / &quot;P2&quot; */</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>result<span class="op">,</span>    <span class="co">/* 下表 */</span></span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">int</span> gate_ms<span class="op">,</span>           <span class="co">/* 切替に要した ms */</span></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">int</span> seq<span class="op">,</span>               <span class="co">/* この swap の通し番号 */</span></span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>                                   gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;render path -&gt; </span><span class="sc">%s</span><span class="st"> (</span><span class="sc">%s</span><span class="st">, </span><span class="sc">%d</span><span class="st"> ms, seq=</span><span class="sc">%d</span><span class="st">)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>            path_id<span class="op">,</span> result<span class="op">,</span> gate_ms<span class="op">,</span> seq<span class="op">);</span></span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;render-path-changed&quot;</span><span class="op">,</span></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_render_path_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>seq <span class="op">==</span> <span class="dv">0</span><span class="op">)</span></span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    g_warning<span class="op">(</span><span class="st">&quot;switch 要求が受理されなかった&quot;</span><span class="op">);</span></span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a><span class="co">/* seq は要求受理時に同期で確定します。完了 signal の seq 引数に同じ番号が</span></span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="co"> * 載るため、swap の前後で採った記録 (ページ位置など) を「当の swap」に</span></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a><span class="co"> * 鍵付けできます。連続 swap では時刻の近さでの突き合わせは当てになりません */</span></span></code></pre></div>
 <h3 id="result-の意味">result の意味</h3>
 <table>
 <thead>
@@ -774,74 +978,74 @@ NULL を許容してください (本ページの例はすべて NULL
 <hr />
 <h2 id="実用パターン-ブラウザ-ui-の更新">実用パターン: ブラウザ UI
 の更新</h2>
-<div class="sourceCode" id="cb12"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
-<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>window<span class="op">;</span></span>
-<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>url_entry<span class="op">;</span></span>
-<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>spinner<span class="op">;</span></span>
-<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a>    guint      spinner_timeout<span class="op">;</span></span>
-<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BrowserUI<span class="op">;</span></span>
-<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean stop_spinner_fallback<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> data<span class="op">;</span></span>
-<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>spinner<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>    ui<span class="op">-&gt;</span>spinner_timeout <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G_SOURCE_REMOVE<span class="op">;</span></span>
-<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> BlinkLoadEvent ev<span class="op">,</span></span>
-<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> user_data<span class="op">;</span></span>
-<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>ev <span class="op">==</span> BLINK_LOAD_STARTED<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>spinner<span class="op">,</span> TRUE<span class="op">);</span></span>
-<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">/* 無音ケース (ダウンロード化・204) の保険 */</span></span>
-<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>ui<span class="op">-&gt;</span>spinner_timeout<span class="op">)</span></span>
-<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>            g_source_remove<span class="op">(</span>ui<span class="op">-&gt;</span>spinner_timeout<span class="op">);</span></span>
-<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        ui<span class="op">-&gt;</span>spinner_timeout <span class="op">=</span></span>
-<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>            g_timeout_add_seconds<span class="op">(</span><span class="dv">30</span><span class="op">,</span> stop_spinner_fallback<span class="op">,</span> ui<span class="op">);</span></span>
-<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>ev <span class="op">==</span> BLINK_LOAD_FINISHED<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>spinner<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>ui<span class="op">-&gt;</span>spinner_timeout<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>            g_source_remove<span class="op">(</span>ui<span class="op">-&gt;</span>spinner_timeout<span class="op">);</span></span>
-<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>            ui<span class="op">-&gt;</span>spinner_timeout <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
-<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">int</span> error_code<span class="op">,</span></span>
-<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>                           <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>failing_uri<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> user_data<span class="op">;</span></span>
-<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>spinner<span class="op">,</span> FALSE<span class="op">);</span></span>
-<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>error_code <span class="op">==</span> <span class="op">-</span><span class="dv">3</span><span class="op">)</span></span>
-<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span><span class="op">;</span>   <span class="co">/* ERR_ABORTED は正常操作の副産物 */</span></span>
-<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a>    g_message<span class="op">(</span><span class="st">&quot;load failed: </span><span class="sc">%d</span><span class="st"> </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">,</span></span>
-<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a>              failing_uri <span class="op">?</span> failing_uri <span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">);</span></span>
-<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_uri_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> user_data<span class="op">;</span></span>
-<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri <span class="op">=</span> blink_web_view_get_uri<span class="op">(</span>view<span class="op">);</span></span>
-<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a>    gtk_editable_set_text<span class="op">(</span>GTK_EDITABLE<span class="op">(</span>ui<span class="op">-&gt;</span>url_entry<span class="op">),</span> uri <span class="op">?</span> uri <span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">);</span></span>
-<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> user_data<span class="op">;</span></span>
-<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>title <span class="op">=</span> blink_web_view_get_title<span class="op">(</span>view<span class="op">);</span></span>
-<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>t <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> - MyBrowser&quot;</span><span class="op">,</span></span>
-<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>                              <span class="op">(</span>title <span class="op">&amp;&amp;</span> <span class="op">*</span>title<span class="op">)</span> <span class="op">?</span> title <span class="op">:</span> <span class="st">&quot;(untitled)&quot;</span><span class="op">);</span></span>
-<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>ui<span class="op">-&gt;</span>window<span class="op">),</span> t<span class="op">);</span></span>
-<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>t<span class="op">);</span></span>
-<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> setup_signals<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> BrowserUI <span class="op">*</span>ui<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> ui<span class="op">);</span></span>
-<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;load-failed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load_failed<span class="op">),</span> ui<span class="op">);</span></span>
-<span id="cb12-66"><a href="#cb12-66" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> ui<span class="op">);</span></span>
-<span id="cb12-67"><a href="#cb12-67" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> ui<span class="op">);</span></span>
-<span id="cb12-68"><a href="#cb12-68" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">struct</span> <span class="op">{</span></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>window<span class="op">;</span></span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>url_entry<span class="op">;</span></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>spinner<span class="op">;</span></span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>    guint      spinner_timeout<span class="op">;</span></span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BrowserUI<span class="op">;</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean stop_spinner_fallback<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> data<span class="op">;</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>spinner<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    ui<span class="op">-&gt;</span>spinner_timeout <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G_SOURCE_REMOVE<span class="op">;</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> BlinkLoadEvent ev<span class="op">,</span></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> user_data<span class="op">;</span></span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>ev <span class="op">==</span> BLINK_LOAD_STARTED<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>spinner<span class="op">,</span> TRUE<span class="op">);</span></span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">/* 無音ケース (ダウンロード化・204) の保険 */</span></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>ui<span class="op">-&gt;</span>spinner_timeout<span class="op">)</span></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>            g_source_remove<span class="op">(</span>ui<span class="op">-&gt;</span>spinner_timeout<span class="op">);</span></span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>        ui<span class="op">-&gt;</span>spinner_timeout <span class="op">=</span></span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>            g_timeout_add_seconds<span class="op">(</span><span class="dv">30</span><span class="op">,</span> stop_spinner_fallback<span class="op">,</span> ui<span class="op">);</span></span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span> <span class="cf">else</span> <span class="cf">if</span> <span class="op">(</span>ev <span class="op">==</span> BLINK_LOAD_FINISHED<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>        gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>spinner<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>ui<span class="op">-&gt;</span>spinner_timeout<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a>            g_source_remove<span class="op">(</span>ui<span class="op">-&gt;</span>spinner_timeout<span class="op">);</span></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a>            ui<span class="op">-&gt;</span>spinner_timeout <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>                           <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>failing_uri<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> user_data<span class="op">;</span></span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>    gtk_widget_set_visible<span class="op">(</span>ui<span class="op">-&gt;</span>spinner<span class="op">,</span> FALSE<span class="op">);</span></span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>error_code <span class="op">==</span> <span class="op">-</span><span class="dv">3</span><span class="op">)</span></span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span><span class="op">;</span>   <span class="co">/* ERR_ABORTED は正常操作の副産物 */</span></span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>    g_message<span class="op">(</span><span class="st">&quot;load failed: </span><span class="sc">%d</span><span class="st"> </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">,</span></span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>              failing_uri <span class="op">?</span> failing_uri <span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">);</span></span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_uri_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> user_data<span class="op">;</span></span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri <span class="op">=</span> blink_web_view_get_uri<span class="op">(</span>view<span class="op">);</span></span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a>    gtk_editable_set_text<span class="op">(</span>GTK_EDITABLE<span class="op">(</span>ui<span class="op">-&gt;</span>url_entry<span class="op">),</span> uri <span class="op">?</span> uri <span class="op">:</span> <span class="st">&quot;&quot;</span><span class="op">);</span></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>    BrowserUI <span class="op">*</span>ui <span class="op">=</span> user_data<span class="op">;</span></span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a>    <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>title <span class="op">=</span> blink_web_view_get_title<span class="op">(</span>view<span class="op">);</span></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>    <span class="dt">char</span> <span class="op">*</span>t <span class="op">=</span> g_strdup_printf<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st"> - MyBrowser&quot;</span><span class="op">,</span></span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>                              <span class="op">(</span>title <span class="op">&amp;&amp;</span> <span class="op">*</span>title<span class="op">)</span> <span class="op">?</span> title <span class="op">:</span> <span class="st">&quot;(untitled)&quot;</span><span class="op">);</span></span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>ui<span class="op">-&gt;</span>window<span class="op">),</span> t<span class="op">);</span></span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>t<span class="op">);</span></span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> setup_signals<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> BrowserUI <span class="op">*</span>ui<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;load-failed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load_failed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;uri-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_uri_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;title-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_title_changed<span class="op">),</span> ui<span class="op">);</span></span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <hr />
 <h2 id="webkitgtk-からの移行">WebKitGTK からの移行</h2>
 <table>

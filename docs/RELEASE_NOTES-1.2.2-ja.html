@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.2-build5 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.2-build6 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-09-14 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-09-19 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.2-build5 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-09-14 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.2-build6 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-09-19 / Chromium: 153.0.8010.36 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,13 +107,67 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-122-build5-リリースノート">BlinkGTK 1.2.2-build5
+<h1 id="blinkgtk-122-build6-リリースノート">BlinkGTK 1.2.2-build6
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-09-14 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-09-19 / <strong>Chromium</strong>:
 153.0.8010.36 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.2-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 153</strong>
 に更新しました。</p>
+<hr />
+<h2 id="build6-でできるようになったこと">build6
+でできるようになったこと</h2>
+<h3 id="view-ごとに-profile-と-cache-を分けられます">view ごとに profile
+と cache を分けられます</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>a <span class="op">=</span> blink_web_view_new_with_profile<span class="op">(</span><span class="st">&quot;tab1&quot;</span><span class="op">);</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>b <span class="op">=</span> blink_web_view_new_with_profile<span class="op">(</span><span class="st">&quot;tab2&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>これまでは 1 プロセスの全 WebView が profile と cache
+を共有していました。同じ URL を<br />
+複数の view で開くと、2
+つ目以降はキャッシュに当たるため、<strong>実際の読み込みは 1
+回しか<br />
+起きません</strong>。view
+を増やしたときのコストを測る用途では、そのままでは測れませんでした。</p>
+<ul>
+<li>同じ名前なら同じ profile、違う名前なら別々になります</li>
+<li>名前に使えるのは英数字と <code>-</code> <code>_</code> のみです</li>
+<li>分かれるもの: HTTP キャッシュ / cookie / localStorage /
+IndexedDB</li>
+<li>名前付き profile は <strong>HTTP キャッシュを
+<code>profiles/&lt;name&gt;/Cache</code> に置きます</strong>。<br />
+既定の view (<code>blink_web_view_new()</code>)
+はこれまでどおりメモリ上です</li>
+<li><strong>キャッシュは終了後も残ります。</strong>
+毎回まっさらから始めたい場合は、profile<br />
+ディレクトリを消してから起動してください</li>
+<li><code>blink_gtk_get_profile_path()</code> が返す値は変わりません
+(プロセスの profile)</li>
+</ul>
+<h3 id="許可の種別を見分けられます">許可の種別を見分けられます</h3>
+<p><code>permission-request</code> シグナルの種別名が 13 種から
+<strong>40 種</strong>になりました。これまで<br />
+<code>"unknown"</code> で届いていた 27
+種に名前が付き、アプリが何の許可かを見て判断できます。</p>
+<p>読書アプリが実際に使うものが含まれます —
+<code>screen-wake-lock</code> (読書中に画面を消させない)<br />
+/ <code>local-fonts</code> / <code>persistent-storage</code> /
+<code>automatic-fullscreen</code> / <code>pointer-lock</code>。</p>
+<h2 id="build6-で直したこと">build6 で直したこと</h2>
+<ul>
+<li>終了中に呼ばれる観測コールバック 2 つで、破棄済みの WebContents
+を参照して<br />
+落ちることがありました</li>
+<li>分綴辞書の探索を起動時 1 回にしました。UI スレッドで同期 I/O
+を行っており、<br />
+診断を有効にしたビルドで落ちていました</li>
+<li>配布ヘッダの Windows
+判定が、外部のプロジェクトで使うと誤った分岐へ落ちる形に<br />
+なっていました</li>
+<li><code>execute_javascript</code> の結果が <code>NULL</code>
+になりうるとヘッダに書いていましたが、<br />
+実装は渡したことがありません。空文字列または <code>"null"</code> の 4
+文字です</li>
+</ul>
 <hr />
 <h2 id="build5-でできるようになったこと">build5
 でできるようになったこと</h2>
@@ -123,8 +177,8 @@ href="RELEASE_NOTES-1.2.2-en.html">English</a></p>
 <code>blink_gtk_init()</code>
 の<strong>前</strong>に呼ぶと、その経路で<br />
 起動します。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* init より前 */</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* init より前 */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
 <p><code>blink_web_view_get_gpu_mode()</code>
 は初期化の後、<strong>実際に動いている経路</strong>を返します。<br />
 起動完了のログにも「描画経路=<mode>」が出るので、指定が効いたかを確かめられます。</p>
@@ -316,7 +370,7 @@ id="版を実行時に尋ねられるようになりました">版を実行時�
 に応じます。不具合を報告する際は、この 1 行を貼れば<br />
 版が一意に決まります。</p>
 <pre><code>$ blinkgtk_browser --version
-BlinkGTK 1.2.2-build5 (Chromium 153.0.8010.36)</code></pre>
+BlinkGTK 1.2.2-build6 (Chromium 153.0.8010.36)</code></pre>
 <p><code>--help</code> で使い方と、開く URL の指定方法を表示します。</p>
 <h3 id="併せて">併せて</h3>
 <p>Chromium 153 では、ほかに <code>EventTimingMatchingHTML</code>

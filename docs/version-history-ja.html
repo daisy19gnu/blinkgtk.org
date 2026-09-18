@@ -45,7 +45,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.2-build5 / 言語: 日本語 | <a
+<p>バージョン: 1.2.2-build6 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -71,9 +71,18 @@ href="version-history-en.html">English</a></p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.2-build5</strong> ← 公開中</td>
-<td>2026-09-14</td>
+<td><strong>v1.2.2-build6</strong> ← 公開中</td>
+<td>2026-09-19</td>
 <td><strong>153.0.8010.36</strong></td>
+<td>view ごとに profile と cache を分けられるようにした
+(blink_web_view_new_with_profile)。複数の WebView
+で同じページを開いたとき、2
+つ目以降がキャッシュに当たって実際の読み込みが起きない問題を避けられる</td>
+</tr>
+<tr>
+<td>v1.2.2-build5</td>
+<td>2026-09-14</td>
+<td>153.0.8010.36</td>
 <td>描画経路を API から選べるようになりました。blink_gtk_set_gpu_mode()
 を blink_gtk_init() の前に呼ぶと、その経路で起動します。これまで
 blink_web_view_new_with_gpu_mode() で EGL
