@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-09-19T00:00:00Z</updated>
+  <updated>2026-09-20T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.4 以降は Fedora 45 以上が対象になります</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist"/>
+    <id>tag:blinkgtk.org,2026:2026-09-20-fedora44-sunset:ja</id>
+    <updated>2026-09-20T00:00:00Z</updated>
+    <category term="notice"/>
+    <summary>v1.2.4 (Chromium 155、上流の stable 予定は 2026-10-06) から、配布するパッケージの対象を Fedora 45 以上にします。Fedora 44 向けの提供は v1.2.3 (Chromium 154) までです。理由はビルド環境を Fedora 45 へ移すためです。BlinkGTK のパッケージは、ビルドした機械の C ライブラリ (glibc) を直接参照します。glibc の互換は一方通行で、新しい版で作ったものは古い版では読み込めません。Fedora 45 の glibc は 2.44、Fedora 44 は 2.43 なので、Fedora 45 でビルドしたパッケージは Fedora 44 に入りません。Fedora 44 をお使いの場合、v1.2.3 は引き続き取得できます。取り下げません。Fedora 45 へ上げると、v1.2.4 以降を dnf でそのまま受け取れます。リポジトリの設定を変える必要はありません。v1.2.3 までのパッケージは Fedora 45 でも動きます。Fedora 45 (glibc 2.44 / GTK4 4.23.4) に実際に入れて読み込めることを確かめています。Fedora 44 自体の提供終了は 2027-06-02 で、当プロジェクトの対応はそれより早く終わります。</summary>
+  </entry>
   <entry>
     <title>v1.2.2-build6 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build6"/>

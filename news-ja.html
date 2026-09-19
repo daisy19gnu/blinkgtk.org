@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist">v1.2.4 以降は Fedora 45 以上が対象になります</a></h2>
+<p><small>2026-09-20 · お知らせ</small></p>
+<p>v1.2.4 (Chromium 155、上流の stable 予定は 2026-10-06) から、配布するパッケージの対象を Fedora 45 以上にします。Fedora 44 向けの提供は v1.2.3 (Chromium 154) までです。理由はビルド環境を Fedora 45 へ移すためです。BlinkGTK のパッケージは、ビルドした機械の C ライブラリ (glibc) を直接参照します。glibc の互換は一方通行で、新しい版で作ったものは古い版では読み込めません。Fedora 45 の glibc は 2.44、Fedora 44 は 2.43 なので、Fedora 45 でビルドしたパッケージは Fedora 44 に入りません。Fedora 44 をお使いの場合、v1.2.3 は引き続き取得できます。取り下げません。Fedora 45 へ上げると、v1.2.4 以降を dnf でそのまま受け取れます。リポジトリの設定を変える必要はありません。v1.2.3 までのパッケージは Fedora 45 でも動きます。Fedora 45 (glibc 2.44 / GTK4 4.23.4) に実際に入れて読み込めることを確かめています。Fedora 44 自体の提供終了は 2027-06-02 で、当プロジェクトの対応はそれより早く終わります。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build6">v1.2.2-build6 を公開しました</a></h2>
 <p><small>2026-09-19 · リリース</small></p>
 <p>view ごとに profile と cache を分けられるようになりました。これまでは 1 プロセスの全 WebView が profile と cache を共有していたため、同じ URL を複数の view で開くと 2 つ目以降はキャッシュに当たり、実際の読み込みは 1 回しか起きませんでした。blink_web_view_new_with_profile(&quot;tab1&quot;) のように名前を渡すと、その view は HTTP キャッシュ・cookie・localStorage・IndexedDB を専有します。名前に使えるのは英数字と - _ のみで、同じ名前なら同じ profile です。名前付き profile はキャッシュを profiles/名前/Cache に置くため終了後も残ります。既定の blink_web_view_new() の動きは変わりません。あわせて permission-request シグナルの種別名が 13 種から 40 種になり、これまで unknown で届いていた 27 種 (screen-wake-lock、local-fonts、persistent-storage、automatic-fullscreen、pointer-lock など) を見分けられます。</p>

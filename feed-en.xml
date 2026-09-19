@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-09-19T00:00:00Z</updated>
+  <updated>2026-09-20T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>From v1.2.4, packages will target Fedora 45 or newer</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist"/>
+    <id>tag:blinkgtk.org,2026:2026-09-20-fedora44-sunset:en</id>
+    <updated>2026-09-20T00:00:00Z</updated>
+    <category term="notice"/>
+    <summary>From v1.2.4 (Chromium 155, upstream stable expected 2026-10-06), the packages we distribute will target Fedora 45 or newer. Fedora 44 will be served up to v1.2.3 (Chromium 154). The reason is that our build machine moves to Fedora 45. BlinkGTK packages link directly against the C library (glibc) of the machine that built them, and glibc compatibility runs one way: what is built on a newer version cannot be loaded on an older one. Fedora 45 ships glibc 2.44 and Fedora 44 ships 2.43, so a package built on Fedora 45 will not install on Fedora 44. If you are on Fedora 44, v1.2.3 stays available and will not be withdrawn. Upgrading to Fedora 45 lets you receive v1.2.4 and later through dnf as usual, with no change to the repository configuration. Packages up to v1.2.3 also run on Fedora 45; we verified this by installing and loading them there (Fedora 45, glibc 2.44, GTK4 4.23.4). Fedora 44 itself is supported until 2027-06-02, so our support ends earlier than that.</summary>
+  </entry>
   <entry>
     <title>v1.2.2-build6 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build6"/>
