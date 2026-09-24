@@ -205,7 +205,8 @@ devel)</h2>
 <td>run apps</td>
 <td><code>/usr/lib64/libblinkgtk-0.1.so.0</code> (public ABI) +
 <code>/usr/lib64/blinkgtk-0.1/</code> (Chromium, private) +
-<code>/usr/libexec/blinkgtk-0.1/</code> (simple_browser) +
+<code>/usr/libexec/blinkgtk-0.1/</code> (sample
+<code>blinkgtk_browser</code>) +
 <code>THIRD_PARTY_NOTICES.html</code></td>
 </tr>
 <tr>
@@ -306,8 +307,8 @@ which adds the private directory to the loader search path.</p>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ldconfig <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> libblinkgtk-0.1</span>
 <span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>    <span class="ex">libblinkgtk-0.1.so.0</span> <span class="er">(</span><span class="ex">libc6,x86-64</span><span class="kw">)</span> <span class="ex">=</span><span class="op">&gt;</span> /usr/lib64/libblinkgtk-0.1.so.0</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># demo browser (in a Wayland session)</span></span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> /usr/libexec/blinkgtk-0.1/simple_browser</span></code></pre></div>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># sample browser (in a Wayland session)</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> /usr/libexec/blinkgtk-0.1/blinkgtk_browser</span></code></pre></div>
 <h3 id="devel-pkg-config">devel (pkg-config)</h3>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--modversion</span> blinkgtk-0.1</span>
