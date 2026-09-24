@@ -434,7 +434,7 @@ int main(int argc, char **argv)
   var withdrawn = 137;   // 取り下げ済み build の実績 (公開 API からは見えない)
   var baseline  = 1097;       // 公開時点の総計
   var show = function (n) {
-    el.textContent = 'ダウンロード数 / Downloads: ' + n.toLocaleString('en-US');
+    el.textContent = 'Linux 版のダウンロード数 / Linux downloads: ' + n.toLocaleString('en-US');
     el.hidden = false;
   };
   show(baseline);
@@ -454,12 +454,12 @@ int main(int argc, char **argv)
     .catch(function () { /* 焼き込んだ baseline のまま表示を維持 */ });
 })();
 (function () {
-  // BlinkGTK for Windows の ZIP。Linux とは合算しない。0 件のうちは出さない。
+  // BlinkGTK for Windows の ZIP。Linux とは合算しない。
+  // 0 件でも出す (2026-09-24 Lead 指摘): 出さないと Linux の欄しか見えず、分けて数えていることが読めない
   var el = document.getElementById('dl-count-win');
   if (!el) return;
   var baseline = 0;
   var show = function (n) {
-    if (n <= 0) return;
     el.textContent = 'Windows 版のダウンロード数 / Windows downloads: ' + n.toLocaleString('en-US');
     el.hidden = false;
   };
