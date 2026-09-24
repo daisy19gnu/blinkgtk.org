@@ -160,9 +160,14 @@ SwiftShader)</td>
 </tbody>
 </table>
 <h3 id="on-screen-rendering">On-screen rendering</h3>
-<p><strong>In the current release (BlinkGTK 1.2.2 / Chromium 153) all
-three modes display<br />
-Blink's rendering output in the GTK window.</strong></p>
+<p><strong>In the current release (BlinkGTK 1.2.3 / Chromium 154), the
+software and EGL modes<br />
+display Blink's rendering output in the GTK window.</strong> The
+swiftshader mode has a<br />
+<strong>known problem: nothing appears on screen</strong> (issue #151;
+the capture API also fails<br />
+because no frame arrives). The cause is under investigation. Use
+software or EGL for now.</p>
 <p><strong>On machines without a usable GPU, asking for EGL falls back
 to software<br />
 automatically</strong> (since v1.2.1-build2). It switches when no frame

@@ -254,9 +254,12 @@ search and zoom</a></td>
 </tr>
 <tr>
 <td>Change the default font size / encoding</td>
-<td><code>blink_web_view_set_default_font_size()</code> /
-<code>blink_web_view_set_default_encoding()</code></td>
-<td><a href="./settings-api-en.html">Settings API</a></td>
+<td><code>blink_web_view_set_default_font_size()</code> (1.2.3 and
+later) / <code>blink_web_view_set_default_encoding()</code> (<strong>not
+applied yet</strong>)</td>
+<td><a
+href="./settings-api-en.html#limitation-up-to-122-and-what-123-changes">Settings
+API</a></td>
 </tr>
 <tr>
 <td>Respond to Fullscreen API requests</td>
@@ -287,7 +290,8 @@ handlers API</a></td>
 <tr>
 <td>Disable / enable JavaScript</td>
 <td><code>blink_web_view_set_javascript_enabled()</code> /
-<code>blink_web_view_get_javascript_enabled()</code></td>
+<code>blink_web_view_get_javascript_enabled()</code> (applied from
+1.2.3)</td>
 <td><a
 href="./settings-api-en.html#blink_web_view_set_javascript_enabled">Settings
 API</a></td>
@@ -295,7 +299,8 @@ API</a></td>
 <tr>
 <td>Stop / resume loading images</td>
 <td><code>blink_web_view_set_images_enabled()</code> /
-<code>blink_web_view_get_images_enabled()</code></td>
+<code>blink_web_view_get_images_enabled()</code> (applied from
+1.2.3)</td>
 <td><a
 href="./settings-api-en.html#blink_web_view_set_images_enabled">Settings
 API</a></td>
@@ -303,7 +308,8 @@ API</a></td>
 <tr>
 <td>Disable / enable localStorage</td>
 <td><code>blink_web_view_set_local_storage_enabled()</code> /
-<code>blink_web_view_get_local_storage_enabled()</code></td>
+<code>blink_web_view_get_local_storage_enabled()</code> (applied from
+1.2.3)</td>
 <td><a
 href="./settings-api-en.html#blink_web_view_set_local_storage_enabled">Settings
 API</a></td>
@@ -394,7 +400,9 @@ handlers API</a></td>
 <tbody>
 <tr>
 <td>Print the page to PDF</td>
-<td><code>blink_web_view_print_to_pdf()</code></td>
+<td><strong>Not implemented</strong> —
+<code>blink_web_view_print_to_pdf()</code> currently reports success
+without writing a PDF (planned)</td>
 <td><a href="./c-api-reference-en.html">C API</a></td>
 </tr>
 <tr>
@@ -449,6 +457,12 @@ API</a></td>
 <td>Inject mouse input for testing</td>
 <td><code>blink_web_view_inject_test_input()</code></td>
 <td><a href="./c-api-reference-en.html#blink_web_view_inject_test_input">C
+API</a></td>
+</tr>
+<tr>
+<td>Put trace markers at both ends of the part to measure</td>
+<td><code>blink_gtk_trace_mark()</code> (since v1.2.3)</td>
+<td><a href="./c-api-reference-en.html#blink_gtk_trace_mark">C
 API</a></td>
 </tr>
 </tbody>

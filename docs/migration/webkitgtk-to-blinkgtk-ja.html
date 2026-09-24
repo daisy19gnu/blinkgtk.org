@@ -130,8 +130,13 @@
 手書きリンクだと必要なライブラリの直接リンクが漏れ、起動直後に落ちます</li>
 <li><strong>Chromium ランタイムリソースの配置</strong> —
 <code>icudtl.dat</code> や <code>locales/</code> などが<br />
-実行時に必要です。パッケージ同梱のラッパー
-<code>run-with-resources</code> を使うか、<br />
+実行時に必要です。既定では<strong>実行ファイルの隣</strong>を見ます。1.2.3
+以降は、そこに<br />
+無ければ <code>libblinkgtk</code> の置き場所からも探します
+(<code>&lt;libdir&gt;/blinkgtk-0.1/chromium/</code><br />
+→ <code>&lt;libdir&gt;/chromium/</code> の順)。これら以外に置く場合や
+1.2.2 以前では、<br />
+<code>blink_gtk_init()</code> より前に
 <code>blink_gtk_set_resources_path()</code> で場所を指定します</li>
 </ol>
 <p>いずれも <a href="../building-with-blinkgtk-ja.html">アプリのビルド</a>
@@ -450,12 +455,14 @@ API</a></p>
 <tr>
 <td><code>WebKitDownload</code> (<code>decide-policy</code> 等)</td>
 <td><code>blink_web_view_set_download_handler()</code></td>
-<td></td>
+<td><strong>未配線</strong> — 登録できるが呼ばれない (<a
+href="../api-reference/ui-handlers-api-ja.html">現状</a>。対応予定)</td>
 </tr>
 <tr>
 <td><code>authenticate</code> シグナル</td>
 <td><code>blink_web_view_set_auth_handler()</code></td>
-<td>応答は <code>auth_response()</code></td>
+<td><strong>未配線</strong> — 登録できるが呼ばれない (<a
+href="../api-reference/ui-handlers-api-ja.html">現状</a>。対応予定)</td>
 </tr>
 <tr>
 <td>TLS エラーポリシー</td>
@@ -494,8 +501,9 @@ API</a></p>
 </tr>
 <tr>
 <td><code>WebKitPrintOperation</code></td>
-<td><code>blink_web_view_print_to_pdf()</code></td>
-<td>PDF 出力のみ (印刷ダイアログは無い)</td>
+<td>(未実装)</td>
+<td><code>blink_web_view_print_to_pdf()</code> は現在 PDF
+を作らない。印刷ダイアログも無い。対応予定</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_get_snapshot()</code></td>
@@ -554,8 +562,9 @@ BlinkGTK に (まだ) 無いもの</h2>
 <li><strong>WebKitWebContext / WebKitNetworkSession
 相当の直接操作</strong> — プロキシ設定、<br />
 キャッシュ制御、独自のデータディレクトリ指定など</li>
-<li><strong>印刷ダイアログ</strong> —
-<code>blink_web_view_print_to_pdf()</code> による PDF 出力のみ</li>
+<li><strong>印刷と PDF 出力</strong> —
+印刷ダイアログは無く、<code>blink_web_view_print_to_pdf()</code>
+も現在は PDF を作らない (対応予定)</li>
 <li><strong>編集コマンド</strong>
 (<code>webkit_web_view_execute_editing_command()</code> 相当)</li>
 </ul>

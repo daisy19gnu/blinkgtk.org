@@ -160,9 +160,14 @@ GL（ANGLE→Vulkan→SwiftShader）</td>
 </tbody>
 </table>
 <h3 id="画面描画について">画面描画について</h3>
-<p><strong>現行 (BlinkGTK 1.2.2 / Chromium 153) では、3 モードとも GTK
-ウィンドウに<br />
-Blink のレンダリング結果が表示されます。</strong></p>
+<p><strong>現行 (BlinkGTK 1.2.3 / Chromium 154) では、software と EGL の
+2 モードで<br />
+GTK ウィンドウに Blink のレンダリング結果が表示されます。</strong>
+swiftshader モードは<br />
+<strong>画面に何も出ない既知の問題があります</strong> (issue #151。撮影
+API もフレームが来ずに<br />
+失敗します)。原因は調査中です。当面は software か EGL
+を使ってください。</p>
 <p><strong>GPU が使えない機械では、EGL を指定しても自動で software
 へ退避します</strong><br />
 (v1.2.1-build2 以降)。描画データが 5

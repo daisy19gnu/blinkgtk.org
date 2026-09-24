@@ -164,6 +164,32 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td>毎フレームの診断も出します (既定は抑止)</td>
 </tr>
 <tr>
+<td><code>BLINKGTK_IM_MODULE</code></td>
+<td><code>gtk</code> / GTK の入力モジュール id</td>
+<td>未設定</td>
+<td><strong>v1.2.3 から。</strong> 入力メソッドの選び方。未設定 (または
+<code>gtk</code>) なら BlinkGTK は何も名指しせず、GTK に決めさせます
+(Wayland では text-input 経路)。その他の値 (<code>ibus</code> など)
+はその id を BlinkGTK のビューに名指しします。<strong>1.2.2
+と同じ動作にするには <code>ibus</code> を指定します。</strong>
+設定した値は <code>blink_gtk_get_im_module()</code>
+で問い合わせられます</td>
+</tr>
+<tr>
+<td><code>GTK_IM_MODULE</code></td>
+<td>GTK の入力モジュール id</td>
+<td>—</td>
+<td>v1.2.3 以降、<code>BLINKGTK_IM_MODULE</code> が未設定なら
+<strong>BlinkGTK の WebView にも効きます</strong> (GTK
+の通常の選び方に従うため)。<code>BLINKGTK_IM_MODULE</code> で id
+を名指しした場合は、GTK4 の
+<code>gtk_im_multicontext_set_context_id()</code>
+がこの変数より優先されるので、WebView には効きません。1.2.2 までは
+BlinkGTK が常に <code>ibus</code> を名指しし、<code>XMODIFIERS</code>
+から判別して<strong>プロセス全体の</strong>この変数を書き換えていました。1.2.3
+からは書き換えません</td>
+</tr>
+<tr>
 <td><code>BLINKGTK_A11Y</code></td>
 <td><code>1</code></td>
 <td>未設定</td>

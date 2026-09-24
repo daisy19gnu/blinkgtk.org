@@ -246,9 +246,12 @@ href="./page-search-zoom-ja.html#blink_web_view_find_in_page">ページ内検索
 </tr>
 <tr>
 <td>既定のフォントサイズ・エンコーディングを変える</td>
-<td><code>blink_web_view_set_default_font_size()</code> /
-<code>blink_web_view_set_default_encoding()</code></td>
-<td><a href="./settings-api-ja.html">Settings API</a></td>
+<td><code>blink_web_view_set_default_font_size()</code> (1.2.3 以降) /
+<code>blink_web_view_set_default_encoding()</code>
+(<strong>まだ反映されない</strong>)</td>
+<td><a
+href="./settings-api-ja.html#setter-の反映-122-までと-123-以降">Settings
+API</a></td>
 </tr>
 <tr>
 <td>全画面 (Fullscreen API) 要求に応答する</td>
@@ -279,7 +282,8 @@ href="./ui-handlers-api-ja.html#blink_web_view_set_fullscreen_handler">UI
 <tr>
 <td>JavaScript を無効・有効にする</td>
 <td><code>blink_web_view_set_javascript_enabled()</code> /
-<code>blink_web_view_get_javascript_enabled()</code></td>
+<code>blink_web_view_get_javascript_enabled()</code> (1.2.3
+以降で反映)</td>
 <td><a
 href="./settings-api-ja.html#blink_web_view_set_javascript_enabled">Settings
 API</a></td>
@@ -287,7 +291,7 @@ API</a></td>
 <tr>
 <td>画像の読み込みを止める・戻す</td>
 <td><code>blink_web_view_set_images_enabled()</code> /
-<code>blink_web_view_get_images_enabled()</code></td>
+<code>blink_web_view_get_images_enabled()</code> (1.2.3 以降で反映)</td>
 <td><a
 href="./settings-api-ja.html#blink_web_view_set_images_enabled">Settings
 API</a></td>
@@ -295,7 +299,8 @@ API</a></td>
 <tr>
 <td>localStorage を無効・有効にする</td>
 <td><code>blink_web_view_set_local_storage_enabled()</code> /
-<code>blink_web_view_get_local_storage_enabled()</code></td>
+<code>blink_web_view_get_local_storage_enabled()</code> (1.2.3
+以降で反映)</td>
 <td><a
 href="./settings-api-ja.html#blink_web_view_set_local_storage_enabled">Settings
 API</a></td>
@@ -384,7 +389,8 @@ href="./ui-handlers-api-ja.html#blink_web_view_set_certificate_error_handler">UI
 <tbody>
 <tr>
 <td>ページを PDF にする</td>
-<td><code>blink_web_view_print_to_pdf()</code></td>
+<td><strong>未実装</strong> — <code>blink_web_view_print_to_pdf()</code>
+は現在 PDF を作らずに成功を返します (対応予定)</td>
 <td><a href="./c-api-reference-ja.html">C API</a></td>
 </tr>
 <tr>
@@ -439,6 +445,12 @@ API</a></td>
 <td>テスト用にマウス入力を注入する</td>
 <td><code>blink_web_view_inject_test_input()</code></td>
 <td><a href="./c-api-reference-ja.html#blink_web_view_inject_test_input">C
+API</a></td>
+</tr>
+<tr>
+<td>測りたい区間の両端にトレースの目印を打つ</td>
+<td><code>blink_gtk_trace_mark()</code> (v1.2.3 以降)</td>
+<td><a href="./c-api-reference-ja.html#blink_gtk_trace_mark">C
 API</a></td>
 </tr>
 </tbody>

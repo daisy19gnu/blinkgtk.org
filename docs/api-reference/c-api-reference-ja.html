@@ -700,35 +700,60 @@ Down/Up）を<br />
 <span id="cb42-6"><a href="#cb42-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G_SOURCE_REMOVE<span class="op">;</span></span>
 <span id="cb42-7"><a href="#cb42-7" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
 <span id="cb42-8"><a href="#cb42-8" aria-hidden="true" tabindex="-1"></a>g_timeout_add_seconds<span class="op">(</span><span class="dv">10</span><span class="op">,</span> test_input<span class="op">,</span> web_view<span class="op">);</span></span></code></pre></div>
+<h3 id="blink_gtk_trace_mark">blink_gtk_trace_mark()</h3>
+<div class="sourceCode" id="cb43"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_trace_mark<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">);</span></span></code></pre></div>
+<p><strong>v1.2.3 以降</strong> —
+トレースに目印を打ちます。「読み込み完了から静止まで」のように、<br />
+測りたい区間の両端で呼ぶと、トレースをその時刻で切れます。</p>
+<ul>
+<li>カテゴリは <code>blink.user_timing</code> (Web の
+<code>performance.mark()</code> と同じ場所) です。<br />
+捕まえるには起動時にカテゴリを足します</li>
+<li><strong>イベント名が <code>name</code> そのもの</strong>になり、引数
+<code>name</code> にも同じ名前が入ります。<br />
+トレースの設定で動的なイベント名を伏せている場合は、イベント名が固定の<br />
+<code>blink_gtk_trace_mark</code> になり、名前は引数 <code>name</code>
+にだけ入ります</li>
+<li>名前は複製されるので、呼び出し側で保持する必要はありません</li>
+<li>カテゴリを足していなければ何もしません。<code>blink_gtk_init()</code>
+より前に呼んでも<br />
+落ちませんが、記録されません</li>
+</ul>
+<p><strong>使用例</strong>:</p>
+<div class="sourceCode" id="cb44"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 起動: --trace-startup=toplevel,blink.user_timing</span></span>
+<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a><span class="co"> *       --trace-startup-format=json --trace-startup-file=/tmp/t.json */</span></span>
+<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;workload_ready&quot;</span><span class="op">);</span></span>
+<span id="cb44-4"><a href="#cb44-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* ... 測りたい区間 ... */</span></span>
+<span id="cb44-5"><a href="#cb44-5" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;idle_static_ready&quot;</span><span class="op">);</span></span></code></pre></div>
 <hr />
 <h2 id="シグナル">シグナル</h2>
 <p>BlinkWebView は GObject
 シグナルを使用して非同期イベントを通知します。<br />
 <code>g_signal_connect()</code> で接続してください。</p>
 <h3 id="load-changed-シグナル">"load-changed" シグナル</h3>
-<div class="sourceCode" id="cb43"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb43-1"><a href="#cb43-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb43-2"><a href="#cb43-2" aria-hidden="true" tabindex="-1"></a>                     BlinkLoadEvent load_event<span class="op">,</span></span>
-<span id="cb43-3"><a href="#cb43-3" aria-hidden="true" tabindex="-1"></a>                     gpointer user_data<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb45"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                     BlinkLoadEvent load_event<span class="op">,</span></span>
+<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                     gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p>ロード状態が変化したときに発火します。<code>load_event</code>
 で状態を判定できます。</p>
 <hr />
 <h3 id="title-changed-シグナル">"title-changed" シグナル</h3>
-<div class="sourceCode" id="cb44"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb44-1"><a href="#cb44-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_title_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb44-2"><a href="#cb44-2" aria-hidden="true" tabindex="-1"></a>                      <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
-<span id="cb44-3"><a href="#cb44-3" aria-hidden="true" tabindex="-1"></a>                      gpointer user_data<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb46"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_title_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                      <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> title<span class="op">,</span></span>
+<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>                      gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p>ページタイトルが変更されたときに発火します。</p>
 <hr />
 <h3 id="uri-changed-シグナル">"uri-changed" シグナル</h3>
-<div class="sourceCode" id="cb45"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb45-1"><a href="#cb45-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_uri_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb45-2"><a href="#cb45-2" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
-<span id="cb45-3"><a href="#cb45-3" aria-hidden="true" tabindex="-1"></a>                    gpointer user_data<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb47"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_uri_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                    gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p>URI が変更されたときに発火します。</p>
 <hr />
 <h3 id="load-failed-シグナル">"load-failed" シグナル</h3>
-<div class="sourceCode" id="cb46"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb46-1"><a href="#cb46-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_load_failed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb46-2"><a href="#cb46-2" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">int</span> error_code<span class="op">,</span></span>
-<span id="cb46-3"><a href="#cb46-3" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
-<span id="cb46-4"><a href="#cb46-4" aria-hidden="true" tabindex="-1"></a>                    gpointer user_data<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb48"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> on_load_failed<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb48-2"><a href="#cb48-2" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb48-3"><a href="#cb48-3" aria-hidden="true" tabindex="-1"></a>                    <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
+<span id="cb48-4"><a href="#cb48-4" aria-hidden="true" tabindex="-1"></a>                    gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p><strong>v1.1.0 以降</strong> --
 ページのロードが失敗したときに発火します。</p>
 <table>
@@ -763,18 +788,18 @@ Down/Up）を<br />
 </tbody>
 </table>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb47"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb47-1"><a href="#cb47-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span></span>
-<span id="cb47-2"><a href="#cb47-2" aria-hidden="true" tabindex="-1"></a>                           <span class="dt">int</span> error_code<span class="op">,</span></span>
-<span id="cb47-3"><a href="#cb47-3" aria-hidden="true" tabindex="-1"></a>                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
-<span id="cb47-4"><a href="#cb47-4" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb47-5"><a href="#cb47-5" aria-hidden="true" tabindex="-1"></a>    fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;Load failed: error=</span><span class="sc">%d</span><span class="st"> uri=</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">,</span> failing_uri<span class="op">);</span></span>
-<span id="cb47-6"><a href="#cb47-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb47-7"><a href="#cb47-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb47-8"><a href="#cb47-8" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-failed&quot;</span><span class="op">,</span></span>
-<span id="cb47-9"><a href="#cb47-9" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_failed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb49"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span></span>
+<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a>                           <span class="dt">int</span> error_code<span class="op">,</span></span>
+<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a>                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> failing_uri<span class="op">,</span></span>
+<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a>                           gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>    fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;Load failed: error=</span><span class="sc">%d</span><span class="st"> uri=</span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> error_code<span class="op">,</span> failing_uri<span class="op">);</span></span>
+<span id="cb49-6"><a href="#cb49-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb49-7"><a href="#cb49-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb49-8"><a href="#cb49-8" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-failed&quot;</span><span class="op">,</span></span>
+<span id="cb49-9"><a href="#cb49-9" aria-hidden="true" tabindex="-1"></a>                 G_CALLBACK<span class="op">(</span>on_load_failed<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
 <hr />
 <h3 id="blink_gtk_set_gpu_mode">blink_gtk_set_gpu_mode()</h3>
-<div class="sourceCode" id="cb48"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb48-1"><a href="#cb48-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_gpu_mode<span class="op">(</span>BlinkGpuMode mode<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb50"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_gtk_set_gpu_mode<span class="op">(</span>BlinkGpuMode mode<span class="op">);</span></span></code></pre></div>
 <p>描画経路を選びます。<strong><code>blink_gtk_init()</code>
 より前に呼んでください。</strong></p>
 <p>経路は <code>blink_gtk_init()</code> の中で確定します。GPU
@@ -784,11 +809,11 @@ dmabuf を作れるかどうか)
 初期化の後に呼んだ場合は警告を出すだけで、経路は変わりません。</p>
 <p>環境変数 <code>BLINKGTK_GPU_MODE</code>
 を起動前に設定するのと同じことです。</p>
-<div class="sourceCode" id="cb49"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb49-1"><a href="#cb49-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* init より前 */</span></span>
-<span id="cb49-2"><a href="#cb49-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
-<span id="cb49-3"><a href="#cb49-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb49-4"><a href="#cb49-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* 実際に効いている経路を読み返す */</span></span>
-<span id="cb49-5"><a href="#cb49-5" aria-hidden="true" tabindex="-1"></a>BlinkGpuMode m <span class="op">=</span> blink_web_view_get_gpu_mode<span class="op">(</span>view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb51"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* init より前 */</span></span>
+<span id="cb51-2"><a href="#cb51-2" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb51-3"><a href="#cb51-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb51-4"><a href="#cb51-4" aria-hidden="true" tabindex="-1"></a><span class="co">/* 実際に効いている経路を読み返す */</span></span>
+<span id="cb51-5"><a href="#cb51-5" aria-hidden="true" tabindex="-1"></a>BlinkGpuMode m <span class="op">=</span> blink_web_view_get_gpu_mode<span class="op">(</span>view<span class="op">);</span></span></code></pre></div>
 <p><strong><code>blink_web_view_new_with_gpu_mode()</code>
 は初期化の後に呼ぶことになるため、<br />
 経路の選択には使えません</strong> (v1.2.2-build4
@@ -797,7 +822,7 @@ dmabuf を作れるかどうか)
 <code>描画経路=&lt;mode&gt;</code> でも確かめられます。</p>
 <h2 id="profile-設定の置き場-api">profile (設定の置き場) API</h2>
 <h3 id="blink_gtk_get_profile_path">blink_gtk_get_profile_path()</h3>
-<div class="sourceCode" id="cb50"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_profile_path<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb52"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_profile_path<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
 <p>エンジンが<strong>実際に採用した</strong> profile の置き場を返します
 (絶対パス)。</p>
 <p>置き場は次の順で決まります。先に決まったものが採られます。</p>
@@ -833,7 +858,7 @@ dmabuf を作れるかどうか)
 「指定が効いたか」が分かりません。</p>
 <h3
 id="blink_gtk_get_profile_source">blink_gtk_get_profile_source()</h3>
-<div class="sourceCode" id="cb51"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb51-1"><a href="#cb51-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_profile_source<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb53"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_profile_source<span class="op">(</span><span class="dt">void</span><span class="op">);</span></span></code></pre></div>
 <p>置き場が<strong>何で決まったか</strong>を返します。</p>
 <table>
 <thead>
@@ -870,36 +895,36 @@ id="blink_gtk_get_profile_source">blink_gtk_get_profile_source()</h3>
 実際には既定を共有している状態です。指定した場所が作れない
 (権限が無い、<br />
 親ディレクトリが存在しない等) ときに起きます。</p>
-<div class="sourceCode" id="cb52"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb52-1"><a href="#cb52-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
-<span id="cb52-2"><a href="#cb52-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-3"><a href="#cb52-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path <span class="op">=</span> blink_gtk_get_profile_path<span class="op">();</span></span>
-<span id="cb52-4"><a href="#cb52-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> src  <span class="op">=</span> blink_gtk_get_profile_source<span class="op">();</span></span>
-<span id="cb52-5"><a href="#cb52-5" aria-hidden="true" tabindex="-1"></a>g_message<span class="op">(</span><span class="st">&quot;profile: </span><span class="sc">%s</span><span class="st"> (</span><span class="sc">%s</span><span class="st">)&quot;</span><span class="op">,</span> path<span class="op">,</span> src<span class="op">);</span></span>
-<span id="cb52-6"><a href="#cb52-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb52-7"><a href="#cb52-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>g_str_equal<span class="op">(</span>src<span class="op">,</span> <span class="st">&quot;default(fallback)&quot;</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb52-8"><a href="#cb52-8" aria-hidden="true" tabindex="-1"></a>    g_warning<span class="op">(</span><span class="st">&quot;指定した置き場を使えませんでした。既定を共有しています&quot;</span><span class="op">);</span></span>
-<span id="cb52-9"><a href="#cb52-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb54"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span> <span class="op">}</span></span>
+<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path <span class="op">=</span> blink_gtk_get_profile_path<span class="op">();</span></span>
+<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> src  <span class="op">=</span> blink_gtk_get_profile_source<span class="op">();</span></span>
+<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>g_message<span class="op">(</span><span class="st">&quot;profile: </span><span class="sc">%s</span><span class="st"> (</span><span class="sc">%s</span><span class="st">)&quot;</span><span class="op">,</span> path<span class="op">,</span> src<span class="op">);</span></span>
+<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="op">(</span>g_str_equal<span class="op">(</span>src<span class="op">,</span> <span class="st">&quot;default(fallback)&quot;</span><span class="op">))</span> <span class="op">{</span></span>
+<span id="cb54-8"><a href="#cb54-8" aria-hidden="true" tabindex="-1"></a>    g_warning<span class="op">(</span><span class="st">&quot;指定した置き場を使えませんでした。既定を共有しています&quot;</span><span class="op">);</span></span>
+<span id="cb54-9"><a href="#cb54-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <h2 id="cookie-api">Cookie API</h2>
 <p>配布ヘッダ <code>blink_gtk.h</code> に実在する 3 関数（2026-07-28
 時点で機械照合済）。</p>
 <h3 id="blink_web_view_get_cookies">blink_web_view_get_cookies()</h3>
-<div class="sourceCode" id="cb53"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb53-1"><a href="#cb53-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkCookieCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> cookies<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
-<span id="cb53-2"><a href="#cb53-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb53-3"><a href="#cb53-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_get_cookies<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb53-4"><a href="#cb53-4" aria-hidden="true" tabindex="-1"></a>                                <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
-<span id="cb53-5"><a href="#cb53-5" aria-hidden="true" tabindex="-1"></a>                                BlinkCookieCallback callback<span class="op">,</span></span>
-<span id="cb53-6"><a href="#cb53-6" aria-hidden="true" tabindex="-1"></a>                                gpointer user_data<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb55"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkCookieCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> cookies<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
+<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_get_cookies<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a>                                <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
+<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>                                BlinkCookieCallback callback<span class="op">,</span></span>
+<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>                                gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p>指定 URL の Cookie を非同期で取得します。<code>callback</code> には
 <code>"a=1; b=2"</code> 形式の<br />
 文字列が渡されます。</p>
 <h3 id="blink_web_view_set_cookie">blink_web_view_set_cookie()</h3>
-<div class="sourceCode" id="cb54"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb54-1"><a href="#cb54-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkSetCookieCallback<span class="op">)(</span>gboolean success<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
-<span id="cb54-2"><a href="#cb54-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb54-3"><a href="#cb54-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_cookie<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb54-4"><a href="#cb54-4" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
-<span id="cb54-5"><a href="#cb54-5" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> cookie_line<span class="op">,</span></span>
-<span id="cb54-6"><a href="#cb54-6" aria-hidden="true" tabindex="-1"></a>                               BlinkSetCookieCallback callback<span class="op">,</span></span>
-<span id="cb54-7"><a href="#cb54-7" aria-hidden="true" tabindex="-1"></a>                               gpointer user_data<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb56"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkSetCookieCallback<span class="op">)(</span>gboolean success<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
+<span id="cb56-2"><a href="#cb56-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb56-3"><a href="#cb56-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_set_cookie<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb56-4"><a href="#cb56-4" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> url<span class="op">,</span></span>
+<span id="cb56-5"><a href="#cb56-5" aria-hidden="true" tabindex="-1"></a>                               <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> cookie_line<span class="op">,</span></span>
+<span id="cb56-6"><a href="#cb56-6" aria-hidden="true" tabindex="-1"></a>                               BlinkSetCookieCallback callback<span class="op">,</span></span>
+<span id="cb56-7"><a href="#cb56-7" aria-hidden="true" tabindex="-1"></a>                               gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p><code>cookie_line</code> は <code>Set-Cookie</code>
 ヘッダと同じ書式です（例:<br />
 <code>"session=abc123; Path=/; Max-Age=3600"</code>）。</p>
@@ -907,17 +932,17 @@ id="blink_gtk_get_profile_source">blink_gtk_get_profile_source()</h3>
 ストアが拒否した<br />
 場合は <code>callback</code> に <code>FALSE</code></strong>
 が渡ります。<code>callback</code> は <code>NULL</code> 可。</p>
-<div class="sourceCode" id="cb55"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb55-1"><a href="#cb55-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_set<span class="op">(</span>gboolean success<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb55-2"><a href="#cb55-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;cookie: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> success <span class="op">?</span> <span class="st">&quot;OK&quot;</span> <span class="op">:</span> <span class="st">&quot;rejected&quot;</span><span class="op">);</span></span>
-<span id="cb55-3"><a href="#cb55-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb55-4"><a href="#cb55-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb55-5"><a href="#cb55-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_cookie<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
-<span id="cb55-6"><a href="#cb55-6" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&quot;https://example.com&quot;</span><span class="op">,</span></span>
-<span id="cb55-7"><a href="#cb55-7" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&quot;session=abc123; Path=/; Max-Age=3600&quot;</span><span class="op">,</span></span>
-<span id="cb55-8"><a href="#cb55-8" aria-hidden="true" tabindex="-1"></a>                          on_set<span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb57"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_set<span class="op">(</span>gboolean success<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;cookie: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> success <span class="op">?</span> <span class="st">&quot;OK&quot;</span> <span class="op">:</span> <span class="st">&quot;rejected&quot;</span><span class="op">);</span></span>
+<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_cookie<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span></span>
+<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&quot;https://example.com&quot;</span><span class="op">,</span></span>
+<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a>                          <span class="st">&quot;session=abc123; Path=/; Max-Age=3600&quot;</span><span class="op">,</span></span>
+<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a>                          on_set<span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
 <h3
 id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
-<div class="sourceCode" id="cb56"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb56-1"><a href="#cb56-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_delete_all_cookies<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb58"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_delete_all_cookies<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p>ブラウザコンテキスト内の全 Cookie を削除します。</p>
 <hr />
 <h2 id="廃止予定の-api">廃止予定の API</h2>
@@ -934,64 +959,64 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 <p>既存のコードは急いで書き換える必要はありません。これらを削除する予定が<br />
 立った場合は、事前にリリースノートでお知らせします。</p>
 <h2 id="完全なサンプルプログラム">完全なサンプルプログラム</h2>
-<div class="sourceCode" id="cb57"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb57-1"><a href="#cb57-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
-<span id="cb57-2"><a href="#cb57-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
-<span id="cb57-3"><a href="#cb57-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
-<span id="cb57-4"><a href="#cb57-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
-<span id="cb57-5"><a href="#cb57-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-6"><a href="#cb57-6" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> BlinkWebView<span class="op">*</span> g_web_view <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb57-7"><a href="#cb57-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-8"><a href="#cb57-8" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean quit_timer<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb57-9"><a href="#cb57-9" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Auto-quit after 45 seconds</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb57-10"><a href="#cb57-10" aria-hidden="true" tabindex="-1"></a>    blink_gtk_quit_main_loop<span class="op">();</span></span>
-<span id="cb57-11"><a href="#cb57-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G_SOURCE_REMOVE<span class="op">;</span></span>
-<span id="cb57-12"><a href="#cb57-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb57-13"><a href="#cb57-13" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-14"><a href="#cb57-14" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean screenshot_timer<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb57-15"><a href="#cb57-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb57-16"><a href="#cb57-16" aria-hidden="true" tabindex="-1"></a>        blink_web_view_capture_screenshot<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>g_web_view<span class="op">),</span> <span class="st">&quot;/tmp/blinkgtk.png&quot;</span><span class="op">);</span></span>
-<span id="cb57-17"><a href="#cb57-17" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;Screenshot captured</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb57-18"><a href="#cb57-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb57-19"><a href="#cb57-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G_SOURCE_REMOVE<span class="op">;</span></span>
-<span id="cb57-20"><a href="#cb57-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb57-21"><a href="#cb57-21" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-22"><a href="#cb57-22" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
-<span id="cb57-23"><a href="#cb57-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* 初期化 */</span></span>
-<span id="cb57-24"><a href="#cb57-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span></span>
-<span id="cb57-25"><a href="#cb57-25" aria-hidden="true" tabindex="-1"></a>        fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;Failed to initialize BlinkGTK</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb57-26"><a href="#cb57-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
-<span id="cb57-27"><a href="#cb57-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb57-28"><a href="#cb57-28" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-29"><a href="#cb57-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* BlinkWebView 作成 */</span></span>
-<span id="cb57-30"><a href="#cb57-30" aria-hidden="true" tabindex="-1"></a>    g_web_view <span class="op">=</span> BLINK_WEB_VIEW<span class="op">(</span>blink_web_view_new<span class="op">());</span></span>
-<span id="cb57-31"><a href="#cb57-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>g_web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb57-32"><a href="#cb57-32" aria-hidden="true" tabindex="-1"></a>        fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;Failed to create BlinkWebView</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb57-33"><a href="#cb57-33" aria-hidden="true" tabindex="-1"></a>        blink_gtk_shutdown<span class="op">();</span></span>
-<span id="cb57-34"><a href="#cb57-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
-<span id="cb57-35"><a href="#cb57-35" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb57-36"><a href="#cb57-36" aria-hidden="true" tabindex="-1"></a>    g_object_ref_sink<span class="op">(</span>g_web_view<span class="op">);</span></span>
-<span id="cb57-37"><a href="#cb57-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-38"><a href="#cb57-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* data:URL→load_html()移行 — インライン HTML ロード */</span></span>
-<span id="cb57-39"><a href="#cb57-39" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>g_web_view<span class="op">),</span></span>
-<span id="cb57-40"><a href="#cb57-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&quot;</span></span>
-<span id="cb57-41"><a href="#cb57-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;body style=&#39;background:#00ff00&#39;&gt;Hello BlinkGTK&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb57-42"><a href="#cb57-42" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-43"><a href="#cb57-43" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* タイマー設定 */</span></span>
-<span id="cb57-44"><a href="#cb57-44" aria-hidden="true" tabindex="-1"></a>    g_timeout_add_seconds<span class="op">(</span><span class="dv">30</span><span class="op">,</span> screenshot_timer<span class="op">,</span> NULL<span class="op">);</span>  <span class="co">/* 30秒後スクリーンショット */</span></span>
-<span id="cb57-45"><a href="#cb57-45" aria-hidden="true" tabindex="-1"></a>    g_timeout_add_seconds<span class="op">(</span><span class="dv">45</span><span class="op">,</span> quit_timer<span class="op">,</span> NULL<span class="op">);</span>         <span class="co">/* 45秒後終了 */</span></span>
-<span id="cb57-46"><a href="#cb57-46" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-47"><a href="#cb57-47" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* メインループ */</span></span>
-<span id="cb57-48"><a href="#cb57-48" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
-<span id="cb57-49"><a href="#cb57-49" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-50"><a href="#cb57-50" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* クリーンアップ */</span></span>
-<span id="cb57-51"><a href="#cb57-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_web_view<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb57-52"><a href="#cb57-52" aria-hidden="true" tabindex="-1"></a>        g_object_unref<span class="op">(</span>g_web_view<span class="op">);</span></span>
-<span id="cb57-53"><a href="#cb57-53" aria-hidden="true" tabindex="-1"></a>        g_web_view <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb57-54"><a href="#cb57-54" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb57-55"><a href="#cb57-55" aria-hidden="true" tabindex="-1"></a>    blink_gtk_shutdown<span class="op">();</span></span>
-<span id="cb57-56"><a href="#cb57-56" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb57-57"><a href="#cb57-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
-<span id="cb57-58"><a href="#cb57-58" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb59"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb59-1"><a href="#cb59-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb59-2"><a href="#cb59-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb59-3"><a href="#cb59-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;stdio.h&gt;</span></span>
+<span id="cb59-4"><a href="#cb59-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;unistd.h&gt;</span></span>
+<span id="cb59-5"><a href="#cb59-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-6"><a href="#cb59-6" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> BlinkWebView<span class="op">*</span> g_web_view <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb59-7"><a href="#cb59-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-8"><a href="#cb59-8" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean quit_timer<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb59-9"><a href="#cb59-9" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;Auto-quit after 45 seconds</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb59-10"><a href="#cb59-10" aria-hidden="true" tabindex="-1"></a>    blink_gtk_quit_main_loop<span class="op">();</span></span>
+<span id="cb59-11"><a href="#cb59-11" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G_SOURCE_REMOVE<span class="op">;</span></span>
+<span id="cb59-12"><a href="#cb59-12" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb59-13"><a href="#cb59-13" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-14"><a href="#cb59-14" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean screenshot_timer<span class="op">(</span>gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb59-15"><a href="#cb59-15" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb59-16"><a href="#cb59-16" aria-hidden="true" tabindex="-1"></a>        blink_web_view_capture_screenshot<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>g_web_view<span class="op">),</span> <span class="st">&quot;/tmp/blinkgtk.png&quot;</span><span class="op">);</span></span>
+<span id="cb59-17"><a href="#cb59-17" aria-hidden="true" tabindex="-1"></a>        printf<span class="op">(</span><span class="st">&quot;Screenshot captured</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb59-18"><a href="#cb59-18" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb59-19"><a href="#cb59-19" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> G_SOURCE_REMOVE<span class="op">;</span></span>
+<span id="cb59-20"><a href="#cb59-20" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb59-21"><a href="#cb59-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-22"><a href="#cb59-22" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb59-23"><a href="#cb59-23" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* 初期化 */</span></span>
+<span id="cb59-24"><a href="#cb59-24" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb59-25"><a href="#cb59-25" aria-hidden="true" tabindex="-1"></a>        fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;Failed to initialize BlinkGTK</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb59-26"><a href="#cb59-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb59-27"><a href="#cb59-27" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb59-28"><a href="#cb59-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-29"><a href="#cb59-29" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* BlinkWebView 作成 */</span></span>
+<span id="cb59-30"><a href="#cb59-30" aria-hidden="true" tabindex="-1"></a>    g_web_view <span class="op">=</span> BLINK_WEB_VIEW<span class="op">(</span>blink_web_view_new<span class="op">());</span></span>
+<span id="cb59-31"><a href="#cb59-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>g_web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb59-32"><a href="#cb59-32" aria-hidden="true" tabindex="-1"></a>        fprintf<span class="op">(</span>stderr<span class="op">,</span> <span class="st">&quot;Failed to create BlinkWebView</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb59-33"><a href="#cb59-33" aria-hidden="true" tabindex="-1"></a>        blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb59-34"><a href="#cb59-34" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb59-35"><a href="#cb59-35" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb59-36"><a href="#cb59-36" aria-hidden="true" tabindex="-1"></a>    g_object_ref_sink<span class="op">(</span>g_web_view<span class="op">);</span></span>
+<span id="cb59-37"><a href="#cb59-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-38"><a href="#cb59-38" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* data:URL→load_html()移行 — インライン HTML ロード */</span></span>
+<span id="cb59-39"><a href="#cb59-39" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_html<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>g_web_view<span class="op">),</span></span>
+<span id="cb59-40"><a href="#cb59-40" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;!DOCTYPE html&gt;&lt;html&gt;&quot;</span></span>
+<span id="cb59-41"><a href="#cb59-41" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;body style=&#39;background:#00ff00&#39;&gt;Hello BlinkGTK&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb59-42"><a href="#cb59-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-43"><a href="#cb59-43" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* タイマー設定 */</span></span>
+<span id="cb59-44"><a href="#cb59-44" aria-hidden="true" tabindex="-1"></a>    g_timeout_add_seconds<span class="op">(</span><span class="dv">30</span><span class="op">,</span> screenshot_timer<span class="op">,</span> NULL<span class="op">);</span>  <span class="co">/* 30秒後スクリーンショット */</span></span>
+<span id="cb59-45"><a href="#cb59-45" aria-hidden="true" tabindex="-1"></a>    g_timeout_add_seconds<span class="op">(</span><span class="dv">45</span><span class="op">,</span> quit_timer<span class="op">,</span> NULL<span class="op">);</span>         <span class="co">/* 45秒後終了 */</span></span>
+<span id="cb59-46"><a href="#cb59-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-47"><a href="#cb59-47" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* メインループ */</span></span>
+<span id="cb59-48"><a href="#cb59-48" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb59-49"><a href="#cb59-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-50"><a href="#cb59-50" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* クリーンアップ */</span></span>
+<span id="cb59-51"><a href="#cb59-51" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_web_view<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb59-52"><a href="#cb59-52" aria-hidden="true" tabindex="-1"></a>        g_object_unref<span class="op">(</span>g_web_view<span class="op">);</span></span>
+<span id="cb59-53"><a href="#cb59-53" aria-hidden="true" tabindex="-1"></a>        g_web_view <span class="op">=</span> NULL<span class="op">;</span></span>
+<span id="cb59-54"><a href="#cb59-54" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb59-55"><a href="#cb59-55" aria-hidden="true" tabindex="-1"></a>    blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb59-56"><a href="#cb59-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb59-57"><a href="#cb59-57" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
+<span id="cb59-58"><a href="#cb59-58" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <hr />
 <h2 id="環境変数">環境変数</h2>
 <h3 id="blinkgtk_gpu_mode">BLINKGTK_GPU_MODE</h3>
@@ -1024,15 +1049,15 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 </tbody>
 </table>
 <p><strong>使用例</strong>:</p>
-<div class="sourceCode" id="cb58"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb58-1"><a href="#cb58-1" aria-hidden="true" tabindex="-1"></a><span class="co"># デフォルト（ソフトウェア描画）</span></span>
-<span id="cb58-2"><a href="#cb58-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./blinkgtk_browser</span></span>
-<span id="cb58-3"><a href="#cb58-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-4"><a href="#cb58-4" aria-hidden="true" tabindex="-1"></a><span class="co"># SwiftShader GL エミュレーション</span></span>
-<span id="cb58-5"><a href="#cb58-5" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="ex">./blinkgtk_browser</span></span>
-<span id="cb58-6"><a href="#cb58-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb58-7"><a href="#cb58-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ネイティブ EGL（実 GPU 必要）</span></span>
-<span id="cb58-8"><a href="#cb58-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./blinkgtk_browser</span></span></code></pre></div>
+<div class="sourceCode" id="cb60"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb60-1"><a href="#cb60-1" aria-hidden="true" tabindex="-1"></a><span class="co"># デフォルト（ソフトウェア描画）</span></span>
+<span id="cb60-2"><a href="#cb60-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./blinkgtk_browser</span></span>
+<span id="cb60-3"><a href="#cb60-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-4"><a href="#cb60-4" aria-hidden="true" tabindex="-1"></a><span class="co"># SwiftShader GL エミュレーション</span></span>
+<span id="cb60-5"><a href="#cb60-5" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="ex">./blinkgtk_browser</span></span>
+<span id="cb60-6"><a href="#cb60-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb60-7"><a href="#cb60-7" aria-hidden="true" tabindex="-1"></a><span class="co"># ネイティブ EGL（実 GPU 必要）</span></span>
+<span id="cb60-8"><a href="#cb60-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./blinkgtk_browser</span></span></code></pre></div>
 <p><strong>注意</strong>: <code>egl</code> モードは実際の GPU
 ハードウェアが必要です。仮想環境や Weston headless では<br />
 <code>software</code> または <code>swiftshader</code>
@@ -1340,7 +1365,8 @@ href="./app-integration-api-ja.html">app-integration-api-ja.md</a></td>
 </tr>
 <tr>
 <td><code>blink_web_view_print_to_pdf()</code></td>
-<td>本ページ</td>
+<td><strong>未実装</strong> (現在は PDF
+を作らずに成功を返す。対応予定)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_set_fullscreen_handler()</code></td>
@@ -1396,6 +1422,10 @@ href="./app-integration-api-ja.html">app-integration-api-ja.md</a></td>
 <tr>
 <td><code>blink_gtk_get_version_full()</code></td>
 <td>本ページ (v1.2.2 以降)</td>
+</tr>
+<tr>
+<td><code>blink_gtk_trace_mark()</code></td>
+<td>本ページ (v1.2.3 以降)</td>
 </tr>
 <tr>
 <td><code>blink_gtk_application_run()</code></td>

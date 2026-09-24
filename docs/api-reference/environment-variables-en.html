@@ -176,6 +176,30 @@ feel noisy</strong></td>
 <td>Also emit per-frame diagnostics (suppressed by default)</td>
 </tr>
 <tr>
+<td><code>BLINKGTK_IM_MODULE</code></td>
+<td><code>gtk</code> or a GTK input-module id</td>
+<td>unset</td>
+<td><strong>From v1.2.3.</strong> Chooses the input method. Unset (or
+<code>gtk</code>) makes BlinkGTK pin nothing and leave the choice to GTK
+(the text-input path on Wayland). Any other value (such as
+<code>ibus</code>) is pinned on BlinkGTK's views. <strong>To get the
+1.2.2 behaviour, set <code>ibus</code>.</strong> Query the configured
+value with <code>blink_gtk_get_im_module()</code></td>
+</tr>
+<tr>
+<td><code>GTK_IM_MODULE</code></td>
+<td>a GTK input-module id</td>
+<td>—</td>
+<td>From v1.2.3, <strong>it also affects BlinkGTK WebViews</strong> when
+<code>BLINKGTK_IM_MODULE</code> is unset, because BlinkGTK follows GTK's
+normal selection. If <code>BLINKGTK_IM_MODULE</code> pins an id, GTK 4's
+<code>gtk_im_multicontext_set_context_id()</code> takes precedence over
+this variable and it has no effect on WebViews. Up to 1.2.2 BlinkGTK
+always pinned <code>ibus</code> and set this variable
+<strong>process-wide</strong> from <code>XMODIFIERS</code>; 1.2.3 no
+longer does</td>
+</tr>
+<tr>
 <td><code>BLINKGTK_A11Y</code></td>
 <td><code>1</code></td>
 <td>unset</td>

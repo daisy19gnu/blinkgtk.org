@@ -109,7 +109,7 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-settings-api-リファレンス">BlinkGTK Settings API
 リファレンス</h1>
-<p><strong>バージョン</strong>: 1.2.2-build6<br />
+<p><strong>バージョン</strong>: 1.2.3-build1<br />
 <strong>最終更新</strong>: 2026-07-29<br />
 <strong>言語</strong>: 日本語 |</p>
 <p><a href="./settings-api-en.html">English</a></p>
@@ -118,6 +118,54 @@
 <p><code>BlinkWebView</code> の挙動を変える API です。JavaScript
 の実行、画像の読み込み、<br />
 ローカルストレージ、User-Agent を切り替えられます。</p>
+<h3 id="setter-の反映-122-までと-123-以降">setter の反映 1.2.2 までと
+1.2.3 以降</h3>
+<p>1.2.2 までは、次の 5 つの setter
+が<strong>表示に反映されていませんでした</strong> (値は保存され、<br />
+getter
+はその値を返しますが、ページの読み込みには使われていませんでした)。<br />
+1.2.3 で 4 つが効くようになりました。出荷形で実測した結果です。</p>
+<table>
+<thead>
+<tr>
+<th>関数</th>
+<th>1.2.2 まで</th>
+<th>1.2.3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blink_web_view_set_javascript_enabled()</code></td>
+<td>効かない (<code>FALSE</code> でもスクリプトが実行される)</td>
+<td>効く</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_images_enabled()</code></td>
+<td>効かない</td>
+<td>効く</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_local_storage_enabled()</code></td>
+<td>効かない</td>
+<td>効く</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_default_font_size()</code></td>
+<td>効かない</td>
+<td>効く</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_default_encoding()</code></td>
+<td>効かない</td>
+<td><strong>まだ効かない</strong> (文字コードの指定が無いページは
+<code>windows-1252</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>スクリプトを止める必要があるアプリは 1.2.3
+以降を使ってください。<br />
+User-Agent (<code>blink_web_view_set_user_agent()</code>)
+はこの制限の対象外です。</p>
 <h3 id="使い方">使い方</h3>
 <p><code>blink_web_view_new()</code>
 の直後、ページを読み込む前に呼びます。</p>

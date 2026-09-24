@@ -1,0 +1,300 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.3-build1 Release Notes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Release date: 2026-09-24 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.3-build1 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-09-24 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-123-build1-release-notes">BlinkGTK 1.2.3-build1 Release
+Notes</h1>
+<p><strong>Release date</strong>: 2026-09-24 /
+<strong>Chromium</strong>: 154.0.8037.57 / Language: <a
+href="RELEASE_NOTES-1.2.3-ja.html">日本語</a> | English</p>
+<p>The rendering engine is updated to <strong>Chromium 154</strong>.</p>
+<hr />
+<h2 id="what-you-can-do-with-build1">What you can do with build1</h2>
+<h3
+id="turning-javascript-images-and-localstorage-off-now-takes-effect">Turning
+JavaScript, images and localStorage off now takes effect</h3>
+<p>Settings such as <code>blink_web_view_set_javascript_enabled()</code>
+are now applied to the page.<br />
+Up to 1.2.2 the value was only stored: <strong>page scripts still ran
+after passing <code>FALSE</code></strong>.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>1.2.3 (measured on the shipped build)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blink_web_view_set_javascript_enabled()</code></td>
+<td>Works (<code>FALSE</code> stops page scripts)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_images_enabled()</code></td>
+<td>Works (<code>FALSE</code> stops image loading)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_local_storage_enabled()</code></td>
+<td>Works (<code>FALSE</code> makes <code>localStorage</code>
+unavailable)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_default_font_size()</code></td>
+<td>Works (passing 30 gives 30px body text)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_default_encoding()</code></td>
+<td><strong>Not yet</strong> (pages without a declared charset stay
+<code>windows-1252</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>If your application must keep scripts from running on some pages,
+update to this release.<br />
+<code>set_default_encoding()</code> will be investigated and handled in
+a later release.</p>
+<h3 id="custom-schemes-accept-the-usual-web-development-forms">Custom
+schemes accept the usual web-development forms</h3>
+<ul>
+<li>A handler can return <code>out_mime</code> with parameters, such as
+<code>"text/html; charset=utf-8"</code>,<br />
+and the page is shown as HTML. Up to 1.2.2 it was shown as
+<code>&lt;pre&gt;</code> text.<br />
+The charset you give is used as is</li>
+<li>Pages can call <code>fetch()</code> on schemes listed in
+<code>BLINKGTK_EXTRA_SCHEMES</code>. Up to 1.2.2 only<br />
+the five built-in schemes (<code>app</code> / <code>blinkgtk</code> /
+<code>res</code> / <code>resource</code> / <code>ebook</code>) allowed
+it</li>
+</ul>
+<h3
+id="packaged-builds-start-without-naming-the-resource-directory">Packaged
+builds start without naming the resource directory</h3>
+<p>Without <code>blink_gtk_set_resources_path()</code>, BlinkGTK now
+also looks for <code>icudtl.dat</code> and the<br />
+other resources next to <code>libblinkgtk</code>. Up to 1.2.2 it only
+looked next to the executable, so<br />
+applications built against the rpm / deb packages stopped with an ICU
+error.<br />
+The search order is:</p>
+<ol type="1">
+<li>The executable's directory</li>
+<li><code>&lt;libdir&gt;/blinkgtk-0.1/chromium/</code> (rpm / deb)</li>
+<li><code>&lt;libdir&gt;/chromium/</code> (tarball)</li>
+<li><code>&lt;libdir&gt;/</code></li>
+</ol>
+<p>Applications that set the path keep working as before.</p>
+<h3 id="the-input-method-follows-gtks-choice">The input method follows
+GTK's choice</h3>
+<p>BlinkGTK no longer picks the Japanese input path itself; it
+<strong>leaves the choice to GTK</strong>.<br />
+On Wayland this is GTK4's default text-input path, which is also what
+the input method<br />
+side (IBus) recommends. On real Fedora 45 / GNOME hardware we confirmed,
+with this path<br />
+selected, that conversion mode works and that closing views repeatedly
+produces no input<br />
+method warnings (measured by selecting the same path through the switch
+added in 1.2.2).</p>
+<p>To get the 1.2.2 behaviour (naming IBus), set
+<code>BLINKGTK_IM_MODULE=ibus</code>. It affects<br />
+BlinkGTK's views only. <code>blink_gtk_get_im_module()</code> returns
+the value currently applied<br />
+(an empty string by default, meaning GTK decides).</p>
+<h3 id="put-your-own-markers-on-the-part-you-want-to-measure">Put your
+own markers on the part you want to measure</h3>
+<p><code>blink_gtk_trace_mark("name")</code> puts a marker in the trace.
+The event is named after the<br />
+marker, the same shape as the web's <code>performance.mark()</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Start with: --trace-startup=toplevel,blink.user_timing</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;workload_ready&quot;</span><span class="op">);</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* ... the part to measure ... */</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;idle_static_ready&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Without the <code>blink.user_timing</code> category the call does
+nothing.</p>
+<h3 id="features-enabled-by-default-in-chromium-154">Features enabled by
+default in Chromium 154</h3>
+<ul>
+<li><strong>CSS <code>text-decoration-inset</code></strong> — pull
+underlines, overlines and line-throughs in from<br />
+the text edges, or extend them outward. In vertical writing the
+underline is the side line</li>
+<li><strong>Responsively-sized <code>&lt;iframe&gt;</code></strong> —
+the embedding page can size an iframe to its content<br />
+(only when requested)</li>
+<li><strong><code>font-width</code> descriptor in
+<code>@font-face</code></strong> — an alias of
+<code>font-stretch</code></li>
+</ul>
+<p>The feature list is Chromium 154's list on chromestatus.com. What we
+measured ourselves<br />
+covers rendering, input and startup, not these typography features.</p>
+<h2 id="what-build1-fixes">What build1 fixes</h2>
+<ul>
+<li><p>The workaround added in 1.2.1 (a vertical line breaking half-way
+when a closing bracket<br />
+falls at the line end) is <strong>removed</strong>. Chromium 153 fixed
+the same symptom upstream; we<br />
+kept the workaround in 1.2.2 after measuring that it no longer changed
+the result</p></li>
+<li><p>The header comment of the <code>load-failed</code> signal did not
+match the implementation. The<br />
+correct handler signature is (the signal itself is unchanged):</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed <span class="op">(</span>BlinkWebView <span class="op">*</span>web_view<span class="op">,</span> BlinkLoadError error_code<span class="op">,</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>failing_uri<span class="op">,</span> gpointer user_data<span class="op">);</span></span></code></pre></div></li>
+<li><p>The header said <code>blink_gtk_init_with_sandbox()</code> was
+not in the shared library yet, but it<br />
+has been since 1.2.2-build4. On Linux, passing <code>NULL</code> behaves
+exactly like <code>blink_gtk_init()</code></p></li>
+</ul>
+<hr />
+<h2 id="what-does-not-change">What does not change</h2>
+<ul>
+<li>No public API is removed. Applications built for the previous
+release keep working</li>
+<li>The default rendering path (software / EGL) and how to switch it are
+the same</li>
+</ul>
+<h2 id="what-behaves-differently">What behaves differently</h2>
+<ul>
+<li>The input method default (above).
+<code>BLINKGTK_IM_MODULE=ibus</code> restores the old behaviour</li>
+<li>Four settings that had no effect up to 1.2.2 now take effect.
+Applications that passed<br />
+<code>FALSE</code> will see page scripts or images stop</li>
+</ul>
+<hr />
+<h2 id="what-we-verified">What we verified</h2>
+<ul>
+<li><strong>EGL path</strong>: passes the check that judges white
+screens, shrunken rendering and abnormal<br />
+exit from the logs</li>
+<li><strong>Settings</strong>: on the shipped build,
+<code>set_javascript_enabled(FALSE)</code> stops page scripts<br />
+(the same check fails on 1.2.2). Images, localStorage and the default
+font size were also<br />
+checked on the shipped build; the default encoding was confirmed not to
+take effect</li>
+<li><strong>Custom schemes and resource detection</strong>: MIME
+parameters, <code>fetch()</code> and starting without<br />
+a resource path were checked on the shipped build (all three fail on
+1.2.2)</li>
+<li><strong>Input method</strong>: on real Fedora 45 / GNOME hardware,
+40 view closures on each of the two<br />
+paths (measured by selecting the path with the 1.2.2 switch; that
+1.2.3's default selects<br />
+that path is confirmed from the startup log)</li>
+<li><strong>Markers</strong>: in one trace, markers from both
+<code>blink_gtk_trace_mark()</code> and<br />
+<code>performance.mark()</code> appear as events named after the
+marker</li>
+</ul>
+</body>
+</html>
+</div></div>

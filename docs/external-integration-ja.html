@@ -110,6 +110,8 @@
 <h1
 id="外部プロジェクトからの-blinkgtk-統合ガイド">外部プロジェクトからの
 BlinkGTK 統合ガイド</h1>
+<p><strong>バージョン</strong>: 1.2.3-build1 (Chromium
+154.0.8037.57)</p>
 <p>別のプロジェクト（独自アプリ、3D ビュワー、EPUB リーダー等）から
 BlinkGTK を<br />
 描画エンジンとして利用する開発者向けのガイドです。</p>
@@ -155,15 +157,15 @@ BlinkGTK を<br />
 <h3 id="21-インストール">2.1 インストール</h3>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora / RHEL（RPM）</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.0.8-1.fc43.x86_64.rpm</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-1.2.3-build1.fc44.x86_64.rpm</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu（DEB）</span></span>
-<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.0.8-1_amd64.deb <span class="dt">\</span></span>
-<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>              ./libblinkgtk-0.1-dev_1.0.8-1_amd64.deb</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dpkg <span class="at">-i</span> ./libblinkgtk-0.1-0_1.2.3-build1-1_amd64.deb <span class="dt">\</span></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a>              ./libblinkgtk-0.1-dev_1.2.3-build1-1_amd64.deb</span>
 <span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a><span class="co"># 汎用 tarball</span></span>
-<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xjf blinkgtk-1.2.2-build6-linux-x86_64.tar.bz2</span>
-<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> blinkgtk-1.2.2-build6-linux-x86_64</span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="fu">tar</span> xjf blinkgtk-1.2.3-build1-linux-x86_64.tar.bz2</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> blinkgtk-1.2.3-build1-linux-x86_64</span>
 <span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ./install.sh   <span class="co"># デフォルト /usr/local</span></span></code></pre></div>
 <h3 id="22-pkg-config-で確認">2.2 pkg-config で確認</h3>
 <div class="sourceCode" id="cb2"><pre
@@ -225,14 +227,19 @@ include すると <code>conflicting types for 'BlinkWebView'</code>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> myapp.c <span class="at">-o</span> myapp <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1 gtk4<span class="va">)</span></span></code></pre></div>
 <h3 id="24-実行">2.4 実行</h3>
 <div class="sourceCode" id="cb5"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="co"># パッケージインストール先の bin ディレクトリから実行</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="ex">/usr/local/blinkgtk-1.0.8/bin/run-with-resources</span> ./myapp</span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span></span></code></pre></div>
 <blockquote>
-<p><strong>重要</strong>: BlinkGTK は Chromium リソースファイル（ICU
-データ、V8 スナップショット、ロケール）を<br />
-バイナリ隣接ディレクトリから読み込みます。パッケージ付属の
-<code>run-with-resources</code><br />
-スクリプトを使うか、下記の「リソースファイルの配置」を参照してください。</p>
+<p><strong>重要</strong>: BlinkGTK は Chromium のリソースファイル（ICU
+データ、V8 スナップショット、<br />
+ロケール）を、既定では<strong>実行ファイルの隣</strong>のディレクトリから読み込みます。<br />
+別の場所に置く場合は、<code>blink_gtk_init()</code>
+より<strong>前に</strong>場所を指定してください。</p>
+<div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* blink_gtk_init() より前に呼ぶ */</span></span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_resources_path<span class="op">(</span><span class="st">&quot;/usr/lib64/blinkgtk-0.1/chromium&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>指定しないまま実行ファイルと別の場所に置くと、起動時に<br />
+<code>Invalid file descriptor to ICU data received</code>
+で異常終了します。<br />
+配置については下記の「リソースファイルの配置」も参照してください。</p>
 </blockquote>
 <hr />
 <h2 id="3-方式-b-chromium-ビルドツリー直接利用">3. 方式 B: Chromium
@@ -241,22 +248,22 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb5-1"><a href="
 ツリーに配置してビルドしている<br />
 開発者向け。</p>
 <h3 id="31-ビルド">3.1 ビルド</h3>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/chromium/src</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://blinkgtk.org/ third_party/blinkgtk</span>
-<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a><span class="co"># gn args に is_component_build=true を設定済みとする</span></span>
-<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="ex">autoninja</span> <span class="at">-C</span> out/Release_Component <span class="dt">\</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a>  third_party/blinkgtk/examples:simple_browser <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>  libblink_core.so libblink_platform.so libblink_modules.so libv8.so <span class="dt">\</span></span>
-<span id="cb6-7"><a href="#cb6-7" aria-hidden="true" tabindex="-1"></a>  content_shell.pak v8_context_snapshot.bin <span class="dt">\</span></span>
-<span id="cb6-8"><a href="#cb6-8" aria-hidden="true" tabindex="-1"></a>  locales/ja.pak locales/en-US.pak</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/chromium/src</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://blinkgtk.org/ third_party/blinkgtk</span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># gn args に is_component_build=true を設定済みとする</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">autoninja</span> <span class="at">-C</span> out/Release_Component <span class="dt">\</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  third_party/blinkgtk/examples:simple_browser <span class="dt">\</span></span>
+<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  libblink_core.so libblink_platform.so libblink_modules.so libv8.so <span class="dt">\</span></span>
+<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  content_shell.pak v8_context_snapshot.bin <span class="dt">\</span></span>
+<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  locales/ja.pak locales/en-US.pak</span></code></pre></div>
 <h3 id="32-実行自分のアプリを含む場合">3.2
 実行（自分のアプリを含む場合）</h3>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/chromium/src/out/Release_Component</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$PWD</span> <span class="dt">\</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="dt">\</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/chromium/src/out/Release_Component</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$PWD</span> <span class="dt">\</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="dt">\</span></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
 <blockquote>
 <p><strong>必ず <code>out/Release_Component</code>
 ディレクトリ内から実行してください。</strong><br />
@@ -350,11 +357,11 @@ style="text-align: left;"><code>FATAL: Error loading V8 startup snapshot</code><
 等）が必要です。</p>
 <h3 id="43-配置ヘルパースクリプト将来提供予定">4.3
 配置ヘルパースクリプト（将来提供予定）</h3>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将来提供: Chromium ビルドから必要ファイルを抽出</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/setup-dev-env.sh</span> <span class="dt">\</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--chromium-src</span><span class="op">=</span>/path/to/chromium/src <span class="dt">\</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--target-dir</span><span class="op">=</span>/path/to/your/app/runtime</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 将来提供: Chromium ビルドから必要ファイルを抽出</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/setup-dev-env.sh</span> <span class="dt">\</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--chromium-src</span><span class="op">=</span>/path/to/chromium/src <span class="dt">\</span></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--target-dir</span><span class="op">=</span>/path/to/your/app/runtime</span></code></pre></div>
 <hr />
 <h2 id="5-gpu-モードの選び方">5. GPU モードの選び方</h2>
 <p><code>BLINKGTK_GPU_MODE</code> 環境変数で切替できます。未設定時は
@@ -403,9 +410,9 @@ style="text-align: left;">ヘッドレス・サーバ・CI・低スペック環�
 <code>gtk_widget_realize()</code> より前に呼んでいる</li>
 </ul>
 <p><strong>確認方法</strong>:</p>
-<div class="sourceCode" id="cb9"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># blink_gtk_init が完了した行と、画面へ渡した行が出ているか</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;blink_gtk_init|FATAL|set_dmabuf_pixels&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># blink_gtk_init が完了した行と、画面へ渡した行が出ているか</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;blink_gtk_init|FATAL|set_dmabuf_pixels&quot;</span></span></code></pre></div>
 <ul>
 <li><code>blink_gtk_init</code> を含む行が出ない → リソース不足</li>
 <li><code>set_dmabuf_pixels</code> を含む行が出ない →
@@ -418,16 +425,16 @@ HTML が空背景の可能性</li>
 <p>リソースファイルが実行バイナリ隣接にない。<code>icudtl.dat</code>
 をコピーするか、<br />
 <code>blink_gtk_set_icu_data_path()</code> で明示指定。</p>
-<div class="sourceCode" id="cb10"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_icu_data_path<span class="op">(</span><span class="st">&quot;/opt/myapp/icudtl.dat&quot;</span><span class="op">);</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span>  <span class="co">/* GTK4 は引数なし */</span>  <span class="co">// 必ず init より前に呼ぶ</span></span></code></pre></div>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_icu_data_path<span class="op">(</span><span class="st">&quot;/opt/myapp/icudtl.dat&quot;</span><span class="op">);</span></span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span>  <span class="co">/* GTK4 は引数なし */</span>  <span class="co">// 必ず init より前に呼ぶ</span></span></code></pre></div>
 <h3 id="63-buildlibblinkgtkso-がセグフォする">6.3
 「<code>build/libblinkgtk.so</code> がセグフォする」</h3>
 <p><code>build/</code> はリポジトリルートの <strong>古い Meson
 ビルドのモック出力</strong>です。<br />
 v1.0.1 で Meson
 は廃止されましたが、ディスク上に残存している場合があります。</p>
-<div class="sourceCode" id="cb11"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> build/</span></code></pre></div>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> build/</span></code></pre></div>
 <p>外部アプリからリンクする場合は、必ず次のどちらかを参照してください。</p>
 <ul>
 <li>パッケージインストール先の
@@ -437,11 +444,11 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href=
 </ul>
 <h3 id="64-pkg-config-で-blinkgtk-01-が見つからない">6.4 「pkg-config で
 <code>blinkgtk-0.1</code> が見つからない」</h3>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/local/lib/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
-<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--list-all</span> <span class="kw">|</span></span>
-<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> blinkgtk</span></code></pre></div>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/local/lib/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--list-all</span> <span class="kw">|</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> blinkgtk</span></code></pre></div>
 <p>tarball インストールの場合はインストール先の
 <code>lib/pkgconfig</code> を<br />
 <code>PKG_CONFIG_PATH</code> に追加してください。</p>

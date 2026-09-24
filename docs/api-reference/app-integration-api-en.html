@@ -112,7 +112,7 @@ Schemes, Messaging, Script Injection — BlinkGTK</title>
 id="blinkgtk-application-integration-api-reference--custom-schemes-messaging-script-injection">BlinkGTK
 Application Integration API Reference — Custom Schemes, Messaging,
 Script Injection</h1>
-<p><strong>Version</strong>: 1.2.2-build6<br />
+<p><strong>Version</strong>: 1.2.3-build1<br />
 <strong>Last updated</strong>: 2026-07-30</p>
 <p><a href="./app-integration-api-ja.html">日本語</a></p>
 <hr />
@@ -320,7 +320,10 @@ length). The engine calls <code>g_bytes_unref()</code> on it</li>
 <code>g_strdup("image/jpeg")</code>; the engine<br />
 frees it with <code>g_free()</code>. If you leave it <code>NULL</code>,
 the type is guessed from<br />
-the URI extension (see the table below)</li>
+the URI extension (see the table below). Parameters such as<br />
+<code>"text/html; charset=utf-8"</code> are accepted from 1.2.3 (up to
+1.2.2, HTML<br />
+with parameters was shown as <code>&lt;pre&gt;</code> text)</li>
 <li>Returning <code>NULL</code> gives the same empty page (200) as the
 text variant</li>
 </ul>
@@ -415,14 +418,14 @@ context happens early in engine startup and cannot be done later.<br />
 <code>register_custom_scheme()</code> runs after that point, so it
 <strong>assigns a handler</strong><br />
 to an already-registered name rather than adding new names.</p>
-<p><strong>A limitation of <code>BLINKGTK_EXTRA_SCHEMES</code> (current
-implementation):</strong> schemes<br />
-added via the environment variable are rejected for <code>fetch()</code>
-calls from page<br />
-JavaScript by a renderer-side gate (navigations and subresources such
-as<br />
-<code>&lt;img&gt;</code> do work). If your SPA uses
-<code>fetch()</code>, use one of the five built-in<br />
+<p><strong><code>BLINKGTK_EXTRA_SCHEMES</code> and
+<code>fetch()</code>:</strong> from 1.2.3, page JavaScript can
+call<br />
+<code>fetch()</code> on schemes added via the environment variable. Up
+to 1.2.2 a renderer-side<br />
+gate rejected them (navigations and subresources such as
+<code>&lt;img&gt;</code> did work).<br />
+If you target 1.2.2 or earlier, use one of the five built-in
 schemes.</p>
 <h3 id="why-a-custom-scheme-instead-of-file">Why a custom scheme instead
 of file://</h3>
@@ -783,39 +786,41 @@ id="blink_web_view_inject_user_script">blink_web_view_inject_user_script()</h3>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a>                                       <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> script<span class="op">,</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a>                                       gboolean inject_at_document_start<span class="op">);</span></span></code></pre></div>
 <ul>
-<li><code>inject_at_document_start=FALSE</code>: runs <strong>once,
+<li><p><code>inject_at_document_start=FALSE</code>: runs <strong>once,
 immediately</strong> in the current<br />
 page (equivalent to <code>blink_web_view_execute_javascript()</code>).
 It is not<br />
-applied to later pages</li>
-<li><code>inject_at_document_start=TRUE</code>: <strong>known issue —
-non-functional in the<br />
-current version</strong> (the script is recorded but never executed). A
-fix is<br />
-planned. If you need "apply to every page" today, drive it from
-the<br />
-<code>load-changed</code> signal instead:</li>
-</ul>
-<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">int</span> ev<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>ev <span class="op">==</span> BLINK_LOAD_FINISHED<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>        blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
-<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;document.title = &#39;[MyApp] &#39; + document.title;&quot;</span><span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>g_signal_connect<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load<span class="op">),</span> NULL<span class="op">);</span></span></code></pre></div>
+applied to later pages</p></li>
+<li><p><code>inject_at_document_start=TRUE</code>: the script is kept
+and runs on every later<br />
+page <strong>before the page's own <code>&lt;script&gt;</code>
+elements</strong> (1.2.0-build6 and later).<br />
+The script is handed to the renderer process when that process starts,
+so:</p>
 <ul>
-<li>Scripts run in the same variable space as the page itself (the main
-world).<br />
+<li><strong>Register it before the first
+<code>blink_web_view_load_uri()</code>.</strong> A script<br />
+added while the renderer is already running does not reach that
+renderer;<br />
+it takes effect from the next page that starts a renderer process<br />
+(a warning is logged when this happens)</li>
+<li>Scripts are shared by every <code>BlinkWebView</code> served by the
+same renderer<br />
+process. If two views register different scripts, both views get
+both</li>
+</ul></li>
+<li><p>Scripts run in the same variable space as the page itself (the
+main world).<br />
 You can read and write the page's variables — and the page can touch
 yours.<br />
-Wrap your code in an IIFE to avoid name collisions</li>
+Wrap your code in an IIFE to avoid name collisions</p></li>
 </ul>
 <h3
 id="blink_web_view_inject_user_stylesheet">blink_web_view_inject_user_stylesheet()</h3>
 <p>Injects CSS into the current page and all later pages.</p>
 <p><strong>Signature</strong>:</p>
-<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_user_stylesheet<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> css<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_inject_user_stylesheet<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                                           <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> css<span class="op">);</span></span></code></pre></div>
 <p>Useful for things like a reading app's dark theme or line-height
 adjustments —<br />
 changing the presentation without touching the content. Behavioral
@@ -839,23 +844,23 @@ it on every settings change, pair it with a script that removes the
 previous<br />
 injection:</li>
 </ul>
-<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Idempotent replacement: remove the previous injection, then re-inject */</span></span>
-<span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
-<span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;var e = document.getElementById(&#39;myapp-style&#39;); if (e) e.remove();&quot;</span><span class="op">,</span></span>
-<span id="cb16-4"><a href="#cb16-4" aria-hidden="true" tabindex="-1"></a>    NULL<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb16-5"><a href="#cb16-5" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>js <span class="op">=</span> g_strdup_printf<span class="op">(</span></span>
-<span id="cb16-6"><a href="#cb16-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;var s = document.createElement(&#39;style&#39;);&quot;</span></span>
-<span id="cb16-7"><a href="#cb16-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;s.id = &#39;myapp-style&#39;; s.textContent = &#39;</span><span class="sc">%s</span><span class="st">&#39;;&quot;</span></span>
-<span id="cb16-8"><a href="#cb16-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;document.head.appendChild(s);&quot;</span><span class="op">,</span> escaped_css<span class="op">);</span></span>
-<span id="cb16-9"><a href="#cb16-9" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span> js<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb16-10"><a href="#cb16-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>js<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Idempotent replacement: remove the previous injection, then re-inject */</span></span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;var e = document.getElementById(&#39;myapp-style&#39;); if (e) e.remove();&quot;</span><span class="op">,</span></span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a>    NULL<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="dt">char</span> <span class="op">*</span>js <span class="op">=</span> g_strdup_printf<span class="op">(</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;var s = document.createElement(&#39;style&#39;);&quot;</span></span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;s.id = &#39;myapp-style&#39;; s.textContent = &#39;</span><span class="sc">%s</span><span class="st">&#39;;&quot;</span></span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;document.head.appendChild(s);&quot;</span><span class="op">,</span> escaped_css<span class="op">);</span></span>
+<span id="cb15-9"><a href="#cb15-9" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span> js<span class="op">,</span> NULL<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb15-10"><a href="#cb15-10" aria-hidden="true" tabindex="-1"></a>g_free<span class="op">(</span>js<span class="op">);</span></span></code></pre></div>
 <h3
 id="blink_web_view_remove_all_user_scripts">blink_web_view_remove_all_user_scripts()</h3>
 <p>Removes <strong>all</strong> registered scripts and stylesheets (the
 name says scripts, but<br />
 CSS is included).</p>
 <p><strong>Signature</strong>:</p>
-<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_remove_all_user_scripts<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb16"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_remove_all_user_scripts<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong>The effect is "stop applying to future pages."</strong>
 <code>&lt;style&gt;</code> elements already<br />
 injected into the currently displayed page are not removed. To remove
@@ -869,12 +874,12 @@ above and<br />
 id="blink_web_view_execute_javascript">blink_web_view_execute_javascript()</h3>
 <p>Runs JavaScript in the current page's main frame.</p>
 <p><strong>Signature</strong>:</p>
-<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkJavaScriptCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> result<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
-<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_execute_javascript<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> script<span class="op">,</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>                                       BlinkJavaScriptCallback callback<span class="op">,</span></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>                                       gpointer user_data<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb17"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb17-1"><a href="#cb17-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkJavaScriptCallback<span class="op">)(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> result<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
+<span id="cb17-2"><a href="#cb17-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_execute_javascript<span class="op">(</span>BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
+<span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                                       <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> script<span class="op">,</span></span>
+<span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>                                       BlinkJavaScriptCallback callback<span class="op">,</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>                                       gpointer user_data<span class="op">);</span></span></code></pre></div>
 <p>Behavioral details:</p>
 <ul>
 <li>Pass a <code>callback</code> to receive the value of the expression
@@ -888,9 +893,9 @@ structured results, <code>JSON.stringify()</code> on the script side is
 the reliable<br />
 approach</strong>:</li>
 </ul>
-<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
-<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;JSON.stringify({title: document.title, y: window.scrollY})&quot;</span><span class="op">,</span></span>
-<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a>    on_result<span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a>blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span></span>
+<span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;JSON.stringify({title: document.title, y: window.scrollY})&quot;</span><span class="op">,</span></span>
+<span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>    on_result<span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
 <ul>
 <li><strong>Promises are not resolved.</strong> You cannot receive the
 result of an <code>async</code><br />
@@ -913,64 +918,64 @@ example: custom scheme + two-way messaging</h2>
 to announce<br />
 readiness, then sends configuration; button clicks notify the C
 side.</p>
-<div class="sourceCode" id="cb20"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
-<span id="cb20-2"><a href="#cb20-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
-<span id="cb20-3"><a href="#cb20-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-4"><a href="#cb20-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_app_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-5"><a href="#cb20-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g_strdup<span class="op">(</span></span>
-<span id="cb20-6"><a href="#cb20-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;html&gt;&lt;body&gt;&quot;</span></span>
-<span id="cb20-7"><a href="#cb20-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;h1&gt;Served by the app&lt;/h1&gt;&quot;</span></span>
-<span id="cb20-8"><a href="#cb20-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;button onclick=</span><span class="sc">\&quot;</span><span class="st">window.blinkgtk.postMessage(&#39;clicked&#39;,&#39;hello&#39;)</span><span class="sc">\&quot;</span><span class="st">&gt;&quot;</span></span>
-<span id="cb20-9"><a href="#cb20-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Notify C&lt;/button&gt;&quot;</span></span>
-<span id="cb20-10"><a href="#cb20-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;script&gt;&quot;</span></span>
-<span id="cb20-11"><a href="#cb20-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;window.addEventListener(&#39;load&#39;, function () {&quot;</span></span>
-<span id="cb20-12"><a href="#cb20-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  window.blinkgtk.addMessageHandler(&#39;config&#39;, function (d) {&quot;</span></span>
-<span id="cb20-13"><a href="#cb20-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;    document.body.style.background = d;&quot;</span></span>
-<span id="cb20-14"><a href="#cb20-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  });&quot;</span></span>
-<span id="cb20-15"><a href="#cb20-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  window.blinkgtk.postMessage(&#39;ready&#39;, &#39;&#39;);&quot;</span>  <span class="co">/* announce readiness */</span></span>
-<span id="cb20-16"><a href="#cb20-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;});&quot;</span></span>
-<span id="cb20-17"><a href="#cb20-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/script&gt;&quot;</span></span>
-<span id="cb20-18"><a href="#cb20-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">);</span></span>
-<span id="cb20-19"><a href="#cb20-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb20-20"><a href="#cb20-20" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-21"><a href="#cb20-21" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_message<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span> <span class="dt">const</span> guint8 <span class="op">*</span>data<span class="op">,</span></span>
-<span id="cb20-22"><a href="#cb20-22" aria-hidden="true" tabindex="-1"></a>                       gsize length<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-23"><a href="#cb20-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_strcmp0<span class="op">(</span>name<span class="op">,</span> <span class="st">&quot;ready&quot;</span><span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-24"><a href="#cb20-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">/* The page is ready — sends are reliable from here on */</span></span>
-<span id="cb20-25"><a href="#cb20-25" aria-hidden="true" tabindex="-1"></a>        blink_web_view_send_message_to_page<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>user_data<span class="op">),</span></span>
-<span id="cb20-26"><a href="#cb20-26" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">&quot;config&quot;</span><span class="op">,</span> <span class="st">&quot;#fffbe6&quot;</span><span class="op">);</span></span>
-<span id="cb20-27"><a href="#cb20-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span><span class="op">;</span></span>
-<span id="cb20-28"><a href="#cb20-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb20-29"><a href="#cb20-29" aria-hidden="true" tabindex="-1"></a>    gsize out_len <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
-<span id="cb20-30"><a href="#cb20-30" aria-hidden="true" tabindex="-1"></a>    guchar <span class="op">*</span>decoded <span class="op">=</span> g_base64_decode<span class="op">((</span><span class="dt">const</span> gchar <span class="op">*)</span>data<span class="op">,</span> <span class="op">&amp;</span>out_len<span class="op">);</span></span>
-<span id="cb20-31"><a href="#cb20-31" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;from the page &#39;</span><span class="sc">%s</span><span class="st">&#39;: </span><span class="sc">%.*s\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>out_len<span class="op">,</span> decoded<span class="op">);</span></span>
-<span id="cb20-32"><a href="#cb20-32" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>decoded<span class="op">);</span></span>
-<span id="cb20-33"><a href="#cb20-33" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb20-34"><a href="#cb20-34" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-35"><a href="#cb20-35" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">**</span>argv<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb20-36"><a href="#cb20-36" aria-hidden="true" tabindex="-1"></a>    blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
-<span id="cb20-37"><a href="#cb20-37" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-38"><a href="#cb20-38" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>win <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
-<span id="cb20-39"><a href="#cb20-39" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
-<span id="cb20-40"><a href="#cb20-40" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-41"><a href="#cb20-41" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
-<span id="cb20-42"><a href="#cb20-42" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> view<span class="op">);</span></span>
-<span id="cb20-43"><a href="#cb20-43" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-44"><a href="#cb20-44" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_custom_scheme<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app&quot;</span><span class="op">,</span></span>
-<span id="cb20-45"><a href="#cb20-45" aria-hidden="true" tabindex="-1"></a>                                          on_app_scheme<span class="op">,</span> NULL<span class="op">);</span></span>
-<span id="cb20-46"><a href="#cb20-46" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;ready&quot;</span><span class="op">,</span></span>
-<span id="cb20-47"><a href="#cb20-47" aria-hidden="true" tabindex="-1"></a>                                            on_message<span class="op">,</span> view<span class="op">);</span></span>
-<span id="cb20-48"><a href="#cb20-48" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;clicked&quot;</span><span class="op">,</span></span>
-<span id="cb20-49"><a href="#cb20-49" aria-hidden="true" tabindex="-1"></a>                                            on_message<span class="op">,</span> view<span class="op">);</span></span>
-<span id="cb20-50"><a href="#cb20-50" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-51"><a href="#cb20-51" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">));</span></span>
-<span id="cb20-52"><a href="#cb20-52" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app://home/&quot;</span><span class="op">);</span></span>
-<span id="cb20-53"><a href="#cb20-53" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb20-54"><a href="#cb20-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span>
-<span id="cb20-55"><a href="#cb20-55" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<div class="sourceCode" id="cb19"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb19-2"><a href="#cb19-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb19-3"><a href="#cb19-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-4"><a href="#cb19-4" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span><span class="op">*</span> on_app_scheme<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>uri<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-5"><a href="#cb19-5" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> g_strdup<span class="op">(</span></span>
+<span id="cb19-6"><a href="#cb19-6" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;html&gt;&lt;body&gt;&quot;</span></span>
+<span id="cb19-7"><a href="#cb19-7" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;h1&gt;Served by the app&lt;/h1&gt;&quot;</span></span>
+<span id="cb19-8"><a href="#cb19-8" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;button onclick=</span><span class="sc">\&quot;</span><span class="st">window.blinkgtk.postMessage(&#39;clicked&#39;,&#39;hello&#39;)</span><span class="sc">\&quot;</span><span class="st">&gt;&quot;</span></span>
+<span id="cb19-9"><a href="#cb19-9" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;Notify C&lt;/button&gt;&quot;</span></span>
+<span id="cb19-10"><a href="#cb19-10" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;script&gt;&quot;</span></span>
+<span id="cb19-11"><a href="#cb19-11" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;window.addEventListener(&#39;load&#39;, function () {&quot;</span></span>
+<span id="cb19-12"><a href="#cb19-12" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  window.blinkgtk.addMessageHandler(&#39;config&#39;, function (d) {&quot;</span></span>
+<span id="cb19-13"><a href="#cb19-13" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;    document.body.style.background = d;&quot;</span></span>
+<span id="cb19-14"><a href="#cb19-14" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  });&quot;</span></span>
+<span id="cb19-15"><a href="#cb19-15" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;  window.blinkgtk.postMessage(&#39;ready&#39;, &#39;&#39;);&quot;</span>  <span class="co">/* announce readiness */</span></span>
+<span id="cb19-16"><a href="#cb19-16" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;});&quot;</span></span>
+<span id="cb19-17"><a href="#cb19-17" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/script&gt;&quot;</span></span>
+<span id="cb19-18"><a href="#cb19-18" aria-hidden="true" tabindex="-1"></a>        <span class="st">&quot;&lt;/body&gt;&lt;/html&gt;&quot;</span><span class="op">);</span></span>
+<span id="cb19-19"><a href="#cb19-19" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb19-20"><a href="#cb19-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-21"><a href="#cb19-21" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_message<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>name<span class="op">,</span> <span class="dt">const</span> guint8 <span class="op">*</span>data<span class="op">,</span></span>
+<span id="cb19-22"><a href="#cb19-22" aria-hidden="true" tabindex="-1"></a>                       gsize length<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-23"><a href="#cb19-23" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_strcmp0<span class="op">(</span>name<span class="op">,</span> <span class="st">&quot;ready&quot;</span><span class="op">)</span> <span class="op">==</span> <span class="dv">0</span><span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-24"><a href="#cb19-24" aria-hidden="true" tabindex="-1"></a>        <span class="co">/* The page is ready — sends are reliable from here on */</span></span>
+<span id="cb19-25"><a href="#cb19-25" aria-hidden="true" tabindex="-1"></a>        blink_web_view_send_message_to_page<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>user_data<span class="op">),</span></span>
+<span id="cb19-26"><a href="#cb19-26" aria-hidden="true" tabindex="-1"></a>                                            <span class="st">&quot;config&quot;</span><span class="op">,</span> <span class="st">&quot;#fffbe6&quot;</span><span class="op">);</span></span>
+<span id="cb19-27"><a href="#cb19-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb19-28"><a href="#cb19-28" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb19-29"><a href="#cb19-29" aria-hidden="true" tabindex="-1"></a>    gsize out_len <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb19-30"><a href="#cb19-30" aria-hidden="true" tabindex="-1"></a>    guchar <span class="op">*</span>decoded <span class="op">=</span> g_base64_decode<span class="op">((</span><span class="dt">const</span> gchar <span class="op">*)</span>data<span class="op">,</span> <span class="op">&amp;</span>out_len<span class="op">);</span></span>
+<span id="cb19-31"><a href="#cb19-31" aria-hidden="true" tabindex="-1"></a>    g_print<span class="op">(</span><span class="st">&quot;from the page &#39;</span><span class="sc">%s</span><span class="st">&#39;: </span><span class="sc">%.*s\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>out_len<span class="op">,</span> decoded<span class="op">);</span></span>
+<span id="cb19-32"><a href="#cb19-32" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>decoded<span class="op">);</span></span>
+<span id="cb19-33"><a href="#cb19-33" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb19-34"><a href="#cb19-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-35"><a href="#cb19-35" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span> <span class="op">**</span>argv<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb19-36"><a href="#cb19-36" aria-hidden="true" tabindex="-1"></a>    blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span>
+<span id="cb19-37"><a href="#cb19-37" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-38"><a href="#cb19-38" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>win <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb19-39"><a href="#cb19-39" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb19-40"><a href="#cb19-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-41"><a href="#cb19-41" aria-hidden="true" tabindex="-1"></a>    GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb19-42"><a href="#cb19-42" aria-hidden="true" tabindex="-1"></a>    gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb19-43"><a href="#cb19-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-44"><a href="#cb19-44" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_custom_scheme<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app&quot;</span><span class="op">,</span></span>
+<span id="cb19-45"><a href="#cb19-45" aria-hidden="true" tabindex="-1"></a>                                          on_app_scheme<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb19-46"><a href="#cb19-46" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;ready&quot;</span><span class="op">,</span></span>
+<span id="cb19-47"><a href="#cb19-47" aria-hidden="true" tabindex="-1"></a>                                            on_message<span class="op">,</span> view<span class="op">);</span></span>
+<span id="cb19-48"><a href="#cb19-48" aria-hidden="true" tabindex="-1"></a>    blink_web_view_register_message_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;clicked&quot;</span><span class="op">,</span></span>
+<span id="cb19-49"><a href="#cb19-49" aria-hidden="true" tabindex="-1"></a>                                            on_message<span class="op">,</span> view<span class="op">);</span></span>
+<span id="cb19-50"><a href="#cb19-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-51"><a href="#cb19-51" aria-hidden="true" tabindex="-1"></a>    gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>win<span class="op">));</span></span>
+<span id="cb19-52"><a href="#cb19-52" aria-hidden="true" tabindex="-1"></a>    blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;app://home/&quot;</span><span class="op">);</span></span>
+<span id="cb19-53"><a href="#cb19-53" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb19-54"><a href="#cb19-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb19-55"><a href="#cb19-55" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p>Build:</p>
-<div class="sourceCode" id="cb21"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb21-1"><a href="#cb21-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> app-integration app-integration.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
+<div class="sourceCode" id="cb20"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb20-1"><a href="#cb20-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> <span class="at">-o</span> app-integration app-integration.c <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
 <hr />
 <h2 id="a-real-world-configuration-an-epub-reader">A real-world
 configuration: an EPUB reader</h2>

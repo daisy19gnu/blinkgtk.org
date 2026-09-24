@@ -109,7 +109,7 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-settings-api-reference">BlinkGTK Settings API
 Reference</h1>
-<p><strong>Version</strong>: 1.2.2-build6<br />
+<p><strong>Version</strong>: 1.2.3-build1<br />
 <strong>Last updated</strong>: 2026-07-29<br />
 <strong>Language</strong>: <a href="./settings-api-ja.html">日本語</a> |
 English</p>
@@ -118,6 +118,53 @@ English</p>
 <p>APIs that change how a <code>BlinkWebView</code> behaves: JavaScript
 execution, image loading, local<br />
 storage, and the User-Agent.</p>
+<h3 id="limitation-up-to-122-and-what-123-changes">Limitation up to
+1.2.2, and what 1.2.3 changes</h3>
+<p>Up to 1.2.2 the following five setters <strong>did not take
+effect</strong> (the value was stored and<br />
+the getter returned it, but page loading did not use it). In 1.2.3 four
+of them work.<br />
+These results were measured on the shipped build.</p>
+<table>
+<thead>
+<tr>
+<th>Function</th>
+<th>Up to 1.2.2</th>
+<th>1.2.3</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blink_web_view_set_javascript_enabled()</code></td>
+<td>No effect (scripts ran after <code>FALSE</code>)</td>
+<td>Works</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_images_enabled()</code></td>
+<td>No effect</td>
+<td>Works</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_local_storage_enabled()</code></td>
+<td>No effect</td>
+<td>Works</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_default_font_size()</code></td>
+<td>No effect</td>
+<td>Works</td>
+</tr>
+<tr>
+<td><code>blink_web_view_set_default_encoding()</code></td>
+<td>No effect</td>
+<td><strong>Still no effect</strong> (pages without a declared charset
+stay <code>windows-1252</code>)</td>
+</tr>
+</tbody>
+</table>
+<p>Applications that must stop scripts should use 1.2.3 or later.<br />
+The User-Agent (<code>blink_web_view_set_user_agent()</code>) is not
+affected.</p>
 <h3 id="how-to-use-them">How to use them</h3>
 <p>Call them right after <code>blink_web_view_new()</code>, before
 loading a page.</p>

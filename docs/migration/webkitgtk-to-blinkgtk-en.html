@@ -134,10 +134,15 @@ right<br />
 after startup</li>
 <li><strong>Chromium runtime resources must be in place</strong> — files
 such as <code>icudtl.dat</code><br />
-and <code>locales/</code> are needed at run time. Use the bundled
-<code>run-with-resources</code><br />
-wrapper, or point at them with
-<code>blink_gtk_set_resources_path()</code></li>
+and <code>locales/</code> are needed at run time. BlinkGTK looks
+<strong>next to the executable</strong><br />
+first and, if they are not there (1.2.3 and later), next to
+<code>libblinkgtk</code>:<br />
+<code>&lt;libdir&gt;/blinkgtk-0.1/chromium/</code> (rpm / deb), then
+<code>&lt;libdir&gt;/chromium/</code><br />
+(tarball). If they live elsewhere, or on 1.2.2 and earlier, call<br />
+<code>blink_gtk_set_resources_path()</code> before
+<code>blink_gtk_init()</code></li>
 </ol>
 <p>Both are covered step by step in<br />
 <a href="../building-with-blinkgtk-en.html">Building your
@@ -461,12 +466,16 @@ integration API</a></p>
 <tr>
 <td><code>WebKitDownload</code> (<code>decide-policy</code> etc.)</td>
 <td><code>blink_web_view_set_download_handler()</code></td>
-<td></td>
+<td><strong>Not wired</strong> — can be registered but is never called
+(<a href="../api-reference/ui-handlers-api-en.html">status</a>;
+planned)</td>
 </tr>
 <tr>
 <td><code>authenticate</code> signal</td>
 <td><code>blink_web_view_set_auth_handler()</code></td>
-<td>Respond with <code>auth_response()</code></td>
+<td><strong>Not wired</strong> — can be registered but is never called
+(<a href="../api-reference/ui-handlers-api-en.html">status</a>;
+planned)</td>
 </tr>
 <tr>
 <td>TLS error policy</td>
@@ -505,8 +514,9 @@ API</a></p>
 </tr>
 <tr>
 <td><code>WebKitPrintOperation</code></td>
-<td><code>blink_web_view_print_to_pdf()</code></td>
-<td>PDF output only (no print dialog)</td>
+<td>(not implemented)</td>
+<td><code>blink_web_view_print_to_pdf()</code> currently writes no PDF,
+and there is no print dialog. Planned</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_get_snapshot()</code></td>
@@ -566,8 +576,9 @@ mechanism)</li>
 <li><strong>Direct control equivalent to WebKitWebContext /
 WebKitNetworkSession</strong> —<br />
 proxy settings, cache control, custom data directories</li>
-<li><strong>A print dialog</strong> — only PDF output via
-<code>blink_web_view_print_to_pdf()</code></li>
+<li><strong>Printing and PDF output</strong> — no print dialog, and
+<code>blink_web_view_print_to_pdf()</code> currently writes no PDF
+(planned)</li>
 <li><strong>Editing commands</strong>
 (<code>webkit_web_view_execute_editing_command()</code> equivalent)</li>
 </ul>
