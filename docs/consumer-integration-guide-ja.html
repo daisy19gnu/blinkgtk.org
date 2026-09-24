@@ -622,10 +622,16 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb19-1"><a href="#cb19
 リソースの置き場所を教える</h3>
 <p>Chromium は起動時に <code>icudtl.dat</code> や
 <code>content_shell.pak</code> などを読み込みます。<br />
-探しに行くのは
-<strong>実行ファイルと同じディレクトリ</strong>です。カレントディレクトリでは<br />
-ありません。</p>
-<p>自分のアプリを別の場所に置くと、これらが見つからず起動に失敗します。</p>
+まず <strong>実行ファイルと同じディレクトリ</strong>を探します
+(カレントディレクトリでは<br />
+ありません)。1.2.3 以降は、そこに無ければ <code>libblinkgtk</code>
+の置き場所から<br />
+<code>&lt;libdir&gt;/blinkgtk-0.1/chromium/</code> (rpm / deb) →
+<code>&lt;libdir&gt;/chromium/</code> (tarball) →<br />
+<code>&lt;libdir&gt;/</code>
+の順に探すので、パッケージ版をそのまま使うなら指定は要りません。</p>
+<p>1.2.2
+以前や、これら以外の場所にリソースを置く場合は、見つからずに起動に失敗します。</p>
 <pre><code>ERROR:base/i18n/icu_util.cc: Invalid file descriptor to ICU data received.
 FATAL:base/i18n/icu_util.cc: Check failed: result.</code></pre>
 <p>このときは、<code>blink_gtk_init()</code>

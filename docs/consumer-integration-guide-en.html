@@ -637,10 +637,16 @@ path).</p>
 <h3 id="711-telling-blinkgtk-where-the-resources-are">7.1.1 Telling
 BlinkGTK where the resources are</h3>
 <p>At startup Chromium loads <code>icudtl.dat</code>,
-<code>content_shell.pak</code>, and others. It looks for them in<br />
-<strong>the directory containing the executable</strong> — not the
-current working directory.</p>
-<p>Put your application somewhere else and they will not be found, so
+<code>content_shell.pak</code>, and others. It first looks in<br />
+<strong>the directory containing the executable</strong> (not the
+current working directory). From 1.2.3,<br />
+if they are not there, it also looks next to <code>libblinkgtk</code>:
+<code>&lt;libdir&gt;/blinkgtk-0.1/chromium/</code><br />
+(rpm / deb), then <code>&lt;libdir&gt;/chromium/</code> (tarball), then
+<code>&lt;libdir&gt;/</code>. With the packaged build you<br />
+do not need to set anything.</p>
+<p>On 1.2.2 and earlier, or if the resources live somewhere else, they
+will not be found and<br />
 startup fails:</p>
 <pre><code>ERROR:base/i18n/icu_util.cc: Invalid file descriptor to ICU data received.
 FATAL:base/i18n/icu_util.cc: Check failed: result.</code></pre>
