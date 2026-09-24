@@ -54,6 +54,7 @@
   <url><loc>https://blinkgtk.org/docs/desktop-integration-en.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
   <url><loc>https://blinkgtk.org/docs/desktop-integration-ja.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
   <url><loc>https://blinkgtk.org/docs/examples/Makefile.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://blinkgtk.org/docs/examples/blinkgtk_browser-windows.c.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
   <url><loc>https://blinkgtk.org/docs/examples/blinkgtk_browser.c.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
   <url><loc>https://blinkgtk.org/docs/external-integration-en.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
   <url><loc>https://blinkgtk.org/docs/external-integration-ja.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
@@ -88,4 +89,6 @@
   <url><loc>https://blinkgtk.org/docs/use-cases-ja.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
   <url><loc>https://blinkgtk.org/docs/version-history-en.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
   <url><loc>https://blinkgtk.org/docs/version-history-ja.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://blinkgtk.org/docs/windows-getting-started-en.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
+  <url><loc>https://blinkgtk.org/docs/windows-getting-started-ja.html</loc><lastmod>2026-09-24</lastmod><priority>0.6</priority></url>
 </urlset>

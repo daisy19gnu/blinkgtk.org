@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3-windows">BlinkGTK for Windows v1.2.1-build3 を公開しました</a></h2>
+<p><small>2026-09-24 · リリース</small></p>
+<p>BlinkGTK を Windows で使える配布物を、はじめて公開しました。BlinkGTK-Windows が作成しています。展開して bin\blinkgtk_browser.exe を実行すれば動く ZIP と、アプリに組み込む人向けの devel ZIP があります。Windows 10 (64bit) 以降の x64 が対象で、確認したのは Windows 11 Pro です。Chromium は 152 で、Linux 版 (v1.2.3、Chromium 154) とは版数が違います。描画経路は software のみで、コード署名はまだありません。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build1">v1.2.3-build1 を公開しました</a></h2>
 <p><small>2026-09-24 · リリース</small></p>
 <p>レンダリングエンジンを Chromium 154.0.8037.57 に更新しました。blink_web_view_set_javascript_enabled(FALSE) などの設定が、ページに反映されるようになりました。1.2.2 までは値を覚えるだけで、FALSE にしてもページのスクリプトは実行されていました。画像と localStorage の無効化、既定の文字サイズも効きます。既定の文字コードはまだ効きません。入力メソッドは GTK の選択に従うようになりました。1.2.2 と同じ動作にするには BLINKGTK_IM_MODULE=ibus を指定します。独自スキームのハンドラが out_mime に charset を付けても HTML として表示され、BLINKGTK_EXTRA_SCHEMES のスキームで fetch() が使えます。パッケージ版では、リソースの場所を指定しなくても起動します。外部利用者からのご報告を受けて直したものです。今回から Fedora 45 向けの RPM (.fc45) も用意しました。中身は Fedora 44 向けと同じバイナリで、Fedora 45 の機械で詰め直したものです。dnf リポジトリは Fedora の版ごとに分けました。これまでの設定のままでも Fedora 44 向けを受け取れます。Fedora 45 向けを dnf で受け取るには、blinkgtk.repo を取り直してください (sudo curl -o /etc/yum.repos.d/blinkgtk.repo https://blinkgtk.org/repo/fedora/blinkgtk.repo)。</p>

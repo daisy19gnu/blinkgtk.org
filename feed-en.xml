@@ -7,12 +7,20 @@
   <updated>2026-09-24T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>BlinkGTK for Windows v1.2.1-build3 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-09-24-windows-121-build3:en</id>
+    <updated>2026-09-24T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>The first BlinkGTK package for Windows is out, produced by BlinkGTK-Windows. There is a ZIP you unpack and run (bin\blinkgtk_browser.exe) and a devel ZIP for embedding BlinkGTK in your application. It targets x64 Windows 10 (64-bit) or later and was verified on Windows 11 Pro. It is based on Chromium 152, a different version from the Linux build (v1.2.3, Chromium 154). Rendering uses the software path only, and the package is not code-signed yet.</summary>
+  </entry>
+  <entry>
     <title>v1.2.3-build1 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build1"/>
     <id>tag:blinkgtk.org,2026:2026-09-24-build1-123:en</id>
     <updated>2026-09-24T00:00:00Z</updated>
     <category term="release"/>
-    <summary>The rendering engine is updated to Chromium 154.0.8037.57. Settings such as blink_web_view_set_javascript_enabled(FALSE) now take effect on the page. Up to 1.2.2 the value was only stored, and page scripts still ran after passing FALSE. Turning off images and localStorage, and the default font size, also work now. The default encoding does not take effect yet. The input method now follows GTK's choice. To get the 1.2.2 behaviour, set BLINKGTK_IM_MODULE=ibus. A custom-scheme handler can return out_mime with a charset and the page is still shown as HTML, and pages can call fetch() on schemes listed in BLINKGTK_EXTRA_SCHEMES. Packaged builds start without naming the resource directory. These fixes follow reports from an external user. From this release there are also Fedora 45 RPMs (.fc45). They contain the same binaries as the Fedora 44 packages, repackaged on a Fedora 45 machine. The dnf repository is now split by Fedora release. Existing settings keep receiving the Fedora 44 packages. To receive the Fedora 45 packages through dnf, fetch blinkgtk.repo again (sudo curl -o /etc/yum.repos.d/blinkgtk.repo https://blinkgtk.org/repo/fedora/blinkgtk.repo).</summary>
+    <summary>The rendering engine is updated to Chromium 154.0.8037.57. Settings such as blink_web_view_set_javascript_enabled(FALSE) now take effect on the page. Up to 1.2.2 the value was only stored, and page scripts still ran after passing FALSE. Turning off images and localStorage, and the default font size, also work now. The default encoding does not take effect yet. The input method now follows GTK&#x27;s choice. To get the 1.2.2 behaviour, set BLINKGTK_IM_MODULE=ibus. A custom-scheme handler can return out_mime with a charset and the page is still shown as HTML, and pages can call fetch() on schemes listed in BLINKGTK_EXTRA_SCHEMES. Packaged builds start without naming the resource directory. These fixes follow reports from an external user. From this release there are also Fedora 45 RPMs (.fc45). They contain the same binaries as the Fedora 44 packages, repackaged on a Fedora 45 machine. The dnf repository is now split by Fedora release. Existing settings keep receiving the Fedora 44 packages. To receive the Fedora 45 packages through dnf, fetch blinkgtk.repo again (sudo curl -o /etc/yum.repos.d/blinkgtk.repo https://blinkgtk.org/repo/fedora/blinkgtk.repo).</summary>
   </entry>
   <entry>
     <title>From v1.2.4, packages will target Fedora 45 or newer</title>

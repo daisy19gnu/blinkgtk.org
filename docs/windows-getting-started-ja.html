@@ -1,0 +1,682 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK for Windows — はじめかた — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="数字には測った日を添えてあります。 配布物のサイズと同梱文書の本数は 配布する ZIP そのものの実測値 (2026-09-24 実測) です。 注意: ZIP を組み立てた日時はここには書きません。 組み直すたびに変わるためです。 ZIP の正確なバイト数とハッシュは、配布物と一緒に置く &amp;lt;パッケージ名&amp;gt;">
+<link rel="canonical" href="https://blinkgtk.org/docs/windows-getting-started-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK for Windows — はじめかた — BlinkGTK">
+<meta property="og:description" content="数字には測った日を添えてあります。 配布物のサイズと同梱文書の本数は 配布する ZIP そのものの実測値 (2026-09-24 実測) です。 注意: ZIP を組み立てた日時はここには書きません。 組み直すたびに変わるためです。 ZIP の正確なバイト数とハッシュは、配布物と一緒に置く &amp;lt;パッケージ名&amp;gt;">
+<meta property="og:url" content="https://blinkgtk.org/docs/windows-getting-started-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/windows-getting-started-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/windows-getting-started-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/windows-getting-started-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-for-windows--はじめかた">BlinkGTK for Windows —
+はじめかた</h1>
+<blockquote>
+<p><strong>数字には測った日を添えてあります。</strong>
+配布物のサイズと同梱文書の本数は<br />
+<strong>配布する ZIP そのものの実測値</strong> (2026-09-24 実測)
+です。<br />
+注意: <strong>ZIP を組み立てた日時はここには書きません。</strong>
+組み直すたびに変わるためです。<br />
+ZIP の正確なバイト数とハッシュは、配布物と一緒に置く
+<code>&lt;パッケージ名&gt;.verify.json</code> (<code>size</code> /
+<code>sha256</code>)<br />
+と <code>SHA256SUMS</code> (ハッシュのみ) を見てください。<br />
+Windows 11 Pro build 26200 での確認は 2026-09-17 に始め、<strong>直近は
+2026-09-24</strong> です (配布物の展開実行検査)。</p>
+</blockquote>
+<p>BlinkGTK を Windows で使えるようにしたものです。版数体系も同じ<br />
+(Chromium の版 + BlinkGTK のパッチレベル) です。</p>
+<p><strong>公開 API は、同じ版数の Linux 版 (1.2.1-build3)
+とほぼ同じです。</strong><br />
+この 101 件の中での差は 2 つ:</p>
+<p><strong>数え方</strong>: 公開ヘッダの宣言と、共有ライブラリ
+(<code>.so</code> / <code>.dll</code>) の export の<br />
+<strong>両方に在るもの</strong>を公開 API と数えます。この定義で
+<strong>Linux も Windows も 101 件</strong>です。</p>
+<p><strong>測り方</strong> (どちらも 2026-09-21 実測):<br />
+Windows は公開ヘッダの宣言 102 と、DLL の export のうち
+<code>blink</code> で始まる名前 112 の共通部分で
+<strong>101</strong>。<br />
+数えたヘッダが devel ZIP
+に同梱するものと同一であることは検査で確かめています。<br />
+Linux は配布 tarball を展開し、同じ数え方を当てて
+<strong>101</strong><br />
+(ヘッダ宣言 101 と、<code>.so</code> の export のうち
+<code>blink_</code> で始まる名前 136 の共通部分)。<br />
+名前で絞るのは、ヘッダに無い内部のシンボルを数えないためで、共通部分の件数には影響しません。<br />
+注意: <strong>「同じ数え方」の中身</strong>:
+条件コンパイルの扱いだけ対称にしてあります —<br />
+Windows 側は <code>#ifndef _WIN32</code> の中を、Linux 側は
+<code>#ifdef _WIN32</code> の中を除きます<br />
+(その platform の利用者に見えない宣言を数えないため)。</p>
+<table>
+<tbody>
+<tr>
+<td>Windows に<strong>無い</strong></td>
+<td><code>blink_web_view_attach_to_external_surface</code> (Wayland
+固有) の 1 本</td>
+</tr>
+<tr>
+<td>Windows に<strong>ある</strong></td>
+<td><code>blink_gtk_init_with_sandbox()</code> の 1 本</td>
+</tr>
+</tbody>
+</table>
+<p><strong>上の 101 件には入らないものが 1 本あります。</strong><br />
+<code>blink_gtk_sandbox_init()</code> は DLL から export
+されず、静的ライブラリ<br />
+<code>blinkgtk_sandbox.lib</code> 経由で実行ファイルに取り込む設計です
+(devel ZIP に同梱)。<br />
+<strong>Linux ではこれを呼べません</strong> (下記)。</p>
+<blockquote>
+<p>注意: <strong>本ページの Linux 版との比較は、比べた時点
+(2026-09-21〜22) の最新だった Linux 1.2.2-build6 (Chromium 153)
+とのものです。</strong><br />
+Linux 版は 2026-09-24 に 1.2.3-build1 (Chromium 154)
+を公開しましたが、<strong>1.2.3 との比較はしていません。</strong><br />
+1.2.3 で直った点 (JavaScript・画像・localStorage
+の無効化が効くようになった等) が<br />
+この Windows 版 (1.2.1-build3)
+でどうなっているかも、確かめていません。</p>
+<p>注意: <strong>Linux 版 1.2.2 で入った 4 本は、この版の Windows
+にはありません</strong><br />
+(1.2.1 には Linux 版にもありません):<br />
+<code>blink_web_view_new_with_profile()</code> /
+<code>blink_gtk_set_gpu_mode()</code> /<br />
+<code>blink_gtk_get_profile_path()</code> /
+<code>blink_gtk_get_profile_source()</code>。</p>
+<p><strong>数え方</strong>: 1.2.2-build6 の公開 API 106 件 −
+1.2.1-build3 の 101 件 = 5 本の増加。<br />
+そのうち <code>blink_gtk_init_with_sandbox()</code> だけが Windows
+にも在るので、<br />
+無いのは 4 本です (2026-09-21 実測)。</p>
+<p>注意: <strong><code>blink_web_view_new_with_profile()</code>
+は、Linux 1.2.2-build6 の目玉として<br />
+紹介された機能です</strong> (view ごとに profile と cache
+を分ける)。<br />
+<strong>この Windows 版では使えません。</strong></p>
+</blockquote>
+<p><strong>サンドボックスの 2 本について</strong> (2026-09-21
+実測。export は、Linux の <code>.so</code> を
+<code>nm -D</code>、Windows の DLL を <code>dumpbin /exports</code>
+で確認):</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Linux 1.2.1</th>
+<th>Linux 1.2.2-build6</th>
+<th>この Windows 版</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ヘッダの宣言</td>
+<td>なし</td>
+<td>あり (<code>Since: (not released yet)</code>)</td>
+<td>あり</td>
+</tr>
+<tr>
+<td><code>blink_gtk_init_with_sandbox()</code>
+を共有ライブラリが提供</td>
+<td>なし</td>
+<td>あり</td>
+<td>あり</td>
+</tr>
+<tr>
+<td><code>blink_gtk_sandbox_init()</code> を提供</td>
+<td>なし</td>
+<td><strong>なし</strong></td>
+<td><strong>あり</strong> (静的ライブラリ
+<code>blinkgtk_sandbox.lib</code> を devel ZIP に同梱)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注意: 表の <code>blink_gtk_init_with_sandbox()</code> の行で Linux
+1.2.2-build6 を「あり」としたのは<br />
+<strong>共有ライブラリを実測した結果</strong>です。</p>
+</blockquote>
+<p><strong><code>blink_gtk_sandbox_init()</code> は、Linux
+ではまだ呼べません。</strong> 本家のヘッダ (英文) が<br />
+"it lives only in the static library blinkgtk_sandbox, which the current
+packages<br />
+do not include. Linking against it will fail." と明記しています<br />
+(静的ライブラリ blinkgtk_sandbox
+の中にしか無く、それは現在のパッケージに含まれないので、<br />
+リンクは失敗する、の意)<br />
+(ヘッダ本文が参照している issue #141
+は、<strong>当方が本体リポジトリに立てた相談</strong>です)。<br />
+この英文は、1.2.3-build1 のヘッダ (<code>blink_gtk.h</code> の
+<code>blink_gtk_sandbox_init()</code> の注記) にも同じ形で残っています
+(2026-09-24 に確認)。<br />
+なお 1.2.3 のヘッダでは、<code>blink_gtk_init_with_sandbox()</code> は
+<code>Since: 1.2.2</code>
+で、共有ライブラリが提供すると書かれています。<br />
+Windows 版は静的ライブラリを同梱しているので呼べます。</p>
+<hr />
+<h2 id="何が入っていますか">何が入っていますか</h2>
+<table>
+<tbody>
+<tr>
+<td><strong>portable ZIP</strong></td>
+<td>展開してすぐ動きます。GTK4
+も同梱しているので、別途の導入は要りません</td>
+</tr>
+<tr>
+<td><strong>devel ZIP</strong></td>
+<td>組み込む人向け。公開 API ヘッダ、インポートライブラリ、GTK4
+の開発用ファイル</td>
+</tr>
+</tbody>
+</table>
+<p>インストーラ (MSI)
+は<strong>まだありません</strong>。設計だけ決まっています。</p>
+<hr />
+<h2 id="動かすまで">動かすまで</h2>
+<h3 id="1-展開する">1. 展開する</h3>
+<p>ZIP を任意の場所へ。<strong>管理者権限は要りません。</strong></p>
+<h3 id="2-初回は警告が出ることがあります">2.
+初回は警告が出ることがあります</h3>
+<p><strong>この配布物にはコード署名がありません。</strong>
+そのため、ブラウザで取得して実行すると<br />
+Microsoft Defender SmartScreen
+の警告が出ることがあります。案内に従って実行を<br />
+続けてください。</p>
+<p>署名は後から追加できるため、最初の版は署名なしで出しています。</p>
+<blockquote>
+<p>注意:
+<strong>この画面のスクリーンショットはまだありません。</strong><br />
+当方の開発機では配布物をブラウザ経由で取得していないため、Mark of the
+Web が付きません。<br />
+<strong>つまり開発機ではこの警告を再現できません。</strong> 素の Windows
+で取得から実行まで<br />
+通して撮り次第、画面と実際のボタン名を載せます。</p>
+</blockquote>
+<h3 id="3-実行する">3. 実行する</h3>
+<p><code>bin\blinkgtk_browser.exe</code> を実行します。<br />
+<strong>引数を付けないと <code>https://google.com/</code>
+を開きます</strong> (インターネットへの接続が要ります)。<br />
+引数に URL を渡すと、そのページを開きます。</p>
+<pre><code>cd blinkgtk-1.2.1-build3-windows-x64\bin
+blinkgtk_browser.exe
+blinkgtk_browser.exe https://example.com/</code></pre>
+<p><code>blinkgtk_browser</code> は、BlinkGTK
+を組み込むのに必要なものだけを示す最小構成のサンプルです。<br />
+起動すると、コンソールの窓も開いて動作のログが表示されます。</p>
+<hr />
+<h2 id="動作条件">動作条件</h2>
+<table>
+<tbody>
+<tr>
+<td>OS</td>
+<td>Windows 10 (64bit) 以降</td>
+</tr>
+<tr>
+<td>CPU</td>
+<td>x64 (<strong>32bit は対応しません</strong>)</td>
+</tr>
+<tr>
+<td>空き容量</td>
+<td>ZIP 約 577 MiB + 展開後 約 1,583
+MiB。<strong>展開中は両方必要</strong>なので実質 約 2.1 GiB (2026-09-24
+実測)</td>
+</tr>
+<tr>
+<td>GTK4</td>
+<td><strong>同梱</strong>。別途入れないでください</td>
+</tr>
+<tr>
+<td>VC++ ランタイム</td>
+<td><strong>DLL を同梱</strong>
+(再頒布可能パッケージのインストーラは不要)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注意: <strong>本ページの MiB は 1,048,576 バイトです。</strong>
+GitHub の Releases の画面も<br />
+同じ単位で「MB」と表示するので、<strong>Releases では 577 MB
+と見えます</strong><br />
+(2026-09-23 に、公開されている別のリポジトリのリリースで、API
+のバイト数と画面の表示を突き合わせて確認)。<br />
+1,000,000 バイト単位で数えるツールでは 605 MB と出ます。<br />
+<strong>同梱文書も同じ単位で書いています</strong> — 大きさを書いている 6
+本<br />
+(<code>INSTALLATION-ja.md</code> / <code>INSTALLATION-en.md</code> /
+<code>building-with-blinkgtk-ja.md</code> /<br />
+<code>portable-app-guide-ja.md</code> / <code>faq-ja.md</code> /
+<code>linux-windows-differences-ja.md</code>)<br />
+すべてで、MB が MiB であることを明記しています (2026-09-21
+時点。機械で確認)。</p>
+</blockquote>
+<blockquote>
+<p><strong>GTK4 を別途インストールしないでください。</strong> Windows の
+GTK4 には ABI が<br />
+2 系統あり (gvsbuild = MSVC ABI / MSYS2 = MinGW ABI)、別の ABI
+でビルドした<br />
+ものは同梱の GTK4 とリンクできません。<br />
+(一般論です。<strong>当方で実際に混ぜて試したわけではありません。</strong>)</p>
+</blockquote>
+<p>注意: 当方が確認したのは <strong>Windows 11 Pro (build
+26200)</strong> です。<br />
+Windows 10 では確かめていません。</p>
+<p>注意: <strong><code>software</code> が唯一の描画経路です。</strong>
+<code>BLINKGTK_GPU_MODE</code> に <code>egl</code> や<br />
+<code>swiftshader</code> を指定しても、<strong>描画は software
+のままです。</strong></p>
+<blockquote>
+<p>変数そのものは読まれます。<code>egl</code> を指定すると経路名の申告が
+<code>"P3"</code> になります。<br />
+<strong>変わらないのは描画です。</strong></p>
+</blockquote>
+<p>EGL の描画経路そのもの (<code>blink_web_view_egl.cc</code> /
+<code>blink_wayland_surface.cc</code>)<br />
+を Windows
+のビルド対象に入れていないためです。<strong>描画を受け取る側のサーフェスをどう合成するかが<br />
+未設計</strong>で、DirectComposition を使う形を検討中です。<br />
+API (<code>blink_gtk_ensure_egl_recipient()</code> など) は <strong>ABI
+を保つため<br />
+<code>blinkgtk.dll</code> に残っています</strong>が、Windows では 0
+を返します。</p>
+<hr />
+<h2 id="linux-版との違い">Linux 版との違い</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>Linux</th>
+<th>Windows</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>導入</td>
+<td>RPM / DEB / tarball</td>
+<td><strong>ZIP</strong> (MSI は今後)</td>
+</tr>
+<tr>
+<td>GTK4</td>
+<td>OS のパッケージ</td>
+<td><strong>同梱</strong></td>
+</tr>
+<tr>
+<td>描画</td>
+<td>software / EGL</td>
+<td><strong>software のみ</strong> (EGL は組み込んでいません)</td>
+</tr>
+<tr>
+<td><code>blink_web_view_attach_to_external_surface</code></td>
+<td>あり</td>
+<td><strong>ありません</strong> (Wayland 固有)</td>
+</tr>
+<tr>
+<td>日本語縦組みの版面 (既定)</td>
+<td>列格子 snap は既定 OFF</td>
+<td><strong>列格子 snap の差はありません</strong>
+(行分割は版数などの差で違いうる。下記 (2))</td>
+</tr>
+<tr>
+<td>同
+(<code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
+指定時)</td>
+<td>列格子 snap が効く</td>
+<td><strong>入っていません</strong> — 行の位置が違うはずです (下記)</td>
+</tr>
+</tbody>
+</table>
+<blockquote>
+<p>注意: <strong>縦組みの版面が両 OS で一致する保証はありません。理由は
+2 つあり、別々のものです。</strong></p>
+<p><strong>(1) 列格子 snap が Windows に入っていません。ただし既定では
+Linux でも<br />
+効きません。</strong><br />
+このフラグ <code>CJKVerticalColumnFragmentation</code> は
+<strong>BlinkGTK が足したもの</strong>で<br />
+(Chromium
+上流の機能ではありません)、<code>runtime_enabled_features.json5</code>
+で<br />
+<code>status: "experimental"</code> = <strong>既定 OFF</strong>
+です。<strong>製品コードがこれを<br />
+有効にすることもありません。</strong></p>
+<p><strong>数え方</strong> (2026-09-22 実測、152 / 153 の両ツリー):
+強制的に有効化する<br />
+<code>SetCJKVerticalColumnFragmentation...</code>
+の呼び出しを<strong>ツリー全体</strong>で数えて<br />
+<strong>0 件</strong>。コマンドラインでの有効化
+(<code>--enable-blink-features</code>) も製品コードには<br />
+無く (<code>third_party/blinkgtk/</code> で 0 件)、BlinkGTK
+のツリー内では検証用のハーネスからのみです。<br />
+BlinkGTK 自身の公開文書 (API リファレンス「縦書き版面メトリクス —
+<code>verticalFlowMetrics</code>」) にも<br />
+「<strong>この API は既定では生えません。</strong>
+起動時に次のフラグが要ります。」とあり、<br />
+そのフラグが
+<code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
+です。</p>
+<p><strong>したがって、既定のまま使う限り、この点で版面は変わりません。</strong><br />
+差が出るのは
+<code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
+を<br />
+付けたときだけです。そのとき Linux 版は条件式 4 箇所で snap
+が効きますが、<br />
+この Windows 版の該当 3 ファイルには出現 0 件なので効きません。</p>
+<p><strong>(2) 版数と、行分割の改変の両方が違います (Windows = Chromium
+152 / 比べた時点の Linux 版 1.2.2 = 153)。</strong><br />
+行分割については、153 に入った上流の修正 (CL 8264049、既定 ON
+のフラグ<br />
+<code>LineBreakerHanKerningEnd</code>) を <strong>152
+は持ちません</strong>。BlinkGTK の行分割の改変 (本家 #131) も、<br />
+<strong>Windows (152) には入っていません。</strong><br />
+本体の実測 (153 のみ。合成ページ・フォント 2 種の範囲)
+では、上流のフラグが ON なら<br />
+#131 の改変は値を動かさず、フラグを切ると改変が効きます
+(改変が無いと、span を含む<br />
+場合に #131 の症状が出ます)。<strong>152 はこのフラグを<br />
+持たないので、Windows (152)
+では改変が無いことも差になりうる</strong>と見ています<br />
+(152 では測っていません)。</p>
+<p>注意: <strong>行の位置の差は、両 OS
+の実画を並べて比べたものではありません。</strong><br />
+確かめたのは、Windows 側の該当 3 ファイルに snap の条件式が 1
+件も無い<br />
+ところまでで、<strong>画面上どれだけ違うかは測っていません。</strong></p>
+<p>版面メトリクスを取る JS の API 自体は Windows にも在りますが、<br />
+<strong>返る値が Linux と一致する保証はありません。</strong><br />
+詳細は同梱の <code>docs\environment-variables-ja.md</code> の §2-b
+(縦書き版面メトリクスの API)。</p>
+</blockquote>
+<hr />
+<h2 id="組み込む方">組み込む方</h2>
+<p><code>devel</code> の ZIP に、公開 API
+ヘッダとインポートライブラリが入っています。</p>
+<p><strong>ビルドには Visual Studio Build Tools 2022 と Windows SDK
+が別途要ります。</strong><br />
+(GTK4 を別途入れなくてよいのは、<strong>動かす場合</strong>の話です)</p>
+<p>利用者側のコンパイルには <code>/MD /DCOMPONENT_BUILD</code>
+が要ります。</p>
+<p>公開ヘッダは <code>blink_gtk.h</code> が
+<code>#include &lt;gtk/gtk.h&gt;</code> するため、GTK4 の<br />
+開発用ファイルも同梱しています。</p>
+<p><strong>組み込み時の注意が 3 点あります (1 点目は Windows
+固有)。</strong></p>
+<ol type="1">
+<li><p><strong>ヘッダを include したうえで、公開 API
+の前方宣言を自分でも書かないでください</strong> (Windows 固有)。<br />
+ヘッダは <code>__declspec(dllimport)</code>
+付きで宣言しているので、同じ翻訳単位に <code>dllimport</code> の<br />
+付かない宣言が並ぶと、clang では警告が出ます<br />
+(ヘッダが先なら
+<code>-Winconsistent-dllimport</code>、自前の宣言が先なら
+<code>-Wdll-attribute-on-redeclaration</code>)。<br />
+警告をエラーとして扱う設定 (<code>-Werror</code> / <code>/WX</code>)
+ではビルドが止まります<br />
+(MSVC の cl.exe
+での出方は当方では確かめていません)。前方宣言は書かず、ヘッダだけを使ってください。</p></li>
+<li><p><strong>呼び出し側が解放する戻り値は <code>g_free()</code>
+で解放してください。</strong><br />
+<code>blink_handoff_meta_serialize()</code> が例です。実装が
+<code>g_strdup_printf()</code> で<br />
+確保しているので、<strong>契約としては <code>g_free()</code></strong>
+です。</p>
+<blockquote>
+<p>API リファレンスの掲載例は <code>free()</code>
+になっています。この点は<br />
+<strong>#130 で確認を依頼中</strong>です。なお現行の構成で
+<code>free()</code> が壊れる、<br />
+という意味ではありません — Windows でも <code>blinkgtk.dll</code>
+と<br />
+<code>glib-2.0-0.dll</code> はどちらも <code>/MD</code> で、プロセス内の
+<code>ucrtbase.dll</code> は<br />
+1 本です (2026-09-15
+実測)。<strong>揃えるのは契約のためです。</strong></p>
+</blockquote></li>
+<li><p><strong><code>blink_gtk_sandbox_init()</code> は DLL
+からエクスポートされません。</strong><br />
+静的ライブラリ <code>blinkgtk_sandbox.lib</code>
+経由で実行ファイルに取り込む設計です<br />
+(devel ZIP に同梱)。<strong>Linux ではこの API をまだ呼べません</strong>
+— 本家の<br />
+パッケージが静的ライブラリを含んでいないためです<br />
+(本体リポジトリの issue
+#141。<strong>当方が立てた相談</strong>)。</p></li>
+</ol>
+<hr />
+<h2 id="版数の読み方">版数の読み方</h2>
+<p><code>1.2.1-build3</code> は BlinkGTK
+本体と同じ版数で、<strong>Chromium の版と BlinkGTK の<br />
+パッチレベルに紐付いています。</strong> この版は Chromium 152.0.7977.64
+です。</p>
+<p>手元のものが何か、実行時に確かめられます。</p>
+<pre><code>&gt; blinkgtk_browser.exe --version
+BlinkGTK 1.2.1-build3 (Chromium 152.0.7977.64)</code></pre>
+<p><strong>サイトや文書の数字ではなく、手元の実行ファイルが出す値を見てください。</strong></p>
+<hr />
+<h2 id="詳しい手順">詳しい手順</h2>
+<p>配布物の <code>docs\</code> に日本語 13 本・英語 4 本のドキュメント
+(PDF 版も同数) が<br />
+入っています。入口は <code>docs\00-index-ja.md</code> (英語は
+<code>docs\00-index-en.md</code>) です。</p>
+<table>
+<tbody>
+<tr>
+<td><code>docs\INSTALLATION-ja.md</code></td>
+<td>導入手順</td>
+</tr>
+<tr>
+<td><code>docs\troubleshooting-ja.md</code></td>
+<td>トラブル対応</td>
+</tr>
+<tr>
+<td><code>docs\api-windows-notes-ja.md</code></td>
+<td>API の Windows 固有の注意</td>
+</tr>
+<tr>
+<td><code>docs\environment-variables-ja.md</code></td>
+<td>環境変数の一覧 (日本語のみ)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="更新履歴">更新履歴</h2>
+<table>
+<thead>
+<tr>
+<th>日付</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-09-19</td>
+<td>初版</td>
+</tr>
+<tr>
+<td>2026-09-21</td>
+<td>公開 API 件数に証跡を添えた (Windows / Linux
+とも実測)。<code>blink_gtk_init_with_sandbox()</code>
+が本家の同梱ヘッダの注記と食い違う点を追記。大きさの単位を MiB
+と明記</td>
+</tr>
+<tr>
+<td>2026-09-22</td>
+<td>日本語縦組みの版面について記述を訂正。<strong>既定 (フラグ OFF)
+では両 platform とも列格子 snap
+は効かない</strong>ため、差が出るのはフラグを指定したときだけ。行分割の差は<strong>版数の差</strong>
+(Windows 152 / Linux 153)
+によるもので、当初書いていた別の因果は取り下げた (注意: この取り下げは
+153 の実測だけに基づくもので行き過ぎだった。2026-09-23 の行で訂正)</td>
+</tr>
+<tr>
+<td>2026-09-22</td>
+<td>本家サイトの源ファイルの行番号を本文から外した
+(毎リリース再生成されるため)。証跡と連絡事項の詳細は本家への連絡欄へ移した</td>
+</tr>
+<tr>
+<td>2026-09-22</td>
+<td>主張と測定の対応を正した
+(注入が無いという主張の根拠を、製品コードでの出現 0 件に差し替え)。ZIP
+を組み立てた日時を本文から外した
+(組み直すたびに変わるため)。当方リポジトリのパスと、本家に確認をお願いしている事項の記述を本文から外し、本家への連絡欄に寄せた</td>
+</tr>
+<tr>
+<td>2026-09-22</td>
+<td>有効にする注入が無いという主張の根拠を、強制有効化する setter の出現
+0 件 (152/153 両ツリー)
+に差し替えた。以前は別の主張の測定を引いていた</td>
+</tr>
+<tr>
+<td>2026-09-22</td>
+<td>重要:
+<strong>本家への連絡事項を、原稿とは別の連絡票に分けた。</strong> 原稿の
+HTML コメントに入れていたが、本家のサイトは pandoc
+生成で、<strong>pandoc は HTML コメントをそのまま出力する</strong>
+(実例: 本家の <code>version-history-ja.md:17</code>
+のコメントが公開ページ <code>:61</code>
+に逐語で出ている)。本家への連絡事項や本家の内部スクリプトの行番号が公開される状態だった。原稿の
+HTML コメントは 0 件にした。測定日を実測に合わせて統一</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>公開 API 件数の測定日を、証跡のある 2026-09-21
+に直した。容量の表の測定日を冒頭 (2026-09-22)
+に揃えた。更新履歴の「未報告の…」という書き方を外した
+(公開ページに出るため)</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>本家の API リファレンスから引いた一文を逐語に直した
+(以前は要約を「」で囲んでいた)</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>重要: GitHub の Releases は 10 進の MB で表示する (577 MiB が 605 MB
+に見える) という説明は<strong>逆でした</strong>。Releases の画面は
+1,048,576 バイト単位で表示するので 577 MB と見える。API
+のバイト数と画面の表示を突き合わせて確認</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>本家ヘッダの英文を訳して「」で示していた箇所を、英語の原文の引用に改めた
+(訳は括弧で添えた)</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>原文でないもの (当方の要約、表の読み方、節の呼び名)
+を「」で括っていた箇所を地の文に改めた。コンパイラの文言は原文どおりに直した</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>見出し帯の文字列の測定日を、記録のある 2026-09-21 に直した</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>Windows 11 での直近の確認日を 2026-09-23 に改めた
+(同日に組み直した配布物で展開実行検査が PASS)</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>export の件数が <code>blink</code> / <code>blink_</code>
+で始まる名前だけの数であることを明記した。公開 API
+の前方宣言を自分で書いたときの挙動を訂正 (clang では警告で、止まるのは
+<code>-Werror</code> / <code>/WX</code> のとき)</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>export 全体の件数 (Windows / Linux) を外した
+(数え方が両者で揃っていなかった)。前方宣言の注意を、ヘッダと自前の宣言が同じ翻訳単位に並んだときの話に限った
+(自前の宣言だけなら警告は出ない。clang で確認、cl.exe は未確認)</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>行分割の差について、BlinkGTK
+の改変が無いためではない、と書いていたのを訂正。本体の実測は 153 だけで
+(上流のフラグの ON / OFF は両方測っている)、そこではフラグ ON
+なら改変は値を動かさない。フラグを持たない 152
+では改変が無いことも差になりうる。ZIP の正確な大きさは
+<code>verify.json</code> にあり、<code>SHA256SUMS</code>
+はハッシュのみと正した。大きさの測定日を 09-23
+に。描画を受け取る側の呼び方を一般的な言い方に改めた。履歴から export
+全体の件数を外した</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>本体の計測の範囲 (153 のみ、合成ページ・フォント 2 種。症状は span
+を含む場合) を明記。検証用のハーネスからのみ、を BlinkGTK
+のツリー内に限った。本家ヘッダの引用に原文に無い強調を付けていたのを外した</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>Linux
+版との違いの表で、既定の縦組みの版面を「差はありません」と断定し、下の注記
+(2) と食い違っていた。列格子 snap
+の差に限った。注記の見出しを「一致しません」から「一致する保証はありません」に弱めた
+(実画での比較はしていない)</td>
+</tr>
+<tr>
+<td>2026-09-23</td>
+<td>直前の履歴行が縦組みの行のある表を取り違えていた
+(動作条件の表ではなく Linux 版との違いの表)
+のを直した。冒頭のファイル数を同梱文書の本数に改めた
+(本文にファイル数は無い)</td>
+</tr>
+<tr>
+<td>2026-09-24</td>
+<td>同梱する実行ファイルを <code>simple_browser</code> から
+<code>blinkgtk_browser</code> に替えたのに合わせて改めた
+(本体と同じ決まり: simple_browser
+は開発用のデモで配布物に入れない)。重要: SmartScreen
+を再現できない理由として挙げていた Defender
+の除外は、実際には入っていなかった (2026-09-24 実測。同日
+<code>C:\chromium</code> を除外に追加)。再現できない理由は Mark of the
+Web が付かないことなので、除外の記述を外した</td>
+</tr>
+<tr>
+<td>2026-09-24</td>
+<td>本家の文書検査の指摘 (2026-09-24) を反映: Linux
+との比較は比べた時点の最新 1.2.2-build6 (Chromium 153)
+とのものと明記し、1.2.3-build1 (Chromium 154、2026-09-24 公開)
+との比較はしていないと書いた。new_with_profile は 1.2.2-build6
+の目玉と改めた。引用した本家ヘッダの英文が 1.2.3
+にも同じ形で残ることを確かめて書き添えた。絵文字を言葉に置き換えた
+(注意: / 重要:)。実測日を 2026-09-24 に更新</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>
