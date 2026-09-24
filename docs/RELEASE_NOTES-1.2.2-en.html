@@ -1,0 +1,468 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.2-build6 Release Notes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Released: 2026-09-19 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.2-build6 Release Notes — BlinkGTK">
+<meta property="og:description" content="Released: 2026-09-19 / Chromium: 153.0.8010.36 / Language: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.2-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-122-build6-release-notes">BlinkGTK 1.2.2-build6 Release
+Notes</h1>
+<p><strong>Released</strong>: 2026-09-19 / <strong>Chromium</strong>:
+153.0.8010.36 / Language: <a href="RELEASE_NOTES-1.2.2-ja.html">日本語</a>
+| English</p>
+<p>The rendering engine is updated to <strong>Chromium 153</strong>.</p>
+<hr />
+<h2 id="what-build6-adds">What build6 adds</h2>
+<h3 id="each-view-can-have-its-own-profile-and-cache">Each view can have
+its own profile and cache</h3>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>a <span class="op">=</span> blink_web_view_new_with_profile<span class="op">(</span><span class="st">&quot;tab1&quot;</span><span class="op">);</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>b <span class="op">=</span> blink_web_view_new_with_profile<span class="op">(</span><span class="st">&quot;tab2&quot;</span><span class="op">);</span></span></code></pre></div>
+<p>Until now every WebView in a process shared one profile and cache.
+Opening the same<br />
+URL in several views served all but the first from that cache, so
+<strong>only one load<br />
+actually happened</strong>. That made it impossible to measure what an
+additional view costs.</p>
+<ul>
+<li>The same name means the same profile; different names are
+separate</li>
+<li>Names may contain letters, digits, <code>-</code> and <code>_</code>
+only</li>
+<li>Separated: HTTP cache, cookies, localStorage, IndexedDB</li>
+<li>A named profile keeps its <strong>HTTP cache on disk</strong> at
+<code>profiles/&lt;name&gt;/Cache</code>.<br />
+Views from <code>blink_web_view_new()</code> keep an in-memory cache as
+before</li>
+<li><strong>The cache survives shutdown.</strong> Remove the profile
+directory first when a run<br />
+must start cold</li>
+<li>What <code>blink_gtk_get_profile_path()</code> reports does not
+change</li>
+</ul>
+<h3 id="permission-requests-can-be-told-apart">Permission requests can
+be told apart</h3>
+<p>The <code>permission-request</code> signal now names <strong>40
+kinds</strong> instead of 13. The 27 kinds<br />
+that used to arrive as <code>"unknown"</code> have names, so an
+application can decide based on<br />
+what is being asked for.</p>
+<p>That includes what a reading application actually uses —
+<code>screen-wake-lock</code> (keep the<br />
+screen on while reading), <code>local-fonts</code>,
+<code>persistent-storage</code>, <code>automatic-fullscreen</code><br />
+and <code>pointer-lock</code>.</p>
+<h2 id="what-build6-fixes">What build6 fixes</h2>
+<ul>
+<li>Two observer callbacks could reference an already-destroyed
+WebContents during<br />
+shutdown and crash</li>
+<li>Hyphenation dictionaries are now located once at startup. The lookup
+ran<br />
+synchronous I/O on the UI thread and aborted on builds with diagnostics
+enabled</li>
+<li>The Windows check in the distributed header took the wrong branch
+when the header<br />
+was used from an outside project</li>
+<li>The header said <code>execute_javascript</code> could yield
+<code>NULL</code>; the implementation never<br />
+passes it. It is an empty string, or the four characters
+<code>null</code></li>
+</ul>
+<hr />
+<h2 id="new-in-build5">New in build5</h2>
+<h3 id="the-rendering-path-can-be-chosen-from-the-api">The rendering
+path can be chosen from the API</h3>
+<p>Call <code>blink_gtk_set_gpu_mode()</code> <strong>before</strong>
+<code>blink_gtk_init()</code> and the engine<br />
+starts on that path.</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* before init */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
+<p>After initialisation, <code>blink_web_view_get_gpu_mode()</code>
+reports the path <strong>actually in<br />
+use</strong>, and the startup log names it ("描画経路=<mode>"), so you
+can confirm that<br />
+the request took effect.</p>
+<h3 id="about-the-previous-form">About the previous form</h3>
+<p>Asking for EGL through
+<code>blink_web_view_new_with_gpu_mode()</code> <strong>did not change
+the<br />
+path</strong>. An external user's report brought this to light.</p>
+<p>The rendering path is settled during engine initialisation, together
+with the<br />
+startup flags handed to the GPU process. By the time a WebView is
+created it can<br />
+no longer be changed, so the environment variable this API sets has no
+effect.<br />
+The startup log named EGL in both cases, so <strong>there was no way to
+tell from<br />
+outside whether the request had taken effect</strong>.</p>
+<p>Delivery counts measured on the same compositor and the same
+page:</p>
+<table>
+<thead>
+<tr>
+<th>Form</th>
+<th>EGL deliveries</th>
+<th>via CPU</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_GPU_MODE=egl</code> alone</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>new_with_gpu_mode(EGL)</code> + the variable</td>
+<td>5</td>
+<td>0</td>
+</tr>
+<tr>
+<td><code>new_with_gpu_mode(EGL)</code> alone</td>
+<td>0</td>
+<td>5</td>
+</tr>
+</tbody>
+</table>
+<p>Without also setting the environment variable, applications asking
+for EGL were<br />
+running on the CPU pixel path, which has different performance
+characteristics<br />
+from the zero-copy path.</p>
+<p><code>blink_web_view_new_with_gpu_mode()</code> still works when
+called before<br />
+initialisation. Asking for a different path after initialisation now
+<strong>emits a<br />
+warning</strong> — the engine does not silently draw on another
+path.</p>
+<h2 id="fixed-in-build4">Fixed in build4</h2>
+<h3 id="the-screen-no-longer-stays-blank-on-virtual-machines">The screen
+no longer stays blank on virtual machines</h3>
+<p>On systems using a <strong>Virtio GPU</strong> (virtual machines and
+the like), the GPU path<br />
+(<code>BLINKGTK_GPU_MODE=egl</code>) <strong>stayed blank from start to
+finish</strong>. Reported by an<br />
+external user.</p>
+<p>To decide whether a frame is empty, the engine reads the drawn image
+from the CPU<br />
+side. On this kind of GPU the drawing happens <strong>outside the
+machine</strong>, so that read<br />
+sees nothing. <strong>Frames that did have content were judged empty and
+withheld.</strong></p>
+<p>Pages without animation were the most affected: only a handful of
+frames are drawn<br />
+at startup, and if all of them are withheld the window <strong>stays
+blank for as long as<br />
+it is open</strong>. Animated pages appeared partway through.</p>
+<p>A frame that reads as all zeros is no longer treated as "empty" but
+as <strong>"we cannot<br />
+tell from here"</strong>, and display is withheld only when the frame is
+genuinely white.</p>
+<p><strong>We built an environment with the same GPU device id,
+reproduced the problem, and<br />
+confirmed the content appears after the fix.</strong> On real GPUs
+neither the judgement<br />
+nor the display changes.</p>
+<h3
+id="assistive-technology-started-after-the-application-now-works">Assistive
+technology started after the application now works</h3>
+<p>Until now the accessibility tree appeared only if a screen reader was
+<strong>already<br />
+running when the application started</strong>. By the time a user turned
+on a screen<br />
+reader it was too late, and the application had to be restarted.</p>
+<p>The engine now notices assistive technology appearing later and
+exposes the tree<br />
+from that point. The explicit switch (<code>BLINKGTK_A11Y=1</code>)
+still works as before.</p>
+<h2 id="fixed-in-build3">Fixed in build3</h2>
+<h3 id="closing-the-window-no-longer-crashes">Closing the window no
+longer crashes</h3>
+<p><strong>Closing the window before a page finished loading could
+crash.</strong> Opening a<br />
+book and closing it right away — an ordinary action — triggered it.
+Closing<br />
+after the page had rendered did not, which made it easy to miss.</p>
+<p>The cause was ours. While the page container is being torn down,
+a<br />
+"navigation finished" notification is delivered, and our handler was
+still<br />
+looking at something we had already released. We now detach the
+handler<br />
+before the teardown.</p>
+<p><strong>The workaround (waiting for the load to finish before
+closing) is no longer<br />
+needed.</strong></p>
+<p>Reported by an external user. <strong>Verified across nine timings,
+from 50 ms to<br />
+3 seconds, all exiting cleanly.</strong></p>
+<p>A second failure with the same trigger (an abnormal-termination
+notice instead<br />
+of a crash) also stopped reproducing with the same fix.</p>
+<h3
+id="diagnostic-records-now-state-the-action-actually-taken">Diagnostic
+records now state the action actually taken</h3>
+<p>When drawing through EGL we check whether a buffer is empty. For
+frames past<br />
+the eighth, that record said "not displaying" <strong>while the frame
+was in fact<br />
+displayed</strong>.</p>
+<p>Anyone using the record to diagnose a problem would be <strong>led
+further astray<br />
+the more carefully they read it</strong>. That happened for about a
+month.</p>
+<p>The measurement and the decision taken from it are now written as
+separate<br />
+terms.</p>
+<h2 id="new-in-build3">New in build3</h2>
+<h3
+id="you-can-now-ask-the-compositor-whether-a-frame-reached-the-screen">You
+can now ask the compositor whether a frame reached the screen</h3>
+<p>Until now our records ended at "the buffer was submitted".
+<strong>Whether it<br />
+actually reached the screen was not recorded.</strong></p>
+<p>This build uses the Wayland presentation-time protocol to ask the
+compositor.<br />
+Every submission gets exactly one outcome: presented (with a timestamp)
+or<br />
+discarded.</p>
+<pre><code>BJGX commit  t=391 buf=36 submit=2 op=attach+viewport w=861 h=553 ...
+BJGX discard t=399 buf=36 submit=2</code></pre>
+<p><strong>"The content was empty" and "the content was there but never
+displayed" are<br />
+different events.</strong> The previous records could not tell them
+apart, which led<br />
+to misdiagnosis.</p>
+<p><strong>Nothing is printed by default.</strong> Set
+<code>BLINKGTK_GX_LOG=1</code> to enable it. With<br />
+it unset, neither rendering nor the display decision changes in any
+way.</p>
+<p>The format was agreed with an external user beforehand: one event per
+line,<br />
+<code>key=value</code> only, <code>=</code> as the sole separator. Lines
+are joined by the buffer id<br />
+and the submission counter.</p>
+<h3 id="porting-to-a-third-platform-got-easier">Porting to a third
+platform got easier</h3>
+<p>Alongside the Windows and MIU Darwin ports, the view implementations
+now have<br />
+platform-neutral names, removing per-platform branches from the shared
+code.<br />
+<strong>No user-visible change.</strong></p>
+<hr />
+<h2 id="what-build2-corrects">What build2 corrects</h2>
+<p>The release notes shipped with build1 were wrong. They said our
+previous<br />
+workaround had been removed; <strong>it had not</strong>, and it is
+still present in this<br />
+release. The wording now matches the artifact. <strong>The program is
+otherwise identical to<br />
+build1</strong> and typeset output does not change; only the version
+string it reports<br />
+becomes <code>1.2.2-build2</code>.</p>
+<hr />
+<h2 id="what-build1-makes-possible">What build1 makes possible</h2>
+<h3 id="vertical-lines-now-fill-to-the-end">Vertical lines now fill to
+the end</h3>
+<p>In vertical writing, a line <strong>broke half-way when a closing
+bracket fell at the<br />
+line end</strong>. A line with room for 35 characters held only 17, and
+because<br />
+<code>text-align: justify</code> then spread the remainder, <strong>the
+inter-character advance<br />
+doubled (16px to 33.5px)</strong>. To a reader that line simply looks
+stretched.</p>
+<p>This release resolves it. Under the same conditions all 35 characters
+fit on<br />
+one line.</p>
+<p><strong>It does not occur in horizontal writing.</strong> The problem
+is specific to vertical<br />
+writing. Within vertical writing, however, it did not depend on
+the<br />
+configuration: it appeared with every font we tried (serif,
+sans-serif,<br />
+Noto Serif CJK JP, Noto Sans CJK JP), with ruby, and with
+<code>line-height: normal</code>.<br />
+<strong>Of 13 configurations, 8 exhibited it; all 8 are resolved in this
+release.</strong></p>
+<p>The characters spread out only when <code>text-align: justify</code>
+is in effect. Without<br />
+it the spacing is unchanged and the line simply ends early. Either way
+the line<br />
+stops half-way.</p>
+<p>We reported this upstream (crbug 542686223) and Chromium fixed it.
+The fix is in<br />
+Chromium 153.</p>
+<p>In the previous release (1.2.1 / Chromium 152) we carried our own
+workaround,<br />
+which improved the count from <strong>17 characters to 34</strong>. One
+character still moved<br />
+to the next line, so it was not complete. That workaround is still
+present in this<br />
+release; with the upstream fix in effect it did not change the result
+within the<br />
+range we measured.</p>
+<h3 id="what-this-item-measures-and-what-it-does-not">What this item
+measures, and what it does not</h3>
+<p>We measured <strong>how many characters fit on one line</strong>. A
+single vertical paragraph<br />
+(35 characters) was laid out at heights from 544px to 564px in 1px
+steps, counting<br />
+the characters on the first line, across four fonts, with
+<code>text-align: justify</code>,<br />
+under software rendering.</p>
+<p><strong>We did not measure column filling.</strong> How much room is
+left at the end of a column<br />
+in multi-column layout (whether another line would still fit) is a
+different<br />
+quantity, and we cannot say it improved in this release. Columns not
+filling to<br />
+capacity is tracked separately.</p>
+<h3 id="the-version-can-be-queried-at-run-time">The version can be
+queried at run time</h3>
+<p>The bundled demo answers <code>--version</code>. When reporting a
+problem, this single<br />
+line identifies the build.</p>
+<pre><code>$ blinkgtk_browser --version
+BlinkGTK 1.2.2-build6 (Chromium 153.0.8010.36)</code></pre>
+<p><code>--help</code> prints the usage and how to specify the URL to
+open.</p>
+<h3 id="also-in-this-release">Also in this release</h3>
+<p>Chromium 153 enables <code>EventTimingMatchingHTML</code> (which
+elements event timing<br />
+attributes to) by default, among others. For BlinkGTK users the change
+that<br />
+matters directly is the vertical-writing fix above.</p>
+<hr />
+<h2 id="what-does-not-change">What does not change</h2>
+<ul>
+<li>There are no public API changes. Applications built against the
+previous<br />
+release continue to run</li>
+<li>The render paths (software / EGL), their defaults and how you switch
+between<br />
+them, are unchanged</li>
+<li>The version query added in the previous release<br />
+(<code>blink_gtk_get_version_full()</code> /
+<code>blink_gtk_get_build()</code>) works the same way</li>
+</ul>
+<hr />
+<h2 id="what-we-verified">What we verified</h2>
+<ul>
+<li><strong>EGL path</strong>: passed the check that judges white
+output, undersized drawing and<br />
+abnormal termination from the log alone</li>
+<li><strong>Vertical line filling</strong>: we counted the characters on
+the first line while<br />
+sweeping the width in 1px steps, across four combinations of our own
+workaround<br />
+(present / absent) and the upstream fix (enabled / disabled)</li>
+<li>The same measurements reproduce on an official Google Chrome
+build<br />
+(154 canary), so this is not behaviour specific to BlinkGTK</li>
+</ul>
+</body>
+</html>
+</div></div>
