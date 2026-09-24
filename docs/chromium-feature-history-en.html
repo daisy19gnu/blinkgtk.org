@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Chromium 147 → 152 — What BlinkGTK Gained — BlinkGTK</title>
+  <title>Chromium 147 → 154 — What BlinkGTK Gained — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -26,7 +26,7 @@
 <meta name="description" content="BlinkGTK embeds Chromium&#x27;s rendering engine, Blink, as-is. When Chromium gains a new web capability, moving BlinkGTK to a newer base gives you that capability d">
 <link rel="canonical" href="https://blinkgtk.org/docs/chromium-feature-history-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Chromium 147 → 152 — What BlinkGTK Gained — BlinkGTK">
+<meta property="og:title" content="Chromium 147 → 154 — What BlinkGTK Gained — BlinkGTK">
 <meta property="og:description" content="BlinkGTK embeds Chromium&#x27;s rendering engine, Blink, as-is. When Chromium gains a new web capability, moving BlinkGTK to a newer base gives you that capability d">
 <meta property="og:url" content="https://blinkgtk.org/docs/chromium-feature-history-en.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -42,7 +42,7 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="chromium-147--152--what-blinkgtk-gained">Chromium 147 → 152 —
+<h1 id="chromium-147--154--what-blinkgtk-gained">Chromium 147 → 154 —
 What BlinkGTK Gained</h1>
 <p>Version: 1.2.3-build1 / Language: English | <a
 href="chromium-feature-history-ja.html">日本語</a></p>
@@ -51,7 +51,7 @@ Chromium gains a new<br />
 web capability, <strong>moving BlinkGTK to a newer base gives you that
 capability directly</strong>.<br />
 This document walks through what changed across Chromium 147, 148, 149,
-150, 151 and 152 —<br />
+150, 151, 152, 153 and 154 —<br />
 the versions BlinkGTK has been built on — from the side of what you can
 actually do.</p>
 <p>It is not a digest of specifications. We diffed the engine source
@@ -122,8 +122,8 @@ usable feature check here.<br />
 Design your pages as if the feature does not exist yet.</p>
 <hr />
 <h2 id="the-shape-of-it">The shape of it</h2>
-<p>Across seven versions, the engine's feature flags went from 1,103 to
-1,220. They peaked at 1,240 in 152; 153 brought the number down by
+<p>Across eight versions, the engine's feature flags went from 1,103 to
+1,222. They peaked at 1,240 in 152; 153 brought the number down by
 clearing out switches for behaviour that had settled.</p>
 <table>
 <thead>
@@ -199,11 +199,20 @@ clearing out switches for behaviour that had settled.</p>
 <td>39</td>
 <td>59</td>
 <td>824</td>
-<td>v1.2.2-build1 –</td>
+<td>v1.2.2-build1 – build6</td>
+</tr>
+<tr>
+<td>154</td>
+<td>1,222</td>
+<td>16</td>
+<td>27</td>
+<td>25</td>
+<td>824</td>
+<td>v1.2.3-build1 –</td>
 </tr>
 </tbody>
 </table>
-<p>Each version turns on 28–48 features by default and removes 20–59.
+<p>Each version turns on 16–48 features by default and removes 19–59.
 The 59 removals in 153 stand out; 48 of them were <strong>switches for
 behaviour that was already on by default</strong>.
 <strong>Removals</strong> are easy<br />
@@ -798,8 +807,151 @@ covered above; the rest were<br />
 either unconfirmed or do not affect what a page displays.</p>
 <hr />
 <h2
-id="where-japanese-typography-stands--the-seven-versions-at-a-glance">Where
-Japanese typography stands — the seven versions at a glance</h2>
+id="153--154--vertical-line-breaking-holds-xml-parsing-goes-back-to-the-older-parser">153
+→ 154 — Vertical line breaking holds; XML parsing goes back to the older
+parser</h2>
+<p><strong>For Japanese typesetting, the main news is what did not
+change.</strong> The line-end fix from<br />
+153 carries over, and ruby, emphasis marks and hanging punctuation are
+in the same state<br />
+as in 153.</p>
+<p>In numbers: 27 features added (10 on by default / 10 experimental / 4
+in development /<br />
+3 other), 25 removed, and 10 changed state (6 promoted to on by default,
+3 no longer on by<br />
+default). The set of CSS properties is unchanged (824).</p>
+<h3 id="vertical-line-breaking-matches-153-measured">Vertical line
+breaking matches 153 (measured)</h3>
+<p>We measured 154 with the same harness used for 153: one vertical
+paragraph of 35<br />
+characters, heights 544–564px in 1px steps, software rendering.</p>
+<table>
+<thead>
+<tr>
+<th>What we measured</th>
+<th>154</th>
+<th>153</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Characters on the first line at 544–551px (without / with an inline
+box)</td>
+<td>33</td>
+<td>33</td>
+</tr>
+<tr>
+<td>Characters on the first line at 552–564px (without / with an inline
+box)</td>
+<td>35</td>
+<td>35</td>
+</tr>
+<tr>
+<td>13 variants (ending in a full stop, <code>text-spacing-trim</code>,
+ruby, four typefaces, …)</td>
+<td>all match 153</td>
+<td>(baseline)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>All 42 points of the band sweep and all 13 variants match the
+153 values.</strong> The line-end<br />
+problem fixed in 153 — a line stopping halfway because of a line-end
+prohibition — has not<br />
+come back in 154.</p>
+<p>This covers what the harness measures. We did not run the engine's
+full layout test suite.</p>
+<h3
+id="text-box-trim-now-works-on-inline-elements-on-by-default"><code>text-box-trim</code>
+now works on inline elements (on by default)</h3>
+<p><code>text-box-trim</code> removes the font-derived space above and
+below a line. Until now it only<br />
+applied to block elements. From 154, setting it on an inline element
+such as <code>&lt;span&gt;</code><br />
+also trims that element's top and bottom.</p>
+<p><strong>If a page does not set <code>text-box-trim</code> on inline
+elements, nothing changes.</strong> Pages that<br />
+do will look different from 154.</p>
+<h3 id="xml-parsing-is-back-on-the-older-parser">XML parsing is back on
+the older parser</h3>
+<p>The Rust XML parser that 153 used for <code>DOMParser</code> and
+<code>XMLHttpRequest</code>'s <code>responseXML</code><br />
+is <strong>not used by default in 154</strong> (its state went back from
+<code>stable</code> to <code>experimental</code>).<br />
+Parsing uses the same implementation as before 153.</p>
+<p>A reader that loads an EPUB's OPF or table of contents through
+<code>DOMParser</code> therefore gets<br />
+a different parser in 153 and 154. If parsing results seemed to change
+in 153, they should<br />
+be back to the earlier behaviour in 154.</p>
+<h3
+id="popovers-and-dialogs-close-correctly-on-tap-on-by-default">Popovers
+and dialogs close correctly on tap (on by default)</h3>
+<p>Closing a popover or dialog by tapping outside it (light dismiss) is
+now triggered by<br />
+<code>click</code> instead of <code>pointerdown</code> /
+<code>pointerup</code>. This addresses cases where touch input<br />
+failed to close them.</p>
+<h3 id="video-captions-get-a-settings-button-on-by-default">Video
+captions get a settings button (on by default)</h3>
+<p>The standard <code>&lt;video&gt;</code> controls gain a button that
+opens caption display settings. Caption<br />
+boxes are also sized and placed by the caption's own position alignment
+(WebVTT) rather<br />
+than by <code>text-align</code>.</p>
+<h3
+id="features-that-work-only-when-a-page-asks-for-them-defaults-unchanged">Features
+that work only when a page asks for them (defaults unchanged)</h3>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>How it is triggered</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Sizing an iframe to its content</td>
+<td>Only when the parent sets <code>frame-sizing</code> and the child
+page has
+<code>&lt;meta name="responsive-embedded-sizing"&gt;</code></td>
+</tr>
+<tr>
+<td>Running scripts through <code>setHTMLUnsafe()</code></td>
+<td>Only when <code>runScripts: true</code> is passed; otherwise scripts
+still do not run</td>
+</tr>
+<tr>
+<td>Treating scroll markers as tabs or links</td>
+<td>Only when <code>scroll-marker-group</code> is followed by
+<code>tabs</code> or <code>links</code> (e.g.
+<code>scroll-marker-group: after tabs</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="hanging-punctuation-is-still-not-usable">Hanging punctuation is
+still not usable</h3>
+<p>The implementation flag for <code>hanging-punctuation</code> has been
+<code>test</code> for <strong>six versions in a<br />
+row, 149 through 154</strong>. <code>CSS.supports()</code> returns true,
+but line layout does not change.</p>
+<h3 id="about-the-25-removals">About the 25 removals</h3>
+<p>21 of the 25 removals are <strong>switches for behaviour that was
+already on by default</strong>.<br />
+Column rules (<code>CSSGapDecoration</code>) is one of them: the 31
+places that checked the switch in<br />
+153 are gone in 154, and the feature is simply always on. No CSS
+properties were removed,<br />
+so nothing was lost.</p>
+<p>Guessing meaning from a name introduces errors, so <strong>items
+whose implementation we could<br />
+not confirm are not listed here</strong>. Of the 6 features promoted to
+on by default, 5 are<br />
+covered above.</p>
+<hr />
+<h2
+id="where-japanese-typography-stands--the-eight-versions-at-a-glance">Where
+Japanese typography stands — the eight versions at a glance</h2>
 <p>Given that BlinkGTK is used mainly for Japanese vertical-writing
 e-books, here are the<br />
 relevant items alone. <strong>A dash means the item did not exist in
@@ -815,6 +967,7 @@ that version.</strong></p>
 <th>151</th>
 <th>152</th>
 <th>153</th>
+<th>154</th>
 </tr>
 </thead>
 <tbody>
@@ -827,6 +980,7 @@ that version.</strong></p>
 <td>—</td>
 <td>—</td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td>Ruby overhang (<code>ruby-overhang</code>)</td>
@@ -834,6 +988,7 @@ that version.</strong></p>
 <td>exp.</td>
 <td>exp.</td>
 <td>exp.</td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
@@ -847,6 +1002,7 @@ that version.</strong></p>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td>Ruby placement reimplemented</td>
@@ -855,6 +1011,7 @@ that version.</strong></p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 </tr>
@@ -867,6 +1024,7 @@ that version.</strong></p>
 <td>—</td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td><code>text-autospace</code> ignores ruby</td>
@@ -874,6 +1032,7 @@ that version.</strong></p>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
@@ -887,6 +1046,7 @@ that version.</strong></p>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td>Annotation space on start</td>
@@ -897,12 +1057,25 @@ that version.</strong></p>
 <td>exp.</td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
+</tr>
+<tr>
+<td><code>text-box-trim</code> on inline elements</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td><code>text-box-trim</code> in nested lists</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
@@ -917,6 +1090,7 @@ that version.</strong></p>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td>Caret movement across ruby lines</td>
@@ -927,10 +1101,12 @@ that version.</strong></p>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
+<td><strong>default</strong></td>
 </tr>
 <tr>
 <td>Underlines skip descenders</td>
 <td>exp.</td>
+<td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
 <td><strong>default</strong></td>
@@ -947,12 +1123,14 @@ that version.</strong></p>
 <td>same</td>
 <td>same</td>
 <td>same</td>
+<td>same</td>
 </tr>
 <tr>
 <td>Vertical multi-column fragmentation (BlinkGTK)</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>exp.</td>
 <td>exp.</td>
 <td>exp.</td>
 <td>exp.</td>
@@ -970,7 +1148,7 @@ reader, a<br />
 151-based BlinkGTK is distinctly worth having.</p>
 <p>Second, <strong>hanging punctuation has not arrived</strong>. The
 property was provided in 149, but the<br />
-implementation is still in development as of 151. Full JLReq conformance
+implementation is still in development as of 154. Full JLReq conformance
 needs this one<br />
 move, and BlinkGTK continues to track it.</p>
 <p>The last row is a feature upstream Chromium does not have —
@@ -1052,6 +1230,11 @@ line fell from 35 back to 17. A control run with a non-existent flag
 name stayed at 35.<br />
 That is behaviour, not a declaration, showing this flag produces the
 result.</p>
+<p>For 154 we re-measured line breaking with the same harness as 153.
+All 42 points of the<br />
+band sweep and all 13 variants match the 153 values; that measurement is
+the basis for<br />
+"vertical line breaking matches 153".</p>
 <p>The prose above matches these measurements. We say hanging
 punctuation is unusable<br />
 because it is off <strong>in the actual build</strong>, not merely by
@@ -1070,7 +1253,7 @@ of items described.</p>
 <ul>
 <li><a href="version-history-en.html">BlinkGTK version history</a> — which
 BlinkGTK maps to which Chromium</li>
-<li><a href="RELEASE_NOTES-1.2.2-en.html">Release notes</a></li>
+<li><a href="RELEASE_NOTES-1.2.3-en.html">Release notes</a></li>
 <li><a href="building-with-blinkgtk-en.html">Building with
 BlinkGTK</a></li>
 </ul>

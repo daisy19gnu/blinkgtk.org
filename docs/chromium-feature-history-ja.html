@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>Chromium 147 → 152 — BlinkGTK に何が増えたか — BlinkGTK</title>
+  <title>Chromium 147 → 154 — BlinkGTK に何が増えたか — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -26,7 +26,7 @@
 <meta name="description" content="BlinkGTK は Chromium のレンダリングエンジン Blink をそのまま載せています。つまり Chromium が新しい版で獲得した Web の能力は、BlinkGTK を新しい版に上げるとそのまま 手に入ります。この文書は、BlinkGTK がベースにしてきた Chromium 147・148・149・">
 <link rel="canonical" href="https://blinkgtk.org/docs/chromium-feature-history-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="Chromium 147 → 152 — BlinkGTK に何が増えたか — BlinkGTK">
+<meta property="og:title" content="Chromium 147 → 154 — BlinkGTK に何が増えたか — BlinkGTK">
 <meta property="og:description" content="BlinkGTK は Chromium のレンダリングエンジン Blink をそのまま載せています。つまり Chromium が新しい版で獲得した Web の能力は、BlinkGTK を新しい版に上げるとそのまま 手に入ります。この文書は、BlinkGTK がベースにしてきた Chromium 147・148・149・">
 <meta property="og:url" content="https://blinkgtk.org/docs/chromium-feature-history-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -42,7 +42,7 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="chromium-147--152--blinkgtk-に何が増えたか">Chromium 147 → 152 —
+<h1 id="chromium-147--154--blinkgtk-に何が増えたか">Chromium 147 → 154 —
 BlinkGTK に何が増えたか</h1>
 <p>バージョン: 1.2.3-build1 / 言語: 日本語 | <a
 href="chromium-feature-history-en.html">English</a></p>
@@ -51,7 +51,7 @@ href="chromium-feature-history-en.html">English</a></p>
 <strong>Chromium が新しい版で獲得した Web の能力は、BlinkGTK
 を新しい版に上げるとそのまま<br />
 手に入ります</strong>。この文書は、BlinkGTK がベースにしてきた Chromium
-147・148・149・150・151・152<br />
+147・148・149・150・151・152・153・154<br />
 の間で何が変わったのかを、実際にできるようになったことの側から辿ったものです。</p>
 <p>仕様書の抜粋ではありません。エンジンのソースツリーそのものを版ごとに突き合わせて<br />
 差分を取り、そこから読者に関係するものを選んでいます(取得方法は末尾に書きます)。</p>
@@ -116,7 +116,7 @@ href="chromium-feature-history-en.html">English</a></p>
 現時点では「使えない」前提で版面を組んでください。</p>
 <hr />
 <h2 id="全体像">全体像</h2>
-<p>7 つの版で、エンジンが持つ機能フラグは 1,103 → 1,220
+<p>8 つの版で、エンジンが持つ機能フラグは 1,103 → 1,222
 になりました。152 で一度 1,240 まで増え、153
 で定着した切替フラグの整理により減っています。</p>
 <table>
@@ -193,11 +193,20 @@ href="chromium-feature-history-en.html">English</a></p>
 <td>39</td>
 <td>59</td>
 <td>824</td>
-<td>v1.2.2-build1 〜</td>
+<td>v1.2.2-build1 〜 build6</td>
+</tr>
+<tr>
+<td>154</td>
+<td>1,222</td>
+<td>16</td>
+<td>27</td>
+<td>25</td>
+<td>824</td>
+<td>v1.2.3-build1 〜</td>
 </tr>
 </tbody>
 </table>
-<p>1 版あたり 28〜48 個の機能が既定で有効になり、20〜59
+<p>1 版あたり 16〜48 個の機能が既定で有効になり、19〜59
 個が消えています。153 の削除 59 件は他の版より多く、そのうち 48
 件は「すでに既定で有効だった切替フラグ」でした。<br />
 <strong>削除がある</strong>という<br />
@@ -767,7 +776,146 @@ EPUB のように XML
 3
 件で、残りは確かめきれなかったか、ページの表示に関わらないものです。</p>
 <hr />
-<h2 id="日本語組版の現在地--7-版を通した俯瞰">日本語組版の現在地 — 7
+<h2
+id="153--154--縦組みの行分割は据え置きxml-の解析は元の実装へ戻った版">153
+→ 154 — 縦組みの行分割は据え置き、XML の解析は元の実装へ戻った版</h2>
+<p><strong>日本語組版にとっては、変わらなかったことが一番の情報です。</strong>
+153 で直った縦組みの<br />
+行末の処理はそのまま引き継がれ、ルビ・圏点・ぶら下げの状態も 153
+と同じです。</p>
+<p>差分の規模は、追加 27 件 (既定で有効 10 / 試験段階 10 / 開発中 4 /
+その他 3)、<br />
+削除 25 件、状態が変わったもの 10 件 (うち既定で有効へ昇格 6
+件、既定から外れたもの 3 件)。<br />
+CSS プロパティの増減はありません (824 件のまま)。</p>
+<h3 id="縦組みの行分割は-153-と同じです-実測">縦組みの行分割は 153
+と同じです (実測)</h3>
+<p>153 で行分割を測ったのと同じ計測ツールで、154
+を測り直しました。縦書き 1 段落 35 文字、<br />
+高さ 544〜564px を 1px 刻み、ソフトウェア描画です。</p>
+<table>
+<thead>
+<tr>
+<th>測ったもの</th>
+<th>154</th>
+<th>153</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>544〜551px の 1 行目の文字数 (inline box 無し / 有り)</td>
+<td>33</td>
+<td>33</td>
+</tr>
+<tr>
+<td>552〜564px の 1 行目の文字数 (inline box 無し / 有り)</td>
+<td>35</td>
+<td>35</td>
+</tr>
+<tr>
+<td>設定を変えた 13 通り
+(句点で終わる・<code>text-spacing-trim</code>・ルビ・書体 4 種など)</td>
+<td>153 と全件一致</td>
+<td>(比較の基準)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>帯掃引の 42 点と 13 通りが、153 の値と 1
+つ残らず一致しました。</strong> 行末の禁則で<br />
+行が途中までしか埋まらない現象 (153 で解消) も、154
+で戻っていません。</p>
+<p>範囲はこの計測ツールが測るものに限ります。エンジン全体の layout test
+を回したわけでは<br />
+ありません。</p>
+<h3
+id="text-box-trim-がインライン要素にも効きます-既定で有効"><code>text-box-trim</code>
+がインライン要素にも効きます (既定で有効)</h3>
+<p><code>text-box-trim</code>
+は、行の上下に付くフォント由来の余白を削る指定です。これまでは<br />
+ブロック要素にしか効きませんでした。154 からは <code>&lt;span&gt;</code>
+のようなインライン要素に<br />
+指定しても、その要素の上下の余白が削られます。</p>
+<p><strong>ページが <code>text-box-trim</code>
+をインライン要素に指定していなければ、何も変わりません。</strong><br />
+指定しているページでは、154 から見え方が変わります。</p>
+<h3 id="xml-の解析は153-の-rust-の実装から従来の実装に戻りました">XML
+の解析は、153 の Rust の実装から従来の実装に戻りました</h3>
+<p>153 で <code>DOMParser</code> と <code>XMLHttpRequest</code> の
+<code>responseXML</code> に使われるようになった<br />
+Rust の XML パーサは、154 では<strong>既定で使われません</strong>
+(状態が <code>stable</code> から<br />
+<code>experimental</code> に戻りました)。153
+より前と同じ実装で解析します。</p>
+<p>EPUB の OPF や目次を <code>DOMParser</code> で読むリーダーでは、153
+と 154 で解析の実装が<br />
+違うことになります。153 で解析の結果が変わったと感じていた場合は、154
+で元に<br />
+戻っているはずです。</p>
+<h3
+id="ポップアップとダイアログがタップで正しく閉じます-既定で有効">ポップアップとダイアログが、タップで正しく閉じます
+(既定で有効)</h3>
+<p>ポップオーバーやダイアログの外側をタップして閉じる操作 (light
+dismiss) が、<br />
+<code>pointerdown</code> / <code>pointerup</code> ではなく
+<code>click</code> を契機にするようになりました。<br />
+タッチ操作で閉じ損ねる不具合への対処です。</p>
+<h3
+id="動画の字幕に設定ボタンが付きます-既定で有効">動画の字幕に、設定ボタンが付きます
+(既定で有効)</h3>
+<p><code>&lt;video&gt;</code>
+の標準の操作部品に、字幕の表示設定を開くボタンが加わりました。<br />
+字幕の枠の置き方も、テキストの揃え (<code>text-align</code>)
+ではなく字幕の指定<br />
+(WebVTT の位置揃え) に従って決めるようになっています。</p>
+<h3
+id="ページ側の指定で働くもの-既定の挙動は変わりません">ページ側の指定で働くもの
+(既定の挙動は変わりません)</h3>
+<table>
+<thead>
+<tr>
+<th>機能</th>
+<th>使い方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iframe を中身の大きさに合わせる</td>
+<td>親が <code>frame-sizing</code> を指定し、子のページが
+<code>&lt;meta name="responsive-embedded-sizing"&gt;</code>
+を置いたときだけ働きます</td>
+</tr>
+<tr>
+<td><code>setHTMLUnsafe()</code> でスクリプトを動かす</td>
+<td><code>runScripts: true</code>
+を渡したときだけです。渡さなければ従来どおり動きません</td>
+</tr>
+<tr>
+<td>スクロールマーカーをタブ / リンクとして扱う</td>
+<td><code>scroll-marker-group</code> に <code>tabs</code> または
+<code>links</code> を続けて指定したときだけです (例:
+<code>scroll-marker-group: after tabs</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="ぶら下げはこの版でもまだ使えません-1">ぶら下げは、この版でもまだ使えません</h3>
+<p><code>hanging-punctuation</code> の実装フラグは、<strong>149 から 154
+まで 6 版続けて <code>test</code></strong> の<br />
+ままです。<code>CSS.supports()</code>
+は真を返しますが、行組版は変わりません。</p>
+<h3 id="削除された-25-件について">削除された 25 件について</h3>
+<p>削除の 25 件のうち 21
+件は、<strong>すでに既定で有効だった切替フラグ</strong>です。<br />
+段組みの罫線 (<code>CSSGapDecoration</code>) もその 1 つで、153 では 31
+か所あった切り替えの<br />
+判定が 154 では 0 か所になり、常に有効として動きます。CSS
+プロパティの増減は<br />
+無いので、機能が失われたわけではありません。</p>
+<p>名前から意味を推測すると誤りが混ざるため、<strong>実装を確かめられなかったものは<br />
+本文に載せていません</strong>。既定で有効へ昇格した 6
+件のうち本文で触れたのは 5 件です。</p>
+<hr />
+<h2 id="日本語組版の現在地--8-版を通した俯瞰">日本語組版の現在地 — 8
 版を通した俯瞰</h2>
 <p>BlinkGTK
 の主な用途が日本語縦組みの電子書籍であることを踏まえて、<br />
@@ -783,6 +931,7 @@ EPUB のように XML
 <th>151</th>
 <th>152</th>
 <th>153</th>
+<th>154</th>
 </tr>
 </thead>
 <tbody>
@@ -795,6 +944,7 @@ EPUB のように XML
 <td>—</td>
 <td>—</td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>ルビのはみ出し (<code>ruby-overhang</code>)</td>
@@ -802,6 +952,7 @@ EPUB のように XML
 <td>試験</td>
 <td>試験</td>
 <td>試験</td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
@@ -815,6 +966,7 @@ EPUB のように XML
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>ルビの置き方の再実装</td>
@@ -823,6 +975,7 @@ EPUB のように XML
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 </tr>
@@ -835,6 +988,7 @@ EPUB のように XML
 <td>—</td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td><code>text-autospace</code> がルビ注記を無視</td>
@@ -842,6 +996,7 @@ EPUB のように XML
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
@@ -855,6 +1010,7 @@ EPUB のように XML
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>注記の開始側アキ</td>
@@ -865,12 +1021,25 @@ EPUB のように XML
 <td>試験</td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>インライン要素の <code>text-box-trim</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>入れ子リストの <code>text-box-trim</code></td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
@@ -885,6 +1054,7 @@ EPUB のように XML
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>ルビ行での編集カーソル移動修正</td>
@@ -895,10 +1065,12 @@ EPUB のように XML
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
 </tr>
 <tr>
 <td>下線が文字を避ける</td>
 <td>試験</td>
+<td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
 <td><strong>既定で有効</strong></td>
@@ -915,12 +1087,14 @@ EPUB のように XML
 <td>同左</td>
 <td>同左</td>
 <td>同左</td>
+<td>同左</td>
 </tr>
 <tr>
 <td>縦組み多段の分割 (BlinkGTK 独自)</td>
 <td>—</td>
 <td>—</td>
 <td>—</td>
+<td>試験</td>
 <td>試験</td>
 <td>試験</td>
 <td>試験</td>
@@ -936,7 +1110,7 @@ EPUB のように XML
 151 ベースの BlinkGTK は明確に価値があります。</p>
 <p>ふたつ、<strong>ぶら下げ組版はまだ届いていません</strong>。プロパティは
 149 で用意されましたが、<br />
-実装は 151 でも開発中のままです。JLReq
+実装は 154 でも開発中のままです。JLReq
 の完全準拠にはこの一手が要ります。<br />
 BlinkGTK はここを継続課題として追っています。</p>
 <p>最後の行の「縦組み多段の分割」は上流 Chromium にはない、BlinkGTK
@@ -1016,6 +1190,10 @@ BlinkGTK はここを継続課題として追っています。</p>
 17 に戻ることを確かめました。存在しないフラグ名を渡した対照では 35
 のままです。<br />
 つまりこのフラグが結果を作っていることが、宣言ではなく挙動で裏付けられています。</p>
+<p>154 では、153 と同じ計測ツールで行分割を測り直しました。帯掃引の 42
+点と設定を変えた<br />
+13 通りが、153 の値とすべて一致しています。<br />
+「縦組みの行分割は 153 と同じ」と書いたのは、この実測によります。</p>
 <p>本文の記述はこの実測と一致しています。ぶら下げが使えないと書いたのは、<br />
 上流の宣言だけでなく<strong>実際のビルドでも無効</strong>だからです。</p>
 <p>各版のツリーからこの 2 ファイルを解析して「機能名 →
@@ -1029,7 +1207,7 @@ BlinkGTK はここを継続課題として追っています。</p>
 <ul>
 <li><a href="version-history-ja.html">BlinkGTK 改版履歴</a> — BlinkGTK
 の版と Chromium の版の対応</li>
-<li><a href="RELEASE_NOTES-1.2.2-ja.html">リリースノート</a> —
+<li><a href="RELEASE_NOTES-1.2.3-ja.html">リリースノート</a> —
 各リリースで何ができるようになったか</li>
 <li><a href="building-with-blinkgtk-ja.html">BlinkGTK
 でアプリを作る</a></li>
