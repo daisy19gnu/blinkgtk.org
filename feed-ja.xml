@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-09-20T00:00:00Z</updated>
+  <updated>2026-09-24T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.3-build1 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build1"/>
+    <id>tag:blinkgtk.org,2026:2026-09-24-build1-123:ja</id>
+    <updated>2026-09-24T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>レンダリングエンジンを Chromium 154.0.8037.57 に更新しました。blink_web_view_set_javascript_enabled(FALSE) などの設定が、ページに反映されるようになりました。1.2.2 までは値を覚えるだけで、FALSE にしてもページのスクリプトは実行されていました。画像と localStorage の無効化、既定の文字サイズも効きます。既定の文字コードはまだ効きません。入力メソッドは GTK の選択に従うようになりました。1.2.2 と同じ動作にするには BLINKGTK_IM_MODULE=ibus を指定します。独自スキームのハンドラが out_mime に charset を付けても HTML として表示され、BLINKGTK_EXTRA_SCHEMES のスキームで fetch() が使えます。パッケージ版では、リソースの場所を指定しなくても起動します。外部利用者からのご報告を受けて直したものです。今回から Fedora 45 向けの RPM (.fc45) も用意しました。中身は Fedora 44 向けと同じバイナリで、Fedora 45 の機械で詰め直したものです。dnf リポジトリは Fedora の版ごとに分けました。これまでの設定のままでも Fedora 44 向けを受け取れます。Fedora 45 向けを dnf で受け取るには、blinkgtk.repo を取り直してください (sudo curl -o /etc/yum.repos.d/blinkgtk.repo https://blinkgtk.org/repo/fedora/blinkgtk.repo)。</summary>
+  </entry>
   <entry>
     <title>v1.2.4 以降は Fedora 45 以上が対象になります</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist"/>
