@@ -432,7 +432,7 @@ int main(int argc, char **argv)
   // 公開時に焼き込んだ実績。GitHub API が使えなくても必ず表示する
   // (未認証 API は 60 req/時・IP 単位で枯渇するため、表示を API に依存させない)。
   var withdrawn = 137;   // 取り下げ済み build の実績 (公開 API からは見えない)
-  var baseline  = 1086;       // 公開時点の総計
+  var baseline  = 1097;       // 公開時点の総計
   var show = function (n) {
     el.textContent = 'ダウンロード数 / Downloads: ' + n.toLocaleString('en-US');
     el.hidden = false;
@@ -452,6 +452,31 @@ int main(int argc, char **argv)
       if (n > baseline) show(n);
     })
     .catch(function () { /* 焼き込んだ baseline のまま表示を維持 */ });
+})();
+(function () {
+  // BlinkGTK for Windows の ZIP。Linux とは合算しない。0 件のうちは出さない。
+  var el = document.getElementById('dl-count-win');
+  if (!el) return;
+  var baseline = 0;
+  var show = function (n) {
+    if (n <= 0) return;
+    el.textContent = 'Windows 版のダウンロード数 / Windows downloads: ' + n.toLocaleString('en-US');
+    el.hidden = false;
+  };
+  show(baseline);
+  fetch('https://api.github.com/repos/daisy19gnu/blinkgtk-dist/releases?per_page=100')
+    .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
+    .then(function (rels) {
+      var zip = /-windows-[A-Za-z0-9_-]+\.zip$/;
+      var n = 0;
+      rels.forEach(function (rel) {
+        (rel.assets || []).forEach(function (a) {
+          if (zip.test(a.name)) n += a.download_count || 0;
+        });
+      });
+      if (n > baseline) show(n);
+    })
+    .catch(function () {});
 })();
 </script>
 <!-- BLINKGTK_DLCOUNT_END -->
