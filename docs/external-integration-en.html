@@ -118,42 +118,15 @@ application, a 3D viewer, an EPUB reader, and so on.</p>
 API / pkg-config</strong> without modifying<br />
 BlinkGTK's own sources.</p>
 <hr />
-<h2 id="1-choosing-an-integration-approach">1. Choosing an integration
-approach</h2>
-<p>There are two ways to use BlinkGTK from the outside.</p>
-<table>
-<thead>
-<tr>
-<th style="text-align: left;">Approach</th>
-<th style="text-align: left;">Audience</th>
-<th style="text-align: left;">Advantages</th>
-<th style="text-align: left;">Drawbacks</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td style="text-align: left;"><strong>A. Binary package</strong></td>
-<td style="text-align: left;">General developers, distribution</td>
-<td style="text-align: left;">No Chromium sources needed; pkg-config
-works</td>
-<td style="text-align: left;">Fixed install location</td>
-</tr>
-<tr>
-<td style="text-align: left;"><strong>B. Directly from a Chromium build
-tree</strong></td>
-<td style="text-align: left;">BlinkGTK developers, tracking the latest
-features</td>
-<td style="text-align: left;">Try the newest BlinkGTK immediately</td>
-<td style="text-align: left;">Requires a full Chromium build</td>
-</tr>
-</tbody>
-</table>
-<p>Recommendation: start with <strong>approach A</strong>, and move to
-approach B once you need deeper integration or |<br />
-the newest features.</p>
+<h2 id="1-how-blinkgtk-is-distributed">1. How BlinkGTK is
+distributed</h2>
+<p>BlinkGTK is distributed as binary packages (RPM / DEB / tarball). You
+do not need the Chromium sources,<br />
+and pkg-config gives you the build settings. The install location is
+fixed (see section 3 to place files elsewhere).</p>
 <hr />
-<h2 id="2-approach-a-integrating-from-a-binary-package">2. Approach A:
-integrating from a binary package</h2>
+<h2 id="2-integrating-from-a-binary-package">2. Integrating from a
+binary package</h2>
 <h3 id="21-installation">2.1 Installation</h3>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora / RHEL (RPM)</span></span>
@@ -245,40 +218,12 @@ startup with<br />
 See also "Placing resource files" below.</p>
 </blockquote>
 <hr />
-<h2 id="3-approach-b-using-a-chromium-build-tree-directly">3. Approach
-B: using a Chromium build tree directly</h2>
-<p>For developers who place BlinkGTK at
-<code>third_party/blinkgtk</code> in a Chromium tree and build it
-there.</p>
-<h3 id="31-building">3.1 Building</h3>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/chromium/src</span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">git</span> clone https://blinkgtk.org/ third_party/blinkgtk</span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="co"># assumes is_component_build=true is already set in your gn args</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="ex">autoninja</span> <span class="at">-C</span> out/Release_Component <span class="dt">\</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a>  third_party/blinkgtk/examples:simple_browser <span class="dt">\</span></span>
-<span id="cb7-6"><a href="#cb7-6" aria-hidden="true" tabindex="-1"></a>  libblink_core.so libblink_platform.so libblink_modules.so libv8.so <span class="dt">\</span></span>
-<span id="cb7-7"><a href="#cb7-7" aria-hidden="true" tabindex="-1"></a>  content_shell.pak v8_context_snapshot.bin <span class="dt">\</span></span>
-<span id="cb7-8"><a href="#cb7-8" aria-hidden="true" tabindex="-1"></a>  locales/ja.pak locales/en-US.pak</span></code></pre></div>
-<h3 id="32-running-including-your-own-application">3.2 Running
-(including your own application)</h3>
-<div class="sourceCode" id="cb8"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /path/to/chromium/src/out/Release_Component</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$PWD</span> <span class="dt">\</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="dt">\</span></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
-<blockquote>
-<p><strong>Always run from inside the <code>out/Release_Component</code>
-directory.</strong> At startup BlinkGTK looks for<br />
-<code>./icudtl.dat</code>, <code>./v8_context_snapshot.bin</code>,
-<code>./content_shell.pak</code>, and <code>./locales/</code>.</p>
-</blockquote>
-<hr />
-<h2 id="4-placing-resource-files">4. Placing resource files</h2>
-<p>When running an external application outside a Chromium build tree,
-the following files must sit in the<br />
-same directory as the executable.</p>
-<h3 id="41-required-files">4.1 Required files</h3>
+<h2 id="3-placing-resource-files">3. Placing resource files</h2>
+<p>When you run your application from a location other than where the
+package is installed, place the<br />
+following files in the same directory as the executable, or name their
+location with <code>blink_gtk_set_resources_path()</code>.</p>
+<h3 id="31-required-files">3.1 Required files</h3>
 <table>
 <thead>
 <tr>
@@ -320,7 +265,7 @@ mismatch</td>
 </tr>
 </tbody>
 </table>
-<h3 id="42-additional-files-per-gpu-mode">4.2 Additional files per GPU
+<h3 id="32-additional-files-per-gpu-mode">3.2 Additional files per GPU
 mode</h3>
 <p><strong>SwiftShader mode
 (<code>BLINKGTK_GPU_MODE=swiftshader</code>)</strong>:</p>
@@ -355,15 +300,15 @@ mode</h3>
 <p>No additional files are needed because the system EGL / GL libraries
 are used. The system does need a<br />
 Wayland-capable EGL driver (Mesa, NVIDIA, and so on).</p>
-<h3 id="43-deployment-helper-script-planned">4.3 Deployment helper
+<h3 id="33-deployment-helper-script-planned">3.3 Deployment helper
 script (planned)</h3>
-<div class="sourceCode" id="cb9"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Planned: extract the required files from a Chromium build</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/setup-dev-env.sh</span> <span class="dt">\</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--chromium-src</span><span class="op">=</span>/path/to/chromium/src <span class="dt">\</span></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--target-dir</span><span class="op">=</span>/path/to/your/app/runtime</span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Planned: extract the required files from a Chromium build</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="ex">scripts/setup-dev-env.sh</span> <span class="dt">\</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a>  <span class="at">--chromium-src</span><span class="op">=</span>/path/to/chromium/src <span class="dt">\</span></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>  <span class="at">--target-dir</span><span class="op">=</span>/path/to/your/app/runtime</span></code></pre></div>
 <hr />
-<h2 id="5-choosing-a-gpu-mode">5. Choosing a GPU mode</h2>
+<h2 id="4-choosing-a-gpu-mode">4. Choosing a GPU mode</h2>
 <p>Switch with the <code>BLINKGTK_GPU_MODE</code> environment variable.
 The default is <code>software</code>.</p>
 <table>
@@ -398,8 +343,8 @@ next release)</td>
 </table>
 <p>See <a href="./gpu-modes-en.html">GPU modes</a> for details.</p>
 <hr />
-<h2 id="6-common-pitfalls">6. Common pitfalls</h2>
-<h3 id="61-white-screen-nothing-renders">6.1 "White screen, nothing
+<h2 id="5-common-pitfalls">5. Common pitfalls</h2>
+<h3 id="51-white-screen-nothing-renders">5.1 "White screen, nothing
 renders"</h3>
 <p><strong>Likely causes</strong>:</p>
 <ul>
@@ -411,9 +356,9 @@ are not displayed</li>
 <code>gtk_widget_realize()</code></li>
 </ul>
 <p><strong>How to check</strong>:</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for the line where blink_gtk_init completed, and the line that hands pixels to the screen</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;blink_gtk_init|FATAL|set_dmabuf_pixels&quot;</span></span></code></pre></div>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Look for the line where blink_gtk_init completed, and the line that hands pixels to the screen</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="dv">2</span><span class="op">&gt;&amp;</span><span class="dv">1</span> <span class="kw">|</span> <span class="fu">grep</span> <span class="at">-E</span> <span class="st">&quot;blink_gtk_init|FATAL|set_dmabuf_pixels&quot;</span></span></code></pre></div>
 <ul>
 <li>No line containing <code>blink_gtk_init</code> → resources are
 missing</li>
@@ -423,34 +368,22 @@ pipeline never started</li>
 the loaded HTML may simply have an empty<br />
 background</li>
 </ul>
-<h3 id="62-icu-data-cannot-be-loaded">6.2 "ICU data cannot be
+<h3 id="52-icu-data-cannot-be-loaded">5.2 "ICU data cannot be
 loaded"</h3>
 <p>The resource files are not next to the executable. Either copy
 <code>icudtl.dat</code> there, or point at it<br />
 explicitly with <code>blink_gtk_set_icu_data_path()</code>.</p>
-<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_icu_data_path<span class="op">(</span><span class="st">&quot;/opt/myapp/icudtl.dat&quot;</span><span class="op">);</span></span>
-<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span>  <span class="co">/* GTK4 は引数なし */</span>  <span class="co">// must be called before init</span></span></code></pre></div>
-<h3 id="63-buildlibblinkgtkso-segfaults">6.3
-"<code>build/libblinkgtk.so</code> segfaults"</h3>
-<p><code>build/</code> at the repository root is <strong>mock output
-from the old Meson build</strong>. Meson was removed in<br />
-v1.0.1, but the directory may still be present on disk.</p>
-<div class="sourceCode" id="cb12"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">rm</span> <span class="at">-rf</span> build/</span></code></pre></div>
-<p>When linking from an external application, always reference either
-the installed<br />
-<code>/usr/lib64/libblinkgtk.so</code> or
-<code>out/Release_Component/libblinkgtk.so</code> inside the Chromium
-build tree.</p>
-<h3 id="64-pkg-config-cannot-find-blinkgtk-01">6.4 "pkg-config cannot
+<div class="sourceCode" id="cb9"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_icu_data_path<span class="op">(</span><span class="st">&quot;/opt/myapp/icudtl.dat&quot;</span><span class="op">);</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span>  <span class="co">/* GTK4 は引数なし */</span>  <span class="co">// must be called before init</span></span></code></pre></div>
+<h3 id="53-pkg-config-cannot-find-blinkgtk-01">5.3 "pkg-config cannot
 find <code>blinkgtk-0.1</code>"</h3>
-<div class="sourceCode" id="cb13"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/local/lib/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
-<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--list-all</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk</span></code></pre></div>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/local/lib/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--list-all</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk</span></code></pre></div>
 <p>For a tarball installation, add the installation's
 <code>lib/pkgconfig</code> to <code>PKG_CONFIG_PATH</code>.</p>
 <hr />
-<h2 id="7-troubleshooting-and-references">7. Troubleshooting and
+<h2 id="6-troubleshooting-and-references">6. Troubleshooting and
 references</h2>
 <ul>
 <li><a href="./faq-en.html">FAQ</a> — frequently asked questions</li>
@@ -459,10 +392,10 @@ error</li>
 <li><a href="./gpu-modes-en.html">GPU modes</a></li>
 </ul>
 <hr />
-<h2 id="8-questions-and-bug-reports">8. Questions and bug reports</h2>
+<h2 id="7-questions-and-bug-reports">7. Questions and bug reports</h2>
 <ul>
 <li>GitHub Issues: <a
-href="https://blinkgtk.org/">https://blinkgtk.org/</a></li>
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">https://github.com/daisy19gnu/blinkgtk-dist/issues</a></li>
 <li>When filing a new issue, please include:
 <ul>
 <li>BlinkGTK version
