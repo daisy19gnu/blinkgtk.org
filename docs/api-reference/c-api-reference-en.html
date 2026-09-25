@@ -927,7 +927,7 @@ id="blink_web_view_delete_all_cookies">blink_web_view_delete_all_cookies()</h3>
 <!-- generated: regenerate with python3 release/scripts/gen-api-function-index.py -->
 
 <h2 id="pdf-output">PDF output</h2>
-<p>Writes the current page to a PDF file (from 1.2.3-build2).</p>
+<p>Writes the current page to a PDF file (since 1.2.3-build2).</p>
 <div class="sourceCode" id="cb50"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb50-1"><a href="#cb50-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_pdf<span class="op">(</span>gboolean ok<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> error<span class="op">,</span> gpointer data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb50-2"><a href="#cb50-2" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>ok<span class="op">)</span> g_print<span class="op">(</span><span class="st">&quot;written: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> path<span class="op">);</span></span>
 <span id="cb50-3"><a href="#cb50-3" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span>    g_print<span class="op">(</span><span class="st">&quot;could not write: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> error <span class="op">?</span> error <span class="op">:</span> <span class="st">&quot;(no reason)&quot;</span><span class="op">);</span></span>
@@ -960,11 +960,11 @@ nothing and gets <code>FALSE</code>.</li>
 <li>Header and footer lines (date, URL, page number) are not printed,
 and there is no print dialog.</li>
 <li>The existing <code>blink_web_view_print_to_pdf()</code> also writes
-the PDF from 1.2.3-build2.<br />
+the PDF since 1.2.3-build2.<br />
 Up to 1.2.3-build1 it called <code>window.print()</code> and reported
 success immediately,<br />
 without writing a file.</li>
-<li>PDF output needs the CUPS library (<code>libcups.so.2</code>) from
+<li>PDF output needs the CUPS library (<code>libcups.so.2</code>) since
 1.2.3-build2. The RPM and DEB<br />
 packages pull it in; with the tarball, install it as described in the
 installation guide.</li>
@@ -1338,16 +1338,16 @@ href="./app-integration-api-en.html">app-integration-api-en.md</a></td>
 </tr>
 <tr>
 <td><code>blink_web_view_print_to_pdf()</code></td>
-<td>this page (writes the PDF from 1.2.3-build2)</td>
+<td>this page (writes the PDF since 1.2.3-build2)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_print_to_pdf_with_options()</code></td>
-<td>this page (from 1.2.3-build2)</td>
+<td>this page (since 1.2.3-build2)</td>
 </tr>
 <tr>
 <td><code>blink_pdf_options_new()</code> and the other
 <code>blink_pdf_options_*</code></td>
-<td>this page (from 1.2.3-build2)</td>
+<td>this page (since 1.2.3-build2)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_set_fullscreen_handler()</code></td>

@@ -109,7 +109,7 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-gobject-signals-api-reference">BlinkGTK GObject Signals
 API Reference</h1>
-<p><strong>Version</strong>: 1.2.3-build2<br />
+<p><strong>Version</strong>: 1.2.3-build3<br />
 <strong>Last updated</strong>: 2026-07-30<br />
 <strong>Language</strong>: English |</p>
 <p><a href="./signals-api-ja.html">日本語</a></p>
@@ -123,7 +123,7 @@ and permission requests.</p>
 <p>This page is written from measurements of the actual engine
 implementation.<br />
 The wiring status of each handler was re-checked against
-1.2.3-build2.</p>
+1.2.3-build3.</p>
 <blockquote>
 <p><strong>Major correction from earlier editions (before
 2026-07-30)</strong>: previous<br />
@@ -608,10 +608,9 @@ is a notification — control it with decide-navigation</h3>
 signal cannot block it or open it elsewhere</strong> (no return value).
 To control it,<br />
 use <a
-href="#decide-navigation-v123-build2-and-later"><code>decide-navigation</code></a>
-(v1.2.3-build2<br />
-and later). When a <code>decide-navigation</code> handler decides, this
-signal is not emitted. The current engine<br />
+href="#decide-navigation-v123-build2-and-later"><code>decide-navigation</code></a><br />
+(v1.2.3-build2 and later). When a <code>decide-navigation</code> handler
+decides, this signal is not emitted. The current engine<br />
 is single-window: <strong>by the time the signal fires it has already
 started<br />
 navigating this same WebView to the target URL.</strong></p>
@@ -1358,8 +1357,8 @@ WebKitGTK)</td>
 </tr>
 <tr>
 <td>Controlling new-window requests</td>
-<td>Possible from v1.2.3-build2 with <code>decide-navigation</code>. Not
-possible before that (notification only; always opens in the same
+<td>Possible since v1.2.3-build2 with <code>decide-navigation</code>.
+Not possible before that (notification only; always opens in the same
 view)</td>
 </tr>
 <tr>

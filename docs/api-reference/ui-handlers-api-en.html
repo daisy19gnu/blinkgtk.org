@@ -112,7 +112,7 @@ Certificate Errors — BlinkGTK</title>
 id="blinkgtk-ui-handlers-api-reference--dialogs-file-chooser-certificate-errors">BlinkGTK
 UI Handlers API Reference — Dialogs, File Chooser, Certificate
 Errors</h1>
-<p><strong>Version</strong>: 1.2.3-build2<br />
+<p><strong>Version</strong>: 1.2.3-build3<br />
 <strong>Last updated</strong>: 2026-07-30<br />
 <strong>Language</strong>: English |</p>
 <p><a href="./ui-handlers-api-ja.html">日本語</a></p>
@@ -125,7 +125,7 @@ decisions — all<br />
 with your own dialogs and policies.</p>
 <p>This page is written from measurements of the actual engine
 implementation.<br />
-The wiring status of each handler was re-checked against 1.2.3-build2.
+The wiring status of each handler was re-checked against 1.2.3-build3.
 The handlers differ in maturity, so we start with their<br />
 status:</p>
 <table>
@@ -244,8 +244,8 @@ this</strong>)</td>
 </tr>
 <tr>
 <td>Download</td>
-<td><strong>Not saved</strong> (cancelled; no file is created. Same from
-1.2.3-build2)</td>
+<td><strong>Not saved</strong> (cancelled; no file is created. Same
+since 1.2.3-build2)</td>
 </tr>
 <tr>
 <td>HTTP auth (401 / 407)</td>
@@ -805,7 +805,7 @@ your handler)</td>
 <h3
 id="blink_web_view_set_download_handler-and-blinkdownload">blink_web_view_set_download_handler()
 and BlinkDownload</h3>
-<p><strong>Files can be saved from 1.2.3-build2.</strong> Up to
+<p><strong>Files can be saved since 1.2.3-build2.</strong> Up to
 1.2.3-build1 the handler was never called and<br />
 downloads were cancelled without notice.</p>
 <div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">char</span> <span class="op">*</span>on_download<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>url<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>suggested<span class="op">,</span></span>
@@ -920,7 +920,7 @@ UI are all fully under your control.</p>
 <h3
 id="blink_web_view_set_auth_handler--blink_web_view_auth_response">blink_web_view_set_auth_handler()
 / blink_web_view_auth_response()</h3>
-<p><strong>Called from 1.2.3-build2.</strong> Up to 1.2.3-build1 the
+<p><strong>Called since 1.2.3-build2.</strong> Up to 1.2.3-build1 the
 handler was never called and every 401 / 407 was cancelled.</p>
 <div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> gboolean <span class="op">(*</span>BlinkAuthRequestCallback<span class="op">)(</span></span>
 <span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span></span>
@@ -1075,11 +1075,11 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#
 <tr>
 <td>Downloads</td>
 <td>Not wired up in 1.2.3-build1 and earlier (cancelled without notice).
-Works from 1.2.3-build2</td>
+Works since 1.2.3-build2</td>
 </tr>
 <tr>
 <td>HTTP authentication</td>
-<td>Not wired up to 1.2.3-build1 (401/407 always cancelled). Works from
+<td>Not wired up to 1.2.3-build1 (401/407 always cancelled). Works since
 1.2.3-build2. Credentials are not stored</td>
 </tr>
 <tr>

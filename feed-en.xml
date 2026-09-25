@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-09-25T00:00:00Z</updated>
+  <updated>2026-09-26T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.3-build3 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build3"/>
+    <id>tag:blinkgtk.org,2026:2026-09-26-build3-123:en</id>
+    <updated>2026-09-26T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Opening audio of 5 MB or more served over a custom scheme (such as ebook://) with &lt;audio&gt; no longer makes the whole application window stop responding. Long narration audio can be played and seeked as is. The public API is unchanged.</summary>
+  </entry>
   <entry>
     <title>v1.2.3-build2 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build2"/>

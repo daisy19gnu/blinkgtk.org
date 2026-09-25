@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.3-build2 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.3-build3 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-09-25 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
+<meta name="description" content="Release date: 2026-09-26 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.3-build2 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-09-25 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.3-build3 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-09-26 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,13 +107,36 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-123-build2-release-notes">BlinkGTK 1.2.3-build2 Release
+<h1 id="blinkgtk-123-build3-release-notes">BlinkGTK 1.2.3-build3 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-09-25 /
+<p><strong>Release date</strong>: 2026-09-26 /
 <strong>Chromium</strong>: 154.0.8037.57 / Language: <a
 href="RELEASE_NOTES-1.2.3-ja.html">日本語</a> | English</p>
 <p>The rendering engine is updated to <strong>Chromium 154</strong>.</p>
 <hr />
+<h2 id="what-build3-fixes">What build3 fixes</h2>
+<ul>
+<li><strong>Opening audio of 5 MB or more served over a custom scheme
+(such as <code>ebook://</code>) with <code>&lt;audio&gt;</code> made
+the<br />
+whole application window stop responding</strong> (#137). The body was
+written to the data pipe to the end on the<br />
+UI thread, so when <code>&lt;audio&gt;</code> stopped reading partway,
+the UI thread kept waiting. It happened both while<br />
+paused and while playing (2.5 MB worked; 5, 10 and 151 MB stopped). The
+body is now written in the<br />
+background as fast as the reader consumes it. With 151 MB (60 minutes)
+of audio, loading reaches the<br />
+point where playback can start in about one second, and seeking works.
+The public API is unchanged and<br />
+no extra memory is used</li>
+<li><code>&lt;audio&gt;</code> over a custom scheme sends a single range
+request, <code>Range: bytes=0-</code>, and no further request<br />
+when seeking. Supporting range requests would not change how
+<code>&lt;audio&gt;</code> loads, so this build does not add<br />
+it (a <code>Range</code> header set on <code>fetch()</code> reaches the
+loader, but the whole body is returned)</li>
+</ul>
 <h2 id="what-you-can-do-with-build2">What you can do with build2</h2>
 <h3 id="write-pages-to-pdf-files">Write pages to PDF files</h3>
 <p><code>blink_web_view_print_to_pdf_with_options()</code> writes a PDF

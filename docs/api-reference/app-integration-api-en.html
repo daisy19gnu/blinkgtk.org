@@ -112,7 +112,7 @@ Schemes, Messaging, Script Injection — BlinkGTK</title>
 id="blinkgtk-application-integration-api-reference--custom-schemes-messaging-script-injection">BlinkGTK
 Application Integration API Reference — Custom Schemes, Messaging,
 Script Injection</h1>
-<p><strong>Version</strong>: 1.2.3-build2<br />
+<p><strong>Version</strong>: 1.2.3-build3<br />
 <strong>Last updated</strong>: 2026-07-30</p>
 <p><a href="./app-integration-api-ja.html">日本語</a></p>
 <hr />
@@ -237,9 +237,9 @@ five built-in names —<br />
 <code>app</code> / <code>blinkgtk</code> / <code>res</code> /
 <code>resource</code> / <code>ebook</code> — plus any names added<br />
 before <code>blink_gtk_init()</code> with
-<code>blink_gtk_register_scheme()</code> (from<br />
-1.2.3-build2) or the <code>BLINKGTK_EXTRA_SCHEMES</code> environment
-variable<br />
+<code>blink_gtk_register_scheme()</code><br />
+(since 1.2.3-build2) or the <code>BLINKGTK_EXTRA_SCHEMES</code>
+environment variable<br />
 (comma-separated). URL scheme classification is fixed early in the
 engine's<br />
 startup sequence, so <code>register_custom_scheme()</code> cannot
@@ -408,7 +408,7 @@ as search) needs the query, save it first</li>
 <tr>
 <td>(any name)</td>
 <td>Add before <code>blink_gtk_init()</code> with
-<code>blink_gtk_register_scheme("myapp")</code> (from 1.2.3-build2), or
+<code>blink_gtk_register_scheme("myapp")</code> (since 1.2.3-build2), or
 before startup with
 <code>BLINKGTK_EXTRA_SCHEMES=myapp,plugin</code></td>
 </tr>
@@ -424,7 +424,8 @@ context happens early in engine startup and cannot be done later.<br />
 to an already-registered name rather than adding new names.</p>
 <p>To add a name, call <code>blink_gtk_register_scheme()</code> before
 <code>blink_gtk_init()</code><br />
-(from 1.2.3-build2). It has the same effect as listing the name in<br />
+(since 1.2.3-build2). It has the same effect as listing the name
+in<br />
 <code>BLINKGTK_EXTRA_SCHEMES</code>, and lets applications that cannot
 set an environment<br />
 variable do it in code.</p>
@@ -606,8 +607,8 @@ alt="Messaging between page JavaScript and the C application: postMessage is rec
 <h3 id="three-things-to-know-first-1">Three things to know first</h3>
 <ol type="1">
 <li><strong><code>window.blinkgtk</code> is ready before the page's own
-scripts run</strong> (from<br />
-1.2.3-build2), so inline scripts at the top of the page can use
+scripts run</strong><br />
+(since 1.2.3-build2), so inline scripts at the top of the page can use
 it.<br />
 Up to 1.2.3-build1 it appeared after the page finished loading (onload);
 if<br />
@@ -770,8 +771,8 @@ first</strong>:</p>
 <tbody>
 <tr>
 <td>When <code>window.blinkgtk</code> appears</td>
-<td>Before each page's scripts (document_start, from 1.2.3-build2; after
-onload up to 1.2.3-build1)</td>
+<td>Before each page's scripts (document_start, since 1.2.3-build2;
+after onload up to 1.2.3-build1)</td>
 </tr>
 <tr>
 <td>C callback thread</td>

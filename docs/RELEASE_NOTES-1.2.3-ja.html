@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.3-build2 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.3-build3 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-09-25 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-09-26 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.3-build2 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-09-25 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.3-build3 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-09-26 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,14 +107,36 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-123-build2-リリースノート">BlinkGTK 1.2.3-build2
+<h1 id="blinkgtk-123-build3-リリースノート">BlinkGTK 1.2.3-build3
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-09-25 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-09-26 / <strong>Chromium</strong>:
 154.0.8037.57 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.3-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 154</strong>
 に更新しました。</p>
 <hr />
+<h2 id="build3-で直したこと">build3 で直したこと</h2>
+<ul>
+<li><strong>独自スキーム (<code>ebook://</code> など) で配った 5 MB
+以上の音声を <code>&lt;audio&gt;</code>
+で開くと、アプリのウィンドウごと<br />
+応答しなくなっていました</strong> (#137)。本文を UI
+スレッドの上でデータパイプに最後まで書き込んでいたため、<br />
+<code>&lt;audio&gt;</code> が途中で読むのをやめると、UI
+スレッドが待ち続けていました。一時停止中でも再生中でも起きます<br />
+(2.5 MB は正常、5・10・151 MB
+は止まることを確かめました)。本文は受け手が読んだ分だけ裏で書くように<br />
+直しました。151 MB (60 分) の音声でも、読み込みから再生の準備まで約 1
+秒で進み、シークもできます。<br />
+公開 API は変わりません。余分なメモリも使いません</li>
+<li>独自スキームの <code>&lt;audio&gt;</code> が出す範囲の要求は
+<code>Range: bytes=0-</code> の 1 回だけで、シークしても次の要求は<br />
+出ないことを確かめました。範囲の要求に対応しても
+<code>&lt;audio&gt;</code>
+の読み込み方は変わらないので、この版では<br />
+対応していません (<code>fetch()</code> に付けた <code>Range</code>
+はハンドラの前まで届きますが、応答は全体です)</li>
+</ul>
 <h2 id="build2-でできるようになったこと">build2
 でできるようになったこと</h2>
 <h3 id="ページを-pdf-ファイルに書き出せます">ページを PDF

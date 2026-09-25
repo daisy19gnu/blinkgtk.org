@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-09-25T00:00:00Z</updated>
+  <updated>2026-09-26T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.3-build3 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build3"/>
+    <id>tag:blinkgtk.org,2026:2026-09-26-build3-123:ja</id>
+    <updated>2026-09-26T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>独自スキーム (ebook:// など) で配った 5 MB 以上の音声を &lt;audio&gt; で開くと、アプリのウィンドウごと応答しなくなる問題を直しました。長い朗読音声もそのまま再生・シークできます。公開 API は変わりません。</summary>
+  </entry>
   <entry>
     <title>v1.2.3-build2 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build2"/>
