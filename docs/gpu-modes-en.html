@@ -162,12 +162,14 @@ SwiftShader)</td>
 <h3 id="on-screen-rendering">On-screen rendering</h3>
 <p><strong>In the current release (BlinkGTK 1.2.3 / Chromium 154), the
 software and EGL modes<br />
-display Blink's rendering output in the GTK window.</strong> The
-swiftshader mode has a<br />
-<strong>known problem: nothing appears on screen</strong> (issue #151;
-the capture API also fails<br />
-because no frame arrives). The cause is under investigation. Use
-software or EGL for now.</p>
+display Blink's rendering output in the GTK window.</strong> Up to
+1.2.3-build1 the<br />
+swiftshader mode <strong>showed nothing on screen</strong> (issue #151;
+the capture API also failed<br />
+because no frame arrived). This is fixed in 1.2.3-build2: pages appear
+as in software<br />
+and EGL, and WebGL output is visible too. On 1.2.3-build1 and earlier,
+use software or EGL.</p>
 <p><strong>On machines without a usable GPU, asking for EGL falls back
 to software<br />
 automatically</strong> (since v1.2.1-build2). It switches when no frame
@@ -482,7 +484,11 @@ proper<br />
 tool is the presentation policy:<br />
 <code>blink_web_view_set_presentation_policy()</code>. It skips only the
 cost of<br />
-presenting frames; layout and rasterization (read-ahead) continue.</p>
+presenting frames; layout and rasterization (read-ahead) continue.<br />
+While presentation is stopped, a screenshot request
+(<code>blink_web_view_capture_screenshot_async()</code><br />
+and similar) still gets exactly one frame, after which presentation
+stays stopped (1.2.3-build2 and later).</p>
 <hr />
 <h2 id="6-troubleshooting">6. Troubleshooting</h2>
 <h3 id="61-fatal-gl_factory_ozone-notreached-in-egl-mode">6.1
@@ -504,16 +510,27 @@ ANGLE Vulkan (Issue #53). Upgrade if you are on<br />
 iter6 or earlier.</p>
 <h3 id="63-swiftshader-renders-but-pixels-never-reach-gtk">6.3
 SwiftShader renders, but pixels never reach GTK</h3>
-<p><strong>This is resolved</strong> (Issue #54, 2026-04-19).</p>
+<p><strong>This is resolved in 1.2.3-build2</strong> (first fixed on
+2026-04-19 under Issue #54;<br />
+it came back in later versions, issue #151).</p>
 <ul>
 <li><strong>Symptom</strong>: <code>BLINK_LOAD_FINISHED</code> is
 reached and FPS is around 60, yet the<br />
-GTK window stays black or shows only the background colour</li>
+GTK window stays black or shows only the background colour, and the
+capture<br />
+API times out</li>
 <li><strong>What caused it</strong>: the <code>CopyFromSurface</code>
-guard was over-applied to SwiftShader</li>
-<li><strong>If you still see it</strong>: your build may be old. Please
-use the current release<br />
-(1.2.1 or later); if it persists there, tell us</li>
+guard was applied to SwiftShader too.<br />
+The guard avoids real-GPU readback (Issue #54) and is only needed for
+EGL.<br />
+SwiftShader has no direct-to-screen path like EGL, so
+<code>CopyFromSurface</code> is the<br />
+only way its pages reach the screen</li>
+<li><strong>Versions where the regression was observed</strong>:
+1.2.2-build6 and 1.2.3-build1 (when<br />
+it first came back was not measured)</li>
+<li><strong>If you still see it</strong>: use 1.2.3-build2 or later; if
+it persists there, tell us</li>
 </ul>
 <h3 id="64-egl-rendering-is-clipped-to-the-top-left-corner-hidpi">6.4
 EGL rendering is clipped to the top-left corner (HiDPI)</h3>

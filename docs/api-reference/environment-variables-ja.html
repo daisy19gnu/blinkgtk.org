@@ -94,7 +94,7 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td><code>1</code> = 無条件で無効化。<code>0</code> =
 無条件で有効のまま。<strong>未設定 = 自動判定</strong> —
 <code>/proc/sys/user/max_user_namespaces</code> を読み、<code>0</code>
-か読めなければ<strong>無効化されます</strong>。効いたかは
+か読めなければ<strong>無効化されます</strong>。有効になったかは
 <code>blink_gtk_is_sandboxed()</code> で問い合わせられます</td>
 </tr>
 <tr>
@@ -108,7 +108,7 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td><code>BLINKGTK_SCROLL_SPEED</code></td>
 <td>—</td>
 <td>—</td>
-<td><strong>廃止</strong>。設定しても効きません。スクロール量は固定の係数で決まります
+<td><strong>廃止</strong>。設定しても何も変わりません。スクロール量は固定の係数で決まります
 (2026-09-15
 実測)。該当コードは残っていますが、どの出荷物にも入っていません</td>
 </tr>
@@ -147,7 +147,9 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 を止めます。<strong>組版とラスタは止めないので先読みは保たれます</strong>。<code>warm</code>
 は窓が隠れている間だけ、<code>warm-force</code>
 は<strong>試験専用</strong>で常に止めます。復帰時は damage を待たず 1
-回無条件でキャプチャするため、古いフレームは残りません</td>
+回無条件でキャプチャするため、古いフレームは残りません。止めている間も、<code>blink_web_view_capture_screenshot_async()</code>
+などで撮影を求められたときは 1 枚だけ出して撮ります (1.2.3-build2
+以降。それより前は 2 秒で失敗していました)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_LOG_LEVEL</code></td>
@@ -180,12 +182,13 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td>GTK の入力モジュール id</td>
 <td>—</td>
 <td>v1.2.3 以降、<code>BLINKGTK_IM_MODULE</code> が未設定なら
-<strong>BlinkGTK の WebView にも効きます</strong> (GTK
+<strong>BlinkGTK の WebView にも適用されます</strong> (GTK
 の通常の選び方に従うため)。<code>BLINKGTK_IM_MODULE</code> で id
 を名指しした場合は、GTK4 の
 <code>gtk_im_multicontext_set_context_id()</code>
-がこの変数より優先されるので、WebView には効きません。1.2.2 までは
-BlinkGTK が常に <code>ibus</code> を名指しし、<code>XMODIFIERS</code>
+がこの変数より優先されるので、WebView
+にはこの変数が適用されません。1.2.2 までは BlinkGTK が常に
+<code>ibus</code> を名指しし、<code>XMODIFIERS</code>
 から判別して<strong>プロセス全体の</strong>この変数を書き換えていました。1.2.3
 からは書き換えません</td>
 </tr>
@@ -355,11 +358,11 @@ BlinkGTK が常に <code>ibus</code> を名指しし、<code>XMODIFIERS</code>
 </tbody>
 </table>
 <h2
-id="3b-開発用デモ-simple_browser-だけのもの--配布物では効きません">3b.
+id="3b-開発用デモ-simple_browser-だけのもの--配布物では使われません">3b.
 開発用デモ (<code>simple_browser</code>) だけのもの —
-配布物では効きません</h2>
-<p><strong>ライブラリにも、配布物のサンプル
-<code>blinkgtk_browser</code> にも効きません。</strong> 当方の開発用デモ
+配布物では使われません</h2>
+<p><strong>ライブラリも、配布物のサンプル <code>blinkgtk_browser</code>
+も、この変数を読みません。</strong> 当方の開発用デモ
 <code>simple_browser</code>
 だけが読む変数です。<code>simple_browser</code>
 は配布物に含めていません。</p>
@@ -407,7 +410,7 @@ id="3b-開発用デモ-simple_browser-だけのもの--配布物では効きま�
 </tr>
 <tr>
 <td><code>BLINKGTK_CHROMIUM_VERSION</code></td>
-<td><strong>廃止</strong>。同梱しない内部デモ専用の変数でした。配布物では効きません</td>
+<td><strong>廃止</strong>。同梱しない内部デモ専用の変数でした。配布物では使われません</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_AUTO_RESIZE=&lt;回数&gt;</code></td>

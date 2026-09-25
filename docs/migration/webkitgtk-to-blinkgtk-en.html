@@ -514,9 +514,9 @@ API</a></p>
 </tr>
 <tr>
 <td><code>WebKitPrintOperation</code></td>
-<td>(not implemented)</td>
-<td><code>blink_web_view_print_to_pdf()</code> currently writes no PDF,
-and there is no print dialog. Planned</td>
+<td><code>blink_web_view_print_to_pdf_with_options()</code></td>
+<td>Writes a PDF file only (1.2.3-build2 and later); there is no print
+dialog</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_get_snapshot()</code></td>
@@ -576,9 +576,9 @@ mechanism)</li>
 <li><strong>Direct control equivalent to WebKitWebContext /
 WebKitNetworkSession</strong> —<br />
 proxy settings, cache control, custom data directories</li>
-<li><strong>Printing and PDF output</strong> — no print dialog, and
-<code>blink_web_view_print_to_pdf()</code> currently writes no PDF
-(planned)</li>
+<li><strong>Printing</strong> — no print dialog. Writing a PDF file is
+available from 1.2.3-build2
+(<code>blink_web_view_print_to_pdf_with_options()</code>)</li>
 <li><strong>Editing commands</strong>
 (<code>webkit_web_view_execute_editing_command()</code> equivalent)</li>
 </ul>

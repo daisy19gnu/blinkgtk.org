@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-09-24T00:00:00Z</updated>
+  <updated>2026-09-25T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.3-build2 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-09-25-build2-123:ja</id>
+    <updated>2026-09-25T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>ページを PDF ファイルに書き出せるようになりました (blink_web_view_print_to_pdf_with_options)。ダウンロードの保存、リンク先と新しいウィンドウの開き方の判断、カメラとマイク、HTTP 認証への応答、許可の決定を覚える口、既定のフォントと最小文字サイズの指定も加わりました。swiftshader モードで画面に何も出なかった問題も直しています。1.2.3-build1 のお知らせで「既定の文字コードはまだ反映されない」としましたが、1.2.3-build1 の時点でも反映されていました (ASCII だけのページで測っていたため)。実行時に CUPS のライブラリ (libcups.so.2) が要ります。</summary>
+  </entry>
   <entry>
     <title>BlinkGTK for Windows v1.2.1-build3 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3-windows"/>

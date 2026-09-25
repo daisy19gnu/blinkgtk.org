@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.3-build1 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.3-build2 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-09-24 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-09-25 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.3-build1 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-09-24 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.3-build2 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-09-25 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,14 +107,136 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-123-build1-リリースノート">BlinkGTK 1.2.3-build1
+<h1 id="blinkgtk-123-build2-リリースノート">BlinkGTK 1.2.3-build2
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-09-24 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-09-25 / <strong>Chromium</strong>:
 154.0.8037.57 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.3-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 154</strong>
 に更新しました。</p>
 <hr />
+<h2 id="build2-でできるようになったこと">build2
+でできるようになったこと</h2>
+<h3 id="ページを-pdf-ファイルに書き出せます">ページを PDF
+ファイルに書き出せます</h3>
+<p><code>blink_web_view_print_to_pdf_with_options()</code>
+で、用紙・余白・背景・ページ範囲を指定して<br />
+書き出せます。callback は <strong>PDF
+をファイルに書き終えてから</strong>
+呼ばれ、失敗したときは理由が渡ります。<br />
+縦組み・ルビ・傍点・縦中横も PDF の上で組まれます。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>BlinkPdfOptions<span class="op">*</span> o <span class="op">=</span> blink_pdf_options_new<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>blink_pdf_options_set_paper_size<span class="op">(</span>o<span class="op">,</span> <span class="fl">8.27</span><span class="op">,</span> <span class="fl">11.69</span><span class="op">);</span>   <span class="co">/* A4 (インチ) */</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_print_to_pdf_with_options<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;/tmp/page.pdf&quot;</span><span class="op">,</span> o<span class="op">,</span> on_pdf<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>blink_pdf_options_free<span class="op">(</span>o<span class="op">);</span></span></code></pre></div>
+<p>スクロールする容器 (<code>overflow: auto</code> など)
+の中の本文は、ページに分けられません。容器に見えている<br />
+分だけが 1 ページに入ります (C API リファレンスの「PDF
+の書き出し」)。</p>
+<h3 id="ダウンロードを保存できます">ダウンロードを保存できます</h3>
+<p><code>blink_web_view_set_download_handler()</code>
+のハンドラが保存先を返すと、そこに保存します<br />
+(<code>NULL</code> なら XDG の Download ディレクトリ、<code>""</code>
+なら保存しない)。<code>download-started</code> シグナルで<br />
+<code>BlinkDownload</code>
+を受け取り、進捗・完了・失敗を知り、<code>blink_download_cancel()</code>
+で取り消せます。<br />
+ハンドラを付けていないビューでは保存しません。</p>
+<h3
+id="リンク先と新しいウィンドウの開き方をアプリが決められます">リンク先と新しいウィンドウの開き方をアプリが決められます</h3>
+<p><code>decide-navigation</code> シグナルで、今のビューで開く / 止める
+/ 外部ブラウザで開く / 別のビューで開く /<br />
+新しいビューで開く、から選べます。<code>window.open()</code>
+で開いたページを新しいビューで受け取ると、<br />
+<code>window.opener</code> が保たれます。</p>
+<h3 id="カメラとマイクを使えます">カメラとマイクを使えます</h3>
+<p><code>getUserMedia()</code> が <code>permission-request</code>
+を通るようになりました。許可すると実際に使えます<br />
+(1.2.3-build1 までは常に <code>NotSupportedError</code>)。</p>
+<h3
+id="許可に後から答え要求元を知り決定を覚えさせられます">許可に後から答え、要求元を知り、決定を覚えさせられます</h3>
+<p><code>blink_permission_request_ref()</code> で要求を持ったまま後で
+<code>allow</code> / <code>deny</code> できます。<br />
+要求元は
+<code>blink_permission_request_get_origin()</code>、埋め込み元は
+<code>get_embedding_origin()</code>。<br />
+<code>blink_permission_request_set_remember()</code>
+で決定を覚えさせると、次からは同じ要求が届きません。</p>
+<h3 id="http-認証-basic-など-にアプリが答えられます">HTTP 認証 (Basic
+など) にアプリが答えられます</h3>
+<p><code>blink_web_view_set_auth_handler()</code>
+のハンドラに届きます。<code>blink_web_view_auth_response()</code>
+で<br />
+ユーザー名とパスワードを返します。2 件目以降の認証は、1
+件ずつ順に届きます。</p>
+<h3
+id="既定のフォントと最小文字サイズを選べます">既定のフォントと最小文字サイズを選べます</h3>
+<p><code>blink_web_view_set_font_family()</code>
+で明朝・ゴシック・等幅などの既定のフォントを、<br />
+<code>blink_web_view_set_minimum_font_size()</code>
+で最小文字サイズを指定できます。最小文字サイズは<br />
+ルビにも適用されます (本文 16px・下限 12px なら、ルビは 8px から 12px
+になります)。</p>
+<h3
+id="独自スキームを初期化の前に登録できます">独自スキームを初期化の前に登録できます</h3>
+<p><code>blink_gtk_register_scheme()</code> を
+<code>blink_gtk_init()</code> の前に呼ぶと、環境変数<br />
+<code>BLINKGTK_EXTRA_SCHEMES</code>
+を使わずにスキームを登録できます。そのスキームのページには origin
+が付き、<br />
+<code>fetch()</code> が使えます。</p>
+<h3
+id="windowblinkgtk-をページの最初のスクリプトから使えます"><code>window.blinkgtk</code>
+をページの最初のスクリプトから使えます</h3>
+<p>1.2.3-build1 までは読み込みが終わってから入っていました。</p>
+<h3
+id="画面へ出さない宣言の下でも撮影できます">画面へ出さない宣言の下でも撮影できます</h3>
+<p>提示ポリシーで画面への表示を止めている間でも、<code>blink_web_view_capture_screenshot_async()</code>
+を<br />
+呼ぶと 1 枚だけ表示して撮ります (1.2.3-build1 までは 2
+秒で失敗していました)。</p>
+<h2 id="build2-で直したこと">build2 で直したこと</h2>
+<ul>
+<li><strong>swiftshader モードで画面に何も出なかった</strong> (KNAVI
+#151)。撮影と表示が止まる扱いを EGL にだけ<br />
+適用します。WebGL の描画も表示されます</li>
+<li><strong>解放関数の注記</strong>
+(#130)。<code>blink_handoff_meta_serialize()</code> の戻り値は
+<code>g_free()</code> で解放します<br />
+(ヘッダと文書が C
+標準ライブラリの解放関数と読める書き方でした)。解放の仕方が書かれていなかった<br />
+<code>blink_web_view_get_devtools_url()</code> /
+<code>blink_web_view_get_url()</code> などにも書きました</li>
+<li><strong>既定の文字コード</strong>。<code>blink_web_view_set_default_encoding()</code>
+は 1.2.3-build1 の時点でもページに<br />
+反映されていました (build1 の下の表の「まだ」は、ASCII
+だけのページで測った結果でした)。既定値が<br />
+使われるのは、文字コードの指定が無く、自動判定も答えを出さないページだけです</li>
+<li><strong><code>blink_gtk_sandbox_init()</code>
+の注記</strong>。Windows 版の devel ZIP の
+<code>lib/blinkgtk_sandbox.lib</code> で<br />
+提供していること、Linux の共有ライブラリには無いこと (Linux では
+<code>blink_gtk_init()</code> を使う) を書きました</li>
+<li>覚えた許可を保存するとき、1 回の要求で 2
+種類を覚えると片方が失われることがありました</li>
+</ul>
+<h2 id="build2-で挙動が変わるもの">build2 で挙動が変わるもの</h2>
+<ul>
+<li><strong><code>blink_web_view_print_to_pdf()</code> が実際に PDF
+を書き出します。</strong> 1.2.3-build1 までは<br />
+<code>window.print()</code>
+を呼んで、ファイルを書かずに成功を返していました</li>
+<li><strong>PDF の書き出しのため、実行時に CUPS のライブラリ
+(<code>libcups.so.2</code>) が要ります。</strong> RPM・DEB では<br />
+依存として入ります。tarball では <code>cups-libs</code> (Fedora) /
+<code>libcups2</code> (Debian・Ubuntu) を入れてください</li>
+<li><strong>RPM / DEB の <code>/usr/bin/blinkgtk-simple-browser</code>
+は <code>/usr/bin/blinkgtk-browser</code> になりました。</strong><br />
+旧名のリンクは残しません。指す先
+(<code>/usr/libexec/blinkgtk-0.1/blinkgtk_browser</code>)
+は同じです</li>
+<li>ダウンロードは、ハンドラを付けていないビューでは保存しません</li>
+</ul>
 <h2 id="build1-でできるようになったこと">build1
 でできるようになったこと</h2>
 <h3
@@ -214,10 +336,10 @@ id="計測したい区間に自分で目印を打てます">計測したい区�
 を呼ぶと、トレースに目印が入ります。イベント名が<br />
 その名前になり、Web の <code>performance.mark()</code>
 と同じ形で並びます。</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 起動: --trace-startup=toplevel,blink.user_timing</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;workload_ready&quot;</span><span class="op">);</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* ... 測りたい区間 ... */</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;idle_static_ready&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// 起動: --trace-startup=toplevel,blink.user_timing</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;workload_ready&quot;</span><span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* ... 測りたい区間 ... */</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;idle_static_ready&quot;</span><span class="op">);</span></span></code></pre></div>
 <p>カテゴリ <code>blink.user_timing</code>
 を足していなければ、この呼び出しは何もしません。</p>
 <h3 id="chromium-154-で既定で有効になった機能">Chromium 154
@@ -245,9 +367,9 @@ id="計測したい区間に自分で目印を打てます">計測したい区�
 <li><p><code>load-failed</code>
 シグナルのヘッダの注記が実装と違っていました。ハンドラの正しい形は<br />
 次のとおりです (シグナル自体は変えていません)</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed <span class="op">(</span>BlinkWebView <span class="op">*</span>web_view<span class="op">,</span> BlinkLoadError error_code<span class="op">,</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>failing_uri<span class="op">,</span> gpointer user_data<span class="op">);</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed <span class="op">(</span>BlinkWebView <span class="op">*</span>web_view<span class="op">,</span> BlinkLoadError error_code<span class="op">,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>failing_uri<span class="op">,</span> gpointer user_data<span class="op">);</span></span></code></pre></div></li>
 <li><p><code>blink_gtk_init_with_sandbox()</code>
 をヘッダは「共有ライブラリにまだ無い」と書いて<br />
 いましたが、1.2.2-build4 から入っています。Linux では <code>NULL</code>

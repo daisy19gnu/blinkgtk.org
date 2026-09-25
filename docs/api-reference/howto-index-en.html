@@ -253,10 +253,18 @@ href="./page-search-zoom-en.html#blink_web_view_find_in_page">In-page
 search and zoom</a></td>
 </tr>
 <tr>
+<td>Change the serif / sans-serif / monospace typeface, or set a minimum
+font size</td>
+<td><code>blink_web_view_set_font_family()</code> /
+<code>blink_web_view_set_minimum_font_size()</code> (1.2.3-build2 and
+later)</td>
+<td><a href="./settings-api-en.html#fonts">Settings API</a></td>
+</tr>
+<tr>
 <td>Change the default font size / encoding</td>
 <td><code>blink_web_view_set_default_font_size()</code> (1.2.3 and
-later) / <code>blink_web_view_set_default_encoding()</code> (<strong>not
-applied yet</strong>)</td>
+later) / <code>blink_web_view_set_default_encoding()</code> (1.2.3 and
+later; only for pages with no declared or detected encoding)</td>
 <td><a
 href="./settings-api-en.html#limitation-up-to-122-and-what-123-changes">Settings
 API</a></td>
@@ -359,18 +367,20 @@ href="./ui-handlers-api-en.html#blink_web_view_set_file_chooser_handler">UI
 handlers API</a></td>
 </tr>
 <tr>
-<td>Download / save files</td>
-<td>Not supported yet (app-side workaround available)</td>
-<td><a
-href="./ui-handlers-api-en.html#downloads-currently-not-supported">UI
-handlers API — status and workaround</a></td>
+<td>Download / save files, show progress, cancel</td>
+<td><code>blink_web_view_set_download_handler()</code> with the
+<code>BlinkDownload</code> from <code>download-started</code>
+(<code>blink_download_cancel()</code> etc., 1.2.3-build2 and later)</td>
+<td><a href="./ui-handlers-api-en.html#downloads">UI handlers API —
+Downloads</a></td>
 </tr>
 <tr>
 <td>Respond to HTTP authentication (Basic etc.)</td>
-<td>Not supported yet</td>
-<td><a
-href="./ui-handlers-api-en.html#http-authentication-currently-not-supported">UI
-handlers API — status and workaround</a></td>
+<td><code>blink_web_view_set_auth_handler()</code> +
+<code>blink_web_view_auth_response()</code> (1.2.3-build2 and
+later)</td>
+<td><a href="./ui-handlers-api-en.html#http-authentication">UI handlers
+API — HTTP authentication</a></td>
 </tr>
 <tr>
 <td>Decide how certificate errors are handled</td>
@@ -386,6 +396,29 @@ handlers API</a></td>
 <code>blink_permission_request_deny()</code></td>
 <td><a href="./signals-api-en.html">Signals API</a></td>
 </tr>
+<tr>
+<td>Answer a permission request later / see who is asking / remember the
+answer</td>
+<td><code>blink_permission_request_ref()</code> /
+<code>_get_origin()</code> / <code>_set_remember()</code> /
+<code>blink_web_view_get_permission_state()</code> (1.2.3-build2 and
+later)</td>
+<td><a
+href="./signals-api-en.html#permission-requests-permission-request">Signals
+API</a></td>
+</tr>
+<tr>
+<td>Open links in the system browser / stop a navigation / open a new
+window in another view</td>
+<td><code>decide-navigation</code> signal with
+<code>blink_navigation_decision_open_external()</code> /
+<code>blink_navigation_decision_ignore()</code> /
+<code>blink_navigation_decision_create_view()</code> (1.2.3-build2 and
+later)</td>
+<td><a
+href="./signals-api-en.html#decide-navigation-v123-build2-and-later">Signals
+API</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="save-and-export">Save and export</h2>
@@ -400,9 +433,9 @@ handlers API</a></td>
 <tbody>
 <tr>
 <td>Print the page to PDF</td>
-<td><strong>Not implemented</strong> —
-<code>blink_web_view_print_to_pdf()</code> currently reports success
-without writing a PDF (planned)</td>
+<td><code>blink_web_view_print_to_pdf_with_options()</code> (paper,
+margins, ranges) / <code>blink_web_view_print_to_pdf()</code>
+(1.2.3-build2 and later)</td>
 <td><a href="./c-api-reference-en.html">C API</a></td>
 </tr>
 <tr>

@@ -178,9 +178,9 @@ devel）</a></li>
 <p>ランタイム依存（アプリ実行に必要な共有ライブラリ）:</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora / RHEL</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4 glib2 wayland vulkan-loader</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4 glib2 wayland vulkan-loader cups-libs</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-1 libglib2.0-0 libwayland-client0 libvulkan1</span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-1 libglib2.0-0 libwayland-client0 libvulkan1 libcups2</span></code></pre></div>
 <p>Chromium ランタイム一式（V8 / Blink / Viz 等の 500 以上の .so
 とリソース）は<br />
 runtime パッケージの <strong>private

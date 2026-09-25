@@ -44,7 +44,7 @@
 </div><div class="card doc">
 <h1 id="chromium-147--154--blinkgtk-に何が増えたか">Chromium 147 → 154 —
 BlinkGTK に何が増えたか</h1>
-<p>バージョン: 1.2.3-build1 / 言語: 日本語 | <a
+<p>バージョン: 1.2.3-build2 / 言語: 日本語 | <a
 href="chromium-feature-history-en.html">English</a></p>
 <p>BlinkGTK は Chromium のレンダリングエンジン Blink
 をそのまま載せています。つまり<br />
@@ -76,7 +76,7 @@ href="chromium-feature-history-en.html">English</a></p>
 <tr>
 <td><strong>既定で有効</strong></td>
 <td><code>stable</code></td>
-<td>何もしなくても効きます。BlinkGTK でもそのまま使えます</td>
+<td>何もしなくても有効です。BlinkGTK でもそのまま使えます</td>
 </tr>
 <tr>
 <td><strong>試験段階</strong></td>
@@ -97,7 +97,7 @@ href="chromium-feature-history-en.html">English</a></p>
 プロパティとしての受け皿が入りました</strong>。<br />
 <code>getComputedStyle()</code> で値も返ります。しかし実装のフラグは 151
 の時点でも <code>test</code> のままで、<br />
-<strong>実際の行組版には効きません</strong>。「プロパティが存在する」ことと「組版が変わる」ことは<br />
+<strong>実際の行組版には反映されません</strong>。「プロパティが存在する」ことと「組版が変わる」ことは<br />
 別の出来事です。</p>
 <p>実際に測ると、この食い違いは
 <strong>機能検出のコードを裏切る形</strong>で出ます<br />
@@ -108,7 +108,7 @@ href="chromium-feature-history-en.html">English</a></p>
 <p><strong><code>CSS.supports()</code> が true を返しますが、行組版は
 1px も変わりません。</strong><br />
 版面をちょうど本文 8 字幅にして「本文 8 字 +
-句点」を流すと、ぶら下げが効けば<br />
+句点」を流すと、ぶら下げが行われれば<br />
 1 行に収まるはずのところ、<code>none</code> でも <code>allow-end</code>
 でも <strong>2 行のまま</strong>でした。</p>
 <p>つまり <code>CSS.supports('hanging-punctuation', ...)</code>
@@ -232,7 +232,7 @@ href="chromium-feature-history-en.html">English</a></p>
 関数が使えるようになりました。「このブラウザは<br />
 この at-rule を解釈するか」を CSS だけで分岐できます</li>
 <li><code>revert</code> キーワードが <code>@rule</code>
-の文脈でも効くようになりました</li>
+の文脈でも使えるようになりました</li>
 <li>コンテナクエリで、コンテナ名だけを指定する書き方が有効になりました</li>
 </ul>
 <h3 id="そのほか">そのほか</h3>
@@ -253,7 +253,7 @@ href="chromium-feature-history-en.html">English</a></p>
 段組みの罫線と、ぶら下げの「受け皿」</h2>
 <p><strong>一言で</strong>:
 多段レイアウトの表現力が増え、日本語組版の器がひとつ用意された版です。</p>
-<h3 id="日本語組版に効いたもの">日本語組版に効いたもの</h3>
+<h3 id="日本語組版に関わる変更">日本語組版に関わる変更</h3>
 <p><strong><code>hanging-punctuation</code> が CSS
 プロパティとして入りました</strong>。行頭・行末に句読点や<br />
 括弧が来たとき、版面の外へぶら下げる指定です(<code>none</code> /
@@ -263,11 +263,11 @@ JIS X 4051 と JLReq
 <code>getComputedStyle()</code> も動きます。</p>
 <p>ただし前述のとおり、<strong>実装フラグは 151 の時点でも
 <code>test</code> のままです</strong>。<br />
-書けるようになったが、まだ効きません。ここは Chromium
+書けるようになったが、まだ組版には反映されません。ここは Chromium
 の今後を待つ部分であり、<br />
 BlinkGTK としても継続して追っている項目です。</p>
 <p><strong>ルビが入った行での編集操作が直りました</strong>(行単位のカーソル移動)。ルビ付きの本文で<br />
-上下キーを押したときの挙動が、ルビの有無で崩れなくなります。編集系アプリには効きます。</p>
+上下キーを押したときの挙動が、ルビの有無で崩れなくなります。編集系アプリで役立ちます。</p>
 <p><code>text-decoration-skip-spaces</code>
 も追加されました。下線を引くとき、単語間のスペースを<br />
 飛ばすかどうかを制御できます。</p>
@@ -305,9 +305,9 @@ BlinkGTK としても継続して追っている項目です。</p>
 版面を詰める道具が増えた版</h2>
 <p><strong>一言で</strong>: この 5 版でいちばん実りが多く、BlinkGTK
 v1.1.0 の土台になった版です。</p>
-<h3 id="日本語組版に効いたもの-1">日本語組版に効いたもの</h3>
+<h3 id="日本語組版に関わる変更-1">日本語組版に関わる変更</h3>
 <p><strong><code>text-box-trim</code>
-が入れ子リストでも効くようになりました</strong>。行の上下に生じるフォント<br />
+が入れ子リストにも適用されるようになりました</strong>。行の上下に生じるフォント<br />
 由来のアキ(ハーフレディング)を削って、指定した文字の高さで版面を作るための仕組みです。<br />
 日本語では、見出しと本文のアキを設計値どおりに詰めるときにこれが要ります。</p>
 <p><strong>全角スペースの扱いが直りました</strong>。テキストの位置対応表(オフセットマッピング)を<br />
@@ -316,7 +316,7 @@ v1.1.0 の土台になった版です。</p>
 <p><strong>書記素クラスタの境界チェック</strong>が入りました。絵文字の合字や結合文字を、<br />
 カーソル移動や削除で分断しにくくなります。</p>
 <p><code>::first-line</code> に <code>text-transform</code>
-が効くようになり、行分割の中断処理も改善されました。</p>
+が適用されるようになり、行分割の中断処理も改善されました。</p>
 <h3 id="css-1">CSS</h3>
 <ul>
 <li><strong>角丸が全面的に拡張されました</strong>。<code>corner</code>
@@ -352,7 +352,7 @@ v1.1.0 の土台になった版です。</p>
 ルビと圏点が仕様として整った版</h2>
 <p><strong>一言で</strong>: 日本語組版にとって、この 5
 版でもっとも直接的な収穫がある版です。</p>
-<h3 id="日本語組版に効いたもの-2">日本語組版に効いたもの</h3>
+<h3 id="日本語組版に関わる変更-2">日本語組版に関わる変更</h3>
 <p><strong>ルビのはみ出し(<code>ruby-overhang</code>)が既定で有効になりました</strong>。147
 からずっと<br />
 試験段階だったものが、151
@@ -367,7 +367,7 @@ v1.1.0 の土台になった版です。</p>
 広がっていましたが、151 では行の高さは <code>line-height</code>
 のまま保たれ、<br />
 必要なぶんは外側のコンテナが伸びます。</p>
-<p>この変更の効き方を、151
+<p>この変更による違いを、151
 のビルドで実測しました。縦組み、<code>font-size: 16px</code>、<br />
 <code>text-emphasis-style: sesame</code> で、段落の実 pitch
 を測った値です。</p>
@@ -485,7 +485,7 @@ v1.1.0 の土台になった版です。</p>
 で「次版以降の動きを注視する価値がある」と書いた注記のアキが、<br />
 152
 で既定になりました。あわせてルビの配置計算そのものが作り直されています。</p>
-<h3 id="日本語組版に効いたもの-3">日本語組版に効いたもの</h3>
+<h3 id="日本語組版に関わる変更-3">日本語組版に関わる変更</h3>
 <p><strong>注記の開始側のアキ(<code>AnnotationSpaceOnStart</code>)が既定で有効になりました。</strong><br />
 151
 では試験段階でした。ブロックの開始側に境界線が無いとき、ルビの注記が<br />
@@ -588,7 +588,7 @@ CSS Text 3 が定めています。152 でその定義に合わせました。</
 <p>152 でフラグが <strong>29 種</strong>消えました。ただし、そのうち
 <strong>25 種は 151 の時点で既に既定 (stable) でした</strong>。<br />
 これは挙動が恒久化して、<strong>設定で切り替えられなくなった</strong>ことを意味します。</p>
-<p><strong>逃げ道として設定していた場合は効かなくなります。</strong>
+<p><strong>逃げ道として設定していた場合は無視されるようになります。</strong>
 代表的なもの:</p>
 <table>
 <thead>
@@ -679,7 +679,7 @@ id="縦組みで閉じ括弧が行末に来ても行が埋まります-既定で
 </tbody>
 </table>
 <p><strong>明示的に無効化すると 17
-文字に戻ります</strong>。これが、この機能が効いていることの<br />
+文字に戻ります</strong>。これが、この機能が動作していることの<br />
 裏付けです。存在しないフラグ名を渡した対照では 35
 のままで、スイッチそのものは<br />
 結果に影響しないことも確かめています。</p>
@@ -714,7 +714,7 @@ href="https://html.spec.whatwg.org/multipage/interaction.html#autocorrection">HT
 Standard</a> にあります。</p>
 <p>日本語入力そのものの挙動を変えるものではありませんが、氏名や住所のように<br />
 自動修正が邪魔になる欄を持つフォームでは、<code>autocorrect=off</code>
-の指定が効くように<br />
+の指定が反映されるように<br />
 なった、と考えてください。</p>
 <h3
 id="カメラとマイクの許可をページの中に置けます-既定で有効">カメラとマイクの許可を、ページの中に置けます
@@ -828,12 +828,12 @@ CSS プロパティの増減はありません (824 件のまま)。</p>
 を回したわけでは<br />
 ありません。</p>
 <h3
-id="text-box-trim-がインライン要素にも効きます-既定で有効"><code>text-box-trim</code>
-がインライン要素にも効きます (既定で有効)</h3>
+id="text-box-trim-がインライン要素にも適用されます-既定で有効"><code>text-box-trim</code>
+がインライン要素にも適用されます (既定で有効)</h3>
 <p><code>text-box-trim</code>
 は、行の上下に付くフォント由来の余白を削る指定です。これまでは<br />
-ブロック要素にしか効きませんでした。154 からは <code>&lt;span&gt;</code>
-のようなインライン要素に<br />
+ブロック要素にしか適用されませんでした。154 からは
+<code>&lt;span&gt;</code> のようなインライン要素に<br />
 指定しても、その要素の上下の余白が削られます。</p>
 <p><strong>ページが <code>text-box-trim</code>
 をインライン要素に指定していなければ、何も変わりません。</strong><br />
@@ -1184,7 +1184,7 @@ BlinkGTK はここを継続課題として追っています。</p>
 についても同じ確認をしています。<code>LineBreakerHanKerningEnd</code>
 は上流の宣言が<br />
 <code>stable</code>
-ですが、宣言を読むだけでは実際に効いているか分かりません。そこで<br />
+ですが、宣言を読むだけでは実際に組版へ反映されているか分かりません。そこで<br />
 <strong>起動時にこのフラグを明示的に無効化して測り直し</strong>、1
 行に入る文字数が 35 から<br />
 17 に戻ることを確かめました。存在しないフラグ名を渡した対照では 35

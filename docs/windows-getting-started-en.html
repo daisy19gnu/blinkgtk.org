@@ -186,20 +186,31 @@ library</td>
 <code>blink_gtk_init_with_sandbox()</code> comes from <strong>measuring
 the shared library.</strong></p>
 </blockquote>
-<p><strong><code>blink_gtk_sandbox_init()</code> cannot be called on
-Linux yet.</strong> The upstream header<br />
-says it "lives only in the static library blinkgtk_sandbox, which the
-current<br />
-packages do not include. Linking against it will fail."<br />
-(Issue #141, which that header text cites, is a question
-<strong>we</strong> filed in the<br />
-upstream repository.) The same sentence is still in the 1.2.3-build1
-header (the<br />
-note on <code>blink_gtk_sandbox_init()</code> in
-<code>blink_gtk.h</code>; checked 2026-09-24). In the<br />
-1.2.3 header, <code>blink_gtk_init_with_sandbox()</code> is marked
-<code>Since: 1.2.2</code> and<br />
-described as provided by the shared library.<br />
+<p><strong><code>blink_gtk_sandbox_init()</code> is Windows-only and
+cannot be called on Linux.</strong><br />
+From 1.2.3-build2, the upstream header marks it "Windows only." and says
+of Linux:<br />
+"The Linux shared library does not export it, so calling it there fails
+to link."<br />
+On Linux, call <code>blink_gtk_init()</code> or pass <code>NULL</code>
+to <code>blink_gtk_init_with_sandbox()</code>;<br />
+code shared between the platforms can guard the call with
+<code>#ifdef G_OS_WIN32</code><br />
+(per the same header note). The same header names the Windows source
+as<br />
+<code>lib/blinkgtk_sandbox.lib</code> in the BlinkGTK for Windows devel
+ZIP, from 1.2.1-build3.<br />
+<code>Since:</code> is <code>1.2.1</code> for
+<code>blink_gtk_sandbox_init()</code> and <code>1.2.2</code> for<br />
+<code>blink_gtk_init_with_sandbox()</code> (checked 2026-09-25 against
+the devel header as of<br />
+1.2.3-build2). As of 1.2.3-build1, the header instead said it "lives
+only in the static<br />
+library blinkgtk_sandbox, which the current packages do not include.
+Linking against it<br />
+will fail." (Issue #141, which the note on
+<code>blink_gtk_init_with_sandbox()</code> cites, is a<br />
+question <strong>we</strong> filed in the upstream repository.)<br />
 The Windows package ships that static library, so it works here.</p>
 <hr />
 <h2 id="what-you-get">What you get</h2>
@@ -497,11 +508,13 @@ contract.</strong></p>
 from the DLL.</strong> It is linked<br />
 into your executable through the static library
 <code>blinkgtk_sandbox.lib</code>,<br />
-which the devel ZIP carries. <strong>On Linux this entry point cannot be
-called<br />
-yet</strong> — upstream's packages do not ship the static library (issue
-#141 in<br />
-the upstream repository, filed by us).</p></li>
+which the devel ZIP carries. <strong>This entry point is Windows-only
+and cannot<br />
+be called on Linux</strong> (the Linux shared library does not export
+it; for what to<br />
+call on Linux instead, see the sandbox paragraph above). The background
+is<br />
+issue #141 in the upstream repository, filed by us.</p></li>
 </ol>
 <hr />
 <h2 id="reading-the-version">Reading the version</h2>
@@ -700,6 +713,16 @@ when we compared, and that we have not compared against 1.2.3-build1
 as the 1.2.2-build6 highlight; checked that the quoted upstream header
 sentence is unchanged in 1.2.3 and said so; replaced emoji with words
 (Note: / Important:); measurement dates updated to 2026-09-24</td>
+</tr>
+<tr>
+<td>2026-09-25</td>
+<td>Rewrote the sandbox paragraph for the
+<code>blink_gtk_sandbox_init()</code> note revised in upstream
+1.2.3-build2 (Windows-only, not callable on Linux, what to call on Linux
+instead, <code>Since:</code>). The earlier sentence is kept as what the
+header said as of 1.2.3-build1. Troubleshooting item 3 (cannot be called
+on Linux yet, because the packages do not ship the static library) now
+says it is Windows-only</td>
 </tr>
 </tbody>
 </table>

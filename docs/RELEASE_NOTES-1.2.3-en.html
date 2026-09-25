@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.3-build1 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.3-build2 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-09-24 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
+<meta name="description" content="Release date: 2026-09-25 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.3-build1 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-09-24 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.3-build2 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-09-25 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,13 +107,139 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-123-build1-release-notes">BlinkGTK 1.2.3-build1 Release
+<h1 id="blinkgtk-123-build2-release-notes">BlinkGTK 1.2.3-build2 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-09-24 /
+<p><strong>Release date</strong>: 2026-09-25 /
 <strong>Chromium</strong>: 154.0.8037.57 / Language: <a
 href="RELEASE_NOTES-1.2.3-ja.html">日本語</a> | English</p>
 <p>The rendering engine is updated to <strong>Chromium 154</strong>.</p>
 <hr />
+<h2 id="what-you-can-do-with-build2">What you can do with build2</h2>
+<h3 id="write-pages-to-pdf-files">Write pages to PDF files</h3>
+<p><code>blink_web_view_print_to_pdf_with_options()</code> writes a PDF
+with the paper, margins, background<br />
+and page range you choose. The callback runs <strong>after the PDF has
+been written</strong>, and gets the<br />
+reason when it fails. Vertical text, ruby, emphasis marks and
+tate-chu-yoko come out in the PDF.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>BlinkPdfOptions<span class="op">*</span> o <span class="op">=</span> blink_pdf_options_new<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>blink_pdf_options_set_paper_size<span class="op">(</span>o<span class="op">,</span> <span class="fl">8.27</span><span class="op">,</span> <span class="fl">11.69</span><span class="op">);</span>   <span class="co">/* A4, in inches */</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_print_to_pdf_with_options<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;/tmp/page.pdf&quot;</span><span class="op">,</span> o<span class="op">,</span> on_pdf<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>blink_pdf_options_free<span class="op">(</span>o<span class="op">);</span></span></code></pre></div>
+<p>Text inside a scrolling container (<code>overflow: auto</code> and
+the like) is not split into pages:<br />
+only what is visible in the container goes onto one page (see "PDF
+output" in the C API reference).</p>
+<h3 id="save-downloads">Save downloads</h3>
+<p>When the handler set with
+<code>blink_web_view_set_download_handler()</code> returns a path, the
+file is<br />
+saved there (<code>NULL</code> means the XDG Download directory,
+<code>""</code> means do not save). The<br />
+<code>download-started</code> signal hands you a
+<code>BlinkDownload</code> for progress, completion and failure,
+and<br />
+<code>blink_download_cancel()</code> cancels it. A view without a
+handler does not save downloads.</p>
+<h3 id="decide-where-links-and-new-windows-open">Decide where links and
+new windows open</h3>
+<p>The <code>decide-navigation</code> signal lets you choose: open in
+this view, stop, open in the external<br />
+browser, open in another view, or open in a new view. A page opened with
+<code>window.open()</code> and<br />
+taken into a new view keeps <code>window.opener</code>.</p>
+<h3 id="use-the-camera-and-microphone">Use the camera and
+microphone</h3>
+<p><code>getUserMedia()</code> now goes through
+<code>permission-request</code>; once allowed, the devices work<br />
+(up to 1.2.3-build1 it always failed with
+<code>NotSupportedError</code>).</p>
+<h3
+id="answer-permissions-later-see-who-asks-and-remember-decisions">Answer
+permissions later, see who asks, and remember decisions</h3>
+<p>Keep a request with <code>blink_permission_request_ref()</code> and
+<code>allow</code> / <code>deny</code> it later.<br />
+<code>blink_permission_request_get_origin()</code> gives the requesting
+origin and <code>get_embedding_origin()</code><br />
+the embedding one. After
+<code>blink_permission_request_set_remember()</code>, the same request
+is not<br />
+asked again.</p>
+<h3 id="answer-http-authentication-basic-and-others">Answer HTTP
+authentication (Basic and others)</h3>
+<p>Requests arrive at the handler set with
+<code>blink_web_view_set_auth_handler()</code>; answer with<br />
+<code>blink_web_view_auth_response()</code>. Further requests arrive one
+at a time.</p>
+<h3 id="choose-default-fonts-and-a-minimum-font-size">Choose default
+fonts and a minimum font size</h3>
+<p><code>blink_web_view_set_font_family()</code> sets the default serif,
+sans-serif, monospace and other<br />
+families, and <code>blink_web_view_set_minimum_font_size()</code> a
+minimum size. The minimum also applies<br />
+to ruby (with 16px text and a 12px minimum, ruby grows from 8px to
+12px).</p>
+<h3 id="register-custom-schemes-before-initialization">Register custom
+schemes before initialization</h3>
+<p>Call <code>blink_gtk_register_scheme()</code> before
+<code>blink_gtk_init()</code> to register a scheme without the<br />
+<code>BLINKGTK_EXTRA_SCHEMES</code> environment variable. Pages on that
+scheme get an origin and can use <code>fetch()</code>.</p>
+<h3 id="use-windowblinkgtk-from-the-pages-first-script">Use
+<code>window.blinkgtk</code> from the page's first script</h3>
+<p>Up to 1.2.3-build1 it was added after loading finished.</p>
+<h3 id="take-screenshots-while-presentation-is-stopped">Take screenshots
+while presentation is stopped</h3>
+<p>While the presentation policy keeps the view off screen,
+<code>blink_web_view_capture_screenshot_async()</code><br />
+now presents one frame and captures it (up to 1.2.3-build1 it failed
+after 2 seconds).</p>
+<h2 id="what-build2-fixes">What build2 fixes</h2>
+<ul>
+<li><strong>swiftshader mode showed nothing on screen</strong> (KNAVI
+#151). The rule that stops capture and<br />
+display now applies to EGL only. WebGL output is shown too</li>
+<li><strong>Notes on freeing results</strong> (#130). Free the result of
+<code>blink_handoff_meta_serialize()</code> with<br />
+<code>g_free()</code> (the header and documentation read as the C
+library function). The free function is<br />
+now also stated for <code>blink_web_view_get_devtools_url()</code>,
+<code>blink_web_view_get_url()</code> and others</li>
+<li><strong>Default encoding.</strong>
+<code>blink_web_view_set_default_encoding()</code> was already
+applied<br />
+as of 1.2.3-build1 (the "Not yet" in the build1 table below came from
+measuring with an ASCII-only<br />
+page). The default is used only for pages that declare no encoding and
+for which automatic<br />
+detection gives no answer</li>
+<li><strong>The note on <code>blink_gtk_sandbox_init()</code></strong>
+now says it is provided by <code>lib/blinkgtk_sandbox.lib</code>
+in<br />
+the Windows devel ZIP, and is not in the Linux shared library (use
+<code>blink_gtk_init()</code> on Linux)</li>
+<li>Remembering two kinds of permission from one request could lose one
+of them</li>
+</ul>
+<h2 id="what-changes-in-behaviour-with-build2">What changes in behaviour
+with build2</h2>
+<ul>
+<li><strong><code>blink_web_view_print_to_pdf()</code> now writes the
+PDF.</strong> Up to 1.2.3-build1 it called<br />
+<code>window.print()</code> and reported success without writing a
+file</li>
+<li><strong>PDF output needs the CUPS library
+(<code>libcups.so.2</code>) at run time.</strong> The RPM and DEB
+packages<br />
+pull it in; with the tarball, install <code>cups-libs</code> (Fedora) or
+<code>libcups2</code> (Debian, Ubuntu)</li>
+<li><strong>In the RPM / DEB packages,
+<code>/usr/bin/blinkgtk-simple-browser</code> is now
+<code>/usr/bin/blinkgtk-browser</code>.</strong><br />
+The old link name is not kept. It still points to<br />
+<code>/usr/libexec/blinkgtk-0.1/blinkgtk_browser</code></li>
+<li>A view without a download handler does not save downloads</li>
+</ul>
 <h2 id="what-you-can-do-with-build1">What you can do with build1</h2>
 <h3
 id="turning-javascript-images-and-localstorage-off-now-takes-effect">Turning
@@ -211,10 +337,10 @@ own markers on the part you want to measure</h3>
 <p><code>blink_gtk_trace_mark("name")</code> puts a marker in the trace.
 The event is named after the<br />
 marker, the same shape as the web's <code>performance.mark()</code>.</p>
-<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Start with: --trace-startup=toplevel,blink.user_timing</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;workload_ready&quot;</span><span class="op">);</span></span>
-<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* ... the part to measure ... */</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;idle_static_ready&quot;</span><span class="op">);</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">// Start with: --trace-startup=toplevel,blink.user_timing</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;workload_ready&quot;</span><span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="co">/* ... the part to measure ... */</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>blink_gtk_trace_mark<span class="op">(</span><span class="st">&quot;idle_static_ready&quot;</span><span class="op">);</span></span></code></pre></div>
 <p>Without the <code>blink.user_timing</code> category the call does
 nothing.</p>
 <h3 id="features-enabled-by-default-in-chromium-154">Features enabled by
@@ -245,9 +371,9 @@ the result</p></li>
 <li><p>The header comment of the <code>load-failed</code> signal did not
 match the implementation. The<br />
 correct handler signature is (the signal itself is unchanged):</p>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed <span class="op">(</span>BlinkWebView <span class="op">*</span>web_view<span class="op">,</span> BlinkLoadError error_code<span class="op">,</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>failing_uri<span class="op">,</span> gpointer user_data<span class="op">);</span></span></code></pre></div></li>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_failed <span class="op">(</span>BlinkWebView <span class="op">*</span>web_view<span class="op">,</span> BlinkLoadError error_code<span class="op">,</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>                            <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>failing_uri<span class="op">,</span> gpointer user_data<span class="op">);</span></span></code></pre></div></li>
 <li><p>The header said <code>blink_gtk_init_with_sandbox()</code> was
 not in the shared library yet, but it<br />
 has been since 1.2.2-build4. On Linux, passing <code>NULL</code> behaves

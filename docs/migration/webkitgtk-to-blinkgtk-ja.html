@@ -501,9 +501,9 @@ API</a></p>
 </tr>
 <tr>
 <td><code>WebKitPrintOperation</code></td>
-<td>(未実装)</td>
-<td><code>blink_web_view_print_to_pdf()</code> は現在 PDF
-を作らない。印刷ダイアログも無い。対応予定</td>
+<td><code>blink_web_view_print_to_pdf_with_options()</code></td>
+<td>PDF ファイルへの書き出しのみ (1.2.3-build2
+以降)。印刷ダイアログは無い</td>
 </tr>
 <tr>
 <td><code>webkit_web_view_get_snapshot()</code></td>
@@ -562,9 +562,9 @@ BlinkGTK に (まだ) 無いもの</h2>
 <li><strong>WebKitWebContext / WebKitNetworkSession
 相当の直接操作</strong> — プロキシ設定、<br />
 キャッシュ制御、独自のデータディレクトリ指定など</li>
-<li><strong>印刷と PDF 出力</strong> —
-印刷ダイアログは無く、<code>blink_web_view_print_to_pdf()</code>
-も現在は PDF を作らない (対応予定)</li>
+<li><strong>印刷</strong> — 印刷ダイアログは無い。PDF
+ファイルへの書き出しは 1.2.3-build2 から
+(<code>blink_web_view_print_to_pdf_with_options()</code>)</li>
 <li><strong>編集コマンド</strong>
 (<code>webkit_web_view_execute_editing_command()</code> 相当)</li>
 </ul>

@@ -110,7 +110,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-描画経路のライブ切替と引き継ぎメタ-blinkshift">BlinkGTK
 描画経路のライブ切替と引き継ぎメタ (BlinkShift)</h1>
-<p><strong>バージョン</strong>: 1.2.3-build1<br />
+<p><strong>バージョン</strong>: 1.2.3-build2<br />
 <strong>最終更新</strong>: 2026-09-01<br />
 <strong>言語</strong>: 日本語 |</p>
 <p><a href="./render-path-handoff-en.html">English</a></p>
@@ -197,8 +197,8 @@ dmabuf 直渡しは<br />
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>BlinkHandoffMeta<span class="op">*</span> blink_handoff_meta_deserialize<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> text<span class="op">);</span></span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span>  blink_handoff_meta_free<span class="op">(</span>BlinkHandoffMeta<span class="op">*</span> meta<span class="op">);</span></span></code></pre></div>
 <p><code>export</code> は失敗すると <code>NULL</code>
-を返します。<code>serialize</code> の戻り値は
-<code>free()</code>、<br />
+を返します。<code>serialize</code> の戻り値は <code>g_free()</code> (C
+の <code>free()</code> ではありません)、<br />
 <code>deserialize</code> と <code>export</code> の戻り値は
 <code>blink_handoff_meta_free()</code> で解放します。</p>
 <p>直列化の形式は INI
@@ -282,7 +282,7 @@ id="現時点でメタに載っていないもの">現時点でメタに載っ�
 <span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;経路=</span><span class="sc">%s</span><span class="st">  </span><span class="sc">%d</span><span class="st"> ms</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">,</span> to<span class="op">,</span> gate_ms<span class="op">);</span></span>
 <span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;  前: </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> g_before <span class="op">!=</span> NULL <span class="op">?</span> g_before <span class="op">:</span> <span class="st">&quot;(採れず)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
 <span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    printf<span class="op">(</span><span class="st">&quot;  後: </span><span class="sc">%s</span><span class="st">&quot;</span><span class="op">,</span> text <span class="op">!=</span> NULL <span class="op">?</span> text <span class="op">:</span> <span class="st">&quot;(採れず)</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
-<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    free<span class="op">(</span>text<span class="op">);</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>text<span class="op">);</span></span>
 <span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    blink_handoff_meta_free<span class="op">(</span>after<span class="op">);</span></span>
 <span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
 <span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
@@ -290,7 +290,7 @@ id="現時点でメタに載っていないもの">現時点でメタに載っ�
 <span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> request_switch<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> path_id<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>  BlinkHandoffMeta<span class="op">*</span> before <span class="op">=</span> blink_web_view_export_handoff_meta<span class="op">(</span>view<span class="op">);</span></span>
 <span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>before <span class="op">!=</span> NULL<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    free<span class="op">(</span>g_before<span class="op">);</span></span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    g_free<span class="op">(</span>g_before<span class="op">);</span></span>
 <span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a>    g_before <span class="op">=</span> blink_handoff_meta_serialize<span class="op">(</span>before<span class="op">);</span></span>
 <span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a>    blink_handoff_meta_free<span class="op">(</span>before<span class="op">);</span></span>
 <span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
@@ -316,7 +316,7 @@ id="現時点でメタに載っていないもの">現時点でメタに載っ�
 <span id="cb4-61"><a href="#cb4-61" aria-hidden="true" tabindex="-1"></a>  request_switch<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
 <span id="cb4-62"><a href="#cb4-62" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-63"><a href="#cb4-63" aria-hidden="true" tabindex="-1"></a>  blink_gtk_run_main_loop<span class="op">();</span></span>
-<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  free<span class="op">(</span>g_before<span class="op">);</span></span>
+<span id="cb4-64"><a href="#cb4-64" aria-hidden="true" tabindex="-1"></a>  g_free<span class="op">(</span>g_before<span class="op">);</span></span>
 <span id="cb4-65"><a href="#cb4-65" aria-hidden="true" tabindex="-1"></a>  blink_gtk_shutdown<span class="op">();</span></span>
 <span id="cb4-66"><a href="#cb4-66" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> <span class="dv">0</span><span class="op">;</span></span>
 <span id="cb4-67"><a href="#cb4-67" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>

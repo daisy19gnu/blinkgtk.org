@@ -109,7 +109,7 @@ Windows 側は <code>#ifndef _WIN32</code> の中を、Linux 側は
 Linux 版は 2026-09-24 に 1.2.3-build1 (Chromium 154)
 を公開しましたが、<strong>1.2.3 との比較はしていません。</strong><br />
 1.2.3 で直った点 (JavaScript・画像・localStorage
-の無効化が効くようになった等) が<br />
+を無効にする設定がページに反映されるようになった等) が<br />
 この Windows 版 (1.2.1-build3)
 でどうなっているかも、確かめていません。</p>
 <p>注意: <strong>Linux 版 1.2.2 で入った 4 本は、この版の Windows
@@ -171,22 +171,32 @@ Linux 版は 2026-09-24 に 1.2.3-build1 (Chromium 154)
 1.2.2-build6 を「あり」としたのは<br />
 <strong>共有ライブラリを実測した結果</strong>です。</p>
 </blockquote>
-<p><strong><code>blink_gtk_sandbox_init()</code> は、Linux
-ではまだ呼べません。</strong> 本家のヘッダ (英文) が<br />
-"it lives only in the static library blinkgtk_sandbox, which the current
-packages<br />
-do not include. Linking against it will fail." と明記しています<br />
-(静的ライブラリ blinkgtk_sandbox
-の中にしか無く、それは現在のパッケージに含まれないので、<br />
-リンクは失敗する、の意)<br />
-(ヘッダ本文が参照している issue #141
-は、<strong>当方が本体リポジトリに立てた相談</strong>です)。<br />
-この英文は、1.2.3-build1 のヘッダ (<code>blink_gtk.h</code> の
-<code>blink_gtk_sandbox_init()</code> の注記) にも同じ形で残っています
-(2026-09-24 に確認)。<br />
-なお 1.2.3 のヘッダでは、<code>blink_gtk_init_with_sandbox()</code> は
-<code>Since: 1.2.2</code>
-で、共有ライブラリが提供すると書かれています。<br />
+<p><strong><code>blink_gtk_sandbox_init()</code> は Windows
+専用で、Linux では呼べません。</strong><br />
+本家の 1.2.3-build2 からのヘッダ (英文) は、この関数を "Windows only."
+とし、Linux については<br />
+"The Linux shared library does not export it, so calling it there fails
+to link." と書いています<br />
+(Linux の共有ライブラリはこの関数を export していないので、Linux
+で呼ぶとリンクに失敗する、の意)。<br />
+Linux では、<code>blink_gtk_init()</code>
+を使うか、<code>blink_gtk_init_with_sandbox()</code> に
+<code>NULL</code> を渡します。<br />
+両方の OS で同じコードを使う場合は、呼び出しを
+<code>#ifdef G_OS_WIN32</code> で囲めます
+(同じヘッダの注記による)。<br />
+同じヘッダは、Windows での提供元を、BlinkGTK for Windows の devel ZIP の
+<code>lib/blinkgtk_sandbox.lib</code><br />
+(1.2.1-build3 から) としています。<code>Since:</code>
+は、<code>blink_gtk_sandbox_init()</code> が <code>1.2.1</code>、<br />
+<code>blink_gtk_init_with_sandbox()</code> が <code>1.2.2</code> です
+(2026-09-25 に、1.2.3-build2 の時点の devel のヘッダで確認)。<br />
+なお 1.2.3-build1 の時点のヘッダは、この関数について "it lives only in
+the static library blinkgtk_sandbox,<br />
+which the current packages do not include. Linking against it will
+fail." と書いていました。<br />
+<code>blink_gtk_init_with_sandbox()</code> の注記が参照している issue
+#141 は、<strong>当方が本体リポジトリに立てた相談</strong>です。<br />
 Windows 版は静的ライブラリを同梱しているので呼べます。</p>
 <hr />
 <h2 id="何が入っていますか">何が入っていますか</h2>
@@ -354,7 +364,7 @@ API (<code>blink_gtk_ensure_egl_recipient()</code> など) は <strong>ABI
 <td>同
 (<code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
 指定時)</td>
-<td>列格子 snap が効く</td>
+<td>列格子への snap が行われる</td>
 <td><strong>入っていません</strong> — 行の位置が違うはずです (下記)</td>
 </tr>
 </tbody>
@@ -364,7 +374,7 @@ API (<code>blink_gtk_ensure_egl_recipient()</code> など) は <strong>ABI
 2 つあり、別々のものです。</strong></p>
 <p><strong>(1) 列格子 snap が Windows に入っていません。ただし既定では
 Linux でも<br />
-効きません。</strong><br />
+列格子への snap は行われません。</strong><br />
 このフラグ <code>CJKVerticalColumnFragmentation</code> は
 <strong>BlinkGTK が足したもの</strong>で<br />
 (Chromium
@@ -383,7 +393,7 @@ Linux でも<br />
 のツリー内では検証用のハーネスからのみです。<br />
 BlinkGTK 自身の公開文書 (API リファレンス「縦書き版面メトリクス —
 <code>verticalFlowMetrics</code>」) にも<br />
-「<strong>この API は既定では生えません。</strong>
+「<strong>この API は既定では用意されません。</strong>
 起動時に次のフラグが要ります。」とあり、<br />
 そのフラグが
 <code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
@@ -393,8 +403,8 @@ BlinkGTK 自身の公開文書 (API リファレンス「縦書き版面メト�
 <code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
 を<br />
 付けたときだけです。そのとき Linux 版は条件式 4 箇所で snap
-が効きますが、<br />
-この Windows 版の該当 3 ファイルには出現 0 件なので効きません。</p>
+が行われますが、<br />
+この Windows 版の該当 3 ファイルには出現 0 件なので行われません。</p>
 <p><strong>(2) 版数と、行分割の改変の両方が違います (Windows = Chromium
 152 / 比べた時点の Linux 版 1.2.2 = 153)。</strong><br />
 行分割については、153 に入った上流の修正 (CL 8264049、既定 ON
@@ -404,7 +414,7 @@ BlinkGTK 自身の公開文書 (API リファレンス「縦書き版面メト�
 <strong>Windows (152) には入っていません。</strong><br />
 本体の実測 (153 のみ。合成ページ・フォント 2 種の範囲)
 では、上流のフラグが ON なら<br />
-#131 の改変は値を動かさず、フラグを切ると改変が効きます
+#131 の改変は値を動かさず、フラグを切ると改変が値を動かします
 (改変が無いと、span を含む<br />
 場合に #131 の症状が出ます)。<strong>152 はこのフラグを<br />
 持たないので、Windows (152)
@@ -469,11 +479,13 @@ BlinkGTK 自身の公開文書 (API リファレンス「縦書き版面メト�
 からエクスポートされません。</strong><br />
 静的ライブラリ <code>blinkgtk_sandbox.lib</code>
 経由で実行ファイルに取り込む設計です<br />
-(devel ZIP に同梱)。<strong>Linux ではこの API をまだ呼べません</strong>
-— 本家の<br />
-パッケージが静的ライブラリを含んでいないためです<br />
-(本体リポジトリの issue
-#141。<strong>当方が立てた相談</strong>)。</p></li>
+(devel ZIP に同梱)。<strong>この API は Windows 専用で、Linux
+では呼べません</strong><br />
+(Linux の共有ライブラリは export していません。Linux
+での代わりの呼び方は、上の「サンドボックスの 2
+本について」を参照)。<br />
+経緯は本体リポジトリの issue #141 (<strong>当方が立てた相談</strong>)
+です。</p></li>
 </ol>
 <hr />
 <h2 id="版数の読み方">版数の読み方</h2>
@@ -535,8 +547,8 @@ BlinkGTK 1.2.1-build3 (Chromium 152.0.7977.64)</code></pre>
 <tr>
 <td>2026-09-22</td>
 <td>日本語縦組みの版面について記述を訂正。<strong>既定 (フラグ OFF)
-では両 platform とも列格子 snap
-は効かない</strong>ため、差が出るのはフラグを指定したときだけ。行分割の差は<strong>版数の差</strong>
+では両 platform とも列格子への snap
+は行われない</strong>ため、差が出るのはフラグを指定したときだけ。行分割の差は<strong>版数の差</strong>
 (Windows 152 / Linux 153)
 によるもので、当初書いていた別の因果は取り下げた (注意: この取り下げは
 153 の実測だけに基づくもので行き過ぎだった。2026-09-23 の行で訂正)</td>
@@ -674,6 +686,25 @@ Web が付かないことなので、除外の記述を外した</td>
 の目玉と改めた。引用した本家ヘッダの英文が 1.2.3
 にも同じ形で残ることを確かめて書き添えた。絵文字を言葉に置き換えた
 (注意: / 重要:)。実測日を 2026-09-24 に更新</td>
+</tr>
+<tr>
+<td>2026-09-25</td>
+<td>本家の用語の対照表に加わった 2 語 (作用と、API の出現を表す動詞)
+を、何が起きるかを書く言い方 (snap が行われる・設定がページに反映される
+等) に改めた (本家経由の Lead の指示:
+利用者には何のことか分からない)。本家の API
+リファレンスの引用を、本家の現行の文 (既定では用意されません)
+に合わせた</td>
+</tr>
+<tr>
+<td>2026-09-25</td>
+<td>本家 1.2.3-build2 でヘッダの <code>blink_gtk_sandbox_init()</code>
+の注記が改められたので、サンドボックスの段落を書き直した (Windows
+専用、Linux では呼べない、Linux
+での代わりの呼び方、<code>Since:</code>)。以前の英文は 1.2.3-build1
+の時点のものとして残した。トラブルシューティングの 3 番目の、Linux
+ではまだ呼べない (静的ライブラリが同梱されていないため)
+という説明も、Windows 専用に改めた</td>
 </tr>
 </tbody>
 </table>

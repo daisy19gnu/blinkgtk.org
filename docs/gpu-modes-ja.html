@@ -164,9 +164,11 @@ GL（ANGLE→Vulkan→SwiftShader）</td>
 2 モードで<br />
 GTK ウィンドウに Blink のレンダリング結果が表示されます。</strong>
 swiftshader モードは<br />
-<strong>画面に何も出ない既知の問題があります</strong> (issue #151。撮影
-API もフレームが来ずに<br />
-失敗します)。原因は調査中です。当面は software か EGL
+1.2.3-build1 まで<strong>画面に何も出ませんでした</strong> (issue
+#151。撮影 API もフレームが<br />
+来ずに失敗します)。1.2.3-build2 で直り、software・EGL
+と同じくページが表示され、<br />
+WebGL の描画も写ります。1.2.3-build1 以前では software か EGL
 を使ってください。</p>
 <p><strong>GPU が使えない機械では、EGL を指定しても自動で software
 へ退避します</strong><br />
@@ -383,13 +385,13 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="
 プロセスへ渡す起動フラグも<br />
 そこで確定します。WebView
 を作る時点ではもう変えられないので、この関数に<br />
-モードを渡しても効かず、警告だけが出ます (2026-09-14
+モードを渡しても反映されず、警告だけが出ます (2026-09-14
 に外部利用者の報告で判明。<br />
 それまで「EGL のつもりで software を測る」ことが起きていました)。</p>
 <p>経路はプロセス全体に 1 つです。同一プロセス内で WebView
 ごとに変えることは<br />
 できません。</p>
-<p>効いたかどうかは <code>blink_web_view_get_gpu_mode()</code>
+<p>反映されたかどうかは <code>blink_web_view_get_gpu_mode()</code>
 で確かめられます。<br />
 起動完了のログにも「描画経路=<mode>」が出ます。<br />
 環境変数 <code>BLINKGTK_GPU_MODE</code>
@@ -470,7 +472,11 @@ egl）の実行時切替は<br />
 <p>「経路を変える」のではなく「今は画面に出す必要がない」場合（音声だけを聞く<br />
 場面など）は、提示ポリシー
 <code>blink_web_view_set_presentation_policy()</code> が<br />
-正規の口です。画面転送の費用だけを省き、組版と描画（先読み）は止めません。</p>
+正規の口です。画面転送の費用だけを省き、組版と描画（先読み）は止めません。<br />
+止めている間も、撮影
+(<code>blink_web_view_capture_screenshot_async()</code> など)
+を求められたときは<br />
+1 枚だけ出して撮り、その後はまた止めます (1.2.3-build2 以降)。</p>
 <hr />
 <h2 id="6-トラブルシューティング">6. トラブルシューティング</h2>
 <h3 id="61-egl-モードで-fatal-gl_factory_ozone-notreached">6.1 EGL
@@ -493,18 +499,26 @@ iter6 以前を使っている場合は更新してください。</p>
 <h3
 id="63-swiftshader-モードで描画されるがピクセルが-gtk-に届かない">6.3
 SwiftShader モードで描画されるがピクセルが GTK に届かない</h3>
-<p><strong>この症状は解消済みです</strong> (Issue #54、2026-04-19)。</p>
+<p><strong>この症状は 1.2.3-build2 で解消しています</strong> (Issue #54
+で 2026-04-19 に一度<br />
+直し、その後の版で再発していました。issue #151)。</p>
 <ul>
 <li><strong>症状</strong>: <code>BLINK_LOAD_FINISHED</code> に到達し FPS
 も 60 前後なのに、<br />
-GTK ウィンドウが真っ黒または背景色のまま</li>
+GTK ウィンドウが真っ黒または背景色のまま。撮影 API も時間切れになる</li>
 <li><strong>原因だったもの</strong>: CopyFromSurface のガードが
 SwiftShader にも<br />
-過剰に適用されていた</li>
-<li><strong>いま同じ症状が出る場合</strong>:
-版が古い可能性があります。<br />
-現行版 (1.2.1 以降)
-をお使いください。それでも出るときはご報告ください</li>
+適用されていた。ガードは実 GPU の読み戻し (Issue #54)
+を避けるためのもので、<br />
+EGL にだけ要る。SwiftShader には EGL
+のように画面へ直接貼る経路が無く、<br />
+ページが画面へ届く経路はこの CopyFromSurface だけです</li>
+<li><strong>再発を確認した版</strong>: 1.2.2-build6 と 1.2.3-build1
+(いつから再発していたかは<br />
+測っていません)</li>
+<li><strong>いま同じ症状が出る場合</strong>: 1.2.3-build2
+以降をお使いください。<br />
+それでも出るときはご報告ください</li>
 </ul>
 <h3 id="64-egl-モードで描画範囲が左上にクリップされる-hidpi">6.4 EGL
 モードで描画範囲が左上にクリップされる (HiDPI)</h3>

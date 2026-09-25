@@ -245,10 +245,17 @@ href="./page-search-zoom-ja.html#blink_web_view_set_zoom_level">ページ内検�
 href="./page-search-zoom-ja.html#blink_web_view_find_in_page">ページ内検索とズーム</a></td>
 </tr>
 <tr>
+<td>明朝・ゴシック・等幅の書体を変える / 最小文字サイズを決める</td>
+<td><code>blink_web_view_set_font_family()</code> /
+<code>blink_web_view_set_minimum_font_size()</code> (1.2.3-build2
+以降)</td>
+<td><a href="./settings-api-ja.html#フォント">Settings API</a></td>
+</tr>
+<tr>
 <td>既定のフォントサイズ・エンコーディングを変える</td>
 <td><code>blink_web_view_set_default_font_size()</code> (1.2.3 以降) /
-<code>blink_web_view_set_default_encoding()</code>
-(<strong>まだ反映されない</strong>)</td>
+<code>blink_web_view_set_default_encoding()</code> (1.2.3
+以降。文字コードの指定も自動判定も無いページだけ)</td>
 <td><a
 href="./settings-api-ja.html#setter-の反映-122-までと-123-以降">Settings
 API</a></td>
@@ -350,16 +357,19 @@ href="./ui-handlers-api-ja.html#blink_web_view_set_file_chooser_handler">UI
 ハンドラ API</a></td>
 </tr>
 <tr>
-<td>ファイルをダウンロード・保存する</td>
-<td>現在未対応 (アプリ側で実装する回避策あり)</td>
-<td><a href="./ui-handlers-api-ja.html#ダウンロード-現状-未対応">UI
-ハンドラ API — 現状と回避策</a></td>
+<td>ファイルをダウンロード・保存する / 進捗を出す / 取り消す</td>
+<td><code>blink_web_view_set_download_handler()</code> と
+<code>download-started</code> の <code>BlinkDownload</code>
+(<code>blink_download_cancel()</code> など、1.2.3-build2 以降)</td>
+<td><a href="./ui-handlers-api-ja.html#ダウンロード">UI ハンドラ API —
+ダウンロード</a></td>
 </tr>
 <tr>
 <td>HTTP 認証 (Basic 等) に応答する</td>
-<td>現在未対応</td>
-<td><a href="./ui-handlers-api-ja.html#http-認証-現状-未対応">UI ハンドラ
-API — 現状と回避策</a></td>
+<td><code>blink_web_view_set_auth_handler()</code> +
+<code>blink_web_view_auth_response()</code> (1.2.3-build2 以降)</td>
+<td><a href="./ui-handlers-api-ja.html#http-認証">UI ハンドラ API — HTTP
+認証</a></td>
 </tr>
 <tr>
 <td>証明書エラーの扱いを自分で決める</td>
@@ -375,6 +385,27 @@ href="./ui-handlers-api-ja.html#blink_web_view_set_certificate_error_handler">UI
 <code>blink_permission_request_deny()</code></td>
 <td><a href="./signals-api-ja.html">Signals API</a></td>
 </tr>
+<tr>
+<td>権限要求に後から答える / 要求元を見る / 決定を覚える</td>
+<td><code>blink_permission_request_ref()</code> /
+<code>_get_origin()</code> / <code>_set_remember()</code> /
+<code>blink_web_view_get_permission_state()</code> (1.2.3-build2
+以降)</td>
+<td><a href="./signals-api-ja.html#権限要求-permission-request">Signals
+API</a></td>
+</tr>
+<tr>
+<td>リンクをシステムのブラウザで開く / 移動を止める /
+新しいウィンドウを別のビューで開く</td>
+<td><code>decide-navigation</code> シグナルと
+<code>blink_navigation_decision_open_external()</code> /
+<code>blink_navigation_decision_ignore()</code> /
+<code>blink_navigation_decision_create_view()</code> (1.2.3-build2
+以降)</td>
+<td><a
+href="./signals-api-ja.html#decide-navigation-v123-build2-以降">Signals
+API</a></td>
+</tr>
 </tbody>
 </table>
 <h2 id="保存と出力">保存と出力</h2>
@@ -389,8 +420,9 @@ href="./ui-handlers-api-ja.html#blink_web_view_set_certificate_error_handler">UI
 <tbody>
 <tr>
 <td>ページを PDF にする</td>
-<td><strong>未実装</strong> — <code>blink_web_view_print_to_pdf()</code>
-は現在 PDF を作らずに成功を返します (対応予定)</td>
+<td><code>blink_web_view_print_to_pdf_with_options()</code>
+(用紙・余白・範囲) / <code>blink_web_view_print_to_pdf()</code>
+(1.2.3-build2 以降)</td>
 <td><a href="./c-api-reference-ja.html">C API</a></td>
 </tr>
 <tr>

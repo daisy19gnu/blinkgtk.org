@@ -159,7 +159,11 @@ transfer) for a window nobody is watching. <strong>Layout and raster
 keep running, so look-ahead is preserved.</strong> <code>warm</code>
 applies only while the window is hidden; <code>warm-force</code> is
 <strong>for testing only</strong> and always applies. On resume the
-engine captures once unconditionally, so no stale frame is shown</td>
+engine captures once unconditionally, so no stale frame is shown. While
+stopped, a screenshot request
+(<code>blink_web_view_capture_screenshot_async()</code> and similar)
+still gets exactly one frame and succeeds (1.2.3-build2 and later;
+earlier versions failed after 2 seconds)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_LOG_LEVEL</code></td>

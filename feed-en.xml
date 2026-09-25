@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-09-24T00:00:00Z</updated>
+  <updated>2026-09-25T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.3-build2 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-09-25-build2-123:en</id>
+    <updated>2026-09-25T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Pages can now be written to PDF files (blink_web_view_print_to_pdf_with_options). Saving downloads, deciding where links and new windows open, the camera and microphone, answering HTTP authentication, remembering permission decisions, and choosing default fonts and a minimum font size are added too. swiftshader mode showing nothing on screen is fixed. The 1.2.3-build1 news said the default encoding was not applied yet; it was already applied as of 1.2.3-build1 (the earlier result came from an ASCII-only page). The CUPS library (libcups.so.2) is now required at run time.</summary>
+  </entry>
   <entry>
     <title>BlinkGTK for Windows v1.2.1-build3 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3-windows"/>

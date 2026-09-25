@@ -119,7 +119,7 @@ API リファレンスマニュアル — 第 1 章 概観とライフサイク�
 </tr>
 <tr>
 <td>対象バージョン</td>
-<td>BlinkGTK 1.2.3-build1 (Chromium 154.0.8037.57)</td>
+<td>BlinkGTK 1.2.3-build2 (Chromium 154.0.8037.57)</td>
 </tr>
 <tr>
 <td>位置づけ</td>
@@ -430,7 +430,7 @@ Chromium
 <span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
 <span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (0) 非標準配置なら blink_gtk_set_resources_path() をここで。 */</span></span>
 <span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (1) 初期化(全 GTK/GLib 呼び出しより前) */</span></span>
-<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (1b) 描画経路は init より前に決める。後では効かない */</span></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* (1b) 描画経路は init より前に決める。後から指定しても反映されない */</span></span>
 <span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>  blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_SOFTWARE<span class="op">);</span></span>
 <span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
 <span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a></span>

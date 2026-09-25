@@ -179,9 +179,9 @@ Installation</a></li>
 <p>Runtime dependencies (shared libraries needed to run apps):</p>
 <div class="sourceCode" id="cb1"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora / RHEL</span></span>
-<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4 glib2 wayland vulkan-loader</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install gtk4 glib2 wayland vulkan-loader cups-libs</span>
 <span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian / Ubuntu</span></span>
-<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-1 libglib2.0-0 libwayland-client0 libvulkan1</span></code></pre></div>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install libgtk-4-1 libglib2.0-0 libwayland-client0 libvulkan1 libcups2</span></code></pre></div>
 <p>The full Chromium runtime (500+ .so for V8 / Blink / Viz, plus
 resources) is<br />
 bundled in the runtime package's <strong>private
