@@ -4,7 +4,7 @@
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <title>BlinkGTK</title>
-<meta name="description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として Linux デスクトップ アプリに Chromium 品質の Web 描画を組み込めます。">
+<meta name="description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として、Linux と Windows の GTK4 デスクトップアプリに Chromium 品質の Web 描画を組み込めます。">
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
@@ -103,14 +103,14 @@
 <link rel="canonical" href="https://blinkgtk.org/">
 <meta property="og:type" content="website">
 <meta property="og:title" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン">
-<meta property="og:description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として Linux デスクトップ アプリに Chromium 品質の Web 描画を組み込めます。">
+<meta property="og:description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として、Linux と Windows の GTK4 デスクトップアプリに Chromium 品質の Web 描画を組み込めます。">
 <meta property="og:url" content="https://blinkgtk.org/">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
 <meta property="og:image:alt" content="BlinkGTK で描画した日本語縦組みの見開き表示">
 <meta name="twitter:card" content="summary_large_image">
 <meta name="twitter:title" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン">
-<meta name="twitter:description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として Linux デスクトップ アプリに Chromium 品質の Web 描画を組み込めます。">
+<meta name="twitter:description" content="BlinkGTK は CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリです。C / Python (PyGObject) / Rust から使え、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に強みがあります。WebKitGTK の代替として、Linux と Windows の GTK4 デスクトップアプリに Chromium 品質の Web 描画を組み込めます。">
 <meta name="twitter:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
 <link rel="alternate" hreflang="ja" href="https://blinkgtk.org/">
 <link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/">
@@ -123,7 +123,7 @@
       "name": "BlinkGTK",
       "alternateName": "Blink GTK4 binding",
       "applicationCategory": "DeveloperApplication",
-      "operatingSystem": "Linux (Wayland)",
+      "operatingSystem": "Linux (Wayland), Windows 10/11",
       "url": "https://blinkgtk.org/",
       "description": "CEF を介さず Chromium の Blink レンダリングエンジンを GTK4 に直接バインドする WebView ライブラリ。C / Python (PyGObject) / Rust から利用でき、日本語縦組み・ルビ・圏点など JLReq 準拠の組版と EPUB 表示に対応する。",
       "programmingLanguage": ["C", "C++", "Python", "Rust"],
@@ -270,14 +270,14 @@ int main(int argc, char **argv)
       <div class="card" lang="ja">
         <span class="lang-label">日本語</span>
         <p>BlinkGTK は、Google Chrome と同じ Chromium / Blink レンダリングエンジンを、GTK4 アプリケーションへネイティブに組み込むための WebView エンジンです。Electron のようにブラウザ全体を同梱するのではなく、最新の Web エンジンそのものを一つの GTK ウィジェットとして扱えます。Wayland に対応し、自己描画方式で、上流の Chromium に追従して更新されます。</p>
-        <p>これにより、Linux のネイティブアプリの中で、現代的な HTML・CSS・JavaScript・メディア再生・複雑な文字組みを、本物のブラウザと同じ品質で動かせます。縦書きや禁則処理を含む日本語組版、音声と読み上げ箇所を同期させる EPUB 3 Media Overlays、DAISY 形式のアクセシブルな読書体験など、要求の厳しい用途にも応えます。</p>
+        <p>これにより、GTK4 のネイティブアプリ (Linux・Windows) の中で、現代的な HTML・CSS・JavaScript・メディア再生・複雑な文字組みを、本物のブラウザと同じ品質で動かせます。縦書きや禁則処理を含む日本語組版、音声と読み上げ箇所を同期させる EPUB 3 Media Overlays、DAISY 形式のアクセシブルな読書体験など、要求の厳しい用途にも応えます。</p>
         <p>BlinkGTK は、電子出版とアクセシビリティのための参照実装 FUSEe-SMIL を支える基盤として生まれました。Web 技術をアプリへ「埋め込む」体験を一級市民にすることを目指し、W3C コミュニティグループ <a href="https://www.w3.org/community/embedded-web-engines/">Embedded Web Engines &amp; Native Web Runtimes</a> とも連携しながら、オープンに開発を進めています(<a href="https://www.w3.org/community/embedded-web-engines/join">このグループに参加する</a>)。なお、このコミュニティグループは Web 技術について議論するための場であり、BlinkGTK 製品のサポート窓口ではありません。参加の前に、グループページの説明をよくお読みください。</p>
       </div>
 
       <div class="card" lang="en">
         <span class="lang-label">English</span>
         <p>BlinkGTK is a WebView engine that embeds the same Chromium / Blink rendering engine found in Google Chrome directly into GTK4 applications. Instead of bundling an entire browser the way Electron does, it lets you treat a modern web engine as a single GTK widget. It is Wayland-native, self-rendering, and stays current with upstream Chromium.</p>
-        <p>This means native Linux apps can run modern HTML, CSS, JavaScript, media playback, and complex typography at the same quality as a real browser. It is built for demanding use cases: Japanese vertical writing with line-breaking rules, EPUB 3 Media Overlays that synchronize audio with highlighted text, and accessible DAISY reading experiences.</p>
+        <p>This means native GTK4 apps on Linux and Windows can run modern HTML, CSS, JavaScript, media playback, and complex typography at the same quality as a real browser. It is built for demanding use cases: Japanese vertical writing with line-breaking rules, EPUB 3 Media Overlays that synchronize audio with highlighted text, and accessible DAISY reading experiences.</p>
         <p>BlinkGTK began as the foundation for FUSEe-SMIL, a reference implementation for digital publishing and accessibility. Our goal is to make embedding the web a first-class experience — developed in the open, in coordination with the W3C <a href="https://www.w3.org/community/embedded-web-engines/">Embedded Web Engines &amp; Native Web Runtimes Community Group</a> (<a href="https://www.w3.org/community/embedded-web-engines/join">join this group</a>). Note that this community group is a forum for discussing web technology, not a support channel for the BlinkGTK product; please read the group's description carefully before joining.</p>
       </div>
 
@@ -300,7 +300,7 @@ int main(int argc, char **argv)
         <h2 id="download">Download</h2>
         <!-- BLINKGTK_RELEASE_BEGIN (auto-generated by update-dist-sites.sh — do not edit manually) -->
         <p><strong>BlinkGTK v1.2.3-build1</strong>（2026-09-24 / Chromium 154.0.8037.57）</p>
-        <p class="ja">Chromium 154 に更新。JavaScript・画像・localStorage の無効化が効くようになりました。入力メソッドは GTK の選択に従います</p>
+        <p class="ja">Chromium 154 に更新。JavaScript・画像・localStorage の無効化がページに反映されるようになりました。入力メソッドは GTK の選択に従います</p>
         <p class="en muted">Updated to Chromium 154. Turning off JavaScript, images and localStorage now takes effect. The input method follows GTK's choice</p>
         <p class="sec"><strong>ダウンロード (Linux) / Download (Linux)</strong></p>
         <ul class="dl-list">
