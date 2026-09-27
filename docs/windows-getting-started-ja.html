@@ -464,10 +464,11 @@ BlinkGTK 自身の公開文書 (API リファレンス「縦書き版面メト�
 確保しているので、<strong>契約としては <code>g_free()</code></strong>
 です。</p>
 <blockquote>
-<p>API リファレンスの掲載例は <code>free()</code>
-になっています。この点は<br />
-<strong>#130 で確認を依頼中</strong>です。なお現行の構成で
-<code>free()</code> が壊れる、<br />
+<p>API リファレンスとその掲載例は 1.2.3-build1 まで <code>free()</code>
+でしたが、<br />
+<strong>1.2.3-build2 でヘッダとともに <code>g_free()</code>
+に直りました</strong> (#130)。なお現行の構成で <code>free()</code>
+が壊れる、<br />
 という意味ではありません — Windows でも <code>blinkgtk.dll</code>
 と<br />
 <code>glib-2.0-0.dll</code> はどちらも <code>/MD</code> で、プロセス内の
@@ -705,6 +706,16 @@ Web が付かないことなので、除外の記述を外した</td>
 の時点のものとして残した。トラブルシューティングの 3 番目の、Linux
 ではまだ呼べない (静的ライブラリが同梱されていないため)
 という説明も、Windows 専用に改めた</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>解放関数の注記を、本家が 1.2.3-build2 で <code>g_free()</code>
+に直した (#130) に改めた (確認を依頼中、のままだった)</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>解放関数の注記の主語を正確にした (<code>free()</code>
+と書いていたのは API リファレンスとその掲載例)</td>
 </tr>
 </tbody>
 </table>

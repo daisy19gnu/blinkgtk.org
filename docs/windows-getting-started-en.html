@@ -493,10 +493,11 @@ implementation<br />
 allocates with <code>g_strdup_printf()</code>, so <strong>the contract
 is <code>g_free()</code></strong>.</p>
 <blockquote>
-<p>The example printed in the API reference uses <code>free()</code>. We
-have <strong>asked<br />
-about this in #130</strong> and it is not settled yet. This does not
-mean <code>free()</code><br />
+<p>The API reference and its example said <code>free()</code> up to
+1.2.3-build1, and<br />
+<strong>1.2.3-build2 changed them, and the header, to
+<code>g_free()</code></strong> (#130). This does not mean
+<code>free()</code><br />
 breaks in the current configuration — on Windows
 <code>blinkgtk.dll</code> and<br />
 <code>glib-2.0-0.dll</code> are both <code>/MD</code> and there is a
@@ -723,6 +724,17 @@ instead, <code>Since:</code>). The earlier sentence is kept as what the
 header said as of 1.2.3-build1. Troubleshooting item 3 (cannot be called
 on Linux yet, because the packages do not ship the static library) now
 says it is Windows-only</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>The note on freeing now says upstream changed the text to
+<code>g_free()</code> in 1.2.3-build2 (#130); it still said the question
+was open</td>
+</tr>
+<tr>
+<td>2026-09-27</td>
+<td>Made the subject of the note on freeing precise (it was the API
+reference and its example that said <code>free()</code>)</td>
 </tr>
 </tbody>
 </table>
