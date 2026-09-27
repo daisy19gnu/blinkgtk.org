@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-09-26T00:00:00Z</updated>
+  <updated>2026-09-28T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>BlinkGTK for Windows v1.2.3-build3 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build3-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-09-28-windows-123-build3:ja</id>
+    <updated>2026-09-28T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>BlinkGTK for Windows を Chromium 154 に更新し、版数が Linux 版と同じ v1.2.3-build3 になりました。Linux 版の 1.2.2 と 1.2.3 で加わった公開 API も Windows 版の DLL から公開されるようになりましたが、新しく入った API の Windows での動作はまだ確かめていません。日本語の Windows で MSVC を使う場合は、コンパイルに /utf-8 を付けてください。</summary>
+  </entry>
   <entry>
     <title>v1.2.3-build3 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build3"/>

@@ -138,6 +138,20 @@
 上の例のように <code>?.</code> か <code>typeof</code>
 で<strong>機能検出</strong>してください。存在しない環境で<br />
 そのまま呼ぶと <code>TypeError</code> になります。</p>
+<p><strong><code>--enable-experimental-web-platform-features</code>
+でも有効になります。</strong> このフラグは<br />
+<code>status: "experimental"</code>
+の機能をまとめて有効にし、<code>CJKVerticalColumnFragmentation</code>
+も<br />
+その 1 つだからです。1.2.3-build3 の Linux 版で、このフラグだけで
+<code>window.__blinkgtk</code> が<br />
+用意されることを確かめました (2026-09-27)。</p>
+<p>同じフラグは、縦書きの段組みの<strong>版面の処理</strong>も切り替えます
+(レイアウトのコードの 4 か所が<br />
+このフラグで分かれています)。<code>--enable-experimental-web-platform-features</code>
+を別の目的で<br />
+付けているアプリでも、縦書きの段組みの組まれ方が変わることがあります。版面が変わる<br />
+ことそのものは、この条件では測っていません。</p>
 <h2 id="返るもの">返るもの</h2>
 <p>すべて <strong>content px</strong>
 (レイアウト座標。ページの拡大率を掛ける前の値) です。</p>

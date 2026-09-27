@@ -144,6 +144,22 @@ exist. <strong>Feature-detect</strong><br />
 with <code>?.</code> or <code>typeof</code>, as above; calling it
 blindly where it is absent raises a<br />
 <code>TypeError</code>.</p>
+<p><strong><code>--enable-experimental-web-platform-features</code>
+enables it as well.</strong> That switch turns<br />
+on every feature with <code>status: "experimental"</code>, and
+<code>CJKVerticalColumnFragmentation</code><br />
+is one of them (checked on the Linux build of 1.2.3-build3:
+<code>window.__blinkgtk</code> is<br />
+present, 2026-09-27).</p>
+<p>The same feature also switches the <strong>page layout</strong> of
+vertical multi-column content<br />
+(four places in the layout code branch on it). An application that
+passes<br />
+<code>--enable-experimental-web-platform-features</code> for another
+reason may therefore see<br />
+vertical multi-column text laid out differently. We have not measured
+the layout<br />
+change itself under that switch.</p>
 <h2 id="what-you-get">What you get</h2>
 <p>All values are in <strong>content px</strong> — layout coordinates,
 before page zoom.</p>
