@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build4">v1.2.3-build4 released</a></h2>
+<p><small>2026-09-28 · Release</small></p>
+<p>Software rendering no longer copies the pixels of every frame before handing them to GTK. Animations run about 24% more often at scale 2, and about 9% more frames reach the screen at scale 1. Also fixes load_html not applying base_uri, a first paint delayed by about 25 seconds when the accessibility bus does not respond, stored permissions being read on the UI thread, and GTK warnings with ibus when a view is closed. The public API is unchanged.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build3-windows">BlinkGTK for Windows v1.2.3-build3 released</a></h2>
 <p><small>2026-09-28 · Release</small></p>
 <p>BlinkGTK for Windows is now on Chromium 154, and its version number, v1.2.3-build3, matches the Linux build. The public API added in Linux 1.2.2 and 1.2.3 is now exported from the Windows DLL too, though the newly added entry points have not been checked on Windows yet. If you use MSVC on Japanese Windows, compile with /utf-8.</p>

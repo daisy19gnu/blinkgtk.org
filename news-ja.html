@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build4">v1.2.3-build4 を公開しました</a></h2>
+<p><small>2026-09-28 · リリース</small></p>
+<p>software の描画で、画面へ渡すたびの画素のコピーを省きました。拡大率 2 でアニメーションが約 24% 多く回り、拡大率 1 で画面に届く枚数が約 9% 増えます。load_html の base_uri が文書に反映されない問題、支援技術のバスが応答しないと最初の描画が約 25 秒遅れる問題、許可の保存を UI スレッドで読む問題、ibus でビューを閉じるときの警告も修正しています。公開 API は変わりません。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build3-windows">BlinkGTK for Windows v1.2.3-build3 を公開しました</a></h2>
 <p><small>2026-09-28 · リリース</small></p>
 <p>BlinkGTK for Windows を Chromium 154 に更新し、版数が Linux 版と同じ v1.2.3-build3 になりました。Linux 版の 1.2.2 と 1.2.3 で加わった公開 API も Windows 版の DLL から公開されるようになりましたが、新しく入った API の Windows での動作はまだ確かめていません。日本語の Windows で MSVC を使う場合は、コンパイルに /utf-8 を付けてください。</p>

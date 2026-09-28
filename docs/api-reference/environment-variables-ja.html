@@ -275,6 +275,13 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td>egl resize ブリッジを無効化</td>
 <td></td>
 </tr>
+<tr>
+<td><code>BLINKGTK_FRAME_COPY=1</code></td>
+<td><strong>1.2.3-build4 から。</strong> software の描画で、画面へ渡す 1
+枚ごとに画素をコピーする従来の動作に戻す
+(既定はコピーせずに渡す)。表示がおかしいときの切り分け用</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h2 id="3-内部診断サポート対象外">3. 内部診断(サポート対象外)</h2>
@@ -314,6 +321,11 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td>出力層・合成</td>
 <td><code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
+<code>BLINKGTK_T2_DELIVER_EMPTY</code> (陰性対照: T2 で renderer
+の最初のフレームを待たずに配送する) / <code>BLINKGTK_T2_AUTO</code>
+(試験用: 拡大率 1 の画面で T2 を自動で選ぶ。既定は無効) /
+<code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (試験用:
+許可の保存の読み込みを遅らせる) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
 <code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
 <code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /

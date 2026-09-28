@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.3-build3 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.3-build4 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-09-26 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
+<meta name="description" content="Release date: 2026-09-28 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.3-build3 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-09-26 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.3-build4 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-09-28 / Chromium: 154.0.8037.57 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,13 +107,74 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-123-build3-release-notes">BlinkGTK 1.2.3-build3 Release
+<h1 id="blinkgtk-123-build4-release-notes">BlinkGTK 1.2.3-build4 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-09-26 /
+<p><strong>Release date</strong>: 2026-09-28 /
 <strong>Chromium</strong>: 154.0.8037.57 / Language: <a
 href="RELEASE_NOTES-1.2.3-ja.html">日本語</a> | English</p>
 <p>The rendering engine is updated to <strong>Chromium 154</strong>.</p>
 <hr />
+<h2 id="what-build4-makes-faster">What build4 makes faster</h2>
+<ul>
+<li><strong>Software rendering no longer copies the pixels of every
+frame before handing them to GTK.</strong><br />
+The captured pixels are passed to the GTK texture as they are. On an
+Intel UHD Graphics 620<br />
+machine (weston headless, GPU compositing) showing an animated page, the
+page's animation<br />
+(requestAnimationFrame) ran about 24% more often at scale 2 (35-36 to 44
+per second), and about<br />
+9% more frames reached the screen at scale 1 (41.9 to 45.7 per second).
+CPU use stays the same<br />
+or goes down slightly. <code>BLINKGTK_FRAME_COPY=1</code> restores the
+previous behavior</li>
+</ul>
+<h2 id="what-build4-fixes">What build4 fixes</h2>
+<ul>
+<li><strong>The <code>base_uri</code> of
+<code>blink_web_view_load_html()</code> was not applied to the
+document.</strong><br />
+The page's <code>document.baseURI</code> and
+<code>blink_web_view_get_uri()</code> now return
+<code>base_uri</code>.<br />
+HTML containing <code>#</code>, <code>%</code>, tabs, or newlines was
+also cut off or altered at that point; this is<br />
+fixed as well</li>
+<li><strong>When the assistive technology bus (AT-SPI) did not respond,
+the first paint was delayed by<br />
+about 25 seconds.</strong> The check for a running screen reader no
+longer waits for the reply on the<br />
+UI thread (32.8 s to 6.0 s in a test with an unresponsive bus)</li>
+<li><strong>The stored permissions
+(<code>BlinkGTK Permissions.json</code>) were read on the UI
+thread</strong> (#146).<br />
+They are now read off the UI thread. Values the application sets or
+clears before the read<br />
+finishes take precedence over the file</li>
+<li><strong>With ibus as the input method, GTK printed warnings when a
+view was closed</strong><br />
+(<code>gtk_widget_compute_point</code> and similar assertions,
+ibus#2905). Input method focus is no longer<br />
+given to widgets that are not attached to a window. ibus 1.5.35 and
+later also fix this on the<br />
+ibus side</li>
+<li><strong>Switching the render path
+(<code>blink_web_view_switch_render_path()</code>) did not complete
+after<br />
+navigating to another site.</strong> The request was accepted, but the
+completion signal never came.<br />
+The switch now happens on the new view created by the navigation</li>
+</ul>
+<h2 id="what-build4-removes-from-the-packages">What build4 removes from
+the packages</h2>
+<ul>
+<li>Two Vulkan development libraries
+(<code>libVkLayer_khronos_validation.so</code> and<br />
+<code>libVkICD_mock_icd.so</code>, about 30 MB together). The
+configuration files needed to load them were<br />
+not shipped, so nothing used them. SwiftShader's Vulkan is still
+included</li>
+</ul>
 <h2 id="what-build3-fixes">What build3 fixes</h2>
 <ul>
 <li><strong>Opening audio of 5 MB or more served over a custom scheme

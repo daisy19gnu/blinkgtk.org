@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.3-build3 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.3-build4 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-09-26 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-09-28 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.3-build3 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-09-26 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.3-build4 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-09-28 / Chromium: 154.0.8037.57 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.3-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,14 +107,70 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-123-build3-リリースノート">BlinkGTK 1.2.3-build3
+<h1 id="blinkgtk-123-build4-リリースノート">BlinkGTK 1.2.3-build4
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-09-26 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-09-28 / <strong>Chromium</strong>:
 154.0.8037.57 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.3-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 154</strong>
 に更新しました。</p>
 <hr />
+<h2 id="build4-で速くなったこと">build4 で速くなったこと</h2>
+<ul>
+<li><strong>software
+の描画で、画面へ渡すたびに行っていた画素のコピーを省きました</strong>。キャプチャした画素を<br />
+そのまま GTK のテクスチャに渡します。測定は Intel UHD Graphics 620
+の機械 (weston headless、合成は GPU) で、<br />
+動くページを表示して行いました。拡大率 2 ではページのアニメーション
+(requestAnimationFrame) が<br />
+約 24% 多く回りました (35〜36 → 44 回/秒)。拡大率 1
+では画面に届く枚数が約 9% 増えました<br />
+(41.9 → 45.7 枚/秒)。CPU
+の使用量は同じか、わずかに減ります。以前の動作は
+<code>BLINKGTK_FRAME_COPY=1</code> で戻せます</li>
+</ul>
+<h2 id="build4-で修正したこと">build4 で修正したこと</h2>
+<ul>
+<li><strong><code>blink_web_view_load_html()</code> の
+<code>base_uri</code>
+が文書に反映されていませんでした</strong>。ページの<br />
+<code>document.baseURI</code> と <code>blink_web_view_get_uri()</code>
+が <code>base_uri</code> を返すように修正しました。<br />
+あわせて、HTML に
+<code>#</code>・<code>%</code>・タブ・改行が含まれると、その位置で切れたり別の文字に変わったり<br />
+していた問題を修正しました</li>
+<li><strong>支援技術のバス (AT-SPI) が応答しない環境で、最初の描画が約
+25 秒遅れていました</strong>。<br />
+スクリーンリーダーの有無の問い合わせを、UI
+スレッドで応答を待たない形に修正しました<br />
+(応答しない状態を作った試験で 32.8 秒 → 6.0 秒)</li>
+<li><strong>許可の保存 (<code>BlinkGTK Permissions.json</code>) を、UI
+スレッドで読み込んでいました</strong> (#146)。<br />
+UI
+スレッドの外で読むように修正しました。読み終わる前にアプリが置いた値・消した値は、<br />
+ファイルの値より優先されます</li>
+<li><strong>入力メソッドに ibus を使う環境で、ビューを閉じるときに GTK
+の警告</strong><br />
+(<code>gtk_widget_compute_point</code> などの assertion)
+<strong>が出ていました</strong> (ibus#2905)。<br />
+窓に付いていない部品では入力メソッドにフォーカスを渡さないように修正しました。<br />
+ibus 1.5.35 以降は ibus の側でも修正されています</li>
+<li><strong>描画経路の切替
+(<code>blink_web_view_switch_render_path()</code>)
+が、別のサイトへ移動した後に<br />
+完了しませんでした</strong>。要求は受理されますが、完了の signal
+が来ないままでした。<br />
+移動後の新しいビューで切り替わるように修正しました</li>
+</ul>
+<h2 id="build4-で配布物から外したもの">build4
+で配布物から外したもの</h2>
+<ul>
+<li>開発用の Vulkan のライブラリ 2 つ
+(<code>libVkLayer_khronos_validation.so</code>、<code>libVkICD_mock_icd.so</code>、<br />
+合わせて約
+30MB)。読み込みに必要な設定ファイルが同梱されておらず、どこからも使われて<br />
+いませんでした。SwiftShader の Vulkan は引き続き同梱しています</li>
+</ul>
 <h2 id="build3-で直したこと">build3 で直したこと</h2>
 <ul>
 <li><strong>独自スキーム (<code>ebook://</code> など) で配った 5 MB

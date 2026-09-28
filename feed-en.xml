@@ -7,6 +7,14 @@
   <updated>2026-09-28T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.3-build4 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build4"/>
+    <id>tag:blinkgtk.org,2026:2026-09-28-build4-123:en</id>
+    <updated>2026-09-28T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Software rendering no longer copies the pixels of every frame before handing them to GTK. Animations run about 24% more often at scale 2, and about 9% more frames reach the screen at scale 1. Also fixes load_html not applying base_uri, a first paint delayed by about 25 seconds when the accessibility bus does not respond, stored permissions being read on the UI thread, and GTK warnings with ibus when a view is closed. The public API is unchanged.</summary>
+  </entry>
+  <entry>
     <title>BlinkGTK for Windows v1.2.3-build3 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build3-windows"/>
     <id>tag:blinkgtk.org,2026:2026-09-28-windows-123-build3:en</id>

@@ -291,6 +291,14 @@ fallbacks on machines with slow GPU startup</td>
 <td>Disables the egl resize bridge</td>
 <td></td>
 </tr>
+<tr>
+<td><code>BLINKGTK_FRAME_COPY=1</code></td>
+<td><strong>Since 1.2.3-build4.</strong> In software rendering, go back
+to copying the pixels of every frame before handing them to GTK (the
+default now hands them over without a copy). For isolating display
+problems</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h2 id="3-internal-diagnostics-unsupported">3. Internal Diagnostics
@@ -313,6 +321,12 @@ without notice.</p>
 <code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
 <code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
+<code>BLINKGTK_T2_DELIVER_EMPTY</code> (negative control: on T2, deliver
+frames without waiting for the renderer's first frame) /
+<code>BLINKGTK_T2_AUTO</code> (testing only: automatically select T2 on
+a scale-1 display; off by default) /
+<code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (testing only: delay
+loading the stored permissions) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
 <code>BLINKGTK_120_TYPEB_FIX</code> /
 <code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /

@@ -45,7 +45,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.3-build3 / 言語: 日本語 | <a
+<p>バージョン: 1.2.3-build4 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -71,9 +71,19 @@ href="version-history-en.html">English</a></p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.3-build3</strong> ← 公開中</td>
-<td>2026-09-26</td>
+<td><strong>v1.2.3-build4</strong> ← 公開中</td>
+<td>2026-09-28</td>
 <td><strong>154.0.8037.57</strong></td>
+<td>software の描画で画素のコピーを省き、拡大率 2 でアニメーションが約
+24% 多く回るようになりました。load_html の base_uri
+が反映されない問題、支援技術のバスが応答しないと最初の描画が約 25
+秒遅れる問題、許可の保存を UI スレッドで読む問題、ibus
+でビューを閉じるときの警告を修正しています</td>
+</tr>
+<tr>
+<td>v1.2.3-build3</td>
+<td>2026-09-26</td>
+<td>154.0.8037.57</td>
 <td>独自スキーム (ebook:// など) で配った 5 MB 以上の音声を <audio>
 で開くと、アプリのウィンドウごと応答しなくなる問題を直しました。長い朗読音声もそのまま再生・シークできます</td>
 </tr>
