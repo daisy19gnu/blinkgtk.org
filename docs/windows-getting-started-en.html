@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Each figure carries the date it was measured. The package sizes and the number of bundled documents are measured on the ZIP we ship (measured 2026-09-27). Note:">
+<meta name="description" content="Each figure carries the date it was measured. The package sizes and the number of bundled documents are measured on the ZIP we ship (measured 2026-09-28). Note:">
 <link rel="canonical" href="https://blinkgtk.org/docs/windows-getting-started-en.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK for Windows — Getting started — BlinkGTK">
-<meta property="og:description" content="Each figure carries the date it was measured. The package sizes and the number of bundled documents are measured on the ZIP we ship (measured 2026-09-27). Note:">
+<meta property="og:description" content="Each figure carries the date it was measured. The package sizes and the number of bundled documents are measured on the ZIP we ship (measured 2026-09-28). Note:">
 <meta property="og:url" content="https://blinkgtk.org/docs/windows-getting-started-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -48,7 +48,7 @@ Getting started</h1>
 <p><strong>Each figure carries the date it was measured.</strong> The
 package sizes and the<br />
 number of bundled documents are measured <strong>on the ZIP we
-ship</strong> (measured 2026-09-27).<br />
+ship</strong> (measured 2026-09-28).<br />
 Note: <strong>We do not state when the ZIP was built</strong>, because
 that changes every time<br />
 it is rebuilt. For the exact byte count and hash of each ZIP, see<br />
@@ -56,23 +56,24 @@ it is rebuilt. For the exact byte count and hash of each ZIP, see<br />
 <code>sha256</code>) and <code>SHA256SUMS</code> (hashes only),<br />
 published alongside the packages. This release was checked on Windows 11
 Pro<br />
-build 26200 on <strong>2026-09-27</strong> (the extract-and-run check of
+build 26200 on <strong>2026-09-28</strong> (the extract-and-run check of
 the package).</p>
 </blockquote>
 <p>BlinkGTK, running on Windows. It follows the same versioning as the
 Linux build<br />
 (Chromium version plus BlinkGTK patch level).<br />
-This release, <strong>1.2.3-build3, has the same version number as Linux
-1.2.3-build3</strong>;<br />
+This release, <strong>1.2.3-build4, has the same version number as Linux
+1.2.3-build4</strong>;<br />
 both are Chromium 154.0.8037.57.</p>
-<p><strong>The public API matches Linux 1.2.3-build3 except for one
-entry point.</strong><br />
-However, the 51 entry points new to the Windows build in this release
+<p><strong>The public API matches Linux 1.2.3-build4 except for one
+entry point.</strong> The public API has not changed since
+1.2.3-build3.<br />
+However, the 51 entry points new to the Windows build in 1.2.3-build3
 (added in Linux 1.2.2 and 1.2.3)<br />
-have not yet been called on Windows. We have called 64 of the 152 public
+have not yet been called on Windows. We have called 65 of the 152 public
 entry points on Windows<br />
 (§0 of the bundled <code>docs\api-windows-notes-en.md</code>), all of
-them ones that were already there in the previous release.</p>
+them ones that were already there in 1.2.1-build3.</p>
 <p><strong>How this is counted</strong>: an entry point counts as public
 API when it is both declared<br />
 in the public header and exported from the shared library
@@ -81,14 +82,17 @@ declarations include the two <code>_get_type</code> functions that
 <code>G_DECLARE_FINAL_TYPE</code> declares<br />
 (<code>BlinkWebView</code> and <code>BlinkDownload</code>). By that
 definition <strong>Linux has 153 and Windows has 152</strong>.</p>
-<p><strong>How this was measured</strong> (both 2026-09-27): for Linux,
+<p><strong>How this was measured</strong> (both 2026-09-28): for Linux,
 the header from the upstream<br />
-1.2.3-build3 devel package and the <code>.so</code> from its runtime
+1.2.3-build4 devel package and the <code>.so</code> from its runtime
 package, read with <code>nm -D</code>:<br />
-the intersection of 154 header declarations and the 189 exports whose
+the intersection of 154 header declarations and the 190 exports whose
 names start with<br />
-<code>blink_</code> = <strong>153</strong>. For Windows, the
-intersection of 153 public header declarations in<br />
+<code>blink_</code> = <strong>153</strong> (one more export than
+1.2.3-build3, but the added <code>blink_gtk_set_pixels_lent</code> is
+not in the header,<br />
+so it is not public API). For Windows, the intersection of 153 public
+header declarations in<br />
 this release and the 163 DLL exports (<code>dumpbin /exports</code>)
 whose names start with <code>blink_</code><br />
 = <strong>152</strong>. The name filter only leaves out internal<br />
@@ -133,14 +137,14 @@ static library <code>blinkgtk_sandbox.lib</code> (shipped in the devel
 ZIP).<br />
 <strong>You cannot call it on Linux</strong> (see below).</p>
 <p><strong>About the two sandbox entry points</strong> (measured
-2026-09-27; exports were checked with <code>nm -D</code> for the Linux
+2026-09-28; exports were checked with <code>nm -D</code> for the Linux
 <code>.so</code> and <code>dumpbin /exports</code> for the Windows
 DLL):</p>
 <table>
 <thead>
 <tr>
 <th></th>
-<th>Linux 1.2.3-build3</th>
+<th>Linux 1.2.3-build4</th>
 <th>This Windows build</th>
 </tr>
 </thead>
@@ -180,8 +184,8 @@ ZIP, from 1.2.1-build3.<br />
 <code>Since:</code> is <code>1.2.1</code> for
 <code>blink_gtk_sandbox_init()</code> and <code>1.2.2</code> for<br />
 <code>blink_gtk_init_with_sandbox()</code>. This note reads the same in
-the Linux 1.2.3-build3<br />
-devel header and in this release's header (compared 2026-09-27).<br />
+the Linux 1.2.3-build4<br />
+devel header and in this release's header (compared 2026-09-28).<br />
 (Issue #141, which the note on
 <code>blink_gtk_init_with_sandbox()</code> cites, is a<br />
 question <strong>we</strong> filed in the upstream repository.)</p>
@@ -231,12 +235,13 @@ download-to-launch on a clean Windows install.</p>
 <strong>Without an argument it opens
 <code>https://google.com/</code></strong> (this needs an Internet<br />
 connection). Pass a URL to open that page instead.</p>
-<pre><code>cd blinkgtk-1.2.3-build3-windows-x64\bin
+<pre><code>cd blinkgtk-1.2.3-build4-windows-x64\bin
 blinkgtk_browser.exe
 blinkgtk_browser.exe https://example.com/</code></pre>
 <p><code>blinkgtk_browser</code> is a minimal sample that shows only
 what is needed to embed<br />
-BlinkGTK. A console window also opens and shows the program's log.</p>
+BlinkGTK. A console window also opens and shows the program's status
+messages.</p>
 <hr />
 <h2 id="requirements">Requirements</h2>
 <table>
@@ -251,9 +256,9 @@ BlinkGTK. A console window also opens and shows the program's log.</p>
 </tr>
 <tr>
 <td>Disk space</td>
-<td>ZIP about 464 MiB + about 1,316 MiB extracted. <strong>You need both
-while extracting</strong> — about 1.8 GiB in practice (1,780 MiB rounded
-up; measured 2026-09-27)</td>
+<td>ZIP about 457 MiB + about 1,291 MiB extracted. <strong>You need both
+while extracting</strong> — about 1.8 GiB in practice (1,748 MiB rounded
+up; measured 2026-09-29)</td>
 </tr>
 <tr>
 <td>GTK4</td>
@@ -269,12 +274,12 @@ installer)</td>
 <blockquote>
 <p>Note: <strong>MiB here means 1,048,576 bytes.</strong> The GitHub
 Releases page uses the same<br />
-unit and labels it "MB", so <strong>the ZIP shows as 464 MB
+unit and labels it "MB", so <strong>the ZIP shows as 457 MB
 there</strong> (checked<br />
 2026-09-23 by comparing the API byte counts of a release in another
 public<br />
 repository with its Releases page). Tools that count in 1,000,000-byte
-units show 487 MB.<br />
+units show 480 MB.<br />
 <strong>The bundled documents use the same unit</strong> — all six that
 print<br />
 sizes (<code>INSTALLATION-ja.md</code>,
@@ -283,7 +288,7 @@ sizes (<code>INSTALLATION-ja.md</code>,
 <code>portable-app-guide-ja.md</code>, <code>faq-ja.md</code>,<br />
 <code>linux-windows-differences-ja.md</code>) state that MB means MiB
 (checked<br />
-mechanically, 2026-09-27).</p>
+mechanically, 2026-09-28).</p>
 </blockquote>
 <blockquote>
 <p><strong>Do not install GTK4 separately.</strong> Windows has two
@@ -311,7 +316,7 @@ public header, <strong>remain in <code>blinkgtk.dll</code> to keep the
 ABI</strong>, but return 0 on Windows.</p>
 <blockquote>
 <p>The environment variable <code>BLINKGTK_GPU_MODE</code> is read
-(checked 2026-09-27 on this release).</p>
+(checked 2026-09-28 on this release).</p>
 <ul>
 <li><code>egl</code> starts Chromium without <code>--disable-gpu</code>
 and changes the reported path name to <code>"P3"</code>.<br />
@@ -361,6 +366,14 @@ build</h2>
 <td><strong>not available</strong> (Wayland-specific)</td>
 </tr>
 <tr>
+<td>DCHECK (Chromium's internal assumption checks)</td>
+<td>disabled</td>
+<td><strong>enabled</strong> — where an internal assumption does not
+hold, the Linux build carries on and the Windows build ends that process
+abnormally (section 8 of the bundled Japanese
+<code>docs\linux-windows-differences-ja.md</code>)</td>
+</tr>
+<tr>
 <td>Japanese vertical layout (default)</td>
 <td>column-grid snap is off by default</td>
 <td><strong>No column-grid snap difference</strong></td>
@@ -369,8 +382,8 @@ build</h2>
 <td>Same, with the flag <code>CJKVerticalColumnFragmentation</code>
 enabled</td>
 <td>four layout changes apply (together called column-grid snap)</td>
-<td><strong>not present</strong> — column splitting and line positions
-may differ (see below)</td>
+<td><strong>apply</strong> (from 1.2.3-build4; one site differs from
+upstream, see below)</td>
 </tr>
 </tbody>
 </table>
@@ -378,9 +391,8 @@ may differ (see below)</td>
 <p>Note: <strong>Vertical Japanese layout is not guaranteed to match
 between the two<br />
 platforms.</strong></p>
-<p><strong>The vertical-layout changes are not in this Windows build —
-but they are off by<br />
-default on Linux too.</strong><br />
+<p><strong>The vertical-layout changes are in the Windows build from
+1.2.3-build4. They are off by default on both platforms.</strong><br />
 The flag that turns them on,
 <code>CJKVerticalColumnFragmentation</code>, is <strong>one BlinkGTK
 adds</strong> (it is not<br />
@@ -391,12 +403,16 @@ default</strong>, and <strong>the<br />
 product code never turns it on.</strong></p>
 <p><strong>How this was counted</strong> (measured 2026-09-27 on the
 upstream 1.2.3-build3 tree<br />
-and this release's Windows tree): calls to the forcing setter<br />
+and the Windows tree at that time): calls to the forcing setter<br />
 <code>SetCJKVerticalColumnFragmentation...</code> <strong>across the
 whole upstream tree</strong> — <strong>zero</strong>.<br />
 Enabling it on the command line (<code>--enable-blink-features</code>)
 likewise never appears<br />
-in product code (zero under <code>third_party/blinkgtk/</code>).</p>
+in product code (zero under <code>third_party/blinkgtk/</code>).<br />
+For 1.2.3-build4: the lines added between upstream 1.2.3-build3 and
+1.2.3-build4 (9 files) contain<br />
+none of these strings and not the flag name either (checked
+2026-09-28).</p>
 <p><strong>The flag is enabled when you start with either of
 these:</strong></p>
 <ul>
@@ -417,8 +433,8 @@ flag.<br />
 On Windows too, either switch makes the API available, and calling it
 returns an object<br />
 (checked 2026-09-27 with a two-column vertical test page).</p>
-<p><strong>What differs when the flag is on</strong>: on Linux,
-conditions at four sites change the layout.<br />
+<p><strong>When the flag is on</strong>: conditions at four sites change
+the layout.<br />
 They round up the block size of a block that is a direct child of the
 multicol container and does not<br />
 itself take part in the column split, to a multiple of the column width
@@ -430,13 +446,26 @@ let an orthogonal vertical child take part in the column split<br />
 (<code>block_layout_algorithm.cc:1418, 2888</code>,
 <code>column_layout_algorithm.cc:374</code> and<br />
 <code>fragmentation_utils.cc:357</code> in the upstream 1.2.3-build3
-tree). The three corresponding files in<br />
-this Windows build have zero occurrences, so none of them apply.
-(Upstream calls all four together the<br />
+tree). (Upstream calls all four together the<br />
 "SNAP 系 4 箇所" (the four SNAP sites), and "column-grid snap" on this
-page means all four.)<br />
-<strong>Column splitting and line positions may therefore differ from
-the Linux build.</strong></p>
+page means all four.)</p>
+<p><strong>The Windows build up to 1.2.3-build3 did not have these four
+sites.</strong> 1.2.3-build4 takes the three upstream<br />
+files. Compared by md5 with the upstream 1.2.3-build4 tree, two files
+are identical and <code>fragmentation_utils.cc</code><br />
+differs at one site only (measured 2026-09-28): we added a condition
+that lets the DCHECK hit by the fourth site<br />
+pass while the flag is enabled. The Windows build has DCHECK enabled, so
+without that change the renderer exited<br />
+abnormally when a matching page was opened with the flag enabled (the
+Linux build has DCHECK disabled, so this<br />
+DCHECK does not run there).</p>
+<p>On a page with vertical text inside a horizontal multicol container,
+counting the rectangles of the text gives<br />
+16 with the flag and 1 without it (1 with the flag too, in the same
+state as 1.2.3-build3 and earlier; measured<br />
+2026-09-28). We have not checked the effects of letting that DCHECK
+pass.</p>
 <p><strong>Line breaking comes from the same source on both
 platforms</strong> (compared by md5, 2026-09-27).<br />
 Of the 275 <code>.cc</code> / <code>.h</code> files directly under
@@ -513,7 +542,7 @@ breaks in the current configuration — on Windows
 <code>blinkgtk.dll</code> and<br />
 <code>glib-2.0-0.dll</code> both use the CRT from DLLs (UCRT) (checked
 on this release<br />
-with <code>dumpbin /dependents</code>, 2026-09-27). <strong>We align it
+with <code>dumpbin /dependents</code>, 2026-09-28). <strong>We align it
 for the contract.</strong></p>
 </blockquote></li>
 <li><p><strong><code>blink_gtk_sandbox_init()</code> is not exported
@@ -530,14 +559,14 @@ issue #141 in the upstream repository, filed by us.</p></li>
 </ol>
 <hr />
 <h2 id="reading-the-version">Reading the version</h2>
-<p><code>1.2.3-build3</code> is the same version number as BlinkGTK
+<p><code>1.2.3-build4</code> is the same version number as BlinkGTK
 itself, <strong>tied to the<br />
 Chromium version and the BlinkGTK patch level.</strong> This one is
 Chromium<br />
 154.0.8037.57.</p>
 <p>You can ask the binary in your hands:</p>
 <pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.3-build3 (Chromium 154.0.8037.57)</code></pre>
+BlinkGTK 1.2.3-build4 (Chromium 154.0.8037.57)</code></pre>
 <p><strong>Trust what your copy prints, not the number on this
 page.</strong></p>
 <hr />
@@ -781,6 +810,20 @@ the code (a direct child of the multicol container that does not take
 part in the column split; 600px when column-width is auto). Stopped
 calling only the second site column-grid snap, following upstream, which
 calls all four the SNAP sites</td>
+</tr>
+<tr>
+<td>2026-09-28</td>
+<td>Updated for 1.2.3-build4. Re-compared with Linux 1.2.3-build4
+(public API unchanged: Linux 153 / Windows 152; Linux exports 190 with
+one internal addition). Described the four vertical-layout sites now
+present (one DCHECK site differs from upstream) and added a DCHECK row
+to the differences table. 65 entry points called</td>
+</tr>
+<tr>
+<td>2026-09-29</td>
+<td>Re-measured the disk space after dropping the two development Vulkan
+libraries from the package (ZIP 464 to 457 MiB, extracted 1,316 to 1,291
+MiB). The console now reads "status messages"</td>
 </tr>
 </tbody>
 </table>

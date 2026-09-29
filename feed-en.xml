@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-09-28T00:00:00Z</updated>
+  <updated>2026-09-29T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>BlinkGTK for Windows v1.2.3-build4 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build4-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-09-29-windows-123-build4:en</id>
+    <updated>2026-09-29T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>BlinkGTK for Windows now takes in the upstream source of the same version as the Linux build v1.2.3-build4. The vertical-layout changes are in the Windows build too: with the flag CJKVerticalColumnFragmentation enabled, vertical text inside a horizontal multicol container is split into columns. Fixes such as base_uri in blink_web_view_load_html() are included as well.</summary>
+  </entry>
   <entry>
     <title>v1.2.3-build4 released</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build4"/>

@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build4-windows">BlinkGTK for Windows v1.2.3-build4 released</a></h2>
+<p><small>2026-09-29 · Release</small></p>
+<p>BlinkGTK for Windows now takes in the upstream source of the same version as the Linux build v1.2.3-build4. The vertical-layout changes are in the Windows build too: with the flag CJKVerticalColumnFragmentation enabled, vertical text inside a horizontal multicol container is split into columns. Fixes such as base_uri in blink_web_view_load_html() are included as well.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build4">v1.2.3-build4 released</a></h2>
 <p><small>2026-09-28 · Release</small></p>
 <p>Software rendering no longer copies the pixels of every frame before handing them to GTK. Animations run about 24% more often at scale 2, and about 9% more frames reach the screen at scale 1. Also fixes load_html not applying base_uri, a first paint delayed by about 25 seconds when the accessibility bus does not respond, stored permissions being read on the UI thread, and GTK warnings with ibus when a view is closed. The public API is unchanged.</p>
