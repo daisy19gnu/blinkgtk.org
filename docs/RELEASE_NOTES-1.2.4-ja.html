@@ -145,8 +145,9 @@ Release にある <code>blinkgtk-release-*.noarch.rpm</code>
 前の要素に負の margin (疑似要素によるものなど)
 があると、ルビの注釈の領域が負の値になり、ルビの無い後続の行が上にずれていました
 (上流の修正)。</li>
-<li><strong>段組みの中のルビの注釈の領域を、段の高さをそろえる段組みの中でも次のブロックへ伝えるようになりました</strong>
-(上流の変更)。段組みの縦書きでルビを使う頁では、配置が変わる場合があります。</li>
+<li><strong>段組みの中のルビの注釈の領域についての上流の変更は、試験段階のフラグ
+(<code>AnnotationSpaceForMultiCol</code>)
+の下だけに入りました。</strong> 既定では配置は変わりません。</li>
 <li><strong><code>::first-line</code> の行の高さの計算が、Chromium 153
 以前と同じに戻ります。</strong> CSS
 の仕様が改められたことに合わせた上流の変更です。</li>
@@ -159,10 +160,11 @@ Release にある <code>blinkgtk-release-*.noarch.rpm</code>
 <h2 id="build1-でできるようになったこと">build1
 でできるようになったこと</h2>
 <ul>
-<li><strong>縦書きの行末のぶら下げ
-(<code>hanging-punctuation: allow-end</code>)
-が既定で有効です。</strong>
-縦書きでのずれと、行が組めないときの値の扱いを修正しています。</li>
+<li><strong>行末のぶら下げ (<code>hanging-punctuation: allow-end</code>)
+が既定で有効です。</strong> 上流で作業中の CL 8367064 を取り込み、縦組で
+inline 軸の border や padding
+がある要素でもぶら下がっていた件と、行が組めない経路で renderer
+が異常終了していた件を当方で修正しています。</li>
 <li><strong>組版の機能が入っているかを実行時に確かめられます</strong>:
 <code>blink_gtk_has_typesetting_feature()</code>
 (#153)。<code>blink_gtk_init()</code>
@@ -190,13 +192,15 @@ Release にある <code>blinkgtk-release-*.noarch.rpm</code>
 <ul>
 <li><strong>拡大率 1
 の画面では、ソフトウェアの描画を撮影を使わない経路で受け取るようにしました</strong>
-(blinkgtk-dist #8)。撮影の要求が付かないので、Viz
-は変わった範囲だけを合成できます (GTK
-へ渡す画は今も全面です)。小さな範囲だけが変わる頁で CPU
+(blinkgtk-dist
+#8)。撮影の要求と、そのための画素の読み出しが無くなります。変わった範囲だけを合成する形は、見開きの片ページが空白のまま残る不具合
+(#120) を防ぐ修正が範囲を毎回全面にするため、1.2.4
+ではまだ入っていません。小さな範囲だけが変わる頁で CPU
 の使用率が下がります。部分更新の頁で 16 秒間に使った CPU 時間 (5
 回の中央値。ホストのプロセスと子プロセスの全スレッドの合計): Intel
 i5-10310U の機械で 9.20 → 5.07 秒、Intel i7-8550U の機械で 15.74 → 9.19
-秒 (どちらも weston headless)。この値は Chromium 154 の開発版で、経路を
+秒 (どちらも weston headless)。この値は Chromium 154
+の上で作った公開前の BlinkGTK で、経路を
 <code>BLINKGTK_USE_MOJO_IPC=1</code>
 で指定して測ったもので、1.2.4-build1
 と自動の選択では測り直していません。拡大率 1
@@ -206,15 +210,20 @@ i5-10310U の機械で 9.20 → 5.07 秒、Intel i7-8550U の機械で 15.74 →
 ごとに描き直し続けないようにしました</strong> (blinkgtk-dist
 #8)。待機中の CPU の使用率が下がります (16 秒間に使った CPU 時間、Intel
 i5-10310U の機械で 2.04 → 0.48 秒、5 回の中央値。Chromium 154
-の開発版で測った値)。<code>BLINKGTK_QUEUE_DRAW_TIMER=1</code>
+の上で作った公開前の BlinkGTK
+で測った値)。<code>BLINKGTK_QUEUE_DRAW_TIMER=1</code>
 で以前の動作に戻せます。</li>
 </ul>
 <h2 id="build1-で修正したこと">build1 で修正したこと</h2>
 <ul>
 <li><strong>EGL で描き続けるとメモリが増え続けていました。</strong>
-renderer +5.6 → +1.6 MB/分、ブラウザ +1.8 → 0 MB/分。</li>
+renderer +5.6 → +1.6 MB/分、ブラウザ +1.8 → 0 MB/分 (Chromium 154
+の上で作った公開前の BlinkGTK、Canvas 2D
+の頁で、同じ仕組みを試験用の切り替えで有効にして測った値)。1.2.4-build1
+でも、検査 (renderer 3,000 KB/分以下、ブラウザ 500 KB/分以下) が PASS
+しています。</li>
 <li><strong>at-spi2-core 2.61 (Fedora 45 の 2.61.90 で確認)
-で、スクリーンリーダーを起動してもアクセシビリティツリーが出ませんでした。</strong>
+で、環境変数を付けずに起動したとき、スクリーンリーダーを起動してもアクセシビリティツリーが出ませんでした。</strong>
 2.61
 で検知に使っていたプロパティが無くなったためで、新しい検知の方法に合わせました。環境変数を付けなくても、支援技術を起動すると有効になります。</li>
 <li><strong><code>BLINKGTK_A11Y=1</code>
@@ -231,14 +240,22 @@ renderer +5.6 → +1.6 MB/分、ブラウザ +1.8 → 0 MB/分。</li>
 を指定しても、拡大率 1.25・1.5 の画面で頁が 2
 で描かれていました</strong>
 (#117)。指定があるときは分数のまま描きます。</li>
-<li><strong>T2 (<code>BLINKGTK_USE_MOJO_IPC=1</code>) で 2 件</strong>:
-<code>window.open()</code> でアプリが作った 2
+<li><strong>撮影を使わない経路
+(<code>BLINKGTK_USE_MOJO_IPC=1</code>。拡大率 1 では既定) で 2
+件</strong>: <code>window.open()</code> でアプリが作った 2
 つ目のビューが空になり、その画が最初のビューに出ていました。画面へ出さない宣言
 (WARM / IDLE) の下でも画面への受け渡しが止まりませんでした。</li>
 </ul>
 <h2 id="build1-で挙動が変わるもの">build1 で挙動が変わるもの</h2>
 <ul>
 <li>日本語組版に関わるものは上の「日本語組版に関わる変更」にまとめました。</li>
+<li><strong><code>text-decoration-skip-spaces</code> の既定の値
+(<code>start end</code>) が働くようになり、行頭と行末の空白
+(全角スペースを含む) には下線などの装飾が引かれなくなります。</strong>
+例えば段落の頭の字下げを全角スペースで入れた文章に
+<code>text-decoration</code>
+を掛けると、その空白の部分に線が引かれません。コードを読んでの判断で、描画は測っていません。以前の描画にするには
+<code>text-decoration-skip-spaces: none</code> を指定します。</li>
 <li><strong>GTK が Wayland 以外 (<code>GDK_BACKEND=x11</code> など)
 で動いたとき、警告を 1 件出します。</strong> BlinkGTK は Wayland
 だけを対象にしており、この場合イベントの回し方が CPU を 1

@@ -143,9 +143,10 @@ Japanese typesetting (Chromium 155)</h2>
 preceding element had a negative margin (for example from a
 pseudo-element), the ruby annotation space became negative and following
 lines without ruby shifted up (upstream fix).</li>
-<li><strong>Ruby annotation space is now passed to the next block inside
-balanced multi-column containers too</strong> (upstream change). On
-multi-column vertical pages with ruby, the layout may change.</li>
+<li><strong>The upstream change to ruby annotation space inside
+multi-column containers is only behind an experimental flag
+(<code>AnnotationSpaceForMultiCol</code>).</strong> The layout does not
+change by default.</li>
 <li><strong>The line height of <code>::first-line</code> is computed as
 in Chromium 153 and earlier.</strong> This is an upstream change that
 follows a revision of the CSS specification.</li>
@@ -158,10 +159,12 @@ Chromium 151 and are now permanent. The behavior does not change.</li>
 </ul>
 <h2 id="what-build1-lets-you-do">What build1 lets you do</h2>
 <ul>
-<li><strong>Hanging punctuation at the line end in vertical text
+<li><strong>Hanging punctuation at the line end
 (<code>hanging-punctuation: allow-end</code>) is enabled by
-default</strong>, with fixes for vertical text and for lines that cannot
-be laid out.</li>
+default.</strong> It takes in the upstream work-in-progress CL 8367064,
+with our fixes for elements with inline-axis border or padding in
+vertical text that still hung, and for a renderer crash on the path
+where a line cannot be laid out.</li>
 <li><strong>You can check at run time whether a typesetting feature is
 built in</strong>: <code>blink_gtk_has_typesetting_feature()</code>
 (#153). It can be called before <code>blink_gtk_init()</code> and
@@ -189,34 +192,42 @@ warning C4819, so add <code>/utf-8</code> if you use
 <ul>
 <li><strong>On a scale-1 display, software rendering is now received
 through a path that does not use capture</strong> (blinkgtk-dist #8).
-Without capture requests, Viz can composite only the area that changed
-(the image handed to GTK is still the full frame). This lowers CPU usage
-on pages where only a small area changes. CPU time used in 16 seconds on
-a partial-update page (median of 5 runs; all threads of the host process
+This removes the capture requests and the pixel readback they need.
+Compositing only the changed area is not in 1.2.4 yet, because the fix
+that keeps one page of a two-page spread from staying blank (#120) makes
+the damaged area the full frame every time. This lowers CPU usage on
+pages where only a small area changes. CPU time used in 16 seconds on a
+partial-update page (median of 5 runs; all threads of the host process
 and its child processes): 9.20 → 5.07 s on an Intel i5-10310U machine,
 15.74 → 9.19 s on an Intel i7-8550U machine (both under weston
-headless). These values were measured on a Chromium 154 development
-build with the path selected by <code>BLINKGTK_USE_MOJO_IPC=1</code>;
-they were not re-measured on 1.2.4-build1 or with the automatic
-selection. It is not used on displays with a scale other than 1, and
-moving to such a display returns to the previous path.
-<code>BLINKGTK_T2_AUTO=0</code> restores the previous path.</li>
+headless). These values were measured on a pre-release BlinkGTK build on
+Chromium 154 with the path selected by
+<code>BLINKGTK_USE_MOJO_IPC=1</code>; they were not re-measured on
+1.2.4-build1 or with the automatic selection. It is not used on displays
+with a scale other than 1, and moving to such a display returns to the
+previous path. <code>BLINKGTK_T2_AUTO=0</code> restores the previous
+path.</li>
 <li><strong>BlinkWebView no longer redraws a static page every 16
 ms</strong> (blinkgtk-dist #8), which lowers CPU usage while idle (CPU
 time used in 16 seconds: 2.04 → 0.48 s on the Intel i5-10310U machine,
-median of 5 runs, measured on a Chromium 154 development build).
-<code>BLINKGTK_QUEUE_DRAW_TIMER=1</code> restores the previous
+median of 5 runs, measured on a pre-release BlinkGTK build on Chromium
+154). <code>BLINKGTK_QUEUE_DRAW_TIMER=1</code> restores the previous
 behavior.</li>
 </ul>
 <h2 id="what-build1-fixes">What build1 fixes</h2>
 <ul>
 <li><strong>Memory grew continuously while drawing in EGL mode.</strong>
-Renderer +5.6 → +1.6 MB/min, browser +1.8 → 0 MB/min.</li>
+Renderer +5.6 → +1.6 MB/min, browser +1.8 → 0 MB/min (measured on a
+pre-release BlinkGTK build on Chromium 154 with a Canvas 2D page, with
+the same mechanism turned on by an experimental switch). On 1.2.4-build1
+the check (renderer at most 3,000 KB/min, browser at most 500 KB/min)
+also passes.</li>
 <li><strong>With at-spi2-core 2.61 (confirmed with 2.61.90 on Fedora
-45), starting a screen reader did not expose the accessibility
-tree.</strong> The property used for detection was removed in 2.61;
-detection now follows the new method. Starting an assistive technology
-turns it on without any environment variable.</li>
+45), when launched without environment variables, starting a screen
+reader did not expose the accessibility tree.</strong> The property used
+for detection was removed in 2.61; detection now follows the new method.
+Starting an assistive technology turns it on without any environment
+variable.</li>
 <li><strong>When an assistive technology started after launching with
 <code>BLINKGTK_A11Y=1</code>, the accessibility tree did not reach
 it</strong> (#145). It now does.</li>
@@ -230,16 +241,26 @@ seconds.</strong> It now appears in 50 to 53 ms.</li>
 <li><strong>In EGL mode with <code>BLINKGTK_EGL_FRACTIONAL=1</code>,
 pages on 1.25 / 1.5 displays were drawn at scale 2</strong> (#117). With
 the setting, pages are drawn at the fractional scale.</li>
-<li><strong>Two fixes in T2
-(<code>BLINKGTK_USE_MOJO_IPC=1</code>)</strong>: a second view created
-by <code>window.open()</code> was blank while its content appeared in
-the first view, and drawing was not withheld under the presentation
-policy (WARM / IDLE).</li>
+<li><strong>Two fixes in the path that does not use capture
+(<code>BLINKGTK_USE_MOJO_IPC=1</code>; the default at scale 1)</strong>:
+a second view created by <code>window.open()</code> was blank while its
+content appeared in the first view, and drawing was not withheld under
+the presentation policy (WARM / IDLE).</li>
 </ul>
 <h2 id="behavior-changes-in-build1">Behavior changes in build1</h2>
 <ul>
 <li>Changes for Japanese typesetting are listed above under "Changes for
 Japanese typesetting".</li>
+<li><strong>The default value of
+<code>text-decoration-skip-spaces</code> (<code>start end</code>) now
+takes effect, so underlines and other decorations are no longer drawn
+over spaces at the start and end of a line (including full-width
+spaces).</strong> For example, if a paragraph is indented with a
+full-width space and has <code>text-decoration</code>, no line is drawn
+over that space. This is based on reading the code; the rendering has
+not been measured. Specify
+<code>text-decoration-skip-spaces: none</code> for the previous
+rendering.</li>
 <li><strong>When GTK runs on a backend other than Wayland (such as
 <code>GDK_BACKEND=x11</code>), one warning is printed.</strong> BlinkGTK
 supports Wayland only; in this case the event pump keeps one CPU core

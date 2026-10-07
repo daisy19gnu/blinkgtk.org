@@ -806,11 +806,16 @@ here</strong>. Of the 10 features promoted to on by default, 3 are
 covered above; the rest were<br />
 either unconfirmed or do not affect what a page displays.</p>
 <hr />
-<h2 id="154--155--fixes-for-ruby-annotation-space-and-margin-trim">154 →
-155 — Fixes for ruby annotation space, and <code>margin-trim</code></h2>
-<p><strong>For Japanese typesetting, two upstream fixes around ruby
-arrived.</strong> Both concern the ruby<br />
-annotation space (the room ruby needs outside the line).</p>
+<h2
+id="154--155--a-fix-for-lines-after-ruby-shifting-up-and-margin-trim">154
+→ 155 — A fix for lines after ruby shifting up, and
+<code>margin-trim</code></h2>
+<p><strong>For Japanese typesetting, two upstream changes to the ruby
+annotation space (the room ruby needs<br />
+outside the line) arrived.</strong> One works by default (the fix for
+lines after ruby shifting up); the<br />
+other, inside multi-column containers, is only behind an experimental
+flag.</p>
 <p>Scale of the change: 25 Blink features became enabled by default (6
 promoted from experimental and<br />
 similar, 19 newly added already enabled), 24 were removed (20 of them
@@ -828,16 +833,18 @@ shifted up. The annotation space<br />
 is now never smaller than the padding (upstream commit
 46d20dbfa5c05).</p>
 <h3
-id="ruby-annotation-space-is-passed-to-the-next-block-inside-multi-column-containers-too-upstream-change">Ruby
-annotation space is passed to the next block inside multi-column
-containers too (upstream change)</h3>
-<p>Previously, children of balanced multi-column containers
-(<code>column-fill: balance</code>) did not pass the<br />
-block-end ruby annotation space to the next block. From 155 they do
-(upstream commit 4226ea59b9645).<br />
-<strong>On multi-column vertical pages with ruby, the layout may
-change.</strong> The size of the effect has not<br />
-been measured.</p>
+id="ruby-annotation-space-inside-multi-column-containers--only-behind-an-experimental-flag-no-change-by-default">Ruby
+annotation space inside multi-column containers — only behind an
+experimental flag (no change by default)</h3>
+<p>A change that makes children of balanced multi-column containers
+(<code>column-fill: balance</code>) pass the<br />
+block-end ruby annotation space to the next block was added (upstream
+commit 4226ea59b9645). The<br />
+change is <strong>only behind the experimental flag
+<code>AnnotationSpaceForMultiCol</code></strong>, which is off by
+default<br />
+in 155. BlinkGTK does not turn this flag on, so the default layout does
+not change.</p>
 <h3
 id="the-line-height-of-first-line-is-computed-as-in-153-and-earlier">The
 line height of <code>::first-line</code> is computed as in 153 and
@@ -853,8 +860,13 @@ default)</h3>
 <ul>
 <li><code>margin-trim</code>: trims the margins of children that touch
 the edges of the container</li>
-<li><code>text-decoration-skip-spaces</code>: makes underlines and other
-decorations skip spaces at the start and end of lines</li>
+<li><code>text-decoration-skip-spaces</code>: decorations such as
+underlines are not drawn over spaces at the start and end of lines.
+<strong>Because the default value is <code>start end</code>, in 155
+decorations are no longer drawn over spaces at the start and end of a
+line (including full-width spaces) even without specifying it</strong>
+(based on reading the code; the rendering has not been measured;
+<code>none</code> restores the previous rendering)</li>
 </ul>
 <h3 id="features-from-151-became-permanent-no-behavior-change">Features
 from 151 became permanent (no behavior change)</h3>
