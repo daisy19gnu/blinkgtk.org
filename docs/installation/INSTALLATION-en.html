@@ -159,8 +159,7 @@ Installation</a></li>
 </tr>
 <tr>
 <td>OS</td>
-<td>Linux (<strong>glibc 2.43 or later</strong>; Fedora 44+, Ubuntu
-25.10+)</td>
+<td>Linux (<strong>glibc 2.44 or later</strong>; Fedora 45+)</td>
 </tr>
 <tr>
 <td>Display</td>
@@ -236,11 +235,17 @@ RHEL (dnf repository — let dnf handle updates)</h3>
 up new releases.<br />
 No need to download files each time.</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> curl <span class="at">-o</span> /etc/yum.repos.d/blinkgtk.repo <span class="dt">\</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  https://blinkgtk.org/repo/fedora/blinkgtk.repo</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin                          <span class="co"># runtime</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin-devel blinkgtk-bin-gir   <span class="co"># for development</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install https://blinkgtk.org/repo/fedora/blinkgtk-release.noarch.rpm</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin                          <span class="co"># runtime</span></span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install blinkgtk-bin-devel blinkgtk-bin-gir   <span class="co"># for development</span></span></code></pre></div>
+<p><code>blinkgtk-release</code> contains only the repository
+configuration (<code>/etc/yum.repos.d/blinkgtk.repo</code>)<br />
+and the public key, and points at the repository for your Fedora
+release. If you placed the<br />
+<code>.repo</code> with <code>curl</code> before, this one line replaces
+it (the old file is kept as<br />
+<code>blinkgtk.repo.rpmorig</code> and is not used).</p>
 <p>Packages are signed and the <code>.repo</code> ships with
 <code>gpgcheck=1</code>. The first<br />
 <code>dnf install</code> asks you to confirm the public key — check that
@@ -277,11 +282,11 @@ RPMs<br />
 directly.</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime only (run apps)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc45.x86_64.rpm</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for development, add devel + gir</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc44.x86_64.rpm</span></code></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc45.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc45.x86_64.rpm</span></code></pre></div>
 <h3 id="debian--ubuntu-deb">Debian / Ubuntu (DEB)</h3>
 <div class="sourceCode" id="cb7"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb        <span class="co"># runtime</span></span>

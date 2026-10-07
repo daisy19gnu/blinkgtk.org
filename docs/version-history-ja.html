@@ -45,7 +45,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.3-build4 / 言語: 日本語 | <a
+<p>バージョン: 1.2.4-build1 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -71,9 +71,19 @@ href="version-history-en.html">English</a></p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.3-build4</strong> ← 公開中</td>
+<td><strong>v1.2.4-build1</strong> ← 公開中</td>
+<td>2026-10-07</td>
+<td><strong>155.0.8059.39</strong></td>
+<td>Chromium 155 に更新。RPM は Fedora 45 以降のみ (Fedora 44 は v1.2.3
+まで)。拡大率 1
+の画面でソフトウェアの描画が変わった範囲だけを描き、静止した頁を描き直し続けなくなりました。EGL
+のメモリ増加、at-spi2-core 2.61
+で支援技術が開かない問題を解消。ルビの後の行が上にずれる上流の修正ほか、日本語組版の変更が入っています</td>
+</tr>
+<tr>
+<td>v1.2.3-build4</td>
 <td>2026-09-28</td>
-<td><strong>154.0.8037.57</strong></td>
+<td>154.0.8037.57</td>
 <td>software の描画で画素のコピーを省き、拡大率 2 でアニメーションが約
 24% 多く回るようになりました。load_html の base_uri
 が反映されない問題、支援技術のバスが応答しないと最初の描画が約 25

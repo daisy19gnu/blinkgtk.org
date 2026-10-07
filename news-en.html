@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build1">v1.2.4-build1 released (Chromium 155; Fedora 44 support ended)</a></h2>
+<p><small>2026-10-07 · Release</small></p>
+<p>The engine is updated to Chromium 155. It includes the upstream fix for lines after ruby shifting up, and hanging punctuation at the line end in vertical text is enabled by default. On a scale-1 display only the changed area is drawn, which lowers CPU usage. RPMs are now built for Fedora 45 or later only. If you use dnf on Fedora 45, install blinkgtk-release once as described in the release notes. Fedora 44 users stay on v1.2.3.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.3-build4-windows">BlinkGTK for Windows v1.2.3-build4 released</a></h2>
 <p><small>2026-09-29 · Release</small></p>
 <p>BlinkGTK for Windows now takes in the upstream source of the same version as the Linux build v1.2.3-build4. The vertical-layout changes are in the Windows build too: with the flag CJKVerticalColumnFragmentation enabled, vertical text inside a horizontal multicol container is split into columns. Fixes such as base_uri in blink_web_view_load_html() are included as well.</p>

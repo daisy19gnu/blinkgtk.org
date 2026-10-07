@@ -44,7 +44,7 @@
 </div><div class="card doc">
 <h1 id="chromium-147--154--what-blinkgtk-gained">Chromium 147 → 154 —
 What BlinkGTK Gained</h1>
-<p>Version: 1.2.3-build4 / Language: English | <a
+<p>Version: 1.2.4-build1 / Language: English | <a
 href="chromium-feature-history-ja.html">日本語</a></p>
 <p>BlinkGTK embeds Chromium's rendering engine, Blink, as-is. When
 Chromium gains a new<br />
@@ -806,6 +806,69 @@ here</strong>. Of the 10 features promoted to on by default, 3 are
 covered above; the rest were<br />
 either unconfirmed or do not affect what a page displays.</p>
 <hr />
+<h2 id="154--155--fixes-for-ruby-annotation-space-and-margin-trim">154 →
+155 — Fixes for ruby annotation space, and <code>margin-trim</code></h2>
+<p><strong>For Japanese typesetting, two upstream fixes around ruby
+arrived.</strong> Both concern the ruby<br />
+annotation space (the room ruby needs outside the line).</p>
+<p>Scale of the change: 25 Blink features became enabled by default (6
+promoted from experimental and<br />
+similar, 19 newly added already enabled), 24 were removed (20 of them
+flags that were already enabled and<br />
+became permanent), 1 was taken out of the defaults, and 18 were newly
+added as experimental or similar.<br />
+No user-writable CSS property was added or removed (3 internal ones were
+added).</p>
+<h3 id="lines-after-ruby-no-longer-shift-up-upstream-fix">Lines after
+ruby no longer shift up (upstream fix)</h3>
+<p>When a preceding element had a negative margin (for example from a
+pseudo-element), the ruby<br />
+annotation space became negative and following lines without ruby
+shifted up. The annotation space<br />
+is now never smaller than the padding (upstream commit
+46d20dbfa5c05).</p>
+<h3
+id="ruby-annotation-space-is-passed-to-the-next-block-inside-multi-column-containers-too-upstream-change">Ruby
+annotation space is passed to the next block inside multi-column
+containers too (upstream change)</h3>
+<p>Previously, children of balanced multi-column containers
+(<code>column-fill: balance</code>) did not pass the<br />
+block-end ruby annotation space to the next block. From 155 they do
+(upstream commit 4226ea59b9645).<br />
+<strong>On multi-column vertical pages with ruby, the layout may
+change.</strong> The size of the effect has not<br />
+been measured.</p>
+<h3
+id="the-line-height-of-first-line-is-computed-as-in-153-and-earlier">The
+line height of <code>::first-line</code> is computed as in 153 and
+earlier</h3>
+<p>The calculation that was enabled by default up to 154 was turned off.
+The CSS specification was<br />
+revised to match old Blink and WebKit, so this is not a regression
+(upstream commit d726ab7f7fc2d).</p>
+<h3
+id="margin-trim-and-text-decoration-skip-spaces-are-available-enabled-by-default"><code>margin-trim</code>
+and <code>text-decoration-skip-spaces</code> are available (enabled by
+default)</h3>
+<ul>
+<li><code>margin-trim</code>: trims the margins of children that touch
+the edges of the container</li>
+<li><code>text-decoration-skip-spaces</code>: makes underlines and other
+decorations skip spaces at the start and end of lines</li>
+</ul>
+<h3 id="features-from-151-became-permanent-no-behavior-change">Features
+from 151 became permanent (no behavior change)</h3>
+<p>Placing emphasis marks with the same mechanism as ruby, and the fix
+for moving the caret up and down<br />
+in lines with ruby, were enabled by default since 151. In 155 their
+flags were removed and they became<br />
+permanent. The removal of flags such as <code>text-indent</code> and
+tab-size calculations is likewise the<br />
+permanent form of what was already enabled in 154.</p>
+<h3 id="not-measured">Not measured</h3>
+<p>The vertical line-breaking measurement done for the 154 chapter was
+not repeated for 155. The items<br />
+above are based on the descriptions of the upstream commits.</p>
 <h2
 id="153--154--vertical-line-breaking-holds-xml-parsing-goes-back-to-the-older-parser">153
 → 154 — Vertical line breaking holds; XML parsing goes back to the older

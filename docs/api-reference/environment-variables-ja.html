@@ -199,10 +199,37 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td><strong>アクセシビリティを有効にします。</strong> 支援技術 (Orca 等)
 が Web ページの中身を読めるよう、ページの構造を AT-SPI
 に出します。既定では Chromium
-がページのアクセシビリティ情報を作らないため、出すものがありません。常時有効にすると全ページでその構築費用がかかるので、必要なときに開く形にしています。<strong>支援技術の接続を検知して自動で開く機能はまだありません</strong>
-(Orca を起動しておくだけでは有効になりません)。コマンドライン引数
+がページのアクセシビリティ情報を作らないため、出すものがありません。常時有効にすると全ページでその構築費用がかかるので、必要なときに開く形にしています。指定しなくても、支援技術
+(Orca 等) が接続すると自動で開きます (1.2.2-build4
+から。アプリの後から支援技術を起動した場合も含む)。1.2.4 からは
+at-spi2-core 2.61 以降 (Fedora 45 等)
+でも自動で開き、<code>BLINKGTK_A11Y=1</code>
+で起動した後に支援技術を起動した場合も届きます。自動で開かない環境では
+<code>1</code> を指定してください。コマンドライン引数
 <code>--force-renderer-accessibility</code>
 でも同じことができますが、起動経路に依存しない環境変数のほうが確実です</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_UPDATE_CHECK</code></td>
+<td><code>1</code></td>
+<td>未設定 (オフ)</td>
+<td><strong>1.2.4 から。</strong>
+新しい版が出ていたら、ログに英語と日本語の 2 行
+(<code>[BlinkGTK update] A newer version is available: ...</code> /
+<code>[BlinkGTK update] 新しい版があります: ...</code>)
+で知らせます。アプリ側から <code>blink_gtk_set_update_check(TRUE)</code>
+(<code>blink_gtk_init()</code> の前に呼ぶ)
+でもオンにできます。その場合も利用者が
+<code>BLINKGTK_UPDATE_CHECK=0</code> を指定すれば止まります
+(利用者の指定が優先)。<strong>既定はオフ</strong> — BlinkGTK
+は他の製品に組み込まれるので、製品の利用者が知らないうちに外へ通信しないためです。<code>1</code>
+のときだけ、起動の 5 秒後に 1 回、配布のリポジトリの版の一覧 (GitHub の
+API、<code>api.github.com</code>)
+を読みます。添付ファイルは取得しません。確かめるのは 1 日 1
+回までで、結果は <code>$XDG_CACHE_HOME/blinkgtk/update-check</code>
+に置きます。Windows
+の版とは取り違えません。通信できないときは何も案内しません
+(起動は待たせません)</td>
 </tr>
 </tbody>
 </table>
@@ -227,6 +254,26 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td><code>BLINKGTK_PUMP_RESCUE=0</code></td>
 <td>pump 起床保証(100ms heartbeat)を無効化</td>
 <td>#120</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_QUEUE_DRAW_TIMER=1</code></td>
+<td>1.2.4 から。16ms
+ごとの定期の描き直しを、それより前の版と同じく常に動かす。1.2.4
+の既定では、静止した頁を描き直し続けないよう、BlinkWebView
+ではこの描き直しを動かさない (待機中の CPU
+の使用率が下がる、blinkgtk-dist #8)。<code>=0</code> で常に止める</td>
+<td>dist#8</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_T2_AUTO=0</code></td>
+<td>1.2.4 から。拡大率 1 の画面で、ソフトウェアの描画の受け取りを T2
+(撮影を使わず、合成の結果を共有メモリで受け取る経路)
+に自動で切り替えるのをやめ、それより前の版と同じ経路を使う。1.2.4
+の既定では拡大率 1 のとき T2 を選び、小さな範囲だけが変わる頁で CPU
+の使用率が下がる (blinkgtk-dist #8)。拡大率 1 以外の画面では T2
+を使わず、移ったときも元の経路に戻す。<code>BLINKGTK_USE_MOJO_IPC=0</code>
+でも同じ</td>
+<td>dist#8</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
@@ -267,7 +314,11 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
-<td>egl モードの分数スケーリングを opt-in(実験的)</td>
+<td>egl モードの分数スケーリングを opt-in(実験的)。1.2.4 から、拡大率
+1.25・1.5 の画面で頁が分数の拡大率 (<code>devicePixelRatio</code>
+1.25・1.5) で描かれる。それより前の版 (1.2.0-build3〜1.2.3)
+では、エンジンが自動で付ける拡大率に整数へ切り上げられ、2
+で描かれていた</td>
 <td>#117</td>
 </tr>
 <tr>
@@ -282,6 +333,14 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 (既定はコピーせずに渡す)。表示がおかしいときの切り分け用</td>
 <td></td>
 </tr>
+<tr>
+<td><code>BLINKGTK_EGL_FAKE_PRESENTATION=0</code></td>
+<td><strong>1.2.4 から。</strong> egl
+モードで「画面に出た」の通知を送らない、以前の動作に戻す。<strong>戻すと、動く頁を表示し続けたときに
+renderer とブラウザのメモリが増え続けます</strong> (1.2.3
+までの動作)。比べるとき用</td>
+<td></td>
+</tr>
 </tbody>
 </table>
 <h2 id="3-内部診断サポート対象外">3. 内部診断(サポート対象外)</h2>
@@ -294,6 +353,12 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>更新の案内の試験</td>
+<td><code>BLINKGTK_UPDATE_CHECK_URL</code>
+(確かめ先の差し替え。<code>check-update-notice.sh</code>
+の手元のサーバ用)</td>
+</tr>
 <tr>
 <td>#120 の調査</td>
 <td><code>BLINKGTK_120_CC_DIAG</code> /
@@ -322,8 +387,12 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td><code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
 <code>BLINKGTK_T2_DELIVER_EMPTY</code> (陰性対照: T2 で renderer
-の最初のフレームを待たずに配送する) / <code>BLINKGTK_T2_AUTO</code>
-(試験用: 拡大率 1 の画面で T2 を自動で選ぶ。既定は無効) /
+の最初のフレームを待たずに配送する) / <code>BLINKGTK_T2_DAMAGE</code>
+(試作・既定オフ: T2 で Viz が描き直した範囲を GTK
+に伝え、変わった範囲だけテクスチャを更新する) /
+<code>BLINKGTK_T2_DAMAGE_TEST_SHRINK</code> (陰性対照: 伝える範囲を 1 px
+狭める) / <code>BLINKGTK_T2_AUTO</code> (<code>0</code> で、拡大率 1
+の画面で T2 を自動で選ぶのをやめる。1.2.4 から既定で有効) /
 <code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (試験用:
 許可の保存の読み込みを遅らせる) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /

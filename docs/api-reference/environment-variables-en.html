@@ -211,12 +211,38 @@ longer does</td>
 over AT-SPI so that assistive technologies (Orca and the like) can read
 the web content. By default Chromium does not build the accessibility
 information for the page, so there is nothing to expose. Building it for
-every page has a cost, so it is opened on request. <strong>Automatic
-activation on assistive-technology connection is not implemented
-yet</strong> (starting Orca alone does not enable it). The command-line
-switch <code>--force-renderer-accessibility</code> does the same thing,
-but the environment variable does not depend on how the program is
-launched</td>
+every page has a cost, so it is opened on request. Without it,
+accessibility opens automatically when an assistive technology (Orca and
+the like) connects (since 1.2.2-build4, including when the assistive
+technology is started after the application). From 1.2.4 this also works
+with at-spi2-core 2.61 or later (Fedora 45 and the like), and when an
+assistive technology is started after launching with
+<code>BLINKGTK_A11Y=1</code>. Set <code>1</code> where automatic
+activation does not happen. The command-line switch
+<code>--force-renderer-accessibility</code> does the same thing, but the
+environment variable does not depend on how the program is launched</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_UPDATE_CHECK</code></td>
+<td><code>1</code></td>
+<td>unset (off)</td>
+<td><strong>Since 1.2.4.</strong> Tells you in two log lines, English
+and Japanese
+(<code>[BlinkGTK update] A newer version is available: ...</code> /
+<code>[BlinkGTK update] 新しい版があります: ...</code>), when a newer
+version has been released. An application can also turn it on with
+<code>blink_gtk_set_update_check(TRUE)</code> (call it before
+<code>blink_gtk_init()</code>); even then the user can stop it with
+<code>BLINKGTK_UPDATE_CHECK=0</code> (the user setting wins).
+<strong>Off by default</strong> — BlinkGTK is embedded in other
+products, and it must not contact the network without the product user
+knowing. Only with <code>1</code>, it reads the release list of the
+distribution repository (GitHub API, <code>api.github.com</code>) once,
+5 seconds after startup. Attachments are not downloaded. It checks at
+most once a day and keeps the result in
+<code>$XDG_CACHE_HOME/blinkgtk/update-check</code>. Windows releases are
+not mistaken for Linux ones. When the network is unavailable it says
+nothing and does not delay startup</td>
 </tr>
 </tbody>
 </table>
@@ -241,6 +267,26 @@ defaults)</h2>
 <td><code>BLINKGTK_PUMP_RESCUE=0</code></td>
 <td>Disables the pump wakeup guarantee (100 ms heartbeat)</td>
 <td>#120</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_QUEUE_DRAW_TIMER=1</code></td>
+<td>Since 1.2.4. Always runs the periodic redraw every 16 ms, as earlier
+versions did. By default 1.2.4 does not run it for BlinkWebView, so a
+static page is not redrawn over and over (lower CPU usage while idle,
+blinkgtk-dist #8). <code>=0</code> always stops it</td>
+<td>dist#8</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_T2_AUTO=0</code></td>
+<td>Since 1.2.4. Stops automatically switching software rendering to T2
+(a path that receives the composited result through shared memory
+instead of capturing it) on a scale-1 display, and uses the same path as
+earlier versions. By default 1.2.4 selects T2 at scale 1, which lowers
+CPU usage on pages where only a small area changes (blinkgtk-dist #8).
+T2 is not used on displays with a scale other than 1, and the original
+path is restored when the window moves to one.
+<code>BLINKGTK_USE_MOJO_IPC=0</code> does the same</td>
+<td>dist#8</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
@@ -283,7 +329,11 @@ fallbacks on machines with slow GPU startup</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
-<td>Opts in to fractional scaling in egl mode (experimental)</td>
+<td>Opts in to fractional scaling in egl mode (experimental). From
+1.2.4, pages on a 1.25 or 1.5 display are drawn at that fractional scale
+(<code>devicePixelRatio</code> 1.25 / 1.5). In 1.2.3 and earlier (since
+1.2.0-build3), the scale the engine adds automatically was rounded up to
+an integer, so pages were drawn at 2</td>
 <td>#117</td>
 </tr>
 <tr>
@@ -297,6 +347,14 @@ fallbacks on machines with slow GPU startup</td>
 to copying the pixels of every frame before handing them to GTK (the
 default now hands them over without a copy). For isolating display
 problems</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_FAKE_PRESENTATION=0</code></td>
+<td><strong>Since 1.2.4.</strong> In egl mode, do not send the
+"presented" notification, as before. <strong>With this, the renderer and
+browser memory keep growing while an animated page is shown</strong>
+(the behavior up to 1.2.3). For comparison only</td>
 <td></td>
 </tr>
 </tbody>
@@ -323,8 +381,12 @@ without notice.</p>
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
 <code>BLINKGTK_T2_DELIVER_EMPTY</code> (negative control: on T2, deliver
 frames without waiting for the renderer's first frame) /
-<code>BLINKGTK_T2_AUTO</code> (testing only: automatically select T2 on
-a scale-1 display; off by default) /
+<code>BLINKGTK_T2_DAMAGE</code> (prototype, off by default: passes the
+area Viz redrew on T2 to GTK, so only the changed area of the texture is
+updated) / <code>BLINKGTK_T2_DAMAGE_TEST_SHRINK</code> (negative
+control: shrinks the passed area by 1 px) /
+<code>BLINKGTK_T2_AUTO</code> (<code>0</code> stops automatically
+selecting T2 on a scale-1 display; on by default since 1.2.4) /
 <code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (testing only: delay
 loading the stored permissions) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
@@ -374,6 +436,11 @@ our development demo <code>simple_browser</code> reads them, and
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Update notice tests</td>
+<td><code>BLINKGTK_UPDATE_CHECK_URL</code> (replaces the URL checked;
+for the local server of <code>check-update-notice.sh</code>)</td>
+</tr>
 <tr>
 <td><code>BLINKGTK_RESTART_ACTIVATION=0</code></td>
 <td>Stops carrying the activation token across a restart (carrying it

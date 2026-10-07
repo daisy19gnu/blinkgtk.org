@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.3-build4 / Language: English | <a
+<p>Version: 1.2.4-build1 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,20 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.3-build4</strong> ← current</td>
+<td><strong>v1.2.4-build1</strong> ← current</td>
+<td>2026-10-07</td>
+<td><strong>155.0.8059.39</strong></td>
+<td>Chromium 155. RPMs are for Fedora 45 or later only (Fedora 44 up to
+v1.2.3). Software rendering draws only the changed area on scale-1
+displays and static pages are no longer redrawn continuously. Fixes EGL
+memory growth and accessibility with at-spi2-core 2.61. Includes
+upstream Japanese typesetting changes such as the fix for lines after
+ruby shifting up</td>
+</tr>
+<tr>
+<td>v1.2.3-build4</td>
 <td>2026-09-28</td>
-<td><strong>154.0.8037.57</strong></td>
+<td>154.0.8037.57</td>
 <td>Software rendering no longer copies every frame, so animations run
 about 24% more often at scale 2. Also fixes load_html not applying
 base_uri, a first paint delayed by about 25 seconds when the

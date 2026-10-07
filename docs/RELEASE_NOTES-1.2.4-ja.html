@@ -1,0 +1,233 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.4-build1 リリースノート — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="リリース日: 2026-10-07 / Chromium: 155.0.8059.39 / 言語: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.4-build1 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-10-07 / Chromium: 155.0.8059.39 / 言語: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="blinkgtk-124-build1-リリースノート">BlinkGTK 1.2.4-build1
+リリースノート</h1>
+<p><strong>リリース日</strong>: 2026-10-07 / <strong>Chromium</strong>:
+155.0.8059.39 / 言語: 日本語 | <a
+href="RELEASE_NOTES-1.2.4-en.html">English</a></p>
+<p>レンダリングエンジンを <strong>Chromium 155</strong>
+に更新しました。</p>
+<hr />
+<h2 id="fedora-44-のサポートを終了しました">Fedora 44
+のサポートを終了しました</h2>
+<ul>
+<li><strong>Fedora 44 向けの提供は v1.2.3 までです。</strong> v1.2.4
+から、RPM は <strong>Fedora 45 以降</strong> (glibc 2.44 以上)
+向けだけになります。</li>
+<li><strong>Fedora 44 で dnf のリポジトリを登録している方</strong>:
+そのまま v1.2.3 に留まります。更新でエラーになることはありません。</li>
+<li><strong>Fedora 45 で dnf のリポジトリを登録している方</strong>: 次の
+1 行を 1 回だけ実行すると、v1.2.4 以降を受け取れます。</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install https://blinkgtk.org/repo/fedora/blinkgtk-release.noarch.rpm</span></code></pre></div>
+<p><code>blinkgtk-release</code> はリポジトリの設定
+(<code>/etc/yum.repos.d/blinkgtk.repo</code>)
+と公開鍵だけのパッケージで、Fedora の版ごとのリポジトリを見ます。以前
+<code>curl</code> で置いた <code>.repo</code> は
+<code>blinkgtk.repo.rpmorig</code>
+として残り、使われません。これからリポジトリの設定を変えるときは、このパッケージの更新でお届けします。</p>
+<p>リポジトリを登録せず RPM
+ファイルを直接インストールする場合も、本体がこのパッケージを必要とします。同じ
+Release にある <code>blinkgtk-release-*.noarch.rpm</code>
+を一緒に指定してください
+(<code>sudo dnf install ./blinkgtk-release-*.noarch.rpm ./blinkgtk-bin-&lt;版&gt;.fc45.x86_64.rpm</code>)。</p>
+<h2 id="日本語組版に関わる変更-chromium-155">日本語組版に関わる変更
+(Chromium 155)</h2>
+<ul>
+<li><strong>ルビの後の行が上にずれる不具合が直りました。</strong>
+前の要素に負の margin (疑似要素によるものなど)
+があると、ルビの注釈の領域が負の値になり、ルビの無い後続の行が上にずれていました
+(上流の修正)。</li>
+<li><strong>段組みの中のルビの注釈の領域を、段の高さをそろえる段組みの中でも次のブロックへ伝えるようになりました</strong>
+(上流の変更)。段組みの縦書きでルビを使う頁では、配置が変わる場合があります。</li>
+<li><strong><code>::first-line</code> の行の高さの計算が、Chromium 153
+以前と同じに戻ります。</strong> CSS
+の仕様が改められたことに合わせた上流の変更です。</li>
+<li><strong>CSS の <code>margin-trim</code> と
+<code>text-decoration-skip-spaces</code> が使えます</strong> (Chromium
+155 で既定で有効になりました)。</li>
+<li>圏点をルビと同じ仕組みで配置する変更と、ルビを含む行でのカーソルの上下移動の修正は、Chromium
+151 から有効だったものが恒久化されました。挙動は変わりません。</li>
+</ul>
+<h2 id="build1-でできるようになったこと">build1
+でできるようになったこと</h2>
+<ul>
+<li><strong>縦書きの行末のぶら下げ
+(<code>hanging-punctuation: allow-end</code>)
+が既定で有効です。</strong>
+縦書きでのずれと、行が組めないときの値の扱いを修正しています。</li>
+<li><strong>組版の機能が入っているかを実行時に確かめられます</strong>:
+<code>blink_gtk_has_typesetting_feature()</code>
+(#153)。<code>blink_gtk_init()</code>
+の前でも呼べ、<code>"hanging-punctuation:allow-end"</code> で TRUE
+を返します。</li>
+<li><strong>新しい版が出ていたらログで知らせられます</strong>
+(既定はオフ)。<code>BLINKGTK_UPDATE_CHECK=1</code> か
+<code>blink_gtk_set_update_check(TRUE)</code>
+でオンにします。案内は英語と日本語の 2 行で、1 日 1 回までです。</li>
+<li><strong>Windows (MSVC) から公開 API をすべて使えます</strong>: 公開
+API の宣言に <code>BLINKGTK_EXPORT</code> を揃えました
+(#142)。公開ヘッダのコメントを ASCII にし、日本語の Windows
+のコンパイラで次の行が読み飛ばされないようにしました (#156)。</li>
+</ul>
+<h2 id="build1-で速くなったこと">build1 で速くなったこと</h2>
+<ul>
+<li><strong>拡大率 1
+の画面では、ソフトウェアの描画で変わった範囲だけを描くようにしました</strong>
+(blinkgtk-dist #8)。小さな範囲だけが変わる頁で CPU
+の使用率が下がります。部分更新の頁で 16 秒間に使った CPU 時間 (5
+回の中央値): Intel i5-10310U の機械で 9.20 → 5.07 秒、Intel i7-8550U
+の機械で 15.74 → 9.19 秒 (どちらも weston headless)。拡大率 1
+以外の画面では使わず、移ったときは以前の経路に戻します。<code>BLINKGTK_T2_AUTO=0</code>
+で以前の経路に戻せます。</li>
+<li><strong>静止した頁を 16ms
+ごとに描き直し続けないようにしました</strong> (blinkgtk-dist
+#8)。待機中の CPU の使用率が下がります (16 秒間に使った CPU 時間、Intel
+i5-10310U の機械で 2.04 → 0.48 秒、5
+回の中央値)。<code>BLINKGTK_QUEUE_DRAW_TIMER=1</code>
+で以前の動作に戻せます。</li>
+</ul>
+<h2 id="build1-で修正したこと">build1 で修正したこと</h2>
+<ul>
+<li><strong>EGL で描き続けるとメモリが増え続けていました。</strong>
+renderer +5.6 → +1.6 MB/分、ブラウザ +1.8 → 0 MB/分。</li>
+<li><strong>at-spi2-core 2.61 以降 (Fedora 45 など)
+で、支援技術を起動してもアクセシビリティが開きませんでした。</strong>
+<code>BLINKGTK_A11Y=1</code>
+で起動した後に支援技術を起動した場合も届くようにしました (#145)。</li>
+<li><strong>XML 文書 (DAISY 3 の DTBook など)
+で、<code>blink_web_view_inject_user_stylesheet()</code>
+と選択の禁止が当たりませんでした</strong>
+(<code>&lt;?xml-stylesheet?&gt;</code> を持つ文書)。</li>
+<li><strong>表示の方針を WARM から ACTIVE
+に戻したとき、止めている間に読み込んだ文書が 0.8〜1.2
+秒出ませんでした。</strong> 修正後は 50〜53 ms です。</li>
+<li><strong>EGL で <code>BLINKGTK_EGL_FRACTIONAL=1</code>
+を指定しても、拡大率 1.25・1.5 の画面で頁が 2
+で描かれていました</strong>
+(#117)。指定があるときは分数のまま描きます。</li>
+<li><strong>T2 (<code>BLINKGTK_USE_MOJO_IPC=1</code>) で 2 件</strong>:
+<code>window.open()</code> でアプリが作った 2
+つ目のビューが空になり、その画が最初のビューに出ていました。画面へ出さない宣言
+(WARM / IDLE) の下でも画面への受け渡しが止まりませんでした。</li>
+</ul>
+<h2 id="build1-で挙動が変わるもの">build1 で挙動が変わるもの</h2>
+<ul>
+<li>日本語組版に関わるものは上の「日本語組版に関わる変更」にまとめました。</li>
+<li><strong>GTK が Wayland 以外 (<code>GDK_BACKEND=x11</code> など)
+で動いたとき、警告を 1 件出します。</strong> BlinkGTK は Wayland
+だけを対象にしており、この場合イベントの回し方が CPU を 1
+コア使い続ける方式になります。動作は変えていません。</li>
+<li><strong>デモ (<code>simple_browser</code>) の描画経路の一覧から Aura
+を外しました。</strong></li>
+</ul>
+</body>
+</html>
+</div></div>
