@@ -73,11 +73,12 @@ BlinkGTK release here.</p>
 <td>2026-10-07</td>
 <td><strong>155.0.8059.39</strong></td>
 <td>Chromium 155. RPMs are for Fedora 45 or later only (Fedora 44 up to
-v1.2.3). Software rendering draws only the changed area on scale-1
-displays and static pages are no longer redrawn continuously. Fixes EGL
-memory growth and accessibility with at-spi2-core 2.61. Includes
-upstream Japanese typesetting changes such as the fix for lines after
-ruby shifting up</td>
+v1.2.3). On scale-1 displays software rendering is received through a
+path without capture (Viz composites only the changed area), and static
+pages are no longer redrawn continuously. Fixes EGL memory growth and
+accessibility with at-spi2-core 2.61. Includes upstream Japanese
+typesetting changes such as the fix for lines after ruby shifting
+up</td>
 </tr>
 <tr>
 <td>v1.2.3-build4</td>

@@ -165,41 +165,61 @@ be laid out.</li>
 <li><strong>You can check at run time whether a typesetting feature is
 built in</strong>: <code>blink_gtk_has_typesetting_feature()</code>
 (#153). It can be called before <code>blink_gtk_init()</code> and
-returns TRUE for <code>"hanging-punctuation:allow-end"</code>.</li>
+returns TRUE for <code>"hanging-punctuation:allow-end"</code>. It
+reports whether the feature is built into this library, not whether it
+was turned off with <code>--disable-blink-features</code>.</li>
 <li><strong>An optional notice in the log when a newer version is
 available</strong> (off by default). Turn it on with
 <code>BLINKGTK_UPDATE_CHECK=1</code> or
 <code>blink_gtk_set_update_check(TRUE)</code>. The notice is two lines
 (English and Japanese), at most once a day.</li>
-<li><strong>All public APIs can be used from Windows (MSVC)</strong>:
-every public API declaration now carries <code>BLINKGTK_EXPORT</code>
-(#142). Comments in the public headers are ASCII, so a Japanese-locale
-Windows compiler no longer skips the next line (#156).</li>
+<li><strong>For Windows (MSVC), every public API declaration now carries
+<code>BLINKGTK_EXPORT</code></strong> (#142, except
+<code>blink_gtk_sandbox_init()</code>). Comments in
+<code>blinkgtk_export.h</code> are now ASCII
+(<code>blinkgtk_version.h</code> has been ASCII since 1.2.3-build4).
+<code>blink_gtk.h</code> has no comments that make a Japanese-locale
+Windows compiler (without <code>/utf-8</code>) skip the next line (nor
+did it in 1.2.3) (#156). The 1.2.4 headers have not been tried with
+MSVC. <code>blink_gtk.h</code> has Japanese comments that trigger
+warning C4819, so add <code>/utf-8</code> if you use
+<code>/WX</code>.</li>
 </ul>
 <h2 id="what-build1-makes-faster">What build1 makes faster</h2>
 <ul>
-<li><strong>On a scale-1 display, software rendering now draws only the
-area that changed</strong> (blinkgtk-dist #8), which lowers CPU usage on
-pages where only a small area changes. CPU time used in 16 seconds on a
-partial-update page (median of 5 runs): 9.20 → 5.07 s on an Intel
-i5-10310U machine, 15.74 → 9.19 s on an Intel i7-8550U machine (both
-under weston headless). It is not used on displays with a scale other
-than 1, and moving to such a display returns to the previous path.
+<li><strong>On a scale-1 display, software rendering is now received
+through a path that does not use capture</strong> (blinkgtk-dist #8).
+Without capture requests, Viz can composite only the area that changed
+(the image handed to GTK is still the full frame). This lowers CPU usage
+on pages where only a small area changes. CPU time used in 16 seconds on
+a partial-update page (median of 5 runs; all threads of the host process
+and its child processes): 9.20 → 5.07 s on an Intel i5-10310U machine,
+15.74 → 9.19 s on an Intel i7-8550U machine (both under weston
+headless). These values were measured on a Chromium 154 development
+build with the path selected by <code>BLINKGTK_USE_MOJO_IPC=1</code>;
+they were not re-measured on 1.2.4-build1 or with the automatic
+selection. It is not used on displays with a scale other than 1, and
+moving to such a display returns to the previous path.
 <code>BLINKGTK_T2_AUTO=0</code> restores the previous path.</li>
-<li><strong>A static page is no longer redrawn every 16 ms</strong>
-(blinkgtk-dist #8), which lowers CPU usage while idle (CPU time used in
-16 seconds: 2.04 → 0.48 s on the Intel i5-10310U machine, median of 5
-runs). <code>BLINKGTK_QUEUE_DRAW_TIMER=1</code> restores the previous
+<li><strong>BlinkWebView no longer redraws a static page every 16
+ms</strong> (blinkgtk-dist #8), which lowers CPU usage while idle (CPU
+time used in 16 seconds: 2.04 → 0.48 s on the Intel i5-10310U machine,
+median of 5 runs, measured on a Chromium 154 development build).
+<code>BLINKGTK_QUEUE_DRAW_TIMER=1</code> restores the previous
 behavior.</li>
 </ul>
 <h2 id="what-build1-fixes">What build1 fixes</h2>
 <ul>
 <li><strong>Memory grew continuously while drawing in EGL mode.</strong>
 Renderer +5.6 → +1.6 MB/min, browser +1.8 → 0 MB/min.</li>
-<li><strong>With at-spi2-core 2.61 or later (Fedora 45 and others),
-starting an assistive technology did not open accessibility.</strong> It
-now also works when the assistive technology starts after launching with
-<code>BLINKGTK_A11Y=1</code> (#145).</li>
+<li><strong>With at-spi2-core 2.61 (confirmed with 2.61.90 on Fedora
+45), starting a screen reader did not expose the accessibility
+tree.</strong> The property used for detection was removed in 2.61;
+detection now follows the new method. Starting an assistive technology
+turns it on without any environment variable.</li>
+<li><strong>When an assistive technology started after launching with
+<code>BLINKGTK_A11Y=1</code>, the accessibility tree did not reach
+it</strong> (#145). It now does.</li>
 <li><strong>In XML documents (such as DAISY 3 DTBook),
 <code>blink_web_view_inject_user_stylesheet()</code> and the
 no-selection style did not apply</strong> (documents with
@@ -224,8 +244,6 @@ Japanese typesetting".</li>
 <code>GDK_BACKEND=x11</code>), one warning is printed.</strong> BlinkGTK
 supports Wayland only; in this case the event pump keeps one CPU core
 busy. The behavior is unchanged.</li>
-<li><strong>Aura is removed from the render path list of the demo
-(<code>simple_browser</code>).</strong></li>
 </ul>
 </body>
 </html>

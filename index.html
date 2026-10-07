@@ -432,8 +432,8 @@ int main(int argc, char **argv)
   if (!el) return;
   // 公開時に焼き込んだ実績。GitHub API が使えなくても必ず表示する
   // (未認証 API は 60 req/時・IP 単位で枯渇するため、表示を API に依存させない)。
-  var withdrawn = 137;   // 取り下げ済み build の実績 (公開 API からは見えない)
-  var baseline  = 1452;       // 公開時点の総計
+  var withdrawn = 152;   // 取り下げ済み build の実績 (公開 API からは見えない)
+  var baseline  = 1467;       // 公開時点の総計
   var show = function (n) {
     el.textContent = 'Linux 版のダウンロード数 / Linux downloads: ' + n.toLocaleString('en-US');
     el.hidden = false;
@@ -459,7 +459,7 @@ int main(int argc, char **argv)
   // 0 件でも出す (2026-09-24 Lead 指摘): 出さないと Linux の欄しか見えず、分けて数えていることが読めない
   var el = document.getElementById('dl-count-win');
   if (!el) return;
-  var baseline = 75;
+  var baseline = 79;
   var show = function (n) {
     el.textContent = 'Windows 版のダウンロード数 / Windows downloads: ' + n.toLocaleString('en-US');
     el.hidden = false;

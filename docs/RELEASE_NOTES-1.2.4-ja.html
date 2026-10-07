@@ -167,41 +167,59 @@ Release にある <code>blinkgtk-release-*.noarch.rpm</code>
 <code>blink_gtk_has_typesetting_feature()</code>
 (#153)。<code>blink_gtk_init()</code>
 の前でも呼べ、<code>"hanging-punctuation:allow-end"</code> で TRUE
-を返します。</li>
+を返します。返すのは「このライブラリに入っているか」で、<code>--disable-blink-features</code>
+で切ったかどうかは見ません。</li>
 <li><strong>新しい版が出ていたらログで知らせられます</strong>
 (既定はオフ)。<code>BLINKGTK_UPDATE_CHECK=1</code> か
 <code>blink_gtk_set_update_check(TRUE)</code>
 でオンにします。案内は英語と日本語の 2 行で、1 日 1 回までです。</li>
-<li><strong>Windows (MSVC) から公開 API をすべて使えます</strong>: 公開
-API の宣言に <code>BLINKGTK_EXPORT</code> を揃えました
-(#142)。公開ヘッダのコメントを ASCII にし、日本語の Windows
-のコンパイラで次の行が読み飛ばされないようにしました (#156)。</li>
+<li><strong>Windows (MSVC) 向けに、公開 API の宣言に
+<code>BLINKGTK_EXPORT</code> を揃えました</strong>
+(#142、<code>blink_gtk_sandbox_init()</code>
+を除く)。<code>blinkgtk_export.h</code> のコメントを ASCII にしました
+(<code>blinkgtk_version.h</code> は 1.2.3-build4 から ASCII
+です)。<code>blink_gtk.h</code> には、日本語の Windows のコンパイラ
+(<code>/utf-8</code> なし)
+で次の行が読み飛ばされる形のコメントはありません (1.2.3
+でもありませんでした) (#156)。1.2.4 のヘッダは MSVC
+では試していません。<code>blink_gtk.h</code>
+には日本語のコメントがあり警告 C4819 が出るので、<code>/WX</code>
+を使う場合は <code>/utf-8</code> を付けてください。</li>
 </ul>
 <h2 id="build1-で速くなったこと">build1 で速くなったこと</h2>
 <ul>
 <li><strong>拡大率 1
-の画面では、ソフトウェアの描画で変わった範囲だけを描くようにしました</strong>
-(blinkgtk-dist #8)。小さな範囲だけが変わる頁で CPU
+の画面では、ソフトウェアの描画を撮影を使わない経路で受け取るようにしました</strong>
+(blinkgtk-dist #8)。撮影の要求が付かないので、Viz
+は変わった範囲だけを合成できます (GTK
+へ渡す画は今も全面です)。小さな範囲だけが変わる頁で CPU
 の使用率が下がります。部分更新の頁で 16 秒間に使った CPU 時間 (5
-回の中央値): Intel i5-10310U の機械で 9.20 → 5.07 秒、Intel i7-8550U
-の機械で 15.74 → 9.19 秒 (どちらも weston headless)。拡大率 1
+回の中央値。ホストのプロセスと子プロセスの全スレッドの合計): Intel
+i5-10310U の機械で 9.20 → 5.07 秒、Intel i7-8550U の機械で 15.74 → 9.19
+秒 (どちらも weston headless)。この値は Chromium 154 の開発版で、経路を
+<code>BLINKGTK_USE_MOJO_IPC=1</code>
+で指定して測ったもので、1.2.4-build1
+と自動の選択では測り直していません。拡大率 1
 以外の画面では使わず、移ったときは以前の経路に戻します。<code>BLINKGTK_T2_AUTO=0</code>
 で以前の経路に戻せます。</li>
-<li><strong>静止した頁を 16ms
+<li><strong>BlinkWebView では、静止した頁を 16ms
 ごとに描き直し続けないようにしました</strong> (blinkgtk-dist
 #8)。待機中の CPU の使用率が下がります (16 秒間に使った CPU 時間、Intel
-i5-10310U の機械で 2.04 → 0.48 秒、5
-回の中央値)。<code>BLINKGTK_QUEUE_DRAW_TIMER=1</code>
+i5-10310U の機械で 2.04 → 0.48 秒、5 回の中央値。Chromium 154
+の開発版で測った値)。<code>BLINKGTK_QUEUE_DRAW_TIMER=1</code>
 で以前の動作に戻せます。</li>
 </ul>
 <h2 id="build1-で修正したこと">build1 で修正したこと</h2>
 <ul>
 <li><strong>EGL で描き続けるとメモリが増え続けていました。</strong>
 renderer +5.6 → +1.6 MB/分、ブラウザ +1.8 → 0 MB/分。</li>
-<li><strong>at-spi2-core 2.61 以降 (Fedora 45 など)
-で、支援技術を起動してもアクセシビリティが開きませんでした。</strong>
-<code>BLINKGTK_A11Y=1</code>
-で起動した後に支援技術を起動した場合も届くようにしました (#145)。</li>
+<li><strong>at-spi2-core 2.61 (Fedora 45 の 2.61.90 で確認)
+で、スクリーンリーダーを起動してもアクセシビリティツリーが出ませんでした。</strong>
+2.61
+で検知に使っていたプロパティが無くなったためで、新しい検知の方法に合わせました。環境変数を付けなくても、支援技術を起動すると有効になります。</li>
+<li><strong><code>BLINKGTK_A11Y=1</code>
+で起動した後に支援技術を起動した場合、アクセシビリティツリーが届きませんでした</strong>
+(#145)。この場合も届くようにしました。</li>
 <li><strong>XML 文書 (DAISY 3 の DTBook など)
 で、<code>blink_web_view_inject_user_stylesheet()</code>
 と選択の禁止が当たりませんでした</strong>
@@ -225,8 +243,6 @@ renderer +5.6 → +1.6 MB/分、ブラウザ +1.8 → 0 MB/分。</li>
 で動いたとき、警告を 1 件出します。</strong> BlinkGTK は Wayland
 だけを対象にしており、この場合イベントの回し方が CPU を 1
 コア使い続ける方式になります。動作は変えていません。</li>
-<li><strong>デモ (<code>simple_browser</code>) の描画経路の一覧から Aura
-を外しました。</strong></li>
 </ul>
 </body>
 </html>
