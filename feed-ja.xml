@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-10-07T00:00:00Z</updated>
+  <updated>2026-10-11T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.4-build2 を公開しました (新しい版の案内の修正)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-10-11-build2-124:ja</id>
+    <updated>2026-10-11T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>新しい版をログで知らせる機能 (BLINKGTK_UPDATE_CHECK=1、既定はオフ) が、配布のリポジトリの版の一覧が大きく、必ず失敗していました。受け取りの上限を上げて直しました。この機能を有効にしていない場合は、build1 と動作は変わりません。</summary>
+  </entry>
   <entry>
     <title>v1.2.4-build1 を公開しました (Chromium 155、Fedora 44 のサポート終了)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build1"/>

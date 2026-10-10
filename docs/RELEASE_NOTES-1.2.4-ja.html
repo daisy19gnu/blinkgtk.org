@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.4-build1 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.4-build2 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-10-07 / Chromium: 155.0.8059.39 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-10-11 / Chromium: 155.0.8059.39 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.4-build1 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-10-07 / Chromium: 155.0.8059.39 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.4-build2 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-10-11 / Chromium: 155.0.8059.39 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,9 +107,9 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-124-build1-リリースノート">BlinkGTK 1.2.4-build1
+<h1 id="blinkgtk-124-build2-リリースノート">BlinkGTK 1.2.4-build2
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-10-07 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-10-11 / <strong>Chromium</strong>:
 155.0.8059.39 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.4-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 155</strong>
@@ -156,6 +156,17 @@ Release にある <code>blinkgtk-release-*.noarch.rpm</code>
 155 で既定で有効になりました)。</li>
 <li>圏点をルビと同じ仕組みで配置する変更と、ルビを含む行でのカーソルの上下移動の修正は、Chromium
 151 から有効だったものが恒久化されました。挙動は変わりません。</li>
+</ul>
+<h2 id="build2-で修正したこと">build2 で修正したこと</h2>
+<ul>
+<li><strong>新しい版の案内 (<code>BLINKGTK_UPDATE_CHECK=1</code> か
+<code>blink_gtk_set_update_check(TRUE)</code>、既定はオフ)
+が、必ず失敗していました。</strong> 配布のリポジトリの版の一覧の応答
+(2026-10-11 に 934,807 バイト) が受け取りの上限 256 KB を超え、ログに
+<code>check failed (net_error=-12)</code> を 1
+行出して諦めていました。上限を 4 MiB
+にしました。案内を有効にしていない場合 (既定) は、build1
+と動作は変わりません。</li>
 </ul>
 <h2 id="build1-でできるようになったこと">build1
 でできるようになったこと</h2>

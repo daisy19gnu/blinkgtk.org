@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.4-build1 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.4-build2 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-10-07 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
+<meta name="description" content="Release date: 2026-10-11 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.4-build1 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-10-07 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.4-build2 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-10-11 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,9 +107,9 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-124-build1-release-notes">BlinkGTK 1.2.4-build1 Release
+<h1 id="blinkgtk-124-build2-release-notes">BlinkGTK 1.2.4-build2 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-10-07 /
+<p><strong>Release date</strong>: 2026-10-11 /
 <strong>Chromium</strong>: 155.0.8059.39 / Language: <a
 href="RELEASE_NOTES-1.2.4-ja.html">日本語</a> | English</p>
 <p>The rendering engine is updated to <strong>Chromium 155</strong>.</p>
@@ -156,6 +156,16 @@ by default in Chromium 155).</li>
 <li>Placing emphasis marks with the same mechanism as ruby, and the fix
 for moving the caret up and down in lines with ruby, were enabled since
 Chromium 151 and are now permanent. The behavior does not change.</li>
+</ul>
+<h2 id="what-build2-fixes">What build2 fixes</h2>
+<ul>
+<li><strong>The update notice (<code>BLINKGTK_UPDATE_CHECK=1</code> or
+<code>blink_gtk_set_update_check(TRUE)</code>, off by default) always
+failed.</strong> The release list response from the distribution
+repository (934,807 bytes on 2026-10-11) exceeded the 256 KB receive
+limit, so it logged <code>check failed (net_error=-12)</code> once and
+gave up. The limit is now 4 MiB. If the notice is not enabled (the
+default), behavior is the same as build1.</li>
 </ul>
 <h2 id="what-build1-lets-you-do">What build1 lets you do</h2>
 <ul>

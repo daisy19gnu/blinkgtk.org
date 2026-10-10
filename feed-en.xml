@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-10-07T00:00:00Z</updated>
+  <updated>2026-10-11T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.4-build2 released (update notice fix)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-10-11-build2-124:en</id>
+    <updated>2026-10-11T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>The optional update notice (BLINKGTK_UPDATE_CHECK=1, off by default) always failed because the release list was larger than the receive limit. The limit is raised. If the notice is not enabled, behavior is the same as build1.</summary>
+  </entry>
   <entry>
     <title>v1.2.4-build1 released (Chromium 155; Fedora 44 support ended)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build1"/>

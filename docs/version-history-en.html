@@ -46,7 +46,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.4-build1 / Language: English | <a
+<p>Version: 1.2.4-build2 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -69,9 +69,18 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.4-build1</strong> ← current</td>
-<td>2026-10-07</td>
+<td><strong>v1.2.4-build2</strong> ← current</td>
+<td>2026-10-11</td>
 <td><strong>155.0.8059.39</strong></td>
+<td>The update notice (BLINKGTK_UPDATE_CHECK=1, off by default) always
+failed because the release list was larger than the receive limit; this
+is fixed. Without the notice enabled, behavior is the same as
+build1.</td>
+</tr>
+<tr>
+<td>v1.2.4-build1</td>
+<td>2026-10-07</td>
+<td>155.0.8059.39</td>
 <td>Chromium 155. RPMs are for Fedora 45 or later only (Fedora 44 up to
 v1.2.3). On scale-1 displays software rendering is received through a
 path without capture (no capture requests or readback), and static pages
