@@ -142,14 +142,16 @@ Release にある <code>blinkgtk-release-*.noarch.rpm</code>
 (Chromium 155)</h2>
 <ul>
 <li><strong>ルビの後の行が上にずれる不具合が直りました。</strong>
-前の要素に負の margin (疑似要素によるものなど)
-があると、ルビの注釈の領域が負の値になり、ルビの無い後続の行が上にずれていました
+要素自身・前の兄弟・子の負の margin (疑似要素によるものなど)
+を相殺した結果が負になると、ルビの注釈の領域が負の値になることがあり、そのときルビの無い後続の行が上にずれていました
 (上流の修正)。</li>
 <li><strong>段組みの中のルビの注釈の領域についての上流の変更は、試験段階のフラグ
 (<code>AnnotationSpaceForMultiCol</code>)
 の下だけに入りました。</strong> 既定では配置は変わりません。</li>
-<li><strong><code>::first-line</code> の行の高さの計算が、Chromium 153
-以前と同じに戻ります。</strong> CSS
+<li><strong><code>::first-line</code> の行の高さの計算が、フラグ
+<code>FirstLineTextMetrics</code> が入る前の計算 (古い Blink・WebKit
+と同じ) に戻ります。</strong> Chromium 154
+まで既定で有効だった計算を外す、CSS
 の仕様が改められたことに合わせた上流の変更です。</li>
 <li><strong>CSS の <code>margin-trim</code> と
 <code>text-decoration-skip-spaces</code> が使えます</strong> (Chromium

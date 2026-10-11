@@ -139,17 +139,20 @@ together with it
 <h2 id="changes-for-japanese-typesetting-chromium-155">Changes for
 Japanese typesetting (Chromium 155)</h2>
 <ul>
-<li><strong>Lines after ruby no longer shift up.</strong> When a
-preceding element had a negative margin (for example from a
-pseudo-element), the ruby annotation space became negative and following
-lines without ruby shifted up (upstream fix).</li>
+<li><strong>Lines after ruby no longer shift up.</strong> When negative
+margins on the element, a preceding sibling or a child (for example from
+a pseudo-element) collapsed to a negative value, the ruby annotation
+space could become negative, and following lines without ruby then
+shifted up (upstream fix).</li>
 <li><strong>The upstream change to ruby annotation space inside
 multi-column containers is only behind an experimental flag
 (<code>AnnotationSpaceForMultiCol</code>).</strong> The layout does not
 change by default.</li>
 <li><strong>The line height of <code>::first-line</code> is computed as
-in Chromium 153 and earlier.</strong> This is an upstream change that
-follows a revision of the CSS specification.</li>
+before the <code>FirstLineTextMetrics</code> flag (as in old Blink and
+WebKit).</strong> The calculation that was on by default up to Chromium
+154 was removed upstream, following a revision of the CSS
+specification.</li>
 <li><strong>CSS <code>margin-trim</code> and
 <code>text-decoration-skip-spaces</code> are available</strong> (enabled
 by default in Chromium 155).</li>

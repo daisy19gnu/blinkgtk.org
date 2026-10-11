@@ -826,10 +826,11 @@ No user-writable CSS property was added or removed (3 internal ones were
 added).</p>
 <h3 id="lines-after-ruby-no-longer-shift-up-upstream-fix">Lines after
 ruby no longer shift up (upstream fix)</h3>
-<p>When a preceding element had a negative margin (for example from a
-pseudo-element), the ruby<br />
-annotation space became negative and following lines without ruby
-shifted up. The annotation space<br />
+<p>When negative margins on the element, a preceding sibling or a child
+(for example from a<br />
+pseudo-element) collapsed to a negative value, the ruby annotation space
+could become negative, and<br />
+following lines without ruby then shifted up. The annotation space<br />
 is now never smaller than the padding (upstream commit
 46d20dbfa5c05).</p>
 <h3
@@ -846,11 +847,12 @@ default<br />
 in 155. BlinkGTK does not turn this flag on, so the default layout does
 not change.</p>
 <h3
-id="the-line-height-of-first-line-is-computed-as-in-153-and-earlier">The
-line height of <code>::first-line</code> is computed as in 153 and
-earlier</h3>
-<p>The calculation that was enabled by default up to 154 was turned off.
-The CSS specification was<br />
+id="the-line-height-of-first-line-is-computed-as-before-the-firstlinetextmetrics-flag">The
+line height of <code>::first-line</code> is computed as before the
+<code>FirstLineTextMetrics</code> flag</h3>
+<p>The calculation behind this flag, enabled by default up to 154, was
+turned off; the line height is<br />
+computed as in old Blink and WebKit. The CSS specification was<br />
 revised to match old Blink and WebKit, so this is not a regression
 (upstream commit d726ab7f7fc2d).</p>
 <h3
@@ -878,9 +880,12 @@ permanent. The removal of flags such as <code>text-indent</code> and
 tab-size calculations is likewise the<br />
 permanent form of what was already enabled in 154.</p>
 <h3 id="not-measured">Not measured</h3>
-<p>The vertical line-breaking measurement done for the 154 chapter was
-not repeated for 155. The items<br />
-above are based on the descriptions of the upstream commits.</p>
+<p>The vertical line-breaking measurement from the 154 chapter (42
+points at heights 544-564px and 13<br />
+variants) was repeated on the released 1.2.4-build2, with results
+identical to 154 (1.2.3-build4)<br />
+(2026-10-11). The other items are based on the upstream commits and
+source, not on measurement.</p>
 <h2
 id="153--154--vertical-line-breaking-holds-xml-parsing-goes-back-to-the-older-parser">153
 → 154 — Vertical line breaking holds; XML parsing goes back to the older
