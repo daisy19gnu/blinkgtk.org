@@ -432,8 +432,8 @@ int main(int argc, char **argv)
   if (!el) return;
   // 公開時に焼き込んだ実績。GitHub API が使えなくても必ず表示する
   // (未認証 API は 60 req/時・IP 単位で枯渇するため、表示を API に依存させない)。
-  var withdrawn = 161;   // 取り下げ済み build の実績 (公開 API からは見えない)
-  var baseline  = 1573;       // 公開時点の総計
+  var withdrawn = 135;   // 取り下げ済み build の実績 (公開 API からは見えない)
+  var baseline  = 1547;       // 公開時点の総計
   var show = function (n) {
     el.textContent = 'Linux 版のダウンロード数 / Linux downloads: ' + n.toLocaleString('en-US');
     el.hidden = false;
@@ -469,7 +469,7 @@ int main(int argc, char **argv)
     .then(function (r) { return r.ok ? r.json() : Promise.reject(); })
     .then(function (rels) {
       var zip = /-windows-[A-Za-z0-9_-]+\.zip$/;
-      var n = 51;   // 差し替え・削除した添付の数 (API からは見えない)
+      var n = 51;   // 差し替え・削除した添付の数 (API からは見えない) - 当方の取得
       rels.forEach(function (rel) {
         (rel.assets || []).forEach(function (a) {
           if (zip.test(a.name)) n += a.download_count || 0;
