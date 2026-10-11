@@ -7,6 +7,14 @@
   <updated>2026-10-11T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>BlinkGTK for Windows v1.2.4-build2 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build2-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-10-11-windows-124-build2:ja</id>
+    <updated>2026-10-11T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>BlinkGTK for Windows を Chromium 155.0.8059.39 に更新しました (Linux 版 v1.2.4-build2 と同じ版の本体のソース)。新しい版の案内 (BLINKGTK_UPDATE_CHECK=1、既定はオフ) が入りました。Windows 版では --enable-logging を付けたときだけ見えます。DCHECK を無効にしてビルドし、portable ZIP は 376 MiB になりました。</summary>
+  </entry>
+  <entry>
     <title>v1.2.4-build2 を公開しました (新しい版の案内の修正)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build2"/>
     <id>tag:blinkgtk.org,2026:2026-10-11-build2-124:ja</id>

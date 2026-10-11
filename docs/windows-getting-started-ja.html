@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="数字には測った日を添えてあります。 配布物のサイズと同梱文書の本数は 配布する ZIP そのものの実測値 (2026-09-28 実測) です。 注意: ZIP を組み立てた日時はここには書きません。 組み直すたびに変わるためです。 ZIP の正確なバイト数とハッシュは、配布物と一緒に置く &amp;lt;パッケージ名&amp;gt;">
+<meta name="description" content="数字には測った日を添えてあります。 配布物のサイズと同梱文書の本数は 配布する ZIP そのものの実測値 (2026-10-11 実測) です。 注意: ZIP を組み立てた日時はここには書きません。 組み直すたびに変わるためです。 ZIP の正確なバイト数とハッシュは、配布物と一緒に置く &amp;lt;パッケージ名&amp;gt;">
 <link rel="canonical" href="https://blinkgtk.org/docs/windows-getting-started-ja.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK for Windows — はじめかた — BlinkGTK">
-<meta property="og:description" content="数字には測った日を添えてあります。 配布物のサイズと同梱文書の本数は 配布する ZIP そのものの実測値 (2026-09-28 実測) です。 注意: ZIP を組み立てた日時はここには書きません。 組み直すたびに変わるためです。 ZIP の正確なバイト数とハッシュは、配布物と一緒に置く &amp;lt;パッケージ名&amp;gt;">
+<meta property="og:description" content="数字には測った日を添えてあります。 配布物のサイズと同梱文書の本数は 配布する ZIP そのものの実測値 (2026-10-11 実測) です。 注意: ZIP を組み立てた日時はここには書きません。 組み直すたびに変わるためです。 ZIP の正確なバイト数とハッシュは、配布物と一緒に置く &amp;lt;パッケージ名&amp;gt;">
 <meta property="og:url" content="https://blinkgtk.org/docs/windows-getting-started-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -47,7 +47,7 @@
 <blockquote>
 <p><strong>数字には測った日を添えてあります。</strong>
 配布物のサイズと同梱文書の本数は<br />
-<strong>配布する ZIP そのものの実測値</strong> (2026-09-28 実測)
+<strong>配布する ZIP そのものの実測値</strong> (2026-10-11 実測)
 です。<br />
 注意: <strong>ZIP を組み立てた日時はここには書きません。</strong>
 組み直すたびに変わるためです。<br />
@@ -55,20 +55,22 @@ ZIP の正確なバイト数とハッシュは、配布物と一緒に置く
 <code>&lt;パッケージ名&gt;.verify.json</code> (<code>size</code> /
 <code>sha256</code>)<br />
 と <code>SHA256SUMS</code> (ハッシュのみ) を見てください。<br />
-この版は、Windows 11 Pro build 26200 で <strong>2026-09-28</strong>
+この版は、Windows 11 Pro build 26200 で <strong>2026-10-11</strong>
 に確認しました (配布物の展開実行検査)。</p>
 </blockquote>
 <p>BlinkGTK を Windows で使えるようにしたものです。版数体系も同じ<br />
 (Chromium の版 + BlinkGTK のパッチレベル) です。<br />
-この版 <strong>1.2.3-build4 は、Linux 版の 1.2.3-build4
-と同じ版数</strong>で、どちらも Chromium 154.0.8037.57 です。</p>
-<p><strong>公開 API は、Linux 版 1.2.3-build4 と 1
-本を除いて同じです。</strong> 1.2.3-build3 から公開 API
-は変わっていません。<br />
+この版 <strong>1.2.4-build2 は、Linux 版の 1.2.4-build2
+と同じ版数</strong>で、どちらも Chromium 155.0.8059.39 です。</p>
+<p><strong>公開 API は、Linux 版 1.2.4-build2 と 1
+本を除いて同じです。</strong> 1.2.3-build4 から 2 本増えました
+(<code>blink_gtk_set_update_check</code> /
+<code>blink_gtk_has_typesetting_feature</code>。Linux
+版と同じです)。<br />
 ただし、1.2.3-build3 で Windows 版に新しく入った 51 本 (Linux 版の 1.2.2
 と 1.2.3 で加わったもの) は、<br />
 Windows ではまだ呼んで確かめていません。Windows で呼んで確かめたのは公開
-API 152 本のうち 65 本で<br />
+API 154 本のうち 65 本で<br />
 (同梱の <code>docs\api-windows-notes-ja.md</code> の §0)、どれも
 1.2.1-build3 の時点で在った API です。</p>
 <p><strong>数え方</strong>: 公開ヘッダの宣言と、共有ライブラリ
@@ -78,28 +80,31 @@ API 152 本のうち 65 本で<br />
 が宣言する<br />
 <code>_get_type</code> の 2 本 (<code>BlinkWebView</code> /
 <code>BlinkDownload</code>) も含めます。<br />
-この定義で <strong>Linux は 153 件、Windows は 152 件</strong>です。</p>
-<p><strong>測り方</strong> (どちらも 2026-09-28 実測):<br />
-Linux は本体が公開した 1.2.3-build4 の devel
+この定義で <strong>Linux は 155 件、Windows は 154 件</strong>です。</p>
+<p><strong>測り方</strong> (どちらも 2026-10-11 実測):<br />
+Linux は本体が公開した 1.2.4-build2 の devel
 パッケージのヘッダと、runtime パッケージの <code>.so</code> を<br />
-<code>nm -D</code> で見て、ヘッダ宣言 154 と、export のうち
-<code>blink_</code> で始まる名前 190 の共通部分で
-<strong>153</strong><br />
-(export は 1.2.3-build3 より 1 つ多いが、増えた
-<code>blink_gtk_set_pixels_lent</code> はヘッダに無く、公開 API
-に入りません)。<br />
-Windows はこの版の公開ヘッダの宣言 153 と、DLL の export
+<code>nm -D</code> で見て、ヘッダ宣言 156 と、export のうち
+<code>blink_</code> で始まる名前 192 の共通部分で
+<strong>155</strong><br />
+(export は 1.2.3-build4 より 2 つ多く、増えた 2
+本はどちらもヘッダにあり、公開 API に入ります。同じ手順で 1.2.3-build4
+を数えると 154 / 190 / 153
+で、以前の測定と一致します。手順と結果は当方の開発用リポジトリの
+<code>docs/evidence/linux-api-count-2026-10-11/</code>
+にあります)。<br />
+Windows はこの版の公開ヘッダの宣言 155 と、DLL の export
 (<code>dumpbin /exports</code>) のうち <code>blink_</code>
 で始まる名前<br />
-163 の共通部分で <strong>152</strong>。<br />
+165 の共通部分で <strong>154</strong>。<br />
 名前で絞るのは、ヘッダに無い内部のシンボルを数えないためで、共通部分の件数には影響しません。<br />
-Windows のヘッダの 153 は、<code>#ifndef _WIN32</code> の中の
+Windows のヘッダの 155 は、<code>#ifndef _WIN32</code> の中の
 <code>blink_web_view_attach_to_external_surface</code> を除き、<br />
 <code>blink_gtk_sandbox_init</code> を含む数です。同梱の
 <code>docs\api-windows-notes-ja.md</code> の §0 は<br />
 <code>BLINKGTK_EXPORT</code> の付いた宣言を数えており
-(こちらは前者を含み後者を含まない)、同じ 153 でも中身が違います。<br />
-共通部分の 152 は同じです。<br />
+(こちらは前者を含み後者を含まない)、同じ 155 でも中身が違います。<br />
+共通部分の 154 は同じです。<br />
 注意: 両 OS
 で数え方をそろえたうえで、条件コンパイルの扱いだけ対称にしてあります
 —<br />
@@ -126,7 +131,7 @@ Windows 側は <code>#ifndef _WIN32</code> の中を、Linux 側は
 Windows では静的ライブラリ <code>blinkgtk_sandbox.lib</code>
 経由で実行ファイルに取り込む設計です (devel ZIP に同梱)。<br />
 <strong>Linux ではこれを呼べません</strong> (下記)。</p>
-<p><strong>サンドボックスの 2 本について</strong> (2026-09-28
+<p><strong>サンドボックスの 2 本について</strong> (2026-10-11
 実測。export は、Linux の <code>.so</code> を
 <code>nm -D</code>、Windows の DLL を <code>dumpbin /exports</code>
 で確認):</p>
@@ -134,7 +139,7 @@ Windows では静的ライブラリ <code>blinkgtk_sandbox.lib</code>
 <thead>
 <tr>
 <th></th>
-<th>Linux 1.2.3-build4</th>
+<th>Linux 1.2.4-build2</th>
 <th>この Windows 版</th>
 </tr>
 </thead>
@@ -178,8 +183,8 @@ Linux では、<code>blink_gtk_init()</code>
 は、<code>blink_gtk_sandbox_init()</code> が <code>1.2.1</code>、<br />
 <code>blink_gtk_init_with_sandbox()</code> が <code>1.2.2</code>
 です。<br />
-この注記は、Linux 1.2.3-build4 の devel
-のヘッダとこの版のヘッダで同じ文面です (2026-09-28 に比べて確認)。<br />
+この注記は、Linux 1.2.4-build2 の devel
+のヘッダとこの版のヘッダで同じ文面です (2026-10-11 に比べて確認)。<br />
 <code>blink_gtk_init_with_sandbox()</code> の注記が参照している issue
 #141 は、<strong>当方が本体リポジトリに立てた相談</strong>です。</p>
 <hr />
@@ -226,7 +231,7 @@ Web が付きません。<br />
 <strong>引数を付けないと <code>https://google.com/</code>
 を開きます</strong> (インターネットへの接続が要ります)。<br />
 引数に URL を渡すと、そのページを開きます。</p>
-<pre><code>cd blinkgtk-1.2.3-build4-windows-x64\bin
+<pre><code>cd blinkgtk-1.2.4-build2-windows-x64\bin
 blinkgtk_browser.exe
 blinkgtk_browser.exe https://example.com/</code></pre>
 <p><code>blinkgtk_browser</code> は、BlinkGTK
@@ -246,9 +251,9 @@ blinkgtk_browser.exe https://example.com/</code></pre>
 </tr>
 <tr>
 <td>空き容量</td>
-<td>ZIP 約 457 MiB + 展開後 約 1,291
-MiB。<strong>展開中は両方必要</strong>なので実質 約 1.8 GiB (1,748 MiB
-を切り上げ。2026-09-29 実測)</td>
+<td>ZIP 約 376 MiB + 展開後 約 1,046
+MiB。<strong>展開中は両方必要</strong>なので実質 約 1.4 GiB (1,422 MiB
+を切り上げ。2026-10-11 実測)</td>
 </tr>
 <tr>
 <td>GTK4</td>
@@ -264,11 +269,11 @@ MiB。<strong>展開中は両方必要</strong>なので実質 約 1.8 GiB (1,74
 <blockquote>
 <p>注意: <strong>本ページの MiB は 1,048,576 バイトです。</strong>
 GitHub の Releases の画面も<br />
-同じ単位で「MB」と表示するので、<strong>Releases では 457 MB
+同じ単位で「MB」と表示するので、<strong>Releases では 376 MB
 と見えます</strong><br />
 (2026-09-23 に、公開されている別のリポジトリのリリースで、API
 のバイト数と画面の表示を突き合わせて確認)。<br />
-1,000,000 バイト単位で数えるツールでは 480 MB と出ます。<br />
+1,000,000 バイト単位で数えるツールでは 395 MB と出ます。<br />
 <strong>同梱文書も同じ単位で書いています</strong> — 大きさを書いている 6
 本<br />
 (<code>INSTALLATION-ja.md</code> / <code>INSTALLATION-en.md</code> /
@@ -355,8 +360,9 @@ EGL の描画経路そのもの (<code>blink_web_view_egl.cc</code> /
 <tr>
 <td>DCHECK (Chromium の内部の前提の検査)</td>
 <td>無効</td>
-<td><strong>有効</strong> — 内部の前提が崩れる場面で、Linux
-版は進み、Windows 版はそのプロセスが異常終了します (同梱の
+<td><strong>無効</strong> (1.2.4-build1 から。1.2.3-build4
+までは有効で、内部の前提が崩れる場面で Windows
+版はそのプロセスが異常終了しました。同梱の
 <code>docs\linux-windows-differences-ja.md</code> の §8)</td>
 </tr>
 <tr>
@@ -437,9 +443,10 @@ Chromium は引数を <code>GetCommandLineW</code>
 ファイルは同じ、<code>fragmentation_utils.cc</code> は 1 箇所だけ<br />
 違います (2026-09-28 実測)。違うのは、4 つ目の改変が当たる DCHECK
 に、フラグが有効なときは通す条件を足したことです。<br />
-Windows 版は DCHECK
-を有効にしてビルドしているため、そのままではフラグを有効にして該当する構造のページを<br />
-開くとレンダラーが異常終了しました (Linux 版は DCHECK
+1.2.3-build4 までの Windows 版は DCHECK
+を有効にしてビルドしていたため、そのままではフラグを有効にして該当する構造のページを<br />
+開くとレンダラーが異常終了しました (1.2.4-build1 以降は DCHECK
+を無効にしてビルドしています。Linux 版は DCHECK
 を無効にしてビルドしているので、この DCHECK は働きません)。</p>
 <p>横組の段組みの中に縦書きの本文を置いたページで、本文の矩形の数を数えると、フラグありで
 16、<br />
@@ -533,13 +540,13 @@ GTK のヘッダの <code>©</code> などの記号で警告 C4819 が出ます�
 </ol>
 <hr />
 <h2 id="版数の読み方">版数の読み方</h2>
-<p><code>1.2.3-build4</code> は BlinkGTK
+<p><code>1.2.4-build2</code> は BlinkGTK
 本体と同じ版数で、<strong>Chromium の版と BlinkGTK の<br />
-パッチレベルに紐付いています。</strong> この版は Chromium 154.0.8037.57
+パッチレベルに紐付いています。</strong> この版は Chromium 155.0.8059.39
 です。</p>
 <p>手元のものが何か、実行時に確かめられます。</p>
 <pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.3-build4 (Chromium 154.0.8037.57)</code></pre>
+BlinkGTK 1.2.4-build2 (Chromium 155.0.8059.39)</code></pre>
 <p><strong>サイトや文書の数字ではなく、手元の実行ファイルが出す値を見てください。</strong></p>
 <hr />
 <h2 id="詳しい手順">詳しい手順</h2>
@@ -808,6 +815,25 @@ Linux 153 / Windows 152 で変わらない。Linux の export は内部用の 1
 つを配布物から外したので、空き容量の値を測り直した (ZIP 464 -&gt; 457
 MiB、展開後 1,316 -&gt; 1,291
 MiB)。コンソールの記述を「動作を知らせるメッセージ」に改めた</td>
+</tr>
+<tr>
+<td>2026-10-11</td>
+<td>1.2.4-build1 (Chromium 155.0.8059.39) に改めた。Linux 1.2.4-build1
+と比べ直した (公開 API は Linux 155 / Windows 154。手順は 1.2.3-build4
+を数えて以前の測定 154 / 190 / 153
+と一致することを確かめた)。空き容量を測り直した (ZIP 376 MiB、展開後
+1,046 MiB)。DCHECK
+を無効にしてビルドしたので表を改めた。縦組みの版面の改変の比較 (本体との
+md5 など) は 1.2.3-build4 での測定で、1.2.4-build1
+では比べ直していない</td>
+</tr>
+<tr>
+<td>2026-10-11</td>
+<td>版数を 1.2.4-build2 に改めた (Linux 版の 1.2.4-build2
+と番号をそろえるため。build1
+からの変更は、新しい版の案内の受け取りの上限を本家と同じ 4 MiB
+にしただけ)。build2 の配布物で測り直し、数値は build1
+と同じ。更新の案内・公開 API・egl の確認も build2 で行った</td>
 </tr>
 </tbody>
 </table>

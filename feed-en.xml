@@ -7,6 +7,14 @@
   <updated>2026-10-11T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>BlinkGTK for Windows v1.2.4-build2 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build2-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-10-11-windows-124-build2:en</id>
+    <updated>2026-10-11T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>BlinkGTK for Windows is updated to Chromium 155.0.8059.39 (the upstream source of the same version as the Linux build v1.2.4-build2). The update notice (BLINKGTK_UPDATE_CHECK=1, off by default) is included; on Windows it is visible only with --enable-logging. The build now has DCHECK disabled, and the portable ZIP is 376 MiB.</summary>
+  </entry>
+  <entry>
     <title>v1.2.4-build2 released (update notice fix)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build2"/>
     <id>tag:blinkgtk.org,2026:2026-10-11-build2-124:en</id>
