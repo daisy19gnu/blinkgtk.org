@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="BlinkGTK runs in one of three GPU modes, selected with the BLINKGTK_GPU_MODE environment variable.">
+<meta name="description" content="BlinkGTK lets you choose whether pages are drawn with the GPU, from three modes. This page covers how to choose, how to set the mode, what can be switched while">
 <link rel="canonical" href="https://blinkgtk.org/docs/gpu-modes-en.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK GPU Modes — BlinkGTK">
-<meta property="og:description" content="BlinkGTK runs in one of three GPU modes, selected with the BLINKGTK_GPU_MODE environment variable.">
+<meta property="og:description" content="BlinkGTK lets you choose whether pages are drawn with the GPU, from three modes. This page covers how to choose, how to set the mode, what can be switched while">
 <meta property="og:url" content="https://blinkgtk.org/docs/gpu-modes-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -108,500 +108,408 @@
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
 <h1 id="blinkgtk-gpu-modes">BlinkGTK GPU Modes</h1>
-<p>BlinkGTK runs in one of three GPU modes, selected with the
-<code>BLINKGTK_GPU_MODE</code> environment variable.</p>
-<blockquote>
-<p><strong>About this page (updated 2026-08-16)</strong><br />
-Parts of chapter 6 (troubleshooting) record symptoms observed on
-earlier<br />
-releases; some are resolved in the current release. Chapter 5
-(switching)<br />
-is up to date. For the authoritative list of environment variables, see
-the<br />
-<a href="./api-reference/environment-variables-en.html">environment
-variables reference</a>.</p>
-</blockquote>
-<hr />
-<h2 id="1-the-three-modes">1. The three modes</h2>
+<p>BlinkGTK lets you choose <strong>whether pages are drawn with the
+GPU</strong>, from three modes.<br />
+This page covers how to choose, how to set the mode, what can be
+switched while the app is running, and what to check when something goes
+wrong.</p>
+<h2 id="1-which-mode-to-choose">1. Which mode to choose</h2>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">Mode</th>
-<th style="text-align: center;"><code>BLINKGTK_GPU_MODE</code></th>
-<th style="text-align: left;">Rendering</th>
-<th style="text-align: left;">Compositing</th>
-<th style="text-align: left;">Intended use</th>
+<th>Situation</th>
+<th>Mode</th>
+<th>How</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>Software</strong></td>
-<td style="text-align: center;"><code>software</code> (default)</td>
-<td style="text-align: left;">CPU</td>
-<td style="text-align: left;">Software compositor</td>
-<td style="text-align: left;">Headless, CI, servers, low-spec
-machines</td>
+<td>Not sure / no GPU / CI</td>
+<td><strong>software</strong></td>
+<td>Set nothing (default)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>SwiftShader</strong></td>
-<td style="text-align: center;"><code>swiftshader</code></td>
-<td style="text-align: left;">Software GL (ANGLE → Vulkan →
-SwiftShader)</td>
-<td style="text-align: left;">Software compositor</td>
-<td style="text-align: left;">Virtual machines, stability first</td>
+<td>Desktop with a GPU, and you want the GPU to draw</td>
+<td><strong>egl</strong></td>
+<td><code>BLINKGTK_GPU_MODE=egl</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>Native EGL</strong></td>
-<td style="text-align: center;"><code>egl</code></td>
-<td style="text-align: left;">Hardware GPU (Wayland EGL)</td>
-<td style="text-align: left;">GPU compositor</td>
-<td style="text-align: left;">Desktop, production</td>
+<td>No GPU, but pages use WebGL / WebGPU</td>
+<td><strong>swiftshader</strong></td>
+<td><code>BLINKGTK_GPU_MODE=swiftshader</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="on-screen-rendering">On-screen rendering</h3>
-<p><strong>The software and EGL modes<br />
-display Blink's rendering output in the GTK window.</strong> Up to
-1.2.3-build1 the<br />
-swiftshader mode <strong>showed nothing on screen</strong> (issue #151;
-the capture API also failed<br />
-because no frame arrived). This is fixed as of 1.2.3-build2: pages
-appear as in software<br />
-and EGL, and WebGL output is visible too. On 1.2.3-build1 and earlier,
-use software or EGL.</p>
-<p><strong>On machines without a usable GPU, asking for EGL falls back
-to software<br />
-automatically</strong> (since v1.2.1-build2). It switches when no frame
-arrives within<br />
-five seconds and writes the reason to standard error; it does not switch
-where<br />
-the GPU path works. Set <code>BLINKGTK_EGL_AUTO_FALLBACK=0</code> to
-disable it (the screen<br />
-may then stay white).</p>
-<h4 id="resolved-so-far-history">Resolved so far (history)</h4>
+<ul>
+<li><strong>With nothing set, BlinkGTK runs in software mode.</strong>
+It does not depend on GPU drivers, so pages look the same
+everywhere</li>
+<li>Every mode needs a Wayland compositor to display pages. On CI
+without a screen, use a headless compositor (such as weston's headless
+backend)</li>
+<li><strong>If you set egl on a machine where the GPU cannot be used,
+BlinkGTK switches to software automatically.</strong> When no frame
+arrives for 5 seconds, it switches to software, keeps showing the page,
+and prints the reason to standard error (since 1.2.1-build2). On
+machines where the GPU works, it does not switch</li>
+<li>WebGL / WebGPU are not available in software mode. For pages that
+use them, choose egl or swiftshader (see the table below)</li>
+</ul>
+<h2 id="2-the-three-modes">2. The three modes</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>software</th>
+<th>swiftshader</th>
+<th>egl</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Page drawing</td>
+<td>CPU</td>
+<td>CPU (compositing is the same as software)</td>
+<td>GPU</td>
+</tr>
+<tr>
+<td>WebGL / WebGL 2</td>
+<td>Not available</td>
+<td>Available (computed on the CPU)</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>WebGPU</td>
+<td>Not available</td>
+<td>Available (computed on the CPU)</td>
+<td>Available</td>
+</tr>
+<tr>
+<td>GPU and driver</td>
+<td>Not needed</td>
+<td>Not needed</td>
+<td>Needed (with Wayland EGL support)</td>
+</tr>
+<tr>
+<td>Good for</td>
+<td>E-book readers, kiosks, CI</td>
+<td>3D pages on machines without a GPU</td>
+<td>Desktops with a GPU</td>
+</tr>
+</tbody>
+</table>
+<p>WebGL / WebGPU availability was checked on the Chromium 155 build by
+trying each mode (2026-10-13). The calls tried were
+<code>getContext('webgl')</code>, <code>getContext('webgl2')</code> and
+<code>navigator.gpu.requestAdapter()</code>.</p>
+<h3 id="software">software</h3>
+<ul>
+<li>Blink draws the page on the CPU, and BlinkGTK shows the result in
+the GTK window</li>
+<li>How the result is received depends on the display scale at startup
+(since 1.2.4)
+<ul>
+<li><strong>When every display has scale 1</strong>: the result is
+received through mojo shared memory. No capture and read-back of the
+result is needed, and compositing only redraws the changed area, so
+pages that change in small areas use less CPU</li>
+<li><strong>Otherwise</strong>: the result is captured and received each
+time</li>
+<li>If the window moves to a display with a scale above 1 after startup,
+BlinkGTK switches back to capturing, once. When it does, a
+<code>render-path-changed</code> signal arrives even though the app did
+not ask for a switch</li>
+</ul></li>
+<li>To receive the result the way earlier versions did (by capturing),
+set <code>BLINKGTK_T2_AUTO=0</code> or
+<code>BLINKGTK_USE_MOJO_IPC=0</code>. If
+<code>BLINKGTK_USE_MOJO_IPC</code> is set, that setting is followed. If
+<code>--force-device-scale-factor</code> is given, its value is used for
+the decision, and BlinkGTK does not switch back when the window moves to
+another display</li>
+</ul>
+<h3 id="swiftshader">swiftshader</h3>
+<ul>
+<li>Page compositing is the same as software; only WebGL / WebGPU work
+is done by SwiftShader (a library that does the GPU's work on the
+CPU)</li>
+<li>SwiftShader and the files needed to load it are included in the
+distribution</li>
+<li>In 1.2.3-build1 and some other versions, nothing could appear on
+screen in this mode. This was fixed in 1.2.3-build2</li>
+</ul>
+<h3 id="egl">egl</h3>
+<ul>
+<li>Draws on the GPU through Wayland EGL and hands the result to the GTK
+window while it stays in GPU memory (dmabuf). The result is not read
+back to the CPU for display (the first few frames after startup, the
+first frame after switching to the GPU hand-over, and captures are read
+on the CPU)</li>
+<li>Needs a real GPU and a driver with Wayland EGL support</li>
+<li>Setting <code>BLINKGTK_GPU_MODE=egl</code> is all that is needed
+(since 1.2.0-build3; earlier versions show a white screen)</li>
+<li>While the window is being resized, it may turn white for a
+moment</li>
+</ul>
+<h2 id="3-how-to-set-the-mode">3. How to set the mode</h2>
+<p><strong>Decide before startup.</strong> Either of these works the
+same way.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* call before blink_gtk_init() (since 1.2.2-build5) */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
+<ul>
+<li>If both the environment variable and
+<code>blink_gtk_set_gpu_mode()</code> are used,
+<code>blink_gtk_set_gpu_mode()</code> wins</li>
+<li>The mode is fixed inside <code>blink_gtk_init()</code>. Calling
+<code>blink_gtk_set_gpu_mode()</code> afterwards does not change it; it
+only prints a warning</li>
+<li><code>blink_web_view_new_with_gpu_mode()</code> also cannot select
+the mode after <code>blink_gtk_init()</code>, because the mode is
+already fixed when a WebView is created. Use one of the two ways
+above</li>
+<li>There is one mode per process. It cannot differ between
+WebViews</li>
+<li><code>blink_web_view_get_gpu_mode()</code> tells you the mode fixed
+at startup. The startup log also prints "描画経路=<mode>" (rendering
+path = mode). After an automatic switch from egl to software, this value
+still says egl (section 5)</li>
+</ul>
+<h2 id="4-switching-while-running-blinkshift">4. Switching while running
+(BlinkShift)</h2>
+<p><strong>BlinkShift</strong> is the feature that switches how the
+drawn result is handed to the screen, without restarting the app (since
+1.2.0-build9).<br />
+Request a switch with <code>blink_web_view_switch_render_path()</code>;
+the result arrives in the <code>render-path-changed</code> signal.<br />
+<code>blink_web_view_get_render_path()</code> tells you the current
+method.</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P1&quot;</span><span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* Returns 1 or more if accepted, 0 if not.</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * The result arrives in render-path-changed (path_id, result, gate_ms, seq). */</span></span></code></pre></div>
+<p>Values to pass:</p>
+<table>
+<thead>
+<tr>
+<th>Value</th>
+<th>How the result is handed over</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"P1"</code></td>
+<td>The software result is captured and received each time</td>
+</tr>
+<tr>
+<td><code>"P2"</code></td>
+<td>The software result is received through mojo shared memory</td>
+</tr>
+<tr>
+<td><code>"P3"</code></td>
+<td>The GPU (egl) result is received while it stays in GPU memory</td>
+</tr>
+</tbody>
+</table>
+<p>The <code>result</code> is one of three values.</p>
+<table>
+<thead>
+<tr>
+<th>result</th>
+<th>Meaning</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"ok"</code></td>
+<td>Drawing works with the new method</td>
+</tr>
+<tr>
+<td><code>"rollback"</code></td>
+<td>Drawing could not be confirmed with the new method, so BlinkGTK went
+back to the previous method. The screen is left as it was</td>
+</tr>
+<tr>
+<td><code>"fail"</code></td>
+<td>The previous method could not be restored, or the switch could not
+start. Treat it as an error</td>
+</tr>
+</tbody>
+</table>
+<p><strong>What can switch to what</strong> (Chromium 155, a machine
+with a GPU, display scale 1; each tried once on a headless compositor,
+2026-10-13):</p>
+<table>
+<thead>
+<tr>
+<th>Started in</th>
+<th>Can switch to</th>
+<th>Cannot switch to</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>software</td>
+<td><code>"P1"</code> ↔︎ <code>"P2"</code> (tens to hundreds of
+milliseconds)</td>
+<td><code>"P3"</code> (egl) — not accepted, or rolled back</td>
+</tr>
+<tr>
+<td>egl</td>
+<td><code>"P1"</code> (about 250 ms)</td>
+<td><code>"P2"</code></td>
+</tr>
+</tbody>
+</table>
+<p>0 is returned (the request is not accepted) in cases such as:</p>
+<ul>
+<li>The first frame has not been delivered yet</li>
+<li>The result is received through mojo shared memory
+(<code>"P2"</code>) or GPU memory (<code>"P3"</code>), and anything
+other than capturing (<code>"P1"</code>) is requested</li>
+<li>An unknown value, NULL or an empty string is passed</li>
+<li>Automatic switching for diagnostics is running through the
+environment variable <code>BLINKGTK_BLINKSHIFT_AUTOSWAP</code></li>
+</ul>
+<p>Notes:</p>
+<ul>
+<li><strong>A process started in software cannot move to egl while
+running.</strong> To draw with egl, start the app again with
+<code>BLINKGTK_GPU_MODE=egl</code></li>
+<li>To carry state over the restart, you can use
+<code>blink_web_view_export_handoff_meta()</code> /
+<code>blink_web_view_import_handoff_meta()</code>
+<ul>
+<li>The exported meta holds the URL, the size of the view (logical
+pixels), the display scale (an integer) and the mode name (the value of
+the environment variable <code>BLINKGTK_GPU_MODE</code>). The scroll
+position fields are written as 0, so fill them in yourself if you need
+them</li>
+<li>Import only loads the URL. Set the window size yourself, and restore
+the scroll position with JavaScript after loading</li>
+<li>To pass the meta to another process, turn it into a string with
+<code>blink_handoff_meta_serialize()</code> /
+<code>blink_handoff_meta_deserialize()</code></li>
+</ul></li>
+<li>A switch applies to the view of the first WebView in the process
+that received a frame. With several WebViews, the <code>view</code>
+argument only decides where the result is reported</li>
+<li>For how to use <code>seq</code>, see the render-path-changed section
+of the <a href="./api-reference/signals-api-en.html">Signals API
+reference</a>. For details of the meta, see <a
+href="./api-reference/render-path-handoff-en.html">Render path switching
+and hand-over</a></li>
+</ul>
+<h3
+id="when-you-want-to-stop-passing-frames-to-the-screen-presentation-policy">When
+you want to stop passing frames to the screen (presentation policy)</h3>
+<p>If you do not want to change the method but simply do not need to
+show anything right now<br />
+(for example while only audio is being heard), use
+<code>blink_web_view_set_presentation_policy()</code>.<br />
+It saves only the cost of handing frames to the screen; page layout and
+drawing (look-ahead) continue.<br />
+While stopped, a capture request (such as
+<code>blink_web_view_capture_screenshot_async()</code>) still<br />
+produces one frame for the capture and then stops again (since
+1.2.3-build2). <strong>In egl mode it currently has no
+effect.</strong></p>
+<h2 id="5-troubleshooting">5. Troubleshooting</h2>
+<h3 id="i-set-egl-but-it-seems-to-run-in-software">I set egl but it
+seems to run in software</h3>
+<ul>
+<li>On machines where the GPU cannot be used, BlinkGTK switches to
+software after 5 seconds and prints the reason to standard error.
+<strong>Use that warning on standard error to tell whether the switch
+happened.</strong> <code>blink_web_view_get_gpu_mode()</code>,
+"描画経路=" in the startup log,
+<code>blink_web_view_get_render_path()</code> and the mode name in an
+exported handoff meta still report egl (the GPU-memory method,
+<code>"P3"</code>) after the switch</li>
+<li>To turn off the automatic switch, set
+<code>BLINKGTK_EGL_AUTO_FALLBACK=0</code> (the screen then stays white
+if the GPU cannot be used). The wait time can be changed with
+<code>BLINKGTK_EGL_AUTO_FALLBACK_MS</code></li>
+<li>Check that you do not set the mode after
+<code>blink_gtk_init()</code> (section 3)</li>
+</ul>
+<h3 id="the-screen-stays-white">The screen stays white</h3>
+<ol type="1">
+<li>Has loading finished (does the <code>load-changed</code> signal
+deliver <code>BLINK_LOAD_FINISHED</code>)?</li>
+<li>Does a simple colored page appear
+(<code>data:text/html,&lt;body style='background:red'&gt;TEST&lt;/body&gt;</code>)?
+In <code>data:</code> URLs, do not write colors with <code>#</code>;
+everything after <code>#</code> is cut off</li>
+<li>For egl, do the GPU and driver support Wayland EGL? If not, BlinkGTK
+should switch to software automatically (above)</li>
+</ol>
+<p>If it is still white, please report it with the version (the value of
+<code>blink_gtk_get_version_full()</code>), the mode, and the window
+size and display scale.</p>
+<h3 id="with-egl-the-page-appears-small-in-the-top-left-corner">With
+egl, the page appears small in the top-left corner</h3>
+<p>This happened when the display scale was not 1, and was fixed in
+1.2.0-build3. egl takes the display scale from the first display at
+startup. Setups where displays have different scales, and moving the
+window to a display with a different scale after startup, have not been
+checked. If you see it, please report it with the window size and the
+scale of each display.</p>
+<h2 id="6-history">6. History</h2>
 <table>
 <thead>
 <tr>
 <th>Version</th>
-<th>Item</th>
+<th>Change</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>v0.9 series</td>
-<td><code>--headless</code> was forced onto the browser process,
-producing a white screen</td>
+<td>1.2.0-build3</td>
+<td>egl works with only <code>BLINKGTK_GPU_MODE=egl</code></td>
 </tr>
 <tr>
-<td>v1.0.1</td>
-<td>Issue #47 — EGL mode fix</td>
+<td>1.2.0-build9</td>
+<td>BlinkShift (switching the hand-over method while running)</td>
 </tr>
 <tr>
-<td>v1.0.10 iter2–iter7</td>
-<td>Issue #53 — SwiftShader mode fix</td>
+<td>1.2.1-build2</td>
+<td>On machines where the GPU cannot be used, egl switches to software
+automatically</td>
 </tr>
 <tr>
-<td>v1.0.10 iter5</td>
-<td>Issue #54 — EGL mode viz Skia readback fix</td>
+<td>1.2.1-build3</td>
+<td>When started in egl, BlinkShift handles the GPU hand-over
+method</td>
 </tr>
 <tr>
-<td>v1.0.10 iter7</td>
-<td>Issue #55 — EGL mode context-lost fix</td>
+<td>1.2.2-build5</td>
+<td><code>blink_gtk_set_gpu_mode()</code> sets the mode from code</td>
 </tr>
 <tr>
-<td><strong>v1.0.x (resolved 2026-04-20)</strong></td>
-<td><strong>Issue #58 — did not follow the parent container's size on
-HiDPI (fixed by implementing the <code>size_allocate</code>
-vfunc)</strong></td>
+<td>1.2.3-build2</td>
+<td>Fixed swiftshader sometimes showing nothing on screen</td>
 </tr>
 <tr>
-<td><strong>v1.1.x (resolved 2026-06-21)</strong></td>
-<td><strong>Issue #59 — repeated <code>blink_web_view_load_uri()</code>
-accumulated resources</strong></td>
-</tr>
-<tr>
-<td>since v1.2.0-build3</td>
-<td>GPU rendering works with a single environment variable</td>
-</tr>
-<tr>
-<td>since v1.2.1-build2</td>
-<td>Automatic fallback on machines without a GPU</td>
+<td>1.2.4</td>
+<td>When every display has scale 1, receiving the software result
+through mojo shared memory is the default</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="2-mode-details">2. Mode details</h2>
-<h3 id="21-software-software">2.1 Software (<code>software</code>)</h3>
-<p><strong>Behavior</strong>:</p>
+<h2 id="7-related-documents">7. Related documents</h2>
 <ul>
-<li>Blink produces pixels on the CPU</li>
-<li><code>viz::SoftwareOutputDevice</code> writes the bitmap into the
-framebuffer</li>
-<li>BlinkGTK retrieves it via <code>CopyFromSurface</code> and displays
-it through <code>GtkPicture</code> / <code>GtkGLArea</code></li>
-<li><code>--disable-gpu-compositing</code> is added internally</li>
-</ul>
-<p><strong>Strengths</strong>:</p>
-<ul>
-<li>The most stable mode; does not depend on GPU drivers</li>
-<li>Verified on Weston headless, virtual machines, and CI</li>
-<li>Easy to debug (the rendering path is simple)</li>
-</ul>
-<p><strong>Weaknesses</strong>:</p>
-<ul>
-<li>Slower than the other modes</li>
-<li><strong>WebGL and WebGPU do not work in this mode.</strong> Pages
-with 3D content will log console errors such as<br />
-<code>THREE.WebGLRenderer: Error creating WebGL context</code> or<br />
-<code>Failed to create WebGPU Context Provider</code>. If your
-JavaScript depends on GPU acceleration, choose<br />
-<code>swiftshader</code> or <code>egl</code>.</li>
-</ul>
-<p><strong>Recommended for</strong>:</p>
-<ul>
-<li>E-book readers (reading UIs are mostly static content)</li>
-<li>Kiosk terminals</li>
-<li>Server-side PDF generation</li>
-<li>Automated CI tests</li>
-</ul>
-<h3 id="22-swiftshader-swiftshader">2.2 SwiftShader
-(<code>swiftshader</code>)</h3>
-<p><strong>Behavior</strong>:</p>
-<ul>
-<li>ANGLE translates GL commands into Vulkan</li>
-<li>SwiftShader emulates Vulkan on the CPU</li>
-<li>GL is emulated in software, but from Blink's point of view a GPU is
-present</li>
-<li><code>--use-gl=angle --use-angle=swiftshader</code> is set</li>
-</ul>
-<p><strong>Strengths</strong>:</p>
-<ul>
-<li>WebGL and fast canvas rendering without a GPU driver</li>
-<li>Can be 2–3× faster than software mode</li>
-<li>Reproducible behavior because it does not depend on hardware</li>
-</ul>
-<p><strong>Weaknesses</strong>:</p>
-<ul>
-<li>Slightly longer startup than software mode</li>
-<li>Requires the SwiftShader ICD (<code>vk_swiftshader_icd.json</code>),
-<code>libvk_swiftshader.so</code>, and the Vulkan<br />
-loader (<code>libvulkan.so.1</code>). Official tarballs and RPMs from
-v1.0.10 iter7 onward bundle these under<br />
-<code>lib/chromium/</code> (packaging fixed in<br />
-Issue #56)</li>
-<li>ANGLE's Vulkan backend may fail to initialize on Intel Mesa and
-similar stacks; v1.0.10 iter7 added a<br />
-mitigation equivalent to <code>--disable-vulkan</code><br />
-(Issue #53)</li>
-</ul>
-<p><strong>Recommended for</strong>:</p>
-<ul>
-<li>Automated tests on VMs, containers, and cloud hosts</li>
-<li>Running WebGL where no GPU driver is available</li>
-<li>As a desktop fallback when GPU drivers are unstable</li>
-</ul>
-<h3 id="23-native-egl-egl">2.3 Native EGL (<code>egl</code>)</h3>
-<p><strong>Behavior</strong>:</p>
-<ul>
-<li>Uses Wayland EGL directly</li>
-<li>Uses the native GPU through the Ozone/Wayland platform</li>
-<li><code>--use-gl=angle --use-angle=gl --ignore-gpu-blocklist</code> is
-set</li>
-<li><code>--headless</code> is not added (fixed in Issue #47)</li>
-</ul>
-<blockquote>
-<p><strong>On v1.2.0-build2 and earlier this shows a white
-screen.</strong></p>
-<p>The setup this path needs (GTK4 integration, manual viewport, device
-scale,<br />
-and the receiving widget) was left to the application, so nothing
-appeared<br />
-unless you knew to configure it. <strong>From the next release the
-engine does<br />
-this</strong>, so <code>BLINKGTK_GPU_MODE=egl</code> alone is enough. On
-earlier versions,<br />
-please use <code>software</code>.</p>
-</blockquote>
-<p><strong>Falls back automatically on machines without a usable
-GPU</strong>:</p>
-<p>You may select <code>egl</code> on a machine where the GPU path does
-not work (no driver,<br />
-no GPU visible inside a virtual machine, and so on). Previously the
-window<br />
-stayed blank with nothing to explain why.</p>
-<p>Now, if no frame reaches the EGL path within five seconds, BlinkGTK
-switches to<br />
-the software path so drawing continues, and writes the reason to
-standard error.<br />
-The fallback does not trigger where the GPU path works. Disable it
-with<br />
-<code>BLINKGTK_EGL_AUTO_FALLBACK=0</code> (the window then stays blank).
-See<br />
-<a href="./api-reference/environment-variables-en.html">Environment
-variables</a> for details.</p>
-<p><strong>What it aims to provide</strong>:</p>
-<ul>
-<li>GPU acceleration for WebGL, WebGPU, and canvas</li>
-<li>High frame rates at 4K / HiDPI</li>
-</ul>
-<p><strong>Current limitations</strong>:</p>
-<ul>
-<li><strong>Does not render on some machines</strong> (see above)</li>
-<li>May briefly turn white during a resize</li>
-<li>Requires a real GPU and a Wayland-EGL-capable driver</li>
-<li>Some functionality is limited under Weston headless</li>
-<li>Exposed to driver-specific bugs</li>
-</ul>
-<p><strong>Current status</strong>:</p>
-<ul>
-<li>Works with <code>BLINKGTK_GPU_MODE=egl</code> alone (from the next
-release)</li>
-<li>Requires a real GPU and a Wayland-EGL-capable driver</li>
-</ul>
-<hr />
-<h2 id="3-choosing-a-mode">3. Choosing a mode</h2>
-<pre><code>What is the application&#39;s runtime environment?
-├─ GPU + desktop + Wayland         -&gt; egl
-├─ No GPU, need WebGL              -&gt; swiftshader
-├─ No GPU, no WebGL                -&gt; software (default)
-└─ Headless / CI                   -&gt; software or swiftshader</code></pre>
-<hr />
-<h2 id="4-launch-examples">4. Launch examples</h2>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Software mode (default)</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># SwiftShader mode</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># Native EGL mode</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
-<p>Selecting the path from code (v1.2.2-build5 and later):</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* before blink_gtk_init */</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
-<p><strong>Note: <code>blink_web_view_new_with_gpu_mode()</code> cannot
-select the path.</strong> The<br />
-rendering path is fixed at <code>blink_gtk_init()</code>, and so are the
-launch flags handed<br />
-to the GPU process. By the time a WebView is created it can no longer
-change, so<br />
-passing a mode there has no effect — it only emits a warning. (Found
-on<br />
-2026-09-14 from an external report; until then it was possible to
-measure the<br />
-software path while believing EGL was in use.)</p>
-<p>There is one path per process. It cannot differ between WebViews in
-the same<br />
-process.</p>
-<p>Confirm what took effect with
-<code>blink_web_view_get_gpu_mode()</code>; the startup log<br />
-also prints the path. Setting <code>BLINKGTK_GPU_MODE</code> before
-launch still works.</p>
-<hr />
-<h2 id="5-switching-modes-and-paths--what-can-change-at-runtime">5.
-Switching modes and paths — what can change at runtime</h2>
-<p>There are <strong>two different axes</strong>, with different
-capabilities.</p>
-<table>
-<thead>
-<tr>
-<th>Axis</th>
-<th>Example</th>
-<th>Switchable at runtime?</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>GPU mode</strong> (software / swiftshader / egl on this
-page)</td>
-<td>software → egl</td>
-<td><strong>No</strong> — requires a process restart</td>
-</tr>
-<tr>
-<td><strong>Delivery path</strong> (how frames reach the screen)</td>
-<td>P1 (direct) ↔︎ P2 (mojo shared memory) ↔︎ P3 (EGL dmabuf)</td>
-<td><strong>Yes</strong> (P1↔︎P2 since v1.2.0-build9, P3 since
-v1.2.1-build3) — <code>blink_web_view_switch_render_path()</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="51-switching-the-gpu-mode-restart-required">5.1 Switching the
-GPU mode (restart required)</h3>
-<p>If your application offers a UI (for example a menu item) that lets
-the user<br />
-pick a GPU mode, changing the mode requires restarting the process.</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// When the user selects a different mode</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>g_setenv<span class="op">(</span><span class="st">&quot;BLINKGTK_GPU_MODE&quot;</span><span class="op">,</span> <span class="st">&quot;egl&quot;</span><span class="op">,</span> TRUE<span class="op">);</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>execv<span class="op">(</span>argv<span class="op">[</span><span class="dv">0</span><span class="op">],</span> argv<span class="op">);</span>  <span class="co">// restart the process</span></span></code></pre></div>
-<p>To carry state (URL, scroll position, display scale) across the
-restart, use<br />
-the handoff meta API (<code>blink_web_view_export_handoff_meta()</code>
-/<br />
-<code>import_handoff_meta()</code>). It carries the display scale in
-canonical units, so<br />
-the restarted view does not come back undersized.</p>
-<h3 id="52-live-delivery-path-switching">5.2 Live delivery-path
-switching</h3>
-<p>There is more than one delivery path (P1 = direct, P2 = mojo shared
-memory,<br />
-P3 = EGL dmabuf), and these <strong>can</strong> be switched without a
-restart:</p>
-<ul>
-<li><strong>P1 ↔︎ P2</strong> (inside software mode) — since
-v1.2.0-build9</li>
-<li><strong>Round trips involving P3 (EGL)</strong> — since
-v1.2.1-build3, but <strong>only when the<br />
-process started with <code>BLINKGTK_GPU_MODE=egl</code></strong>. A
-process started under<br />
-software rendering cannot move to EGL: upstream treats the compositing
-mode<br />
-as one-way for the whole process, and under a software start no
-GPU-side<br />
-frames are produced at all</li>
-</ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* Completion arrives on the &quot;render-path-changed&quot; signal. If the new path</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * fails its render check, the previous path is restored automatically</span></span>
-<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a><span class="co"> * (result=&quot;rollback&quot; — the screen is never broken). */</span></span></code></pre></div>
-<p>A switch takes a few hundred milliseconds in our test environment.
-See the<br />
-render-path-changed section of the<br />
-<a href="./api-reference/signals-api-en.html">Signals API reference</a>
-for details<br />
-(sequence numbers, result values).</p>
-<p><strong>Scope</strong>: this API switches software-side delivery
-paths ("P1" / "P2") only.<br />
-It does not switch the GPU mode itself (software ↔︎ egl) — use the
-restart<br />
-procedure in 5.1 for that.</p>
-<h3 id="53-stopping-presentation-instead-presentation-policy">5.3
-Stopping presentation instead (presentation policy)</h3>
-<p>If what you actually want is "this view need not be presented right
-now"<br />
-(an audio-only mode, for example) rather than a different path, the
-proper<br />
-tool is the presentation policy:<br />
-<code>blink_web_view_set_presentation_policy()</code>. It skips only the
-cost of<br />
-presenting frames; layout and rasterization (read-ahead) continue.<br />
-While presentation is stopped, a screenshot request
-(<code>blink_web_view_capture_screenshot_async()</code><br />
-and similar) still gets exactly one frame, after which presentation
-stays stopped (1.2.3-build2 and later).</p>
-<hr />
-<h2 id="6-troubleshooting">6. Troubleshooting</h2>
-<h3 id="61-fatal-gl_factory_ozone-notreached-in-egl-mode">6.1
-<code>FATAL: gl_factory_ozone NOTREACHED</code> in EGL mode</h3>
-<p><strong>Cause</strong>: the Wayland EGL driver is not found, or the
-process is falling back to an X11 display.<br />
-<strong>Fix</strong>: use v1.0.10 iter7 or later (fixed for v1.0.1
-in<br />
-Issue #47, hardened further for v1.0.10 iter7 in<br />
-Issue #53).</p>
-<h3 id="62-vk_error_initialization_failed-in-swiftshader-mode">6.2
-<code>VK_ERROR_INITIALIZATION_FAILED</code> in SwiftShader mode</h3>
-<p><strong>Cause</strong>: ANGLE's Vulkan backend fails to initialize
-against the environment's Vulkan driver<br />
-configuration.<br />
-<strong>Fix</strong>: use v1.0.10 iter7 or later. In iter7 the
-SwiftShader path was changed to explicitly avoid<br />
-ANGLE Vulkan (Issue #53). Upgrade if you are on<br />
-iter6 or earlier.</p>
-<h3 id="63-swiftshader-renders-but-pixels-never-reach-gtk">6.3
-SwiftShader renders, but pixels never reach GTK</h3>
-<p><strong>This is resolved as of 1.2.3-build2</strong> (first fixed on
-2026-04-19 under Issue #54;<br />
-it came back in later versions, issue #151).</p>
-<ul>
-<li><strong>Symptom</strong>: <code>BLINK_LOAD_FINISHED</code> is
-reached and FPS is around 60, yet the<br />
-GTK window stays black or shows only the background colour, and the
-capture<br />
-API times out</li>
-<li><strong>What caused it</strong>: the <code>CopyFromSurface</code>
-guard was applied to SwiftShader too.<br />
-The guard avoids real-GPU readback (Issue #54) and is only needed for
-EGL.<br />
-SwiftShader has no direct-to-screen path like EGL, so
-<code>CopyFromSurface</code> is the<br />
-only way its pages reach the screen</li>
-<li><strong>Versions where the regression was observed</strong>:
-1.2.2-build6 and 1.2.3-build1 (when<br />
-it first came back was not measured)</li>
-<li><strong>If you still see it</strong>: use 1.2.3-build2 or later; if
-it persists there, tell us</li>
-</ul>
-<h3 id="64-egl-rendering-is-clipped-to-the-top-left-corner-hidpi">6.4
-EGL rendering is clipped to the top-left corner (HiDPI)</h3>
-<p><strong>This is resolved</strong> (Issue #58, 2026-04-20).</p>
-<ul>
-<li><strong>Symptom</strong>: with <code>gtk_scale=2</code>, the parent
-widget is 1536×785 logical px but<br />
-web content appears only in a small area at the top left</li>
-<li><strong>What caused it</strong>: the Chromium view was updated
-correctly through<br />
-<code>size_allocate</code>, but the <code>wl_subsurface</code> /
-<code>wp_viewport</code> destination size did<br />
-not follow. Implementing the <code>size_allocate</code> vfunc fixed
-it</li>
-<li><strong>If you still see it</strong> on the current release, report
-it with the window size<br />
-and <code>gtk_scale</code>. We check for these two symptoms
-automatically on every update</li>
-</ul>
-<h3 id="65-white-screen-in-every-mode">6.5 White screen in every
-mode</h3>
-<p>This can still occur under some conditions even on v1.0.10 iter7 and
-later. Check the following:</p>
-<ul>
-<li>BlinkGTK version: <code>pkg-config --modversion blinkgtk-0.1</code>
-reports <code>1.0.10</code> or later</li>
-<li>Parent widget hierarchy:
-<ul>
-<li>Using <code>blink_web_view_new()</code> directly (recommended): any
-GtkContainer works as the parent<br />
-(<code>gtk_window_set_child(window, view)</code> is the simplest)</li>
-<li>Using <code>blink_web_view_new_container()</code>: a GtkOverlay +
-GtkPicture is built internally.<br />
-<strong>Deprecated (Issue #90): on Chromium 148+ the internal software
-bridge does not render, so migrate<br />
-to <code>blink_web_view_new()</code> with your own
-GtkOverlay</strong></li>
-</ul></li>
-<li>Loaded HTML: try
-<code>data:text/html,&lt;body style='background:red'&gt;TEST&lt;/body&gt;</code>
-as a test page</li>
-<li>Logs: check that <code>DidFinishNavigation()</code> and
-<code>BLINK_LOAD_FINISHED</code> appear</li>
-</ul>
-<p>See <a href="./troubleshooting-en.html">Troubleshooting</a> for
-details.</p>
-<hr />
-<h2 id="7-benchmarking">7. Benchmarking</h2>
-<p>The <code>triple_gpu_compare</code> sample
-(<code>examples/triple_gpu_compare.c</code>) compares all three modes
-side by side<br />
-within a single application.</p>
-<p><strong>Running from a Chromium build tree</strong>:</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$CHROMIUM_SRC</span>/out/Release_Component</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$PWD</span> <span class="ex">./triple_gpu_compare</span></span></code></pre></div>
-<p><strong>When installed from a tarball or RPM</strong>:</p>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># The executable lives in $prefix/bin; runtime .so files in $prefix/lib/chromium</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /usr/local/lib/chromium   <span class="co"># or adjust to your prefix</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/usr/local/bin/triple_gpu_compare</span></span></code></pre></div>
-<p>Three WebViews are displayed side by side so you can compare FPS and
-rendering quality.</p>
-<hr />
-<h2 id="8-related-documents">8. Related documents</h2>
-<ul>
+<li><a href="./api-reference/environment-variables-en.html">Environment
+variables reference</a> — <code>BLINKGTK_GPU_MODE</code>, the automatic
+switch, the receive method</li>
 <li><a href="./api-reference/settings-api-en.html">Settings API
-reference</a> — choosing the mode at creation
-(<code>new_with_gpu_mode</code>)</li>
+reference</a> — <code>blink_gtk_set_gpu_mode()</code>,
+<code>blink_web_view_get_gpu_mode()</code></li>
 <li><a href="./api-reference/signals-api-en.html">Signals API
-reference</a> — completion signal for live path switching</li>
-<li>[Issue #47: EGL mode fix]</li>
+reference</a> — <code>render-path-changed</code></li>
+<li><a href="./api-reference/render-path-handoff-en.html">Render path
+switching and hand-over</a> — BlinkShift and handoff meta</li>
+<li><a href="./troubleshooting-en.html">Troubleshooting</a></li>
 </ul>
 </body>
 </html>

@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="BlinkGTK は 3 つの GPU モードで動作します。環境変数 BLINKGTK_GPU_MODE で選択します。">
+<meta name="description" content="BlinkGTK は、ページの描画に GPU を使うかどうかを 3 つのモードから選べます。 このページでは、選び方、指定の仕方、実行中に切り替えられる範囲、困ったときの確かめ方を説明します。">
 <link rel="canonical" href="https://blinkgtk.org/docs/gpu-modes-ja.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK GPU モード解説 — BlinkGTK">
-<meta property="og:description" content="BlinkGTK は 3 つの GPU モードで動作します。環境変数 BLINKGTK_GPU_MODE で選択します。">
+<meta property="og:description" content="BlinkGTK は、ページの描画に GPU を使うかどうかを 3 つのモードから選べます。 このページでは、選び方、指定の仕方、実行中に切り替えられる範囲、困ったときの確かめ方を説明します。">
 <meta property="og:url" content="https://blinkgtk.org/docs/gpu-modes-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -108,488 +108,387 @@
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
 <h1 id="blinkgtk-gpu-モード解説">BlinkGTK GPU モード解説</h1>
-<p>BlinkGTK は 3 つの GPU モードで動作します。環境変数
-<code>BLINKGTK_GPU_MODE</code> で選択します。</p>
-<blockquote>
-<p><strong>記述時点について（2026-08-16 更新）</strong><br />
-第 6 章 (トラブルシューティング)
-の一部は過去の版で観測した症状の記録で、<br />
-現行の版では解消済みのものを含みます。切り替えの仕組み (第 5 章)
-は<br />
-現行の版に合わせて更新済みです。環境変数の正リストは<br />
-<a
-href="./api-reference/environment-variables-ja.html">環境変数リファレンス</a>
-を<br />
-ご確認ください。</p>
-</blockquote>
-<hr />
-<h2 id="1-3-つのモード">1. 3 つのモード</h2>
+<p>BlinkGTK は、ページの描画に <strong>GPU を使うかどうか</strong>を 3
+つのモードから選べます。<br />
+このページでは、選び方、指定の仕方、実行中に切り替えられる範囲、困ったときの確かめ方を説明します。</p>
+<h2 id="1-まず何を選べばよいか">1. まず何を選べばよいか</h2>
 <table>
 <thead>
 <tr>
-<th style="text-align: left;">モード</th>
-<th style="text-align: center;"><code>BLINKGTK_GPU_MODE</code></th>
-<th style="text-align: left;">レンダリング</th>
-<th style="text-align: left;">コンポジション</th>
-<th style="text-align: left;">用途</th>
+<th>用途</th>
+<th>モード</th>
+<th>指定</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td style="text-align: left;"><strong>ソフトウェア</strong></td>
-<td style="text-align: center;"><code>software</code>（既定）</td>
-<td style="text-align: left;">CPU</td>
-<td style="text-align: left;">ソフトウェアコンポジタ</td>
-<td style="text-align: left;">ヘッドレス・CI・サーバ・低スペック</td>
+<td>迷ったら / GPU の無い機械 / CI</td>
+<td><strong>software</strong></td>
+<td>何も指定しない (既定)</td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>SwiftShader</strong></td>
-<td style="text-align: center;"><code>swiftshader</code></td>
-<td style="text-align: left;">ソフトウェア
-GL（ANGLE→Vulkan→SwiftShader）</td>
-<td style="text-align: left;">ソフトウェアコンポジタ</td>
-<td style="text-align: left;">仮想マシン・安定優先</td>
+<td>GPU のあるデスクトップで、描画を GPU に任せたい</td>
+<td><strong>egl</strong></td>
+<td><code>BLINKGTK_GPU_MODE=egl</code></td>
 </tr>
 <tr>
-<td style="text-align: left;"><strong>EGL ネイティブ</strong></td>
-<td style="text-align: center;"><code>egl</code></td>
-<td style="text-align: left;">ハードウェア GPU（Wayland EGL）</td>
-<td style="text-align: left;">GPU コンポジタ</td>
-<td style="text-align: left;">デスクトップ・本番</td>
+<td>GPU は無いが WebGL / WebGPU を使うページを表示したい</td>
+<td><strong>swiftshader</strong></td>
+<td><code>BLINKGTK_GPU_MODE=swiftshader</code></td>
 </tr>
 </tbody>
 </table>
-<h3 id="画面描画について">画面描画について</h3>
-<p><strong>software と EGL の 2 モードで<br />
-GTK ウィンドウに Blink のレンダリング結果が表示されます。</strong>
-swiftshader モードは<br />
-1.2.3-build1 まで<strong>画面に何も出ませんでした</strong> (issue
-#151。撮影 API もフレームが<br />
-来ずに失敗します)。1.2.3-build2 から直っており、software・EGL
-と同じくページが表示され、<br />
-WebGL の描画も写ります。1.2.3-build1 以前では software か EGL
-を使ってください。</p>
-<p><strong>GPU が使えない機械では、EGL を指定しても自動で software
-へ退避します</strong><br />
-(v1.2.1-build2 以降)。描画データが 5
-秒間届かなければ切り替わり、理由を標準<br />
-エラー出力に記します。GPU が使える機械では切り替わりません。<br />
-無効化するには <code>BLINKGTK_EGL_AUTO_FALLBACK=0</code>
-を指定します<br />
-(白いままになる可能性があります)。</p>
-<h4 id="これまでに解決したもの-履歴">これまでに解決したもの (履歴)</h4>
+<ul>
+<li><strong>何も指定しなければ software</strong> で動きます。GPU
+ドライバに依存しないので、どの環境でも同じように表示されます</li>
+<li>どのモードでも、表示には Wayland のコンポジタが要ります。画面の無い
+CI でも、headless のコンポジタ (weston の headless など) を使います</li>
+<li><strong>egl を指定しても GPU が使えない機械では、自動で software
+に切り替わります</strong>。描画データが 5 秒間 1 枚も届かなければ
+software へ切り替えて表示を続け、理由を標準エラー出力に出します
+(1.2.1-build2 から)。GPU が使える機械では切り替わりません</li>
+<li>WebGL / WebGPU は software では使えません。使うページを表示するなら
+egl か swiftshader を選んでください (下の表)</li>
+</ul>
+<h2 id="2-3-つのモード">2. 3 つのモード</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>software</th>
+<th>swiftshader</th>
+<th>egl</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ページの描画</td>
+<td>CPU</td>
+<td>CPU (合成は software と同じ)</td>
+<td>GPU</td>
+</tr>
+<tr>
+<td>WebGL / WebGL 2</td>
+<td>使えない</td>
+<td>使える (CPU で計算)</td>
+<td>使える</td>
+</tr>
+<tr>
+<td>WebGPU</td>
+<td>使えない</td>
+<td>使える (CPU で計算)</td>
+<td>使える</td>
+</tr>
+<tr>
+<td>GPU とドライバ</td>
+<td>要らない</td>
+<td>要らない</td>
+<td>要る (Wayland EGL に対応したもの)</td>
+</tr>
+<tr>
+<td>向いている場面</td>
+<td>電子書籍・キオスク・CI</td>
+<td>GPU の無い環境で 3D のページ</td>
+<td>GPU のあるデスクトップ</td>
+</tr>
+</tbody>
+</table>
+<p>WebGL / WebGPU の可否は、Chromium 155
+の版で各モードを試して確かめています (2026-10-13)。試したのは
+<code>getContext('webgl')</code>、<code>getContext('webgl2')</code>、<code>navigator.gpu.requestAdapter()</code>
+です。</p>
+<h3 id="software">software</h3>
+<ul>
+<li>Blink が CPU でページを描き、その結果を BlinkGTK が GTK
+のウィンドウに表示します</li>
+<li>描画結果の受け取り方は、起動したときの画面の拡大率で決まります
+(1.2.4 から)
+<ul>
+<li><strong>すべての画面の拡大率が 1 のとき</strong>: mojo
+の共有メモリで受け取ります。描画結果を撮影して読み出す処理が要らず、合成の描き直しも変わった範囲だけになるので、部分的に動くページでの
+CPU 使用量が減ります</li>
+<li><strong>それ以外のとき</strong>:
+描画結果を毎回撮影して受け取ります</li>
+<li>起動した後に拡大率が 1
+より大きい画面へ移ると、撮影して受け取る方法へ 1
+回だけ戻します。戻したときは、アプリが求めていなくても
+<code>render-path-changed</code> シグナルが届きます</li>
+</ul></li>
+<li>受け取り方を以前の版と同じ (撮影して受け取る)
+にするには、<code>BLINKGTK_T2_AUTO=0</code> か
+<code>BLINKGTK_USE_MOJO_IPC=0</code>
+を指定します。<code>BLINKGTK_USE_MOJO_IPC</code>
+を指定した場合は、その指定に従います。<code>--force-device-scale-factor</code>
+を指定した場合は、その値で判定し、起動した後に画面を移っても戻しません</li>
+</ul>
+<h3 id="swiftshader">swiftshader</h3>
+<ul>
+<li>ページの合成は software と同じで、WebGL / WebGPU の計算だけを
+SwiftShader (CPU で GPU の働きをするライブラリ) が受け持ちます</li>
+<li>SwiftShader とその読み込みに要るファイルは配布物に入っています</li>
+<li>1.2.3-build1 などで画面に何も表示されないことがあり、1.2.3-build2
+で直しました</li>
+</ul>
+<h3 id="egl">egl</h3>
+<ul>
+<li>Wayland の EGL を通して GPU で描画し、その結果を GPU のメモリのまま
+(dmabuf) GTK のウィンドウへ渡します。表示のために描画結果を CPU
+へ読み戻すことはしません (起動直後の数枚、GPU
+の受け渡しへ切り替えた直後の 1 枚、撮影を求めたときは CPU
+で読みます)</li>
+<li>実際の GPU と、Wayland EGL に対応したドライバが要ります</li>
+<li><code>BLINKGTK_GPU_MODE=egl</code> を指定するだけで動きます
+(1.2.0-build3 から。それ以前の版では白い画面になります)</li>
+<li>ウィンドウの大きさを変えている間、一瞬白くなることがあります</li>
+</ul>
+<h2 id="3-指定の仕方">3. 指定の仕方</h2>
+<p><strong>起動する前に決めます。</strong> 次のどちらでも同じです。</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span></span></code></pre></div>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* blink_gtk_init() より前に呼ぶ (1.2.2-build5 から) */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
+<ul>
+<li>環境変数と <code>blink_gtk_set_gpu_mode()</code>
+の両方を指定した場合は、<code>blink_gtk_set_gpu_mode()</code>
+が優先します</li>
+<li>モードは <code>blink_gtk_init()</code> の中で決まります。後から
+<code>blink_gtk_set_gpu_mode()</code>
+を呼んでも変わらず、警告が出るだけです</li>
+<li><code>blink_web_view_new_with_gpu_mode()</code>
+では、<code>blink_gtk_init()</code> の後にモードを選べません。WebView
+を作る時点ではモードが決まっているためです。モードは上の 2
+つの方法で指定してください</li>
+<li>モードはプロセス全体で 1 つです。WebView
+ごとに変えることはできません</li>
+<li>起動時に決まったモードは <code>blink_web_view_get_gpu_mode()</code>
+で確かめられます。起動完了のログにも「描画経路=&lt;モード&gt;」が出ます。egl
+から software へ自動で切り替わった後もこの値は egl のままです (5
+章)</li>
+</ul>
+<h2 id="4-実行中の切替-blinkshift">4. 実行中の切替 (BlinkShift)</h2>
+<p><strong>BlinkShift</strong>
+は、アプリを再起動せずに、描画結果を画面へ受け渡す方法を切り替える機能です
+(1.2.0-build9 から)。<br />
+<code>blink_web_view_switch_render_path()</code> で切替を求め、結果は
+<code>render-path-changed</code> シグナルで届きます。<br />
+今の受け渡しの方法は <code>blink_web_view_get_render_path()</code>
+で分かります。</p>
+<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P1&quot;</span><span class="op">);</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* 受け付けられれば 1 以上、受け付けられなければ 0 が返る。</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * 結果は render-path-changed (path_id, result, gate_ms, seq) で届く。 */</span></span></code></pre></div>
+<p>切替先に渡す値:</p>
+<table>
+<thead>
+<tr>
+<th>値</th>
+<th>受け渡しの方法</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"P1"</code></td>
+<td>software の描画結果を毎回撮影して受け取る</td>
+</tr>
+<tr>
+<td><code>"P2"</code></td>
+<td>software の描画結果を mojo の共有メモリで受け取る</td>
+</tr>
+<tr>
+<td><code>"P3"</code></td>
+<td>GPU (egl) の描画結果を GPU のメモリのまま受け取る</td>
+</tr>
+</tbody>
+</table>
+<p>結果 (<code>result</code>) は次の 3 つです。</p>
+<table>
+<thead>
+<tr>
+<th>result</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>"ok"</code></td>
+<td>新しい方法で描画できた</td>
+</tr>
+<tr>
+<td><code>"rollback"</code></td>
+<td>新しい方法で描画を確かめられず、元の方法へ戻した。画面はそのまま</td>
+</tr>
+<tr>
+<td><code>"fail"</code></td>
+<td>元の方法へ戻せなかったか、切替を始められなかった。エラーとして扱ってください</td>
+</tr>
+</tbody>
+</table>
+<p><strong>どこからどこへ移れるか</strong> (Chromium 155、GPU
+のある機械、拡大率 1。headless のコンポジタで各 1
+回試した結果。2026-10-13):</p>
+<table>
+<thead>
+<tr>
+<th>起動したモード</th>
+<th>移れる</th>
+<th>移れない</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>software</td>
+<td><code>"P1"</code> ↔︎ <code>"P2"</code> (数十〜数百ミリ秒)</td>
+<td><code>"P3"</code> (egl) — 受け付けられないか、rollback
+で元に戻る</td>
+</tr>
+<tr>
+<td>egl</td>
+<td><code>"P1"</code> (約 250 ミリ秒)</td>
+<td><code>"P2"</code></td>
+</tr>
+</tbody>
+</table>
+<p>0 が返る (受け付けられない) のは、たとえば次の場合です。</p>
+<ul>
+<li>描画の最初のフレームがまだ届いていない</li>
+<li>mojo の共有メモリ (<code>"P2"</code>) か GPU のメモリ
+(<code>"P3"</code>) で受け取っている間に、撮影して受け取る方法
+(<code>"P1"</code>) 以外を指定した</li>
+<li>知らない値、NULL、空の文字列を指定した</li>
+<li>診断用の環境変数 <code>BLINKGTK_BLINKSHIFT_AUTOSWAP</code>
+で自動の切替を動かしている</li>
+</ul>
+<p>注意:</p>
+<ul>
+<li><strong>software で起動したプロセスは、実行中に egl
+へ移れません。</strong> egl で描画するには、アプリを
+<code>BLINKGTK_GPU_MODE=egl</code> で起動し直してください</li>
+<li>起動し直すときの引き継ぎには、<code>blink_web_view_export_handoff_meta()</code>
+/ <code>blink_web_view_import_handoff_meta()</code> を使えます
+<ul>
+<li>export したメタには、URL、表示領域の大きさ (論理ピクセル)、拡大率
+(整数)、モード名 (環境変数 <code>BLINKGTK_GPU_MODE</code> の値)
+が入ります。スクロール位置の欄は 0
+で書き出されるので、必要ならアプリが値を入れます</li>
+<li>import が行うのは URL
+の読み込みだけです。大きさはアプリがウィンドウに設定し、スクロール位置は読み込みの後に
+JavaScript で戻します</li>
+<li>別のプロセスへ渡すには <code>blink_handoff_meta_serialize()</code> /
+<code>blink_handoff_meta_deserialize()</code> で文字列にします</li>
+</ul></li>
+<li>切替が掛かるのは、プロセスの中で最初に描画結果が届いた WebView
+の表示です。WebView が複数ある場合、引数の <code>view</code>
+は結果の通知の宛先を決めるだけです</li>
+<li><code>seq</code> の使い方は、<a
+href="./api-reference/signals-api-ja.html">シグナル API リファレンス</a>
+の render-path-changed の節にあります。メタの詳細は <a
+href="./api-reference/render-path-handoff-ja.html">描画経路の切替と引き継ぎ</a>
+を参照してください</li>
+</ul>
+<h3
+id="画面への受け渡しを止めたい場合-提示ポリシー">画面への受け渡しを止めたい場合
+(提示ポリシー)</h3>
+<p>「方法を変える」のではなく「今は画面に出す必要がない」場合
+(音声だけを聞いている間など) は、<br />
+<code>blink_web_view_set_presentation_policy()</code>
+を使います。画面へ受け渡す費用だけを省き、<br />
+ページの組版と描画 (先読み) は止めません。止めている間でも、撮影<br />
+(<code>blink_web_view_capture_screenshot_async()</code> など)
+を求められたときは 1 枚だけ出して撮り、<br />
+その後はまた止めます (1.2.3-build2 から)。<strong>egl
+では今のところ効果がありません。</strong></p>
+<h2 id="5-困ったとき">5. 困ったとき</h2>
+<h3 id="egl-を指定したのに-software-で動いているように見える">egl
+を指定したのに software で動いているように見える</h3>
+<ul>
+<li>GPU が使えない機械では、5 秒後に software
+へ自動で切り替わり、理由が標準エラー出力に出ます。<strong>切り替わったかどうかは、この標準エラー出力の警告で確かめてください。</strong>
+<code>blink_web_view_get_gpu_mode()</code>、起動完了のログの「描画経路=」、<code>blink_web_view_get_render_path()</code>、export
+した handoff meta のモード名は、切り替わった後も egl のまま
+(受け渡しの方法は GPU のメモリ = <code>"P3"</code>) です</li>
+<li>自動の切替を止めるには <code>BLINKGTK_EGL_AUTO_FALLBACK=0</code>
+を指定します (その場合、GPU
+が使えないと画面は白いままになります)。待ち時間は
+<code>BLINKGTK_EGL_AUTO_FALLBACK_MS</code> で変えられます</li>
+<li><code>blink_gtk_init()</code>
+の後でモードを指定していないか確かめてください (3 章)</li>
+</ul>
+<h3 id="画面が白いまま">画面が白いまま</h3>
+<ol type="1">
+<li>読み込みが終わっているか (<code>load-changed</code> シグナルで
+<code>BLINK_LOAD_FINISHED</code> が届くか)</li>
+<li>色だけの簡単なページで表示されるか
+(<code>data:text/html,&lt;body style='background:red'&gt;TEST&lt;/body&gt;</code>。<code>data:</code>
+の URL では色を <code>#</code> で書かないでください。<code>#</code>
+以降が切り捨てられます)</li>
+<li>egl なら、GPU とドライバが Wayland EGL
+に対応しているか。対応していなければ自動で software に切り替わるはずです
+(上)</li>
+</ol>
+<p>それでも白い場合は、使っている版
+(<code>blink_gtk_get_version_full()</code>
+の値)、モード、ウィンドウの大きさと拡大率を添えてご報告ください。</p>
+<h3 id="egl-で表示が左上に小さく出る">egl で表示が左上に小さく出る</h3>
+<p>画面の拡大率が 1 以外のときに起きていた症状で、1.2.0-build3
+で直しました。egl
+の拡大率は、起動した時点の最初の画面から取ります。複数の画面で拡大率が違う場合や、起動した後に拡大率の違う画面へ移った場合は確かめていません。起きた場合は、ウィンドウの大きさと各画面の拡大率を添えてご報告ください。</p>
+<h2 id="6-履歴">6. 履歴</h2>
 <table>
 <thead>
 <tr>
 <th>版</th>
-<th>内容</th>
+<th>変わったこと</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>v0.9 系</td>
-<td><code>--headless</code> が browser
-プロセスに強制付与され白画面になっていた</td>
+<td>1.2.0-build3</td>
+<td>egl が <code>BLINKGTK_GPU_MODE=egl</code>
+の指定だけで動くようになった</td>
 </tr>
 <tr>
-<td>v1.0.1</td>
-<td>Issue #47 — EGL モード修正</td>
+<td>1.2.0-build9</td>
+<td>BlinkShift (実行中の受け渡しの方法の切替)</td>
 </tr>
 <tr>
-<td>v1.0.10 iter2-iter7</td>
-<td>Issue #53 — SwiftShader モード修正</td>
+<td>1.2.1-build2</td>
+<td>GPU が使えない機械で egl から software
+へ自動で切り替わるようになった</td>
 </tr>
 <tr>
-<td>v1.0.10 iter5</td>
-<td>Issue #54 — EGL モード viz Skia readback 修正</td>
+<td>1.2.1-build3</td>
+<td>egl で起動した場合に、BlinkShift で GPU
+の受け渡しの方法を扱えるようになった</td>
 </tr>
 <tr>
-<td>v1.0.10 iter7</td>
-<td>Issue #55 — EGL モード Context Lost 修正</td>
+<td>1.2.2-build5</td>
+<td><code>blink_gtk_set_gpu_mode()</code>
+でコードからモードを指定できるようになった</td>
 </tr>
 <tr>
-<td><strong>v1.0.x (2026-04-20 解決)</strong></td>
-<td><strong>Issue #58 — HiDPI で親コンテナのサイズに追従しない
-(<code>size_allocate</code> vfunc の実装で解決)</strong></td>
+<td>1.2.3-build2</td>
+<td>swiftshader で画面に表示されないことがあったのを直した</td>
 </tr>
 <tr>
-<td><strong>v1.1.x (2026-06-21 解決)</strong></td>
-<td><strong>Issue #59 — <code>blink_web_view_load_uri()</code>
-の繰返しでリソースが累積する</strong></td>
-</tr>
-<tr>
-<td>v1.2.0-build3 から</td>
-<td>GPU 描画が環境変数の指定だけで使えるようになった</td>
-</tr>
-<tr>
-<td>v1.2.1-build2 から</td>
-<td>GPU の無い機械での自動退避</td>
+<td>1.2.4</td>
+<td>すべての画面の拡大率が 1 のとき、software の描画結果を mojo
+の共有メモリで受け取るのが既定になった</td>
 </tr>
 </tbody>
 </table>
-<hr />
-<h2 id="2-モード別詳細">2. モード別詳細</h2>
-<h3 id="21-ソフトウェア-software">2.1 ソフトウェア
-(<code>software</code>)</h3>
-<p><strong>挙動</strong>:</p>
+<h2 id="7-関連資料">7. 関連資料</h2>
 <ul>
-<li>Blink が CPU でピクセルを生成</li>
-<li><code>viz::SoftwareOutputDevice</code>
-がビットマップをフレームバッファに書き込み</li>
-<li><code>CopyFromSurface</code> で BlinkGTK
-が取得し、<code>GtkPicture</code> / <code>GtkGLArea</code>
-経由で表示</li>
-<li>内部的に <code>--disable-gpu-compositing</code> が付与される</li>
-</ul>
-<p><strong>長所</strong>:</p>
-<ul>
-<li>最も安定、GPU ドライバに依存しない</li>
-<li>Weston headless・仮想マシン・CI で動作確認済み</li>
-<li>デバッグが容易（レンダリングパスが単純）</li>
-</ul>
-<p><strong>短所</strong>:</p>
-<ul>
-<li>パフォーマンスは他モードより劣る</li>
-<li><strong>WebGL / WebGPU はこのモードでは動作しません</strong>。<br />
-3D コンテンツを表示するページでは
-<code>THREE.WebGLRenderer: Error creating WebGL context</code> や
-<code>Failed to create WebGPU Context Provider</code> といった<br />
-Console エラーが出ます。GPU アクセラレーション前提の JS
-に依存するなら<br />
-<code>swiftshader</code> または <code>egl</code>
-モードを選んでください。</li>
-</ul>
-<p><strong>推奨用途</strong>:</p>
-<ul>
-<li>電子書籍リーダー（読書 UI は静的コンテンツが主）</li>
-<li>キオスク端末</li>
-<li>サーバサイド PDF 生成</li>
-<li>CI 自動テスト</li>
-</ul>
-<h3 id="22-swiftshader-swiftshader">2.2 SwiftShader
-(<code>swiftshader</code>)</h3>
-<p><strong>挙動</strong>:</p>
-<ul>
-<li>ANGLE が GL コマンドを Vulkan に変換</li>
-<li>Vulkan を SwiftShader が CPU でエミュレート</li>
-<li>GL はソフトウェアでエミュレートされるが、Blink から見ると GPU
-が存在する状態</li>
-<li><code>--use-gl=angle --use-angle=swiftshader</code>
-が設定される</li>
-</ul>
-<p><strong>長所</strong>:</p>
-<ul>
-<li>GPU ドライバ不要で WebGL / Canvas 高速描画が可能</li>
-<li>software モードより 2〜3 倍速いケースあり</li>
-<li>ハードウェア依存しないので挙動が再現的</li>
-</ul>
-<p><strong>短所</strong>:</p>
-<ul>
-<li>起動時間が software より少し長い</li>
-<li>SwiftShader ICD (<code>vk_swiftshader_icd.json</code>) と
-<code>libvk_swiftshader.so</code>、<br />
-および Vulkan loader (<code>libvulkan.so.1</code>) が必要。v1.0.10 iter7
-以降の<br />
-公式 tarball / RPM では <code>lib/chromium/</code>
-に同梱されている<br />
-(Issue #56 でパッケージング<br />
-修正済)</li>
-<li>Intel Mesa などでは ANGLE の Vulkan backend
-初期化に失敗する可能性があるが、<br />
-v1.0.10 iter7 で <code>--disable-vulkan</code>
-相当の緩和策が入っている<br />
-(Issue #53)</li>
-</ul>
-<p><strong>推奨用途</strong>:</p>
-<ul>
-<li>VM・コンテナ・クラウド上の自動テスト</li>
-<li>GPU ドライバがないが WebGL を動かしたい場合</li>
-<li>デスクトップ環境の代替（GPU ドライバが不安定な場合）</li>
-</ul>
-<h3 id="23-egl-ネイティブ-egl">2.3 EGL ネイティブ
-(<code>egl</code>)</h3>
-<p><strong>挙動</strong>:</p>
-<ul>
-<li>Wayland EGL を直接使用</li>
-<li>Ozone/Wayland プラットフォーム経由でネイティブ GPU を利用</li>
-<li><code>--use-gl=angle --use-angle=gl --ignore-gpu-blocklist</code>
-が設定される</li>
-<li><code>--headless</code> は付与されない（Issue #47 で修正済み）</li>
-</ul>
-<blockquote>
-<p><strong>v1.2.0-build2 以前では白画面になります。</strong></p>
-<p>動作に必要な設定 (GTK4 統合・手動 viewport・device
-scale・受け手ウィジェット)<br />
-が利用者側に委ねられており、指定しないと表示されませんでした。<br />
-<strong>次の版からはエンジンが行う</strong>ので、<code>BLINKGTK_GPU_MODE=egl</code>
-だけで動きます。<br />
-それ以前の版では <code>software</code> をお使いください。</p>
-</blockquote>
-<p><strong>GPU が使えない機械では自動で退避します</strong>:</p>
-<p>ドライバが無い、仮想環境で GPU が見えないなど、<code>egl</code>
-を指定してもその機械で<br />
-GPU
-経路が使えないことがあります。以前はこの場合に画面が白いまま何も起きず、<br />
-原因を知る手立てがありませんでした。</p>
-<p>現在は、EGL 経路に描画データが 5 秒間 1
-枚も届かなければ、<strong>自動的にソフトウェア<br />
-経路へ切り替えて描画を続け、その理由を標準エラー出力に記します</strong>。<br />
-GPU が使える機械では退避しません。無効化は
-<code>BLINKGTK_EGL_AUTO_FALLBACK=0</code><br />
-(その場合、画面は白いままになります)。詳しくは<br />
-<a href="./api-reference/environment-variables-ja.html">環境変数</a>
-を参照してください。</p>
-<p><strong>目指しているもの</strong>:</p>
-<ul>
-<li>WebGL / WebGPU / Canvas の GPU アクセラレーション</li>
-<li>4K / HiDPI での高フレームレート</li>
-</ul>
-<p><strong>現状の制約</strong>:</p>
-<ul>
-<li><strong>環境によって描画されない</strong> (上記)</li>
-<li>リサイズ中に一時的に白くなることがある</li>
-<li>実 GPU と Wayland EGL 対応ドライバが必要</li>
-<li>Weston headless では一部機能に制限あり</li>
-<li>ドライバ依存のバグに遭遇するリスク</li>
-</ul>
-<p><strong>現在の位置付け</strong>:</p>
-<ul>
-<li><code>BLINKGTK_GPU_MODE=egl</code> だけで動作 (次の版以降)</li>
-<li>実 GPU と Wayland EGL 対応ドライバが必要</li>
-</ul>
-<hr />
-<h2 id="3-モード選択フロー">3. モード選択フロー</h2>
-<pre><code>アプリの実行環境は？
-├─ GPU あり・デスクトップ・Wayland → egl
-├─ GPU なし・WebGL 必要           → swiftshader
-├─ GPU なし・WebGL 不要           → software（既定）
-└─ ヘッドレス・CI                  → software または swiftshader</code></pre>
-<hr />
-<h2 id="4-起動例">4. 起動例</h2>
-<div class="sourceCode" id="cb2"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co"># ソフトウェアモード（既定）</span></span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a><span class="co"># SwiftShader モード</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>swiftshader <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a><span class="co"># EGL ネイティブモード</span></span>
-<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="va">BLINKGTK_GPU_MODE</span><span class="op">=</span>egl <span class="ex">./myapp</span> <span class="at">--no-sandbox</span> <span class="at">--no-zygote</span></span></code></pre></div>
-<p>コード内から指定する場合 (v1.2.2-build5 以降):</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_gpu_mode<span class="op">(</span>BLINK_GPU_MODE_EGL<span class="op">);</span>   <span class="co">/* blink_gtk_init より前 */</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">);</span></span></code></pre></div>
-<p><strong>注意: <code>blink_web_view_new_with_gpu_mode()</code>
-では経路を選べません。</strong><br />
-描画経路は <code>blink_gtk_init()</code> の時点で決まり、GPU
-プロセスへ渡す起動フラグも<br />
-そこで確定します。WebView
-を作る時点ではもう変えられないので、この関数に<br />
-モードを渡しても反映されず、警告だけが出ます (2026-09-14
-に外部利用者の報告で判明。<br />
-それまで「EGL のつもりで software を測る」ことが起きていました)。</p>
-<p>経路はプロセス全体に 1 つです。同一プロセス内で WebView
-ごとに変えることは<br />
-できません。</p>
-<p>反映されたかどうかは <code>blink_web_view_get_gpu_mode()</code>
-で確かめられます。<br />
-起動完了のログにも「描画経路=<mode>」が出ます。<br />
-環境変数 <code>BLINKGTK_GPU_MODE</code>
-を起動前に設定する方法も従来どおり使えます。</p>
-<hr />
-<h2 id="5-モードと経路の切り替え--何が実行中に変えられるか">5.
-モードと経路の切り替え — 何が実行中に変えられるか</h2>
-<p>切り替えには<strong>二つの軸</strong>があり、できることが違います。</p>
-<table>
-<thead>
-<tr>
-<th>軸</th>
-<th>例</th>
-<th>実行中の切替</th>
-</tr>
-</thead>
-<tbody>
-<tr>
-<td><strong>GPU モード</strong> (本ページの software / swiftshader /
-egl)</td>
-<td>software → egl</td>
-<td><strong>不可</strong> — プロセス再起動が必要</td>
-</tr>
-<tr>
-<td><strong>配送経路</strong> (画面転送の経路)</td>
-<td>P1 (直接) ↔︎ P2 (mojo 共有メモリ) ↔︎ P3 (EGL dmabuf)</td>
-<td><strong>可</strong> (P1↔︎P2 は v1.2.0-build9 以降、P3 は
-v1.2.1-build3 以降) —
-<code>blink_web_view_switch_render_path()</code></td>
-</tr>
-</tbody>
-</table>
-<h3 id="51-gpu-モードの切替-再起動が必要">5.1 GPU モードの切替
-(再起動が必要)</h3>
-<p>ユーザーが GPU モードを選択できる
-UI（メニュー項目など）を提供する場合、<br />
-モード切替にはプロセス再起動が必要です。</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">// ユーザーが別モードを選んだら</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a>g_setenv<span class="op">(</span><span class="st">&quot;BLINKGTK_GPU_MODE&quot;</span><span class="op">,</span> <span class="st">&quot;egl&quot;</span><span class="op">,</span> TRUE<span class="op">);</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>execv<span class="op">(</span>argv<span class="op">[</span><span class="dv">0</span><span class="op">],</span> argv<span class="op">);</span>  <span class="co">// プロセス再起動</span></span></code></pre></div>
-<p>再起動をまたぐ状態（URL・スクロール位置・表示スケール）の引き継ぎには<br />
-handoff meta API（<code>blink_web_view_export_handoff_meta()</code>
-/<br />
-<code>import_handoff_meta()</code>）が使えます。表示スケールを含めて正準単位で<br />
-引き継ぐため、再起動後に「描画が小さい」が起きません。</p>
-<h3 id="52-配送経路のライブ切替">5.2 配送経路のライブ切替</h3>
-<p>画面転送の経路は複数あり（P1 = 直接配送 / P2 = mojo 共有メモリ配送
-/<br />
-P3 = EGL dmabuf
-配送）、これは<strong>再起動なしに</strong>切り替えられます。</p>
-<ul>
-<li><strong>P1 ↔︎ P2</strong> (software モード内部) … v1.2.0-build9
-以降</li>
-<li><strong>P3 (EGL) を含む往復</strong> … v1.2.1-build3
-以降。ただし<br />
-<strong><code>BLINKGTK_GPU_MODE=egl</code>
-で起動した場合だけ</strong>です。ソフトウェア描画で<br />
-起動したプロセスは EGL
-へ移れません（合成モードは上流でプロセス全体の<br />
-一方通行で、software 起動では GPU
-側の描画データがそもそも作られません）</li>
-</ul>
-<div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> seq <span class="op">=</span> blink_web_view_switch_render_path<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;P2&quot;</span><span class="op">);</span></span>
-<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a><span class="co">/* 完了は &quot;render-path-changed&quot; シグナル。切替後の描画が確認できなければ</span></span>
-<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a><span class="co"> * 自動で元の経路に戻ります (result=&quot;rollback&quot;、画面は壊れません) */</span></span></code></pre></div>
-<p>切替はテスト環境の実測で数百ミリ秒です。詳細（seq
-による前後対応付け・<br />
-result の意味）は <a href="./api-reference/signals-api-ja.html">シグナル
-API リファレンス</a><br />
-の render-path-changed の節を参照してください。</p>
-<p><strong>適用範囲に注意</strong>: この API が切り替えるのは software
-系の配送経路<br />
-（"P1" / "P2"）だけです。GPU モードそのもの（software ↔︎
-egl）の実行時切替は<br />
-できません（5.1 の再起動手順を使ってください）。</p>
-<h3 id="53-画面転送を止めたい場合-提示ポリシー">5.3
-画面転送を止めたい場合 (提示ポリシー)</h3>
-<p>「経路を変える」のではなく「今は画面に出す必要がない」場合（音声だけを聞く<br />
-場面など）は、提示ポリシー
-<code>blink_web_view_set_presentation_policy()</code> が<br />
-正規の口です。画面転送の費用だけを省き、組版と描画（先読み）は止めません。<br />
-止めている間も、撮影
-(<code>blink_web_view_capture_screenshot_async()</code> など)
-を求められたときは<br />
-1 枚だけ出して撮り、その後はまた止めます (1.2.3-build2 以降)。</p>
-<hr />
-<h2 id="6-トラブルシューティング">6. トラブルシューティング</h2>
-<h3 id="61-egl-モードで-fatal-gl_factory_ozone-notreached">6.1 EGL
-モードで <code>FATAL: gl_factory_ozone NOTREACHED</code></h3>
-<p><strong>原因</strong>: Wayland EGL ドライバが見つからない、または X11
-Display に<br />
-フォールバックしている<br />
-<strong>対処</strong>: v1.0.10 iter7 以降を使用<br />
-(Issue #47 で v1.0.1 修正済、<br />
-Issue #53 で v1.0.10 iter7<br />
-さらに強化)。</p>
-<h3 id="62-swiftshader-モードで-vk_error_initialization_failed">6.2
-SwiftShader モードで <code>VK_ERROR_INITIALIZATION_FAILED</code></h3>
-<p><strong>原因</strong>: ANGLE の Vulkan backend 初期化が環境の Vulkan
-ドライバ設定で失敗する<br />
-<strong>対処</strong>: v1.0.10 iter7 以降を使用。iter7 で SwiftShader
-経路は<br />
-ANGLE Vulkan を明示的に回避するよう修正済 (Issue #53)。<br />
-iter6 以前を使っている場合は更新してください。</p>
-<h3
-id="63-swiftshader-モードで描画されるがピクセルが-gtk-に届かない">6.3
-SwiftShader モードで描画されるがピクセルが GTK に届かない</h3>
-<p><strong>この症状は 1.2.3-build2 から解消しています</strong> (Issue
-#54 で 2026-04-19 に一度<br />
-直し、その後の版で再発していました。issue #151)。</p>
-<ul>
-<li><strong>症状</strong>: <code>BLINK_LOAD_FINISHED</code> に到達し FPS
-も 60 前後なのに、<br />
-GTK ウィンドウが真っ黒または背景色のまま。撮影 API も時間切れになる</li>
-<li><strong>原因だったもの</strong>: CopyFromSurface のガードが
-SwiftShader にも<br />
-適用されていた。ガードは実 GPU の読み戻し (Issue #54)
-を避けるためのもので、<br />
-EGL にだけ要る。SwiftShader には EGL
-のように画面へ直接貼る経路が無く、<br />
-ページが画面へ届く経路はこの CopyFromSurface だけです</li>
-<li><strong>再発を確認した版</strong>: 1.2.2-build6 と 1.2.3-build1
-(いつから再発していたかは<br />
-測っていません)</li>
-<li><strong>いま同じ症状が出る場合</strong>: 1.2.3-build2
-以降をお使いください。<br />
-それでも出るときはご報告ください</li>
-</ul>
-<h3 id="64-egl-モードで描画範囲が左上にクリップされる-hidpi">6.4 EGL
-モードで描画範囲が左上にクリップされる (HiDPI)</h3>
-<p><strong>この症状は解消済みです</strong> (Issue #58、2026-04-20)。</p>
-<ul>
-<li><strong>症状</strong>: <code>gtk_scale=2</code>
-の環境で、親ウィジェットは 1536×785 logical px<br />
-あるのに、Web コンテンツが左上のごく一部にしか表示されない</li>
-<li><strong>原因だったもの</strong>: Chromium 側のビューは
-<code>size_allocate</code> で正しく<br />
-更新されるのに、<code>wl_subsurface</code> / <code>wp_viewport</code> の
-destination サイズが<br />
-追従していなかった。<code>size_allocate</code> の vfunc
-を実装して解消しています</li>
-<li><strong>いま同じ症状が出る場合</strong>: 現行版 (1.2.1 以降)
-でも出るようでしたら、<br />
-window のサイズと <code>gtk_scale</code> を添えてご報告ください。<br />
-この 2 症状は更新のたびに自動検査しています</li>
-</ul>
-<h3 id="65-全モードで白画面">6.5 全モードで白画面</h3>
-<p>v1.0.10 iter7
-以降でも条件によっては発生することがあります。確認手順:</p>
-<ul>
-<li>BlinkGTK バージョン:
-<code>pkg-config --modversion blinkgtk-0.1</code> が <code>1.0.10</code>
-以上</li>
-<li>親ウィジェット階層:
-<ul>
-<li><code>blink_web_view_new()</code> 直接利用の場合 (推奨): 親は任意の
-GtkContainer で可<br />
-(<code>gtk_window_set_child(window, view)</code> が最もシンプル)</li>
-<li><code>blink_web_view_new_container()</code> 利用の場合: 内部で
-GtkOverlay +<br />
-GtkPicture が自動構築される。<strong>非推奨 (Issue #90): Chromium 148+
-で<br />
-内部 software bridge が描画しないため、<code>blink_web_view_new()</code>
-+<br />
-自前 GtkOverlay への移行を推奨</strong></li>
-</ul></li>
-<li>読み込み HTML: テスト用に
-<code>data:text/html,&lt;body style='background:red'&gt;TEST&lt;/body&gt;</code><br />
-で確認</li>
-<li>ログ: <code>DidFinishNavigation()</code> と
-<code>BLINK_LOAD_FINISHED</code> が出ているか</li>
-</ul>
-<p>詳細は <a href="./troubleshooting-ja.html">トラブルシューティング</a>
-を参照。</p>
-<hr />
-<h2 id="7-ベンチマーク">7. ベンチマーク</h2>
-<p><code>triple_gpu_compare</code> サンプル
-(<code>examples/triple_gpu_compare.c</code>) で 3 モードを同一<br />
-アプリ内で並列比較できます。</p>
-<p><strong>Chromium ビルドツリーから実行する場合</strong>:</p>
-<div class="sourceCode" id="cb6"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> <span class="va">$CHROMIUM_SRC</span>/out/Release_Component</span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="va">LD_LIBRARY_PATH</span><span class="op">=</span><span class="va">$PWD</span> <span class="ex">./triple_gpu_compare</span></span></code></pre></div>
-<p><strong>tarball / RPM でインストールした場合</strong>:</p>
-<div class="sourceCode" id="cb7"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 実行ファイルは $prefix/bin、ランタイム .so は $prefix/lib/chromium</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="bu">cd</span> /usr/local/lib/chromium   <span class="co"># もしくは prefix に応じて</span></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">/usr/local/bin/triple_gpu_compare</span></span></code></pre></div>
-<p>3 つの WebView が並列表示され、FPS
-とレンダリング品質を比較できます。</p>
-<hr />
-<h2 id="8-関連資料">8. 関連資料</h2>
-<ul>
+<li><a
+href="./api-reference/environment-variables-ja.html">環境変数リファレンス</a>
+— <code>BLINKGTK_GPU_MODE</code>、自動の切替、受け取り方の指定</li>
 <li><a href="./api-reference/settings-api-ja.html">設定 API
-リファレンス</a> — 生成時のモード指定
-(<code>new_with_gpu_mode</code>)</li>
+リファレンス</a> —
+<code>blink_gtk_set_gpu_mode()</code>、<code>blink_web_view_get_gpu_mode()</code></li>
 <li><a href="./api-reference/signals-api-ja.html">シグナル API
-リファレンス</a> — 配送経路のライブ切替の完了通知</li>
-<li>[Issue #47: EGL mode fix]</li>
+リファレンス</a> — <code>render-path-changed</code></li>
+<li><a
+href="./api-reference/render-path-handoff-ja.html">描画経路の切替と引き継ぎ</a>
+— BlinkShift と handoff meta</li>
+<li><a href="./troubleshooting-ja.html">トラブルシューティング</a></li>
 </ul>
 </body>
 </html>
