@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.4-build3 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.4-build4 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -91,7 +91,7 @@
 <meta name="description" content="Release date: 2026-10-14 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.4-build3 Release Notes — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.4-build4 Release Notes — BlinkGTK">
 <meta property="og:description" content="Release date: 2026-10-14 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-en.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -107,7 +107,7 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-124-build3-release-notes">BlinkGTK 1.2.4-build3 Release
+<h1 id="blinkgtk-124-build4-release-notes">BlinkGTK 1.2.4-build4 Release
 Notes</h1>
 <p><strong>Release date</strong>: 2026-10-14 /
 <strong>Chromium</strong>: 155.0.8059.39 / Language: <a
@@ -159,6 +159,26 @@ by default in Chromium 155).</li>
 <li>Placing emphasis marks with the same mechanism as ruby, and the fix
 for moving the caret up and down in lines with ruby, were enabled since
 Chromium 151 and are now permanent. The behavior does not change.</li>
+</ul>
+<h2 id="what-build4-fixes">What build4 fixes</h2>
+<ul>
+<li><strong>Clicking the page after a navigation could crash the
+app.</strong> A navigation recreates the rendering view
+(RenderWidgetHostView), but the old view stayed registered with the text
+input manager (TextInputManager), so a selection change caused by a
+click called the freed view (#157). On pages that set
+<code>user-select: none</code> on the text, a click does not change the
+selection, so clicks did not trigger it.</li>
+<li><strong>With accessibility enabled, navigating to another page could
+make the app stop responding.</strong> After the old document's view was
+destroyed, the bridge to assistive technologies still pointed at the
+destroyed tree, and when an assistive technology (AT-SPI) queried an
+item of the old document, the main thread did not return (#158). Without
+assistive technologies this did not happen.</li>
+<li><strong>The bundled INSTALL and README gave the wrong DEB file
+names</strong> (<code>libblinkgtk-0.1-0_&lt;version&gt;_amd64.deb</code>
+instead of <code>..._&lt;version&gt;-1_amd64.deb</code>), so the
+commands as written failed to find the files.</li>
 </ul>
 <h2 id="what-build3-adds-or-changes">What build3 adds or changes</h2>
 <ul>

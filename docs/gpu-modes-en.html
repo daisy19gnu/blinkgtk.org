@@ -423,8 +423,8 @@ It saves only the cost of handing frames to the screen; page layout and
 drawing (look-ahead) continue.<br />
 While stopped, a capture request (such as
 <code>blink_web_view_capture_screenshot_async()</code>) still<br />
-succeeds, and presentation stays stopped (since 1.2.3-build2). From
-1.2.4-build3 the capture on the software path<br />
+succeeds, and presentation stays stopped (since 1.2.3-build2). Since
+1.2.4-build3, the capture on the software path<br />
 returns, in most cases, the screen at the time of the request and may
 finish without putting a frame on screen.<br />
 <strong>The presentation policy currently has no effect in egl

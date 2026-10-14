@@ -110,7 +110,7 @@
 <h1 id="cef--webkitgtk--blinkgtk--どれを選ぶか">CEF / WebKitGTK /
 BlinkGTK — どれを選ぶか</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>バージョン</strong>: 1.2.4-build3</p>
+<strong>バージョン</strong>: 1.2.4-build4</p>
 <p>GTK4 のアプリに Web エンジンを組み込むとき、選択肢はおおむね 3
 つです。<br />
 この文書は、その 3
@@ -248,9 +248,10 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 <span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>view <span class="op">=</span> BlinkGTK.WebView.new()</span>
 <span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span></code></pre></div>
 <h2 id="配布物の大きさ">配布物の大きさ</h2>
-<p>Chromium を抱える以上、<strong>小さくはありません</strong>。BlinkGTK
-1.2.4-build3 の<br />
-実測値です。</p>
+<p>Chromium
+を抱える以上、<strong>小さくはありません</strong>。2026-10-14 に
+BlinkGTK 1.2.4-build4 の<br />
+tarball で実測した値です (1 MB = 1,000,000 バイト)。</p>
 <table>
 <thead>
 <tr>
@@ -261,19 +262,19 @@ class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a hr
 <tbody>
 <tr>
 <td>tarball (tar.gz)</td>
-<td>約 220 MB</td>
+<td>約 229 MB</td>
 </tr>
 <tr>
 <td>展開後</td>
-<td>約 749 MB</td>
+<td>約 755 MB</td>
 </tr>
 <tr>
 <td>共有ライブラリ</td>
-<td>537 本 / 合計 約 710 MB</td>
+<td>516 本 (シンボリックリンクを除く) / 合計 約 722 MB</td>
 </tr>
 <tr>
 <td><code>libblinkgtk-0.1.so</code> 単体</td>
-<td>約 10 MB</td>
+<td>約 11 MB</td>
 </tr>
 </tbody>
 </table>

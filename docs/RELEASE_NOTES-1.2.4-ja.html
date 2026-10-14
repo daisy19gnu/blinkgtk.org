@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.4-build3 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.4-build4 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -91,7 +91,7 @@
 <meta name="description" content="リリース日: 2026-10-14 / Chromium: 155.0.8059.39 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.4-build3 リリースノート — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.4-build4 リリースノート — BlinkGTK">
 <meta property="og:description" content="リリース日: 2026-10-14 / Chromium: 155.0.8059.39 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -107,7 +107,7 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-124-build3-リリースノート">BlinkGTK 1.2.4-build3
+<h1 id="blinkgtk-124-build4-リリースノート">BlinkGTK 1.2.4-build4
 リリースノート</h1>
 <p><strong>リリース日</strong>: 2026-10-14 / <strong>Chromium</strong>:
 155.0.8059.39 / 言語: 日本語 | <a
@@ -158,6 +158,25 @@ Release にある <code>blinkgtk-release-*.noarch.rpm</code>
 155 で既定で有効になりました)。</li>
 <li>圏点をルビと同じ仕組みで配置する変更と、ルビを含む行でのカーソルの上下移動の修正は、Chromium
 151 から有効だったものが恒久化されました。挙動は変わりません。</li>
+</ul>
+<h2 id="build4-で修正したこと">build4 で修正したこと</h2>
+<ul>
+<li><strong>頁を移った後に本文をクリックすると、アプリが異常終了することがありました。</strong>
+頁を移ると描画の部品 (RenderWidgetHostView)
+が作り直されますが、前の部品が文字入力の管理 (TextInputManager)
+の通知先に残っていて、本文のクリックで選択が変わったときに、解放済みの部品を呼んでいました
+(#157)。本文に <code>user-select: none</code>
+を当てている頁では、クリックで選択が変わらないので、クリックでは起きませんでした。</li>
+<li><strong>支援技術を有効にして頁を移ると、アプリが応答しなくなることがありました。</strong>
+前の文書の部品が破棄された後も、支援技術への橋渡しが、破棄された木を指したままでした。支援技術
+(AT-SPI)
+が前の文書の項目を問い合わせると、メインスレッドが戻らなくなっていました
+(#158)。支援技術を使わない場合は起きませんでした。</li>
+<li><strong>同梱の INSTALL と README が、DEB
+のファイル名を誤って案内していました</strong>
+(<code>libblinkgtk-0.1-0_&lt;版&gt;_amd64.deb</code>
+と書いていたが、正しくは
+<code>..._&lt;版&gt;-1_amd64.deb</code>)。案内どおりに打つと、ファイルが見つからずに失敗していました。</li>
 </ul>
 <h2 id="build3-でできるようになったこと変わったこと">build3
 でできるようになったこと・変わったこと</h2>

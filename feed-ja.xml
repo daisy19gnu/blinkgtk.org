@@ -7,6 +7,14 @@
   <updated>2026-10-14T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.4-build4 を公開しました (頁を移った後の異常終了と応答停止の修正)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build4"/>
+    <id>tag:blinkgtk.org,2026:2026-10-14-build4-124:ja</id>
+    <updated>2026-10-14T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>頁を移った後に本文をクリックするとアプリが異常終了する問題と、支援技術を有効にして頁を移るとアプリが応答しなくなる問題を修正しました。同梱の INSTALL・README の DEB のファイル名の誤りも修正しました。</summary>
+  </entry>
+  <entry>
     <title>v1.2.4-build3 を公開しました (割注・撮影の修正)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build3"/>
     <id>tag:blinkgtk.org,2026:2026-10-14-build3-124:ja</id>
