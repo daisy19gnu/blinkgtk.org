@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build3">v1.2.4-build3 released (warichu, capture fixes)</a></h2>
+<p><small>2026-10-14 · Release</small></p>
+<p>Inline cutting notes (warichu) that fit on one line can now be set (CSS -blinkgtk-warichu: auto; the syntax is experimental). Fixed: static-page captures (software async) that timed out after 2 seconds but left a file, swapped colours in EGL captures, and render path switches that always rolled back on white pages. The async capture on the software path now, in most cases, returns the screen at the time of the request.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build2-windows">BlinkGTK for Windows v1.2.4-build2 released</a></h2>
 <p><small>2026-10-11 · Release</small></p>
 <p>BlinkGTK for Windows is updated to Chromium 155.0.8059.39 (the upstream source of the same version as the Linux build v1.2.4-build2). The update notice (BLINKGTK_UPDATE_CHECK=1, off by default) is included; on Windows it is visible only with --enable-logging. The build now has DCHECK disabled, and the portable ZIP is 376 MiB.</p>

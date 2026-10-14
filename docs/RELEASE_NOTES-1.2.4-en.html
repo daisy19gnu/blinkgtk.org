@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.4-build2 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.4-build3 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-10-11 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
+<meta name="description" content="Release date: 2026-10-14 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.4-build2 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-10-11 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.4-build3 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-10-14 / Chromium: 155.0.8059.39 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.4-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -107,9 +107,9 @@
   <a href="index.html">Documentation</a> ·
   <a href="../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-124-build2-release-notes">BlinkGTK 1.2.4-build2 Release
+<h1 id="blinkgtk-124-build3-release-notes">BlinkGTK 1.2.4-build3 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-10-11 /
+<p><strong>Release date</strong>: 2026-10-14 /
 <strong>Chromium</strong>: 155.0.8059.39 / Language: <a
 href="RELEASE_NOTES-1.2.4-ja.html">日本語</a> | English</p>
 <p>The rendering engine is updated to <strong>Chromium 155</strong>.</p>
@@ -159,6 +159,86 @@ by default in Chromium 155).</li>
 <li>Placing emphasis marks with the same mechanism as ruby, and the fix
 for moving the caret up and down in lines with ruby, were enabled since
 Chromium 151 and are now permanent. The behavior does not change.</li>
+</ul>
+<h2 id="what-build3-adds-or-changes">What build3 adds or changes</h2>
+<ul>
+<li><strong>Inline cutting notes (warichu) that fit on one
+line.</strong> Add <code>-blinkgtk-warichu: auto</code> to an inline
+element and it is set as two columns of small text inside one line of
+the body. The page sets the note's font size (such as
+<code>font-size: 0.5em</code>) and the brackets. Notes that span lines
+are not supported yet. Check availability with
+<code>blink_gtk_has_typesetting_feature("warichu:single-line")</code>.
+<strong>The syntax is experimental</strong> and may change in a later
+build based on user feedback.
+<ul>
+<li>On elements with <code>-blinkgtk-warichu: auto</code>, emphasis
+marks (including those set on the element itself) and lines inherited
+from ancestors (such as underlines) are not drawn. A
+<code>text-decoration</code> set on the element itself is drawn. This
+also applies when the element falls back to normal layout under the
+conditions below.</li>
+<li>The element is laid out normally (not as a note) when:
+<ul>
+<li>it contains anything other than text (<code>&lt;br&gt;</code>,
+tate-chu-yoko, images or nested elements), or it is empty</li>
+<li><code>white-space</code> preserves line breaks, or
+<code>hyphens: auto</code> applies</li>
+<li>it contains right-to-left text</li>
+<li>it has margin, border or padding</li>
+<li>it is inside ruby, or it is an SVG text element (such as
+<code>&lt;tspan&gt;</code>)</li>
+<li>it does not fit even on an empty line of the body</li>
+</ul></li>
+<li>In paragraphs that contain an element with
+<code>-blinkgtk-warichu: auto</code>, <code>text-wrap: pretty</code> has
+no effect (even when the element falls back to normal layout).</li>
+</ul></li>
+<li><strong>The async capture
+(<code>blink_web_view_capture_screenshot_async()</code>) on the software
+path now, in most cases, returns the screen at the time of the
+request.</strong> If the next frame handed to the screen arrives first,
+that frame is used. It used to wait for the next frame, so where the
+page changes right after the request, what is captured differs from
+earlier builds. While presentation is stopped (presentation policy), a
+capture may finish without putting a frame on screen. What the EGL path
+and the synchronous capture return is unchanged.</li>
+<li><strong>The built-in AI APIs (<code>LanguageModel</code>,
+<code>Summarizer</code>, <code>Translator</code>,
+<code>LanguageDetector</code>) now all report that they are
+unavailable.</strong> BlinkGTK has no on-device model. Previously
+<code>availability()</code> returned <code>"downloadable"</code> for
+<code>LanguageModel</code>, <code>Summarizer</code> and
+<code>LanguageDetector</code>, and <code>Translator</code> never
+answered.</li>
+</ul>
+<h2 id="what-build3-fixes">What build3 fixes</h2>
+<ul>
+<li><strong>With the software async capture, capturing a static page
+reported failure after 2 seconds but still left a file at the requested
+path.</strong> This happened with the 1.2.4 default (at scale 1 the
+result is received through mojo shared memory). Files are now written in
+one place only, and nothing is written on a timeout (this follows from
+the design; a timeout could not be produced, so it was not measured).
+There is no time limit on waiting for the captured image, so a heavily
+loaded machine can still time out. On the EGL path the capture still
+times out if the next frame does not arrive within 2 seconds. The
+synchronous <code>blink_web_view_capture_screenshot()</code> is
+unchanged (it can still leave a file on failure).</li>
+<li><strong>EGL captures had red and blue swapped.</strong></li>
+<li><strong>With EGL, closing the window from the capture callback
+crashed the app.</strong></li>
+<li><strong>On pages with a white background, switching the render path
+while running (BlinkShift) always rolled back even when drawing
+worked</strong> (pages with a black background used the same check). The
+check now compares against the screen shown before the switch. On
+black-background pages, switching from egl still rolls back, because
+drawing cannot be confirmed.</li>
+<li><strong>The C API reference showed
+<code>BlinkScreenshotCallback</code> with the wrong type</strong> (an
+extra leading <code>web_view</code> argument). Code written as
+documented fails to compile. The correct type is
+<code>(gboolean success, const char* filename, gpointer user_data)</code>.</li>
 </ul>
 <h2 id="what-build2-fixes">What build2 fixes</h2>
 <ul>

@@ -235,8 +235,8 @@ is done by SwiftShader (a library that does the GPU's work on the
 CPU)</li>
 <li>SwiftShader and the files needed to load it are included in the
 distribution</li>
-<li>In 1.2.3-build1 and some other versions, nothing could appear on
-screen in this mode. This was fixed in 1.2.3-build2</li>
+<li>In versions prior to 1.2.3-build2, nothing could appear on screen in
+this mode. It has been fixed since 1.2.3-build2</li>
 </ul>
 <h3 id="egl">egl</h3>
 <ul>
@@ -361,6 +361,18 @@ milliseconds)</td>
 </tr>
 </tbody>
 </table>
+<p>Differences by page background color (since 1.2.4-build3):</p>
+<ul>
+<li>After a switch, BlinkGTK checks drawing by comparing the screen
+delivered with the new method against the screen shown before the
+switch. Pages with a white background can switch as shown in the table
+above (up to 1.2.4-build2, pages with a white background ended in
+<code>"rollback"</code> even when drawing worked)</li>
+<li>On pages with a black background, switching from egl to
+<code>"P1"</code> ends in <code>"rollback"</code>, because drawing
+cannot be confirmed (the screen stays as it was). Reading the GPU-memory
+screen from the CPU can look the same as black on some systems</li>
+</ul>
 <p>0 is returned (the request is not accepted) in cases such as:</p>
 <ul>
 <li>The first frame has not been delivered yet</li>
@@ -411,9 +423,12 @@ It saves only the cost of handing frames to the screen; page layout and
 drawing (look-ahead) continue.<br />
 While stopped, a capture request (such as
 <code>blink_web_view_capture_screenshot_async()</code>) still<br />
-produces one frame for the capture and then stops again (since
-1.2.3-build2). <strong>In egl mode it currently has no
-effect.</strong></p>
+succeeds, and presentation stays stopped (since 1.2.3-build2). From
+1.2.4-build3 the capture on the software path<br />
+returns, in most cases, the screen at the time of the request and may
+finish without putting a frame on screen.<br />
+<strong>The presentation policy currently has no effect in egl
+mode.</strong></p>
 <h2 id="5-troubleshooting">5. Troubleshooting</h2>
 <h3 id="i-set-egl-but-it-seems-to-run-in-software">I set egl but it
 seems to run in software</h3>
@@ -449,12 +464,12 @@ should switch to software automatically (above)</li>
 size and display scale.</p>
 <h3 id="with-egl-the-page-appears-small-in-the-top-left-corner">With
 egl, the page appears small in the top-left corner</h3>
-<p>This happened when the display scale was not 1, and was fixed in
-1.2.0-build3. egl takes the display scale from the first display at
-startup. Setups where displays have different scales, and moving the
-window to a display with a different scale after startup, have not been
-checked. If you see it, please report it with the window size and the
-scale of each display.</p>
+<p>In versions prior to 1.2.0-build3, this happened when the display
+scale was not 1; it has been fixed since 1.2.0-build3. egl takes the
+display scale from the first display at startup. Setups where displays
+have different scales, and moving the window to a display with a
+different scale after startup, have not been checked. If you see it,
+please report it with the window size and the scale of each display.</p>
 <h2 id="6-history">6. History</h2>
 <table>
 <thead>
@@ -494,6 +509,11 @@ method</td>
 <td>1.2.4</td>
 <td>When every display has scale 1, receiving the software result
 through mojo shared memory is the default</td>
+</tr>
+<tr>
+<td>1.2.4-build3</td>
+<td>BlinkShift switches no longer roll back on pages with a white
+background</td>
 </tr>
 </tbody>
 </table>

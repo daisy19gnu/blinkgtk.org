@@ -148,8 +148,10 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 は窓が隠れている間だけ、<code>warm-force</code>
 は<strong>試験専用</strong>で常に止めます。復帰時は damage を待たず 1
 回無条件でキャプチャするため、古いフレームは残りません。止めている間も、<code>blink_web_view_capture_screenshot_async()</code>
-などで撮影を求められたときは 1 枚だけ出して撮ります (1.2.3-build2
-以降。それより前は 2 秒で失敗していました)</td>
+などの撮影は成功し、その後も止めたままです (1.2.3-build2
+以降。それより前は 2 秒で失敗していました)。1.2.4-build3
+からは、software
+の撮影はほとんどの場合、要求した時点の画面を返し、画面へは出さずに終わることがあります</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_LOG_LEVEL</code></td>
@@ -465,6 +467,12 @@ id="3b-開発用デモ-simple_browser-だけのもの--配布物では使われ�
 <td>再起動を fork +
 親の残存で行い、その残存時間を指定します。<strong>既定は
 0(無効)</strong> で、従来どおり execv します</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEMO_SELECT_PATH=&lt;id&gt;@&lt;ms&gt;,...</code></td>
+<td>試験専用。起動から指定したミリ秒の時点で、描画経路の一覧の項目
+<code>&lt;id&gt;</code> を選びます (例
+<code>egl@6000,software@12000</code>)。人が一覧を選んだときと同じ処理を通ります</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_PERMISSION_ALLOW</code></td>

@@ -162,8 +162,10 @@ applies only while the window is hidden; <code>warm-force</code> is
 engine captures once unconditionally, so no stale frame is shown. While
 stopped, a screenshot request
 (<code>blink_web_view_capture_screenshot_async()</code> and similar)
-still gets exactly one frame and succeeds (1.2.3-build2 and later;
-earlier versions failed after 2 seconds)</td>
+still succeeds, and presentation stays stopped (1.2.3-build2 and later;
+earlier versions failed after 2 seconds). From 1.2.4-build3 the capture
+on the software path returns, in most cases, the screen at the time of
+the request and may finish without putting a frame on screen</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_LOG_LEVEL</code></td>
@@ -451,6 +453,13 @@ brings the new window to the front)</td>
 <td>Restart by forking and letting the parent linger for this long.
 <strong>Defaults to 0 (disabled)</strong>, which restarts via execv as
 before</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEMO_SELECT_PATH=&lt;id&gt;@&lt;ms&gt;,...</code></td>
+<td>Testing only. Selects item <code>&lt;id&gt;</code> in the render
+path list at the given number of milliseconds after startup (for example
+<code>egl@6000,software@12000</code>). It goes through the same handling
+as when a person picks from the list</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_PERMISSION_ALLOW</code></td>
