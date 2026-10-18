@@ -55,13 +55,24 @@ ZIP の正確なバイト数とハッシュは、配布物と一緒に置く
 <code>&lt;パッケージ名&gt;.verify.json</code> (<code>size</code> /
 <code>sha256</code>)<br />
 と <code>SHA256SUMS</code> (ハッシュのみ) を見てください。<br />
-この版は、Windows 11 Pro build 26200 で <strong>2026-10-11</strong>
+この版は、Windows 11 Pro build 26300 で <strong>2026-10-18</strong>
 に確認しました (配布物の展開実行検査)。</p>
 </blockquote>
 <p>BlinkGTK を Windows で使えるようにしたものです。版数体系も同じ<br />
 (Chromium の版 + BlinkGTK のパッチレベル) です。<br />
-この版 <strong>1.2.4-build2 は、Linux 版の 1.2.4-build2
-と同じ版数</strong>で、どちらも Chromium 155.0.8059.39 です。</p>
+この版 <strong>1.2.4-build4 は、Linux 版の 1.2.4-build4
+と同じ版数</strong>で、どちらも Chromium 155.0.8059.39 です。<br />
+<strong>ただし、Chromium 本体のソース (組版・レイアウト) に当てる変更は
+1.2.4-build2 と同じです</strong> (<code>content.dll</code> に入る当方の
+Windows 用のビュー (RenderWidgetHostViewWin) は、GPU
+の経路のために変わりました)。 Linux 版の build3・build4 の BlinkGTK
+の層の変更は取り込みましたが、<strong>Linux 版の build1 で入ったぶら下げ
+(#153) と、build3 で入った割注 (#154) のエンジン側の変更は、Windows
+版には含みません</strong>
+(「同じ番号ならエンジンの変更も同じ」とは、この版だけ食い違います)。<br />
+<code>blink_gtk_has_typesetting_feature</code> は、この版では両方とも
+FALSE を返します (1.2.4-build2 の Windows 版は、動かないぶら下げで TRUE
+を返していました。誤りで、この版で直しました)。</p>
 <p><strong>公開 API は、Linux 版 1.2.4-build2 と 1
 本を除いて同じです。</strong> 1.2.3-build4 から 2 本増えました
 (<code>blink_gtk_set_update_check</code> /
@@ -70,9 +81,12 @@ ZIP の正確なバイト数とハッシュは、配布物と一緒に置く
 ただし、1.2.3-build3 で Windows 版に新しく入った 51 本 (Linux 版の 1.2.2
 と 1.2.3 で加わったもの) は、<br />
 Windows ではまだ呼んで確かめていません。Windows で呼んで確かめたのは公開
-API 154 本のうち 65 本で<br />
+API 154 本のうち 66 本で<br />
 (同梱の <code>docs\api-windows-notes-ja.md</code> の §0)、どれも
-1.2.1-build3 の時点で在った API です。</p>
+1.2.1-build3 の時点で在った API です。<br />
+<strong>Linux 版との比較 (公開 API の数など) は、2026-10-11 に Linux の
+1.2.4-build2 で測った値です。Linux の build3・build4
+とは測り直していません。</strong></p>
 <p><strong>数え方</strong>: 公開ヘッダの宣言と、共有ライブラリ
 (<code>.so</code> / <code>.dll</code>) の export の<br />
 <strong>両方に在るもの</strong>を公開 API
@@ -231,7 +245,7 @@ Web が付きません。<br />
 <strong>引数を付けないと <code>https://google.com/</code>
 を開きます</strong> (インターネットへの接続が要ります)。<br />
 引数に URL を渡すと、そのページを開きます。</p>
-<pre><code>cd blinkgtk-1.2.4-build2-windows-x64\bin
+<pre><code>cd blinkgtk-1.2.4-build4-windows-x64\bin
 blinkgtk_browser.exe
 blinkgtk_browser.exe https://example.com/</code></pre>
 <p><code>blinkgtk_browser</code> は、BlinkGTK
@@ -251,8 +265,8 @@ blinkgtk_browser.exe https://example.com/</code></pre>
 </tr>
 <tr>
 <td>空き容量</td>
-<td>ZIP 約 376 MiB + 展開後 約 1,046
-MiB。<strong>展開中は両方必要</strong>なので実質 約 1.4 GiB (1,422 MiB
+<td>ZIP 約 377 MiB + 展開後 約 1,048
+MiB。<strong>展開中は両方必要</strong>なので実質 約 1.4 GiB (1,425 MiB
 を切り上げ。2026-10-11 実測)</td>
 </tr>
 <tr>
@@ -269,7 +283,7 @@ MiB。<strong>展開中は両方必要</strong>なので実質 約 1.4 GiB (1,42
 <blockquote>
 <p>注意: <strong>本ページの MiB は 1,048,576 バイトです。</strong>
 GitHub の Releases の画面も<br />
-同じ単位で「MB」と表示するので、<strong>Releases では 376 MB
+同じ単位で「MB」と表示するので、<strong>Releases では 377 MB
 と見えます</strong><br />
 (2026-09-23 に、公開されている別のリポジトリのリリースで、API
 のバイト数と画面の表示を突き合わせて確認)。<br />
@@ -291,11 +305,18 @@ GTK4 には ABI が<br />
 ものは同梱の GTK4 とリンクできません。<br />
 (一般論です。<strong>当方で実際に混ぜて試したわけではありません。</strong>)</p>
 </blockquote>
-<p>注意: 当方が確認したのは <strong>Windows 11 Pro (build
-26200)</strong> です。<br />
+<p>注意: 当方が確認したのは <strong>Windows 11 Pro (build 26200 と
+26300)</strong> です。<br />
 Windows 10 では確かめていません。</p>
-<p>注意: <strong>描画結果を GTK へ渡す経路は <code>software</code> の 1
-つだけです。</strong><br />
+<p>注意: <strong>既定では、描画結果を GTK へ渡す経路は
+<code>software</code> の 1 つです。</strong><br />
+<strong>試験段階の GPU の経路があります</strong> (環境変数
+<code>BLINKGTK_WIN_GPU_PATH=vulkan</code> で有効にする、Windows
+専用の経路。<strong>Intel Iris Xe の 1
+機種でのみ確認</strong>しています。既定では無効。同梱の
+<code>docs\gpu-modes-ja.md</code> の §6)。<br />
+この版には、Vulkan を有効にした GTK (<code>gtk-4-1.dll</code>)
+を同梱しています (環境変数を指定しない既定の経路は変わりません)。<br />
 EGL の描画経路そのもの (<code>blink_web_view_egl.cc</code> /
 <code>blink_wayland_surface.cc</code>)<br />
 を Windows
@@ -350,7 +371,10 @@ EGL の描画経路そのもの (<code>blink_web_view_egl.cc</code> /
 <tr>
 <td>描画結果の受け渡し経路</td>
 <td>software / EGL</td>
-<td><strong>software のみ</strong> (EGL は組み込んでいません)</td>
+<td><strong>既定は software</strong> (EGL
+は組み込んでいません)。<strong>試験段階の GPU の経路 (P4)
+を、環境変数で選べます</strong> (Windows 専用、Intel Iris Xe の 1
+機種のみ確認)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_attach_to_external_surface</code></td>
@@ -540,13 +564,13 @@ GTK のヘッダの <code>©</code> などの記号で警告 C4819 が出ます�
 </ol>
 <hr />
 <h2 id="版数の読み方">版数の読み方</h2>
-<p><code>1.2.4-build2</code> は BlinkGTK
+<p><code>1.2.4-build4</code> は BlinkGTK
 本体と同じ版数で、<strong>Chromium の版と BlinkGTK の<br />
 パッチレベルに紐付いています。</strong> この版は Chromium 155.0.8059.39
 です。</p>
 <p>手元のものが何か、実行時に確かめられます。</p>
 <pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.4-build2 (Chromium 155.0.8059.39)</code></pre>
+BlinkGTK 1.2.4-build4 (Chromium 155.0.8059.39)</code></pre>
 <p><strong>サイトや文書の数字ではなく、手元の実行ファイルが出す値を見てください。</strong></p>
 <hr />
 <h2 id="詳しい手順">詳しい手順</h2>
@@ -834,6 +858,17 @@ md5 など) は 1.2.3-build4 での測定で、1.2.4-build1
 からの変更は、新しい版の案内の受け取りの上限を本家と同じ 4 MiB
 にしただけ)。build2 の配布物で測り直し、数値は build1
 と同じ。更新の案内・公開 API・egl の確認も build2 で行った</td>
+</tr>
+<tr>
+<td>2026-10-18</td>
+<td>版数を 1.2.4-build4 に改めた (本家 Linux 版の 1.2.4-build4
+と番号をそろえるため)。BlinkGTK の層の取り込み、Vulkan 付きの GTK
+の同梱と試験段階の GPU の経路 (P4、Intel Iris Xe の 1 機種のみ確認)
+を足した。<strong>Chromium 本体のソース (組版・レイアウト)
+に当てる変更は build2 と同じ</strong>
+(割注・ぶら下げのエンジン側は含まない)。<code>blink_gtk_has_typesetting_feature</code>
+の答えの誤り (build2) を直したことを書いた。Linux 版との比較の測定値は
+1.2.4-build2 のもののまま (build4 では測り直していない)</td>
 </tr>
 </tbody>
 </table>

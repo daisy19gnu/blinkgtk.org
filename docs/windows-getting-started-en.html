@@ -56,15 +56,27 @@ it is rebuilt. For the exact byte count and hash of each ZIP, see<br />
 <code>sha256</code>) and <code>SHA256SUMS</code> (hashes only),<br />
 published alongside the packages. This release was checked on Windows 11
 Pro<br />
-build 26200 on <strong>2026-10-11</strong> (the extract-and-run check of
+build 26300 on <strong>2026-10-18</strong> (the extract-and-run check of
 the package).</p>
 </blockquote>
 <p>BlinkGTK, running on Windows. It follows the same versioning as the
 Linux build<br />
 (Chromium version plus BlinkGTK patch level).<br />
-This release, <strong>1.2.4-build2, has the same version number as Linux
-1.2.4-build2</strong>;<br />
-both are Chromium 155.0.8059.39.</p>
+This release, <strong>1.2.4-build4, has the same version number as Linux
+1.2.4-build4</strong>;<br />
+both are Chromium 155.0.8059.39.<br />
+<strong>However, the changes applied to the Chromium source (typesetting
+and layout) are the same as in 1.2.4-build2</strong> (our Windows view
+in <code>content.dll</code>, RenderWidgetHostViewWin, did change, for
+the GPU path). The BlinkGTK-layer changes of Linux build3 and build4 are
+included, but <strong>the engine-side changes for hanging punctuation
+(#153, which came with Linux build1) and warichu (#154, which came with
+build3) are not</strong> (so, for this release only, "the same number
+means the same engine changes" does not hold).<br />
+<code>blink_gtk_has_typesetting_feature</code> returns FALSE for both
+names in this release (the Windows 1.2.4-build2 returned TRUE for
+hanging punctuation, which does not work; that was wrong and is fixed in
+this release).</p>
 <p><strong>The public API matches Linux 1.2.4-build2 except for one
 entry point.</strong> Since 1.2.3-build4 the public API has grown by two
 entry points (<code>blink_gtk_set_update_check</code> and
@@ -72,10 +84,13 @@ entry points (<code>blink_gtk_set_update_check</code> and
 Linux).<br />
 However, the 51 entry points new to the Windows build in 1.2.3-build3
 (added in Linux 1.2.2 and 1.2.3)<br />
-have not yet been called on Windows. We have called 65 of the 154 public
+have not yet been called on Windows. We have called 66 of the 154 public
 entry points on Windows<br />
 (§0 of the bundled <code>docs\api-windows-notes-en.md</code>), all of
-them ones that were already there in 1.2.1-build3.</p>
+them ones that were already there in 1.2.1-build3.<br />
+<strong>The comparison with Linux (the number of public entry points,
+etc.) uses values measured on 2026-10-11 against Linux 1.2.4-build2. It
+was not re-measured against Linux build3 and build4.</strong></p>
 <p><strong>How this is counted</strong>: an entry point counts as public
 API when it is both declared<br />
 in the public header and exported from the shared library
@@ -240,7 +255,7 @@ download-to-launch on a clean Windows install.</p>
 <strong>Without an argument it opens
 <code>https://google.com/</code></strong> (this needs an Internet<br />
 connection). Pass a URL to open that page instead.</p>
-<pre><code>cd blinkgtk-1.2.4-build2-windows-x64\bin
+<pre><code>cd blinkgtk-1.2.4-build4-windows-x64\bin
 blinkgtk_browser.exe
 blinkgtk_browser.exe https://example.com/</code></pre>
 <p><code>blinkgtk_browser</code> is a minimal sample that shows only
@@ -261,8 +276,8 @@ messages.</p>
 </tr>
 <tr>
 <td>Disk space</td>
-<td>ZIP about 376 MiB + about 1,046 MiB extracted. <strong>You need both
-while extracting</strong> — about 1.4 GiB in practice (1,422 MiB rounded
+<td>ZIP about 377 MiB + about 1,048 MiB extracted. <strong>You need both
+while extracting</strong> — about 1.4 GiB in practice (1,425 MiB rounded
 up; measured 2026-10-11)</td>
 </tr>
 <tr>
@@ -279,7 +294,7 @@ installer)</td>
 <blockquote>
 <p>Note: <strong>MiB here means 1,048,576 bytes.</strong> The GitHub
 Releases page uses the same<br />
-unit and labels it "MB", so <strong>the ZIP shows as 376 MB
+unit and labels it "MB", so <strong>the ZIP shows as 377 MB
 there</strong> (checked<br />
 2026-09-23 by comparing the API byte counts of a release in another
 public<br />
@@ -304,11 +319,19 @@ will not link against the bundled GTK4.<br />
 (This is the general rule. <strong>We have not actually tried mixing
 them.</strong>)</p>
 </blockquote>
-<p>Note: We verified this on <strong>Windows 11 Pro (build
-26200)</strong>. We have not tested<br />
+<p>Note: We verified this on <strong>Windows 11 Pro (builds 26200 and
+26300)</strong>. We have not tested<br />
 Windows 10.</p>
-<p>Note: <strong>Handing rendered output to GTK has only one path:
-<code>software</code>.</strong><br />
+<p>Note: <strong>By default, handing rendered output to GTK has only one
+path: <code>software</code>.</strong><br />
+<strong>There is an experimental GPU path</strong> (Windows only; enable
+it with the environment variable
+<code>BLINKGTK_WIN_GPU_PATH=vulkan</code>. <strong>Confirmed on one
+Intel Iris Xe machine only.</strong> Disabled by default. See §6 of the
+bundled <code>docs\gpu-modes-ja.md</code>).<br />
+This release bundles a Vulkan-enabled GTK (<code>gtk-4-1.dll</code>);
+the default path, without the environment variable, does not
+change.<br />
 The EGL render path itself (<code>blink_web_view_egl.cc</code>,
 <code>blink_wayland_surface.cc</code>)<br />
 is not part of the Windows build: <strong>how the receiving surface gets
@@ -363,7 +386,10 @@ build</h2>
 <tr>
 <td>Path that hands over rendered output</td>
 <td>software / EGL</td>
-<td><strong>software only</strong> (EGL is not built)</td>
+<td><strong>software by default</strong> (EGL is not built). <strong>An
+experimental GPU path (P4) can be selected with an environment
+variable</strong> (Windows only; one Intel Iris Xe machine
+confirmed)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_attach_to_external_surface</code></td>
@@ -565,14 +591,14 @@ issue #141 in the upstream repository, filed by us.</p></li>
 </ol>
 <hr />
 <h2 id="reading-the-version">Reading the version</h2>
-<p><code>1.2.4-build2</code> is the same version number as BlinkGTK
+<p><code>1.2.4-build4</code> is the same version number as BlinkGTK
 itself, <strong>tied to the<br />
 Chromium version and the BlinkGTK patch level.</strong> This one is
 Chromium<br />
 155.0.8059.39.</p>
 <p>You can ask the binary in your hands:</p>
 <pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.4-build2 (Chromium 155.0.8059.39)</code></pre>
+BlinkGTK 1.2.4-build4 (Chromium 155.0.8059.39)</code></pre>
 <p><strong>Trust what your copy prints, not the number on this
 page.</strong></p>
 <hr />
@@ -849,6 +875,18 @@ number). The only change from build1 is that the update-check receive
 limit is now 4 MiB, the same as upstream. Re-measured on the build2
 package; the numbers are the same as build1. The update check, the
 public API and egl were also re-checked on build2</td>
+</tr>
+<tr>
+<td>2026-10-18</td>
+<td>Version changed to 1.2.4-build4 (to match the Linux 1.2.4-build4
+number). Added the BlinkGTK-layer changes, a bundled Vulkan-enabled GTK
+with an experimental GPU path (P4, confirmed on one Intel Iris Xe
+machine only), and the correction of
+<code>blink_gtk_has_typesetting_feature</code> (build2 was wrong).
+<strong>The changes applied to the Chromium source (typesetting and
+layout) are the same as build2</strong> (no warichu or hanging
+punctuation in the engine). The measurements compared with Linux stay at
+the 1.2.4-build2 values (not re-measured for build4)</td>
 </tr>
 </tbody>
 </table>
