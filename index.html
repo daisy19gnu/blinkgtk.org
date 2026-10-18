@@ -8,6 +8,9 @@
 <style>
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
+  /* 狭い画面で長いコード名・URL が頁を横に広げないよう折り返す (2026-10-18、check-site-responsive.sh) */
+  p, li, td, th, h1, h2, h3 { overflow-wrap: anywhere; }
+  :not(pre) > code, a { overflow-wrap: anywhere; word-break: break-word; }
   body {
     margin: 0;
     font-family: system-ui, -apple-system, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;

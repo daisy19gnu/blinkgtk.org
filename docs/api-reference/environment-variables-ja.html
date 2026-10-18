@@ -233,6 +233,16 @@ API、<code>api.github.com</code>)
 の版とは取り違えません。通信できないときは何も案内しません
 (起動は待たせません)</td>
 </tr>
+<tr>
+<td><code>BLINKGTK_WIN_GPU_PATH</code></td>
+<td><code>vulkan</code></td>
+<td>未設定</td>
+<td><strong>Windows 専用・試験段階 (BlinkGTK for Windows 1.2.4-build4
+から)。</strong> 値 <code>vulkan</code> のとき、Chromium の GPU
+合成の結果を CPU に読み戻さずに GTK の Vulkan のレンダラーへ渡す (経路名
+<code>P4</code>)。既定は無効。<strong>Intel Iris Xe の 1
+機種でのみ確認。</strong> Linux では使われない</td>
+</tr>
 </tbody>
 </table>
 <h2 id="2-エスケープハッチ既定のまま推奨">2.

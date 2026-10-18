@@ -247,6 +247,17 @@ most once a day and keeps the result in
 not mistaken for Linux ones. When the network is unavailable it says
 nothing and does not delay startup</td>
 </tr>
+<tr>
+<td><code>BLINKGTK_WIN_GPU_PATH</code></td>
+<td><code>vulkan</code></td>
+<td>unset</td>
+<td><strong>Windows only, experimental (from BlinkGTK for Windows
+1.2.4-build4).</strong> With the value <code>vulkan</code>, the result
+of Chromium's GPU compositing is handed to GTK's Vulkan renderer without
+reading it back to the CPU (path name <code>P4</code>). Disabled by
+default. <strong>Confirmed on one Intel Iris Xe machine only.</strong>
+Not used on Linux</td>
+</tr>
 </tbody>
 </table>
 <h2 id="2-escape-hatches-leave-at-defaults">2. Escape Hatches (leave at

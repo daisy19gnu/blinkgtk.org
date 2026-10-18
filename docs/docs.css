@@ -1,5 +1,8 @@
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
+  /* 狭い画面で長いコード名・URL が頁を横に広げないよう折り返す (2026-10-18、check-site-responsive.sh) */
+  p, li, td, th, h1, h2, h3 { overflow-wrap: anywhere; }
+  :not(pre) > code, a { overflow-wrap: anywhere; word-break: break-word; }
   body {
     margin: 0;
     font-family: system-ui, -apple-system, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
@@ -97,6 +100,11 @@
   .doc pre { background: rgba(128,128,128,.10); padding: 1em; overflow-x: auto; border-radius: 6px; }
   .doc code { background: rgba(128,128,128,.14); padding: .1em .35em; border-radius: 3px; }
   .doc pre code { background: none; padding: 0; }
+  /* 狭い画面 (スマートフォン・タブレット): 長いコード名と URL は折り返し、頁全体を横に動かさない。
+   * 2026-10-18、check-site-responsive.sh で描いて測ると、幅 360px で 42 件 (頁 × 幅) が横に動いていた
+   * (原因は折り返さない <code> と URL)。表とコードの塊は、それ自身の中で横スクロールさせる (上の指定) */
+  .doc p, .doc li, .doc td, .doc th, .doc dd, .doc blockquote, .doc h1, .doc h2, .doc h3, .doc h4 { overflow-wrap: anywhere; }
+  .doc :not(pre) > code, .doc a { overflow-wrap: anywhere; word-break: break-word; }
   .doc table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
   .doc th, .doc td { border: 1px solid rgba(128,128,128,.3); padding: .45em .7em; text-align: left; }
   .doc blockquote { border-left: 3px solid rgba(128,128,128,.4); margin-left: 0; padding-left: 1em; }
