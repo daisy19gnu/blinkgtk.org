@@ -12,7 +12,7 @@
     <id>tag:blinkgtk.org,2026:2026-10-18-windows-124-build4:ja</id>
     <updated>2026-10-18T00:00:00Z</updated>
     <category term="release"/>
-    <summary>BlinkGTK for Windows に Vulkan 付きの GTK を同梱し、試験段階の GPU の経路を足しました (環境変数 BLINKGTK_WIN_GPU_PATH=vulkan のときだけ。既定は無効で、Intel Iris Xe の 1 機種でのみ確認しています)。1.2.4-build2 では、ぶら下げが動作しないのに blink_gtk_has_typesetting_feature() が TRUE を返していました。この版で修正しました。Chromium は 155.0.8059.39 のままで、Linux 版のぶら下げ (#153) と割注 (#154) のエンジン側の変更は含みません。</summary>
+    <summary>BlinkGTK for Windows に Vulkan 付きの GTK を同梱し、試験段階の GPU の経路を足しました。この経路は、環境変数 BLINKGTK_WIN_GPU_PATH=vulkan を指定したときだけ使います。既定は無効で、Intel Iris Xe の 1 機種でのみ確認しています。1.2.4-build2 では、ぶら下げが動作しないのに blink_gtk_has_typesetting_feature() が TRUE を返していました。この版で修正しました。Chromium は 155.0.8059.39 のままで、Linux 版のぶら下げ (#153) と割注 (#154) のエンジン側の変更は含みません。</summary>
   </entry>
   <entry>
     <title>v1.2.4-build4 を公開しました (頁を移った後の異常終了と応答停止の修正)</title>

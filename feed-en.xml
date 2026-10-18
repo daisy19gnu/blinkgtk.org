@@ -12,7 +12,7 @@
     <id>tag:blinkgtk.org,2026:2026-10-18-windows-124-build4:en</id>
     <updated>2026-10-18T00:00:00Z</updated>
     <category term="release"/>
-    <summary>BlinkGTK for Windows now bundles a Vulkan-enabled GTK and adds an experimental GPU path (only with the environment variable BLINKGTK_WIN_GPU_PATH=vulkan; disabled by default, confirmed on one Intel Iris Xe machine only). In 1.2.4-build2, blink_gtk_has_typesetting_feature() returned TRUE for hanging punctuation although it did not work; this release fixes that. Chromium stays at 155.0.8059.39, and the engine-side changes for hanging punctuation (#153) and warichu (#154) in the Linux build are not included.</summary>
+    <summary>BlinkGTK for Windows now bundles a Vulkan-enabled GTK and adds an experimental GPU path. The path is used only when the environment variable BLINKGTK_WIN_GPU_PATH=vulkan is set. It is disabled by default and confirmed on one Intel Iris Xe machine only. In 1.2.4-build2, blink_gtk_has_typesetting_feature() returned TRUE for hanging punctuation although it did not work; this release fixes that. Chromium stays at 155.0.8059.39, and the engine-side changes for hanging punctuation (#153) and warichu (#154) in the Linux build are not included.</summary>
   </entry>
   <entry>
     <title>v1.2.4-build4 released (fixes after navigation)</title>
