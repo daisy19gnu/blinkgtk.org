@@ -1,8 +1,21 @@
   :root { color-scheme: light dark; }
   * { box-sizing: border-box; }
   /* 狭い画面で長いコード名・URL が頁を横に広げないよう折り返す (2026-10-18、check-site-responsive.sh) */
-  p, li, td, th, h1, h2, h3 { overflow-wrap: anywhere; }
+  p, li, h1, h2, h3 { overflow-wrap: anywhere; }
   :not(pre) > code, a { overflow-wrap: anywhere; word-break: break-word; }
+  /* 表の中は anywhere を使わない: 列が 1〜3 文字幅に潰れて縦に伸びた (2026-10-18 Lead 指摘) */
+  td, th { overflow-wrap: break-word; }
+  td code, th code, td a, th a { overflow-wrap: normal; word-break: normal; }
+  /* スマートフォンの幅では、対応表・描画経路の表を 1 行 1 枚のカードにする (項目名は data-label) */
+  @media (max-width: 600px) {
+    table.compat, table.compat tbody, table.compat tr, table.compat td { display: block; width: 100%; }
+    table.compat tr:first-child { display: none; }
+    table.compat tr { border: 1px solid rgba(128,128,128,.32); border-radius: 8px; padding: .45em .8em; margin: .6em 0; }
+    table.compat td { border: 0 !important; border-top: 1px solid rgba(128,128,128,.18) !important; padding: .3em 0; overflow-wrap: anywhere; }
+    table.compat td:first-child { border-top: 0 !important; }
+    table.compat td code, table.compat td a { overflow-wrap: anywhere; }
+    table.compat td::before { content: attr(data-label); display: block; font-size: .76rem; font-weight: 600; opacity: .7; }
+  }
   body {
     margin: 0;
     font-family: system-ui, -apple-system, "Noto Sans JP", "Hiragino Kaku Gothic ProN", "Helvetica Neue", Arial, sans-serif;
@@ -103,8 +116,14 @@
   /* 狭い画面 (スマートフォン・タブレット): 長いコード名と URL は折り返し、頁全体を横に動かさない。
    * 2026-10-18、check-site-responsive.sh で描いて測ると、幅 360px で 42 件 (頁 × 幅) が横に動いていた
    * (原因は折り返さない <code> と URL)。表とコードの塊は、それ自身の中で横スクロールさせる (上の指定) */
-  .doc p, .doc li, .doc td, .doc th, .doc dd, .doc blockquote, .doc h1, .doc h2, .doc h3, .doc h4 { overflow-wrap: anywhere; }
+  .doc p, .doc li, .doc dd, .doc blockquote, .doc h1, .doc h2, .doc h3, .doc h4 { overflow-wrap: anywhere; }
   .doc :not(pre) > code, .doc a { overflow-wrap: anywhere; word-break: break-word; }
+  /* 表の中は anywhere を使わない (2026-10-18 Lead 指摘「表の左側がスマホで縦長になって見づらい」)。
+   * anywhere は列の最小幅を 1 文字まで縮めてよいことにするので、短い列が 1〜3 文字幅に潰れて縦に伸びた。
+   * 表の中は語の途中で折り返さず、表が画面より広いときは表の中だけで横にスクロールさせる */
+  .doc td, .doc th { overflow-wrap: break-word; min-width: 7.5em; }
+  .doc td:has(> code:only-child) { min-width: 0; }
+  .doc td code, .doc th code, .doc td a, .doc th a { overflow-wrap: normal; word-break: normal; }
   .doc table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
   .doc th, .doc td { border: 1px solid rgba(128,128,128,.3); padding: .45em .7em; text-align: left; }
   .doc blockquote { border-left: 3px solid rgba(128,128,128,.4); margin-left: 0; padding-left: 1em; }
