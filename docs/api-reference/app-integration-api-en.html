@@ -481,9 +481,8 @@ of file://</h3>
 treated as a <strong>real<br />
 origin with a secure context (HTTPS-equivalent)</strong>, so
 <code>fetch()</code>, Service<br />
-Workers and secure-context-only web APIs just work. The EPUB
-reader<br />
-BlinkGTK-Readium serves the entire Readium SPA and all book data
+Workers and secure-context-only web APIs just work. An EPUB reader<br />
+built on BlinkGTK serves the entire Readium SPA and all book data
 over<br />
 <code>ebook://</code> for exactly this reason — the
 <code>fetch()</code>-based web app runs<br />
@@ -1028,7 +1027,7 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb21-1"><a href="#
 <hr />
 <h2 id="a-real-world-configuration-an-epub-reader">A real-world
 configuration: an EPUB reader</h2>
-<p>The EPUB reader BlinkGTK-Readium runs "a web application shipped as a
+<p>An EPUB reader built on BlinkGTK runs "a web application shipped as a
 GTK<br />
 product" using only the APIs on this page. Design points worth
 borrowing:</p>

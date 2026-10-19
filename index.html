@@ -192,7 +192,7 @@
           <img class="gal-main" src="assets/gallery/g1-kusamakura-ch2-v4.png" width="1600" height="1025"
                data-full="assets/gallery/g1-kusamakura-ch2-v4.png"
                data-cap="夏目漱石『草枕』二章冒頭 — 文字サイズ 150%・章見出しの行取り・密なルビ・鉤括弧の縦組 (HiDPI レンダリング、18-19 / 198 頁) / Kusamakura ch. 2 opening at 150% font size — heading spacing, dense ruby, vertical quotation brackets (HiDPI rendering, pages 18-19 of 198)"
-               alt="BlinkGTK で作られた EPUB リーダー BlinkGTK-Readium が、夏目漱石『草枕』二章の冒頭を文字サイズ 150% の縦書き見開きで表示しているところ。章見出し「二」の行取り、密なルビ、鉤括弧の会話文、ページ番号 18/198・19/198 が見える / BlinkGTK-Readium showing the opening of Kusamakura chapter 2 at 150% font size in a vertical two-page spread, with heading spacing, dense ruby, bracketed dialogue and page counters 18/198 and 19/198">
+               alt="BlinkGTK で作られた EPUB リーダーが、夏目漱石『草枕』二章の冒頭を文字サイズ 150% の縦書き見開きで表示しているところ。章見出し「二」の行取り、密なルビ、鉤括弧の会話文、ページ番号 18/198・19/198 が見える / An EPUB reader built on BlinkGTK showing the opening of Kusamakura chapter 2 at 150% font size in a vertical two-page spread, with heading spacing, dense ruby, bracketed dialogue and page counters 18/198 and 19/198">
           <div class="gal-thumbs">
             <img src="assets/gallery/t2-v3.png" data-full="assets/gallery/g2-kusamakura-cover-v3.png"
                  data-cap="『草枕』表紙 — 画像と縦組みのキャプション / The Kusamakura cover page with a vertically-set caption"
@@ -208,11 +208,11 @@
                  alt="三章の等倍切り出し。低誦・朧夜・理窟・非人情などのルビとダーシが精細に描画されている / An unscaled crop from chapter 3 showing finely rendered ruby and vertical dashes">
           </div>
           <figcaption>
-            BlinkGTK が描画エンジンとして使用されているプログラムです — EPUB リーダー
-            <strong>BlinkGTK-Readium</strong> が夏目漱石『草枕』を縦書き見開きで表示。
+            BlinkGTK が描画エンジンとして使用されているプログラムです — EPUB リーダーが
+            夏目漱石『草枕』を縦書き見開きで表示。
             ルビも圏点も Blink がそのまま描画します。画像はクリックで拡大できます。<br>
             <span class="muted">A program that uses BlinkGTK as its rendering engine:
-            <strong>BlinkGTK-Readium</strong>, an EPUB reader, showing Natsume Soseki's
+            an EPUB reader showing Natsume Soseki's
             <em>Kusamakura</em> in vertical-writing two-page spreads — ruby and emphasis dots rendered by Blink.
             Click any image to enlarge.</span><br>
             <span class="muted">Readium (Copyright Readium Foundation、BSD-3-Clause。EDRLab が主要開発元) を基に、
@@ -287,14 +287,14 @@ int main(int argc, char **argv)
         <span class="lang-label">日本語</span>
         <p>BlinkGTK は、Google Chrome と同じ Chromium / Blink レンダリングエンジンを、GTK4 アプリケーションへネイティブに組み込むための WebView エンジンです。Electron のようにブラウザ全体を同梱するのではなく、最新の Web エンジンそのものを一つの GTK ウィジェットとして扱えます。Wayland に対応し、自己描画方式で、上流の Chromium に追従して更新されます。</p>
         <p>これにより、GTK4 のネイティブアプリ (Linux・Windows) の中で、現代的な HTML・CSS・JavaScript・メディア再生・複雑な文字組みを、本物のブラウザと同じ品質で動かせます。縦書きや禁則処理を含む日本語組版、音声と読み上げ箇所を同期させる EPUB 3 Media Overlays、DAISY 形式のアクセシブルな読書体験など、要求の厳しい用途にも応えます。</p>
-        <p>BlinkGTK は、電子出版とアクセシビリティのための参照実装 FUSEe-SMIL を支える基盤として生まれました。Web 技術をアプリへ「埋め込む」体験を一級市民にすることを目指し、W3C コミュニティグループ <a href="https://www.w3.org/community/embedded-web-engines/">Embedded Web Engines &amp; Native Web Runtimes</a> とも連携しながら、オープンに開発を進めています(<a href="https://www.w3.org/community/embedded-web-engines/join">このグループに参加する</a>)。なお、このコミュニティグループは Web 技術について議論するための場であり、BlinkGTK 製品のサポート窓口ではありません。参加の前に、グループページの説明をよくお読みください。</p>
+        <p>BlinkGTK は、電子出版とアクセシビリティのための参照実装を支える基盤として生まれました。Web 技術をアプリへ「埋め込む」体験を一級市民にすることを目指し、W3C コミュニティグループ <a href="https://www.w3.org/community/embedded-web-engines/">Embedded Web Engines &amp; Native Web Runtimes</a> とも連携しながら、オープンに開発を進めています(<a href="https://www.w3.org/community/embedded-web-engines/join">このグループに参加する</a>)。なお、このコミュニティグループは Web 技術について議論するための場であり、BlinkGTK 製品のサポート窓口ではありません。参加の前に、グループページの説明をよくお読みください。</p>
       </div>
 
       <div class="card" lang="en">
         <span class="lang-label">English</span>
         <p>BlinkGTK is a WebView engine that embeds the same Chromium / Blink rendering engine found in Google Chrome directly into GTK4 applications. Instead of bundling an entire browser the way Electron does, it lets you treat a modern web engine as a single GTK widget. It is Wayland-native, self-rendering, and stays current with upstream Chromium.</p>
         <p>This means native GTK4 apps on Linux and Windows can run modern HTML, CSS, JavaScript, media playback, and complex typography at the same quality as a real browser. It is built for demanding use cases: Japanese vertical writing with line-breaking rules, EPUB 3 Media Overlays that synchronize audio with highlighted text, and accessible DAISY reading experiences.</p>
-        <p>BlinkGTK began as the foundation for FUSEe-SMIL, a reference implementation for digital publishing and accessibility. Our goal is to make embedding the web a first-class experience — developed in the open, in coordination with the W3C <a href="https://www.w3.org/community/embedded-web-engines/">Embedded Web Engines &amp; Native Web Runtimes Community Group</a> (<a href="https://www.w3.org/community/embedded-web-engines/join">join this group</a>). Note that this community group is a forum for discussing web technology, not a support channel for the BlinkGTK product; please read the group's description carefully before joining.</p>
+        <p>BlinkGTK began as the foundation for a reference implementation for digital publishing and accessibility. Our goal is to make embedding the web a first-class experience — developed in the open, in coordination with the W3C <a href="https://www.w3.org/community/embedded-web-engines/">Embedded Web Engines &amp; Native Web Runtimes Community Group</a> (<a href="https://www.w3.org/community/embedded-web-engines/join">join this group</a>). Note that this community group is a forum for discussing web technology, not a support channel for the BlinkGTK product; please read the group's description carefully before joining.</p>
       </div>
 
       <div class="card">
@@ -395,7 +395,7 @@ int main(int argc, char **argv)
     </main>
 
     <footer>
-      <p>FUSEe Project / BlinkGTK Project</p>
+      <p>BlinkGTK Project</p>
       <p><a href="privacy-ja.html">プライバシーポリシー</a> · <a href="privacy-en.html">Privacy policy</a></p>
     </footer>
   </div>

@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Starting from v1.0.10 iter8, BlinkWebView automatically follows its parent container&#x27;s size. This document covers the behavior specification, migration notes, a">
+<meta name="description" content="Starting with v1.0.10 (builds distributed from 2026-04-20 onward), BlinkWebView automatically follows its parent container&#x27;s size. This document covers the beha">
 <link rel="canonical" href="https://blinkgtk.org/docs/resize-behavior-en.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK Resize Behavior — BlinkGTK">
-<meta property="og:description" content="Starting from v1.0.10 iter8, BlinkWebView automatically follows its parent container&#x27;s size. This document covers the behavior specification, migration notes, a">
+<meta property="og:description" content="Starting with v1.0.10 (builds distributed from 2026-04-20 onward), BlinkWebView automatically follows its parent container&#x27;s size. This document covers the beha">
 <meta property="og:url" content="https://blinkgtk.org/docs/resize-behavior-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -109,8 +109,8 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-resize-behavior">BlinkGTK Resize Behavior</h1>
 <p><strong>Version</strong>: 1.2.4-build4 (Chromium 155.0.8059.39)</p>
-<p>Starting from v1.0.10 iter8, <code>BlinkWebView</code> automatically
-follows its parent<br />
+<p>Starting with v1.0.10 (builds distributed from 2026-04-20 onward),
+<code>BlinkWebView</code> automatically follows its parent<br />
 container's size. This document covers the behavior specification,
 migration<br />
 notes, and differences from previous versions.</p>
@@ -188,10 +188,12 @@ follows the parent container.</p>
 <hr />
 <h2 id="3-differences-from-previous-versions">3. Differences from
 Previous Versions</h2>
-<h3 id="31-v1010-iter7-and-earlier-issue-58">3.1 v1.0.10 iter7 and
-Earlier (Issue #58)</h3>
-<p>Before iter8, <code>BlinkWebView</code> did not follow parent size
-and was <strong>stuck at the<br />
+<h3
+id="31-earlier-versions-v109-and-earlier-and-v1010-builds-distributed-before-2026-04-20">3.1
+Earlier Versions (v1.0.9 and Earlier, and v1.0.10 Builds Distributed
+Before 2026-04-20)</h3>
+<p>In those versions, <code>BlinkWebView</code> did not follow parent
+size and was <strong>stuck at the<br />
 Chromium default 800x600</strong>. On HiDPI systems, this 800x600 was
 treated as<br />
 device pixels, resulting in an effective display of roughly 400x300 CSS
@@ -204,7 +206,9 @@ is deprecated and<br />
 overriding <code>GtkWidgetClass::size_allocate_vfunc</code> from C
 application code is<br />
 impractical.</p>
-<h3 id="32-v1010-iter8-and-later">3.2 v1.0.10 iter8 and Later</h3>
+<h3
+id="32-v1010-builds-distributed-from-2026-04-20-onward-and-later">3.2
+v1.0.10 (Builds Distributed From 2026-04-20 Onward) and Later</h3>
 <p><code>blink_gtk_api.cc</code> now implements:</p>
 <ol type="1">
 <li><strong><code>GtkWidgetClass::size_allocate</code> vfunc override in
@@ -226,7 +230,10 @@ the widget to fill the available parent area cleanly</li>
 <li>Re-notifies the current size on HiDPI scale changes</li>
 </ul></li>
 </ol>
-<p>Tracking number: BlinkGTK #58</p>
+<p>Applications that called
+<code>blink_web_view_set_canvas_size()</code> as a workaround on<br />
+earlier versions can remove that call (keeping it also works; see
+4.2).</p>
 <hr />
 <h2 id="4-caveats">4. Caveats</h2>
 <h3 id="41-minimum-size-reduced-to-0">4.1 Minimum Size Reduced to 0</h3>
@@ -270,7 +277,7 @@ release blocker.</p>
 <li><a href="./external-integration-en.html">External Integration</a></li>
 </ul>
 <hr />
-<p><strong>Last updated</strong>: 2026-04-20 (v1.0.10 iter8)<br />
+<p><strong>Last updated</strong>: 2026-04-20 (v1.0.10)<br />
 <strong>Author</strong>: BlinkGTK Project</p>
 </body>
 </html>

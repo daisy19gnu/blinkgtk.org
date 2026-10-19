@@ -4,8 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 環境変数リファレンス(公開サポート正リスト) —
-BlinkGTK</title>
+  <title>BlinkGTK 環境変数リファレンス — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -24,11 +23,11 @@ BlinkGTK</title>
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="BlinkGTK が解釈する環境変数を 3 区分で定義します。embedder が依存してよいのは第 1 区分(公開サポート)のみです。">
+<meta name="description" content="API リファレンスマニュアルの第 9 章 (環境変数) にあたる文書です。BlinkGTK が読む環境変数は、すべてこの一覧に載せています。ここに無い名前は BlinkGTK では使われません。">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/environment-variables-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 環境変数リファレンス(公開サポート正リスト) — BlinkGTK">
-<meta property="og:description" content="BlinkGTK が解釈する環境変数を 3 区分で定義します。embedder が依存してよいのは第 1 区分(公開サポート)のみです。">
+<meta property="og:title" content="BlinkGTK 環境変数リファレンス — BlinkGTK">
+<meta property="og:description" content="API リファレンスマニュアルの第 9 章 (環境変数) にあたる文書です。BlinkGTK が読む環境変数は、すべてこの一覧に載せています。ここに無い名前は BlinkGTK では使われません。">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/environment-variables-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,21 +42,26 @@ BlinkGTK</title>
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1 id="blinkgtk-環境変数リファレンス公開サポート正リスト">BlinkGTK
-環境変数リファレンス(公開サポート正リスト)</h1>
+<h1 id="blinkgtk-環境変数リファレンス">BlinkGTK
+環境変数リファレンス</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>最終更新</strong>: 2026-09-02 (BlinkGTK 1.2.2 / Chromium 153
-baseline、#121 API リファレンス第 9 章の正本)</p>
-<p>BlinkGTK が解釈する環境変数を 3 区分で定義します。<strong>embedder
-が依存してよいのは第 1 区分(公開サポート)のみ</strong>です。</p>
+<strong>最終更新</strong>: 2026-10-19 (BlinkGTK 1.2.4-build4 / Chromium
+155.0.8059.39)</p>
+<p>API リファレンスマニュアルの第 9 章 (環境変数)
+にあたる文書です。BlinkGTK
+が読む環境変数は、すべてこの一覧に載せています。ここに無い名前は
+BlinkGTK では使われません。</p>
+<p>環境変数は次の 3 つに分けています。<strong>BlinkGTK
+を組み込むアプリが頼ってよいのは、1
+つ目の「公開サポート」だけ</strong>です。</p>
 <ul>
 <li><strong>公開サポート</strong> — 安定
 API。後方互換を維持し、変更時はリリースノートで告知します。</li>
-<li><strong>エスケープハッチ</strong> — 既定 ON
-の修正・機構を無効化するトラブルシュート用スイッチ。通常運用では<strong>設定しないでください</strong>。問題の切り分けにのみ使用し、恒久設定にしないこと(将来のリリースで予告のうえ削除されることがあります)。</li>
+<li><strong>エスケープハッチ (切り分け用のスイッチ)</strong> —
+既定で有効になっている修正や仕組みを止めて、以前の動作に戻すためのスイッチ。通常は<strong>設定しないでください</strong>。不具合の原因がその修正にあるかを確かめるときだけ使い、常用しないでください
+(将来の版で、予告のうえ削除することがあります)。</li>
 <li><strong>内部診断</strong> —
-開発・調査用。<strong>無保証・サポート対象外</strong>で、予告なく変更・削除されます。embedder
-が依存してはいけません。</li>
+開発・調査用。<strong>無保証・サポート対象外</strong>で、予告なく変更・削除されます。アプリから頼らないでください。</li>
 </ul>
 <hr />
 <h2 id="1-公開サポート環境変数">1. 公開サポート環境変数</h2>
@@ -101,8 +105,9 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td><code>BLINKGTK_EXTRA_SCHEMES</code></td>
 <td>カンマ区切り scheme 名</td>
 <td>未設定</td>
-<td>追加のカスタム URL scheme を standard scheme として登録(例:
-<code>ebook</code>)。custom scheme loader と併用</td>
+<td>独自の URL スキーム (例: <code>ebook</code>) を、<code>https</code>
+などと同じ扱いの標準スキームとして登録します。独自スキームの読み込み処理
+(custom scheme loader) と組み合わせて使います</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_SCROLL_SPEED</code></td>
@@ -239,33 +244,40 @@ API、<code>api.github.com</code>)
 <td>未設定</td>
 <td><strong>Windows 専用・試験段階 (BlinkGTK for Windows 1.2.4-build4
 から)。</strong> 値 <code>vulkan</code> のとき、Chromium の GPU
-合成の結果を CPU に読み戻さずに GTK の Vulkan のレンダラーへ渡す (経路名
-<code>P4</code>)。既定は無効。<strong>Intel Iris Xe の 1
+合成の結果を CPU に読み戻さずに GTK の Vulkan
+のレンダラーへ渡します。サイトや Windows 版のお知らせで「GPU の経路
+P4」と呼んでいるものです (指定する値は <code>vulkan</code>
+だけです)。既定は無効。<strong>Intel Iris Xe の 1
 機種でのみ確認。</strong> Linux では使われない</td>
 </tr>
 </tbody>
 </table>
 <h2 id="2-エスケープハッチ既定のまま推奨">2.
 エスケープハッチ(既定のまま推奨)</h2>
+<p>不具合が出て、下の修正が関係していそうなときに、その修正だけを止めて確かめるためのものです。止めて症状が消えた場合は、使っている版と症状を添えてお知らせください。</p>
 <table>
 <thead>
 <tr>
 <th>変数</th>
 <th>効果(=0 等を設定した場合)</th>
-<th>関連</th>
+<th>関連する修正</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>BLINKGTK_PUMP_LEGACY=1</code></td>
-<td>fd-watcher pump を無効化し旧 g_idle pump へ(idle CPU
-が増加します)</td>
-<td>#115</td>
+<td>メインループの回し方を、Wayland の接続を監視する方式 (fd-watcher
+pump) から以前の方式 (g_idle pump) に戻す(待機中の CPU
+の使用率が増えます)</td>
+<td>1.1.0 の修正: 何も操作していない間も CPU を 1
+コア近く使い続けていた問題</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_PUMP_RESCUE=0</code></td>
-<td>pump 起床保証(100ms heartbeat)を無効化</td>
-<td>#120</td>
+<td>メインループを 100ms ごとに必ず起こす仕組み (起床の保証)
+を無効化</td>
+<td>1.1.0
+で、下の「白紙のまま固定される問題」の修正と一緒に入ったもの</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_QUEUE_DRAW_TIMER=1</code></td>
@@ -273,8 +285,8 @@ API、<code>api.github.com</code>)
 ごとの定期の描き直しを、それより前の版と同じく常に動かす。1.2.4
 の既定では、静止した頁を描き直し続けないよう、BlinkWebView
 ではこの描き直しを動かさない (待機中の CPU
-の使用率が下がる、blinkgtk-dist #8)。<code>=0</code> で常に止める</td>
-<td>dist#8</td>
+の使用率が下がる)。<code>=0</code> で常に止める</td>
+<td>1.2.4 の変更: 静止した頁を 16ms ごとに描き直さない</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_T2_AUTO=0</code></td>
@@ -282,15 +294,16 @@ API、<code>api.github.com</code>)
 (撮影を使わず、合成の結果を共有メモリで受け取る経路)
 に自動で切り替えるのをやめ、それより前の版と同じ経路を使う。1.2.4
 の既定では拡大率 1 のとき T2 を選び、小さな範囲だけが変わる頁で CPU
-の使用率が下がる (blinkgtk-dist #8)。拡大率 1 以外の画面では T2
+の使用率が下がる。拡大率 1 以外の画面では T2
 を使わず、移ったときも元の経路に戻す。<code>BLINKGTK_USE_MOJO_IPC=0</code>
 でも同じ</td>
-<td>dist#8</td>
+<td>1.2.4 の変更: 拡大率 1 の画面で T2 を既定にした</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
-<td>capture damage gate(idle 時のフレームコピー抑制)を無効化</td>
-<td>#115</td>
+<td>画面が変わっていないときに画面のコピー (キャプチャ) を省く仕組み
+(capture damage gate) を無効化</td>
+<td>1.1.0 の修正: 待機中に CPU を使い続けていた問題</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_FORCE_SINGLE_THREADED=1</code></td>
@@ -299,8 +312,10 @@ API、<code>api.github.com</code>)
 </tr>
 <tr>
 <td><code>BLINKGTK_120_INVAL_FALLBACK=0</code></td>
-<td>invalidation フォールバック(白紙固定の修正)を無効化</td>
-<td>#120 fixG</td>
+<td>描き直す範囲が空と計算されたときに補う仕組み (invalidation
+フォールバック) を無効化</td>
+<td>1.1.0 の修正:
+文字サイズを大きく変えた直後に、頁が白紙のまま固定される問題</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_AUTO_FALLBACK=0</code></td>
@@ -316,13 +331,15 @@ API、<code>api.github.com</code>)
 </tr>
 <tr>
 <td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
-<td>activation 再 damage(白紙固定の修正)を無効化</td>
-<td>#120 fixF</td>
+<td>新しい描画結果を有効にしたとき、もう一度描き直させる仕組み
+(activation 再 damage) を無効化</td>
+<td>同上 (白紙のまま固定される問題の修正)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_120_CKB_REDRAW=0</code></td>
-<td>checkerboard 再 damage(安全網)を無効化</td>
-<td>#120 fixE</td>
+<td>まだ描かれていない部分 (checkerboard)
+が残ったときに描き直させる仕組みを無効化</td>
+<td>同上の問題に対する予備の対策</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
@@ -331,7 +348,8 @@ API、<code>api.github.com</code>)
 1.25・1.5) で描かれる。それより前の版 (1.2.0-build3〜1.2.3)
 では、エンジンが自動で付ける拡大率に整数へ切り上げられ、2
 で描かれていた</td>
-<td>#117</td>
+<td>1.1.0 から指定したときだけ有効。1.2.4
+の修正で分数のまま描かれる</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_RESIZE_BRIDGE=0</code></td>
@@ -372,7 +390,7 @@ renderer とブラウザのメモリが増え続けます</strong> (1.2.3
 の手元のサーバ用)</td>
 </tr>
 <tr>
-<td>#120 の調査</td>
+<td>白紙のまま固定される問題の調査</td>
 <td><code>BLINKGTK_120_CC_DIAG</code> /
 <code>BLINKGTK_120_DISP_DIAG</code> /
 <code>BLINKGTK_120_CLIP_DIAG</code> / <code>BLINKGTK_120_DIAG</code> /
@@ -455,7 +473,7 @@ id="3b-開発用デモ-simple_browser-だけのもの--配布物では使われ�
 開発用デモ (<code>simple_browser</code>) だけのもの —
 配布物では使われません</h2>
 <p><strong>ライブラリも、配布物のサンプル <code>blinkgtk_browser</code>
-も、この変数を読みません。</strong> 当方の開発用デモ
+も、この変数を読みません。</strong> BlinkGTK の開発に使っているデモ
 <code>simple_browser</code>
 だけが読む変数です。<code>simple_browser</code>
 は配布物に含めていません。</p>
@@ -551,7 +569,7 @@ id="3b-開発用デモ-simple_browser-だけのもの--配布物では使われ�
 <ul>
 <li><code>c-api-reference-ja.md</code>
 §BLINKGTK_GPU_MODE(本リファレンスへ統合予定)</li>
-<li>API リファレンスマニュアル 第 9 章(#121)の正本は本ファイル</li>
+<li>版ごとの変更は、同梱のリリースノートと改版履歴を参照してください</li>
 </ul>
 </body>
 </html>

@@ -89,11 +89,11 @@ Lifecycle — BlinkGTK</title>
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="The authority on API semantics is the public header blink_gtk/blink_gtk.h and upstream review.">
+<meta name="description" content="The meaning and behaviour of the API are defined by the public header blink_gtk/blink_gtk.h. Where this chapter and the header disagree, follow the header.">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/01-overview-lifecycle-en.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK API Reference Manual — Chapter 1: Overview and Lifecycle — BlinkGTK">
-<meta property="og:description" content="The authority on API semantics is the public header blink_gtk/blink_gtk.h and upstream review.">
+<meta property="og:description" content="The meaning and behaviour of the API are defined by the public header blink_gtk/blink_gtk.h. Where this chapter and the header disagree, follow the header.">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/01-overview-lifecycle-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -115,7 +115,7 @@ API Reference Manual — Chapter 1: Overview and Lifecycle</h1>
 <tbody>
 <tr>
 <td>Author</td>
-<td>BlinkGTK-Readium project (consumer/embedder perspective, #121)</td>
+<td>BlinkGTK Project</td>
 </tr>
 <tr>
 <td>Target version</td>
@@ -123,14 +123,16 @@ API Reference Manual — Chapter 1: Overview and Lifecycle</h1>
 </tr>
 <tr>
 <td>Scope</td>
-<td>A user manual that includes what an embedder learned running
-BlinkGTK in production</td>
+<td>A manual for developers who embed BlinkGTK in their applications. It
+includes what was learned running an EPUB reader built on BlinkGTK in
+production</td>
 </tr>
 </tbody>
 </table>
-<p>The authority on API semantics is the public header
-<code>blink_gtk/blink_gtk.h</code> and<br />
-upstream review.</p>
+<p>The meaning and behaviour of the API are defined by the public
+header<br />
+<code>blink_gtk/blink_gtk.h</code>. Where this chapter and the header
+disagree, follow the header.</p>
 <hr />
 <h2 id="11-what-blinkgtk-is">1.1 What BlinkGTK is</h2>
 <p>BlinkGTK is a library for embedding Chromium's Blink rendering engine
@@ -144,14 +146,13 @@ navigate, talk to JavaScript, and serve custom URI schemes.<br />
 against the prebuilt<br />
 package (shared libraries + headers + pkg-config). This manual is
 written from<br />
-the perspective of an embedder running BlinkGTK in production as an EPUB
-viewer<br />
-(BlinkGTK-Readium).</p>
+the perspective of running an EPUB reader built on BlinkGTK in
+production.</p>
 <h2 id="12-architecture-at-a-glance">1.2 Architecture at a glance</h2>
 <p>Top to bottom:</p>
 <ol type="1">
-<li><strong>Embedder (your application)</strong> — a GTK4 application.
-You build the chrome<br />
+<li><strong>The embedding application (your application)</strong> — a
+GTK4 application. You build the chrome<br />
 (windows, menus) with GTK and place one <code>BlinkWebView</code> inside
 it as a child<br />
 widget.</li>
@@ -166,8 +167,8 @@ process) child processes for the renderer, GPU and so on are started;
 they do<br />
 the actual layout and painting.</li>
 </ol>
-<p>The embedder only touches layers 1 and 2; Chromium's process model
-stays behind<br />
+<p>Your application only touches layers 1 and 2; Chromium's process
+model stays behind<br />
 the curtain. That said, the pitfalls in §1.5 (sandbox, profile, RUNPATH)
 all<br />
 stem from this multi-process structure, so being aware it exists makes
@@ -210,7 +211,8 @@ on the GTK main thread. From a worker thread, dispatch to the main
 thread with<br />
 <code>g_idle_add()</code>.</p>
 <h2 id="13-the-lifecycle-as-a-whole">1.3 The lifecycle as a whole</h2>
-<p>An embedder process moves through these phases in one direction.</p>
+<p>The process of an application that embeds BlinkGTK moves through
+these phases in one direction.</p>
 <table>
 <thead>
 <tr>
@@ -271,9 +273,8 @@ explicitly is recommended</strong>; see below)</td>
 </table>
 <blockquote>
 <p><strong>Whether and when to call
-<code>blink_gtk_shutdown()</code></strong> (the official position
-from<br />
-the upstream <code>#123</code> review)</p>
+<code>blink_gtk_shutdown()</code></strong> (BlinkGTK's
+recommendation)</p>
 <table>
 <thead>
 <tr>
@@ -306,10 +307,10 @@ non-deterministic</strong>. <strong>Not recommended</strong></td>
 is registered once<br />
 <code>ContentMainRunner::Run</code> succeeds, so teardown happens
 automatically while the<br />
-AtExitManager is alive (issue <code>#102-C</code>). That is also why
-embedders that never<br />
-called it historically kept working. Even so, <strong>call it explicitly
-so the order<br />
+AtExitManager is alive. That is also why existing applications that
+never<br />
+called it kept working. Even so, <strong>call it explicitly so the
+order<br />
 is deterministic</strong>.</p>
 </blockquote>
 <h3 id="0-pre-init-configuration">(0) Pre-init configuration</h3>
@@ -359,7 +360,8 @@ several WebViews with different modes in one process, the mode of the
 first<br />
 one applies to all of them.</li>
 <li><strong>In production we recommend
-<code>BLINK_GPU_MODE_SOFTWARE</code></strong> (it is what we use).<br />
+<code>BLINK_GPU_MODE_SOFTWARE</code></strong> (the EPUB reader mentioned
+above also uses it).<br />
 See <code>BLINKGTK_GPU_MODE</code> in Chapter 9 and Chapter 5
 (rendering) for detail.</li>
 </ul>
@@ -367,7 +369,7 @@ See <code>BLINKGTK_GPU_MODE</code> in Chapter 9 and Chapter 5
 <p>Before calling <code>load_uri()</code>, put in place everything that
 receives events<br />
 originating from the content.</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Custom URI scheme (binary-capable variant; issue #103) */</span></span>
+<div class="sourceCode" id="cb8"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* Custom URI scheme (binary-capable variant; images and audio are returned without truncation) */</span></span>
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="dt">void</span> blink_web_view_register_custom_scheme_full<span class="op">(</span></span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a>    BlinkWebView<span class="op">*</span> web_view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> scheme<span class="op">,</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>    BlinkCustomSchemeBytesCallback callback<span class="op">,</span> gpointer user_data<span class="op">);</span></span>
@@ -384,15 +386,17 @@ originating from the content.</p>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a>  BLINK_LOAD_FINISHED   <span class="op">=</span> <span class="dv">2</span><span class="op">,</span></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>  BLINK_LOAD_REDIRECTED <span class="op">=</span> <span class="dv">3</span>  <span class="co">/* reserved; the current runtime never emits it */</span></span>
 <span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkLoadEvent<span class="op">;</span></span></code></pre></div>
-<p><strong>From the consumer's experience</strong>:
+<p><strong>Note from production use</strong>:
 <code>BLINK_LOAD_REDIRECTED</code> is reserved for the<br />
-future and is not emitted today. Also, the integer values of the enum
-were made<br />
-explicit in v1.0.10 iter14 to match <strong>the values actually
-emitted</strong> — before<br />
-that, a build existed in which <code>ev == BLINK_LOAD_FINISHED</code>
+future and is not emitted today. Also, starting with the v1.0.10 builds
+distributed<br />
+from 2026-04-21 onward, the integer values of the enum were made
+explicit to match<br />
+<strong>the values actually emitted</strong>. In earlier versions the
+header values and the<br />
+emitted values differed, so <code>ev == BLINK_LOAD_FINISHED</code>
 silently evaluated to<br />
-false. Do not mix old packages with new ones.</p>
+false. Do not mix headers from an old package with a new library.</p>
 <h3 id="4-5-placement-and-load">(4)-(5) Placement and load</h3>
 <p><code>BlinkWebView</code> is an ordinary GTK4 widget: place it
 with<br />
@@ -410,8 +414,8 @@ avoids a collision between the GTK and Chromium lifecycles and keeps
 the<br />
 shutdown order under control. GLib's <code>g_timeout_add()</code> /
 <code>g_idle_add()</code> still<br />
-fire under this loop (we use GLib timeouts routinely for recording
-and<br />
+fire under this loop (the EPUB reader uses GLib timeouts routinely for
+recording and<br />
 diagnostics). Call <code>blink_gtk_quit_main_loop()</code> from wherever
 you want to end<br />
 it, such as a window's <code>close-request</code>.</p>
@@ -421,13 +425,12 @@ it, such as a window's <code>close-request</code>.</p>
 process exits.</p>
 <h2 id="14-a-minimal-complete-example-putting-it-on-gtk4">1.4 A minimal
 complete example (putting it on GTK4)</h2>
-<p>A compilable example, boiled down from the real flow of a production
-embedder<br />
-(BlinkGTK-Readium's readium-launcher). It serves a local directory over
-the<br />
+<p>A compilable example, boiled down from the launch code of an EPUB
+reader running<br />
+in production. It serves a local directory over the<br />
 custom scheme <code>app://</code> and receives load completion through a
 signal.</p>
-<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* minimal-embedder.c — a minimal BlinkGTK embedder (GTK4) */</span></span>
+<div class="sourceCode" id="cb13"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* minimal-embedder.c — a minimal application embedding BlinkGTK (GTK4) */</span></span>
 <span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
 <span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
 <span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
@@ -505,15 +508,14 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href=
 <p>The next section explains why <code>-Wl,-rpath,'$ORIGIN'</code> and
 "place it in<br />
 lib/chromium and launch from there".</p>
-<h2 id="15-pitfalls-in-production-from-the-consumer">1.5 Pitfalls in
-production (from the consumer)</h2>
-<p>So that a new embedder starting from zero can get running in a single
-round<br />
-trip, here are the ones we actually walked into.</p>
+<h2 id="15-pitfalls-in-production">1.5 Pitfalls in production</h2>
+<p>So that you can get BlinkGTK running on the first try, here are the
+problems<br />
+that actually occurred while running the EPUB reader.</p>
 <h3
-id="a-runpath--library-resolution--instant-death-from-a-v8-snapshot-mismatch">(a)
-RUNPATH / library resolution — instant death from a V8 snapshot
-mismatch</h3>
+id="a-runpath--library-resolution--immediate-abnormal-exit-from-a-v8-snapshot-mismatch">(a)
+RUNPATH / library resolution — immediate abnormal exit from a V8
+snapshot mismatch</h3>
 <p><code>libblinkgtk.so</code> must be paired strictly with the Chromium
 resources of the same<br />
 package (<code>v8_context_snapshot.bin</code> and so on). Do not build a
@@ -522,9 +524,9 @@ the absolute rpath that comes from the <code>.pc</code> file and then
 copy it into the<br />
 <code>lib/chromium/</code> of <strong>a different package</strong> and
 run it: it will load the <code>.so</code><br />
-from the package it was built against, and <strong>the renderer dies
-instantly on a V8<br />
-snapshot mismatch</strong> (we demonstrated this on 2026-07-07). Either
+from the package it was built against, and <strong>the renderer exits
+abnormally at once on a V8<br />
+snapshot mismatch</strong> (confirmed in practice on 2026-07-07). Either
 of these avoids<br />
 it:</p>
 <ul>
@@ -544,7 +546,7 @@ if you intend to move or swap packages, building your own is the safe
 route.</p>
 <h3 id="b-the-profile-at-blink_gtk-is-shared-by-every-instance">(b) The
 profile at <code>~/.blink_gtk/</code> is shared by every instance</h3>
-<p>In our measurements, passing <code>--user-data-dir</code> does not
+<p>In measurements, passing <code>--user-data-dir</code> does not
 separate profiles;<br />
 <code>~/.blink_gtk/</code> is shared by every BlinkGTK process belonging
 to the same user.<br />
@@ -564,7 +566,7 @@ user<br />
 namespaces, some development environments — the child processes will not
 start<br />
 unless the argv you hand to <code>blink_gtk_init()</code> includes
-<code>--no-sandbox --no-zygote</code>. Our production launch script
+<code>--no-sandbox --no-zygote</code>. The EPUB reader's launch script
 always passes both. For the<br />
 equivalent through the environment, see <code>BLINKGTK_NO_SANDBOX</code>
 in Chapter 9. Use<br />
@@ -573,9 +575,9 @@ off).</p>
 <h3
 id="d-software-is-the-recommended-gpu-mode-and-there-is-one-per-process">(d)
 Software is the recommended GPU mode, and there is one per process</h3>
-<p>The EGL (hardware GPU) path is experimental; having evaluated it, we
-decided to<br />
-<strong>run on software for the time being</strong> (both rendering
+<p>The EGL (hardware GPU) path is experimental; having evaluated it, the
+EPUB reader<br />
+<strong>runs on software for the time being</strong> (both rendering
 vertical-writing EPUB body<br />
 text and taking screenshots are stable on software). And, as noted
 above, the<br />
@@ -588,10 +590,10 @@ renderer side, so a fault in the compositor/display stage — the display
 going<br />
 blank while the content is fine — may not appear in it. Do not accept
 a<br />
-display-side verification on the strength of a captured PNG alone. We
-hit a false<br />
-pass this way, and now also run a check that reads the GTK composition
-result<br />
+display-side verification on the strength of a captured PNG alone. A
+defect was once missed this<br />
+way; the EPUB reader now also runs a check that reads the GTK
+composition result<br />
 directly.</p>
 <h2 id="16-checking-the-version">1.6 Checking the version</h2>
 <div class="sourceCode" id="cb15"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> blink_gtk_get_version<span class="op">(</span><span class="dt">void</span><span class="op">);</span>           <span class="co">/* e.g. &quot;1.2.1&quot; */</span></span>
@@ -605,8 +607,8 @@ directly.</p>
 compile-time macros<br />
 (<code>BLINKGTK_VERSION</code> / <code>CHROMIUM_VERSION</code>), so what
 you display follows the<br />
-library without rebuilding the consumer. We recommend always recording
-these<br />
+library without rebuilding your application. We recommend always
+recording these<br />
 run-time values in logs and bug reports.</p>
 <h2 id="17-forward-references-to-other-chapters">1.7 Forward references
 to other chapters</h2>
@@ -619,13 +621,11 @@ and <code>load-failed</code></li>
 relationship with <code>fetch()</code></li>
 <li><strong>Chapter 5, Rendering and screenshots</strong> — GPU modes,
 the <code>capture_screenshot</code> family</li>
-<li><strong>Chapter 9, Environment variables</strong> — the
-authoritative list of publicly supported variables including
-<code>BLINKGTK_GPU_MODE</code>, with practical examples</li>
+<li><strong>Chapter 9, Environment variables</strong> — the list of
+supported variables including <code>BLINKGTK_GPU_MODE</code>, with
+practical examples</li>
 </ul>
-<p>(Chapter titles are as planned at the time of the first instalment of
-the agreed<br />
-table of contents in #121; the final form follows upstream review.)</p>
+<p>(Chapter titles are planned and may change.)</p>
 <h2 id="sources-for-this-chapter">Sources for this chapter</h2>
 <p>The first draft was written from the sources below. It was then
 <strong>re-verified<br />
@@ -644,9 +644,9 @@ named<br />
 above after the re-verifications)</li>
 <li>Existing documentation:
 <code>docs/04-user-guides/api-reference/c-api-reference-en.md</code></li>
-<li>Production example: BlinkGTK-Readium
-<code>app/native/readium-launcher.c</code> (a real<br />
-embedder) and its build/launch scripts</li>
+<li>Production example: the launch code of an EPUB reader built on
+BlinkGTK, and<br />
+its build and launch scripts</li>
 </ul>
 </body>
 </html>

@@ -166,14 +166,14 @@ Chromium 151 and are now permanent. The behavior does not change.</li>
 app.</strong> A navigation recreates the rendering view
 (RenderWidgetHostView), but the old view stayed registered with the text
 input manager (TextInputManager), so a selection change caused by a
-click called the freed view (#157). On pages that set
+click called the freed view. On pages that set
 <code>user-select: none</code> on the text, a click does not change the
 selection, so clicks did not trigger it.</li>
 <li><strong>With accessibility enabled, navigating to another page could
 make the app stop responding.</strong> After the old document's view was
 destroyed, the bridge to assistive technologies still pointed at the
 destroyed tree, and when an assistive technology (AT-SPI) queried an
-item of the old document, the main thread did not return (#158). Without
+item of the old document, the main thread did not return. Without
 assistive technologies this did not happen.</li>
 <li><strong>The bundled INSTALL and README gave the wrong DEB file
 names</strong> (<code>libblinkgtk-0.1-0_&lt;version&gt;_amd64.deb</code>
@@ -279,52 +279,50 @@ with our fixes for elements with inline-axis border or padding in
 vertical text that still hung, and for a renderer crash on the path
 where a line cannot be laid out.</li>
 <li><strong>You can check at run time whether a typesetting feature is
-built in</strong>: <code>blink_gtk_has_typesetting_feature()</code>
-(#153). It can be called before <code>blink_gtk_init()</code> and
-returns TRUE for <code>"hanging-punctuation:allow-end"</code>. It
-reports whether the feature is built into this library, not whether it
-was turned off with <code>--disable-blink-features</code>.</li>
+built in</strong>: <code>blink_gtk_has_typesetting_feature()</code>. It
+can be called before <code>blink_gtk_init()</code> and returns TRUE for
+<code>"hanging-punctuation:allow-end"</code>. It reports whether the
+feature is built into this library, not whether it was turned off with
+<code>--disable-blink-features</code>.</li>
 <li><strong>An optional notice in the log when a newer version is
 available</strong> (off by default). Turn it on with
 <code>BLINKGTK_UPDATE_CHECK=1</code> or
 <code>blink_gtk_set_update_check(TRUE)</code>. The notice is two lines
 (English and Japanese), at most once a day.</li>
 <li><strong>For Windows (MSVC), every public API declaration now carries
-<code>BLINKGTK_EXPORT</code></strong> (#142, except
+<code>BLINKGTK_EXPORT</code></strong> (except
 <code>blink_gtk_sandbox_init()</code>). Comments in
 <code>blinkgtk_export.h</code> are now ASCII
 (<code>blinkgtk_version.h</code> has been ASCII since 1.2.3-build4).
 <code>blink_gtk.h</code> has no comments that make a Japanese-locale
 Windows compiler (without <code>/utf-8</code>) skip the next line (nor
-did it in 1.2.3) (#156). The 1.2.4 headers have not been tried with
-MSVC. <code>blink_gtk.h</code> has Japanese comments that trigger
-warning C4819, so add <code>/utf-8</code> if you use
-<code>/WX</code>.</li>
+did it in 1.2.3). The 1.2.4 headers have not been tried with MSVC.
+<code>blink_gtk.h</code> has Japanese comments that trigger warning
+C4819, so add <code>/utf-8</code> if you use <code>/WX</code>.</li>
 </ul>
 <h2 id="what-build1-makes-faster">What build1 makes faster</h2>
 <ul>
 <li><strong>On a scale-1 display, software rendering is now received
-through a path that does not use capture</strong> (blinkgtk-dist #8).
-This removes the capture requests and the pixel readback they need.
-Compositing only the changed area is not in 1.2.4 yet, because the fix
-that keeps one page of a two-page spread from staying blank (#120) makes
-the damaged area the full frame every time. This lowers CPU usage on
-pages where only a small area changes. CPU time used in 16 seconds on a
-partial-update page (median of 5 runs; all threads of the host process
-and its child processes): 9.20 → 5.07 s on an Intel i5-10310U machine,
-15.74 → 9.19 s on an Intel i7-8550U machine (both under weston
-headless). These values were measured on a pre-release BlinkGTK build on
-Chromium 154 with the path selected by
-<code>BLINKGTK_USE_MOJO_IPC=1</code>; they were not re-measured on
-1.2.4-build1 or with the automatic selection. It is not used on displays
-with a scale other than 1, and moving to such a display returns to the
-previous path. <code>BLINKGTK_T2_AUTO=0</code> restores the previous
-path.</li>
+through a path that does not use capture</strong>. This removes the
+capture requests and the pixel readback they need. Compositing only the
+changed area is not in 1.2.4 yet, because the fix that keeps one page of
+a two-page spread from staying blank makes the damaged area the full
+frame every time. This lowers CPU usage on pages where only a small area
+changes. CPU time used in 16 seconds on a partial-update page (median of
+5 runs; all threads of the host process and its child processes): 9.20 →
+5.07 s on an Intel i5-10310U machine, 15.74 → 9.19 s on an Intel
+i7-8550U machine (both under weston headless). These values were
+measured on a pre-release BlinkGTK build on Chromium 154 with the path
+selected by <code>BLINKGTK_USE_MOJO_IPC=1</code>; they were not
+re-measured on 1.2.4-build1 or with the automatic selection. It is not
+used on displays with a scale other than 1, and moving to such a display
+returns to the previous path. <code>BLINKGTK_T2_AUTO=0</code> restores
+the previous path.</li>
 <li><strong>BlinkWebView no longer redraws a static page every 16
-ms</strong> (blinkgtk-dist #8), which lowers CPU usage while idle (CPU
-time used in 16 seconds: 2.04 → 0.48 s on the Intel i5-10310U machine,
-median of 5 runs, measured on a pre-release BlinkGTK build on Chromium
-154). <code>BLINKGTK_QUEUE_DRAW_TIMER=1</code> restores the previous
+ms</strong>, which lowers CPU usage while idle (CPU time used in 16
+seconds: 2.04 → 0.48 s on the Intel i5-10310U machine, median of 5 runs,
+measured on a pre-release BlinkGTK build on Chromium 154).
+<code>BLINKGTK_QUEUE_DRAW_TIMER=1</code> restores the previous
 behavior.</li>
 </ul>
 <h2 id="what-build1-fixes">What build1 fixes</h2>
@@ -343,7 +341,7 @@ Starting an assistive technology turns it on without any environment
 variable.</li>
 <li><strong>When an assistive technology started after launching with
 <code>BLINKGTK_A11Y=1</code>, the accessibility tree did not reach
-it</strong> (#145). It now does.</li>
+it</strong>. It now does.</li>
 <li><strong>In XML documents (such as DAISY 3 DTBook),
 <code>blink_web_view_inject_user_stylesheet()</code> and the
 no-selection style did not apply</strong> (documents with
@@ -352,8 +350,8 @@ no-selection style did not apply</strong> (documents with
 ACTIVE, a document loaded while WARM did not appear for 0.8 to 1.2
 seconds.</strong> It now appears in 50 to 53 ms.</li>
 <li><strong>In EGL mode with <code>BLINKGTK_EGL_FRACTIONAL=1</code>,
-pages on 1.25 / 1.5 displays were drawn at scale 2</strong> (#117). With
-the setting, pages are drawn at the fractional scale.</li>
+pages on 1.25 / 1.5 displays were drawn at scale 2</strong>. With the
+setting, pages are drawn at the fractional scale.</li>
 <li><strong>Two fixes in the path that does not use capture
 (<code>BLINKGTK_USE_MOJO_IPC=1</code>; the default at scale 1)</strong>:
 a second view created by <code>window.open()</code> was blank while its

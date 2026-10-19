@@ -147,7 +147,7 @@ longer waits for the reply on the<br />
 UI thread (32.8 s to 6.0 s in a test with an unresponsive bus)</li>
 <li><strong>The stored permissions
 (<code>BlinkGTK Permissions.json</code>) were read on the UI
-thread</strong> (#146).<br />
+thread</strong>.<br />
 They are now read off the UI thread. Values the application sets or
 clears before the read<br />
 finishes take precedence over the file</li>
@@ -180,8 +180,8 @@ included</li>
 <li><strong>Opening audio of 5 MB or more served over a custom scheme
 (such as <code>ebook://</code>) with <code>&lt;audio&gt;</code> made
 the<br />
-whole application window stop responding</strong> (#137). The body was
-written to the data pipe to the end on the<br />
+whole application window stop responding</strong>. The body was written
+to the data pipe to the end on the<br />
 UI thread, so when <code>&lt;audio&gt;</code> stopped reading partway,
 the UI thread kept waiting. It happened both while<br />
 paused and while playing (2.5 MB worked; 5, 10 and 151 MB stopped). The
@@ -280,10 +280,10 @@ now presents one frame and captures it (up to 1.2.3-build1 it failed
 after 2 seconds).</p>
 <h2 id="what-build2-fixes">What build2 fixes</h2>
 <ul>
-<li><strong>swiftshader mode showed nothing on screen</strong> (KNAVI
-#151). The rule that stops capture and<br />
+<li><strong>swiftshader mode showed nothing on screen</strong>. The rule
+that stops capture and<br />
 display now applies to EGL only. WebGL output is shown too</li>
-<li><strong>Notes on freeing results</strong> (#130). Free the result of
+<li><strong>Notes on freeing results</strong>. Free the result of
 <code>blink_handoff_meta_serialize()</code> with<br />
 <code>g_free()</code> (the header and documentation read as the C
 library function). The free function is<br />

@@ -130,7 +130,8 @@ devel）</a></li>
 <li><a href="#tarballfhs-レイアウト">Tarball（FHS レイアウト）</a></li>
 </ul></li>
 <li><a href="#インストール確認">インストール確認</a></li>
-<li><a href="#consumer-アプリのビルド">consumer アプリのビルド</a></li>
+<li><a href="#blinkgtk-を組み込むアプリのビルド">BlinkGTK
+を組み込むアプリのビルド</a></li>
 <li><a href="#アンインストール">アンインストール</a></li>
 <li><a href="#トラブルシューティング">トラブルシューティング</a></li>
 </ol>
@@ -208,7 +209,7 @@ devel）</h2>
 </tr>
 <tr>
 <td><strong>blinkgtk-bin-devel</strong>（devel）</td>
-<td>consumer 開発</td>
+<td>BlinkGTK を組み込むアプリの開発</td>
 <td>ヘッダ（<code>/usr/include/blinkgtk-0.1/</code>）+
 pkg-config（<code>/usr/lib64/pkgconfig/blinkgtk-0.1.pc</code>）+
 <code>.so</code> symlink</td>
@@ -289,7 +290,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="
 <span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                                    <span class="co"># ld.so.conf.d を反映</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel（consumer 開発時のみ）</span></span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel（BlinkGTK を組み込むアプリを開発するときのみ）</span></span>
 <span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
 <p><code>ldconfig</code> は runtime に含まれる
 <code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code><br />
@@ -320,24 +321,26 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href=
 <p><strong>重要</strong>: <code>--libs</code> に PartitionAlloc
 allocator shim<br />
 （<code>-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</code>）が<br />
-含まれます。consumer は <strong>必ず pkg-config
-経由でリンク</strong>してください（shim を<br />
-実行ファイルに直接リンクしないと Chromium のナビゲーションが失敗します
-—<br />
-Issue #90）。</p>
+含まれます。BlinkGTK を組み込むアプリは <strong>必ず pkg-config
+経由でリンク</strong>してください。<br />
+shim を実行ファイルに直接リンクしないと、Chromium 148
+以降を元にした版では<br />
+ページの読み込みが確定せず、画面が黒いままになります。</p>
 <h3 id="girpython--pygobject">gir（Python / PyGObject）</h3>
 <div class="sourceCode" id="cb11"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> python3 <span class="at">-c</span> <span class="st">&quot;import gi; gi.require_version(&#39;BlinkGTK&#39;,&#39;0.1&#39;); from gi.repository import BlinkGTK; print(&#39;BlinkGTK OK&#39;)&quot;</span></span>
 <span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a><span class="ex">BlinkGTK</span> OK</span></code></pre></div>
 <hr />
-<h2 id="consumer-アプリのビルド">consumer アプリのビルド</h2>
+<h2 id="blinkgtk-を組み込むアプリのビルド">BlinkGTK
+を組み込むアプリのビルド</h2>
 <p>BlinkGTK を組み込むアプリは pkg-config でビルドします（shim
 の直接リンクが<br />
 自動で付与されます）。</p>
 <div class="sourceCode" id="cb12"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> my_app.c <span class="at">-o</span> my_app <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span></code></pre></div>
-<p>詳細は <a href="../consumer-integration-guide-ja.html">consumer
-統合ガイド</a>（ライフサイクル /<br />
+<p>詳細は <a
+href="../consumer-integration-guide-ja.html">組み込みガイド</a>（ライフサイクル
+/<br />
 WebView 埋め込み / GPU モード / 注入 等）を参照してください。</p>
 <hr />
 <h2 id="アンインストール">アンインストール</h2>
@@ -378,14 +381,14 @@ blinkgtk-0.1 を検出しない</h3>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb16-1"><a href="#cb16-1" aria-hidden="true" tabindex="-1"></a><span class="co"># devel を導入 (上記) するか、tarball 配置時は:</span></span>
 <span id="cb16-2"><a href="#cb16-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/lib64/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
 <span id="cb16-3"><a href="#cb16-3" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--modversion</span> blinkgtk-0.1</span></code></pre></div>
-<h3 id="3-自作アプリで黒画面--ナビゲーション失敗issue-90">3.
-自作アプリで黒画面 / ナビゲーション失敗（Issue #90）</h3>
-<p>consumer が allocator shim
+<h3 id="3-自作アプリで黒画面--ナビゲーション失敗">3. 自作アプリで黒画面
+/ ナビゲーション失敗</h3>
+<p>アプリの実行ファイルが allocator shim
 を直接リンクしていません。<strong>pkg-config 経由で<br />
 リンク</strong>してください（<code>pkg-config --libs blinkgtk-0.1</code>
 が shim を含みます）。<br />
-確認: `readelf -d ./my_app | grep NEEDED |</p>
-<p>grep partition_alloc_allocator_shim`<br />
+確認:
+<code>readelf -d ./my_app | grep NEEDED | grep partition_alloc_allocator_shim</code><br />
 が 1 件あること。</p>
 <h3 id="4-python-import-エラーnamespace-blinkgtk-not-available">4.
 Python import
@@ -403,8 +406,9 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb18-1"><a href=
 <hr />
 <h2 id="次のステップ">次のステップ</h2>
 <ol type="1">
-<li><strong>consumer 統合ガイド</strong>: <a
-href="../consumer-integration-guide-ja.html">consumer-integration-guide-ja.md</a></li>
+<li><strong>組み込みガイド</strong>: <a
+href="../consumer-integration-guide-ja.html">BlinkGTK 組み込みガイド
+(リンクと実行時の要件)</a></li>
 <li><strong>アプリのビルド</strong>: <a
 href="../building-with-blinkgtk-ja.html">building-with-blinkgtk-ja.md</a></li>
 <li><strong>Python / Rust</strong>: <a

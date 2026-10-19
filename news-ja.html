@@ -12,7 +12,7 @@
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build4-windows">BlinkGTK for Windows v1.2.4-build4 を公開しました</a></h2>
 <p><small>2026-10-18 · リリース</small></p>
-<p>BlinkGTK for Windows に Vulkan 付きの GTK を同梱し、試験段階の GPU の経路を足しました。この経路は、環境変数 BLINKGTK_WIN_GPU_PATH=vulkan を指定したときだけ使います。既定は無効で、Intel Iris Xe の 1 機種でのみ確認しています。1.2.4-build2 では、ぶら下げが動作しないのに blink_gtk_has_typesetting_feature() が TRUE を返していました。この版で修正しました。Chromium は 155.0.8059.39 のままで、Linux 版のぶら下げ (#153) と割注 (#154) のエンジン側の変更は含みません。</p>
+<p>BlinkGTK for Windows に Vulkan 付きの GTK を同梱し、試験段階の GPU の経路を足しました。この経路は、環境変数 BLINKGTK_WIN_GPU_PATH=vulkan を指定したときだけ使います。既定は無効で、Intel Iris Xe の 1 機種でのみ確認しています。1.2.4-build2 では、ぶら下げが動作しないのに blink_gtk_has_typesetting_feature() が TRUE を返していました。この版で修正しました。Chromium は 155.0.8059.39 のままで、Linux 版に入ったぶら下げと割注のエンジン側の変更は含みません。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build4">v1.2.4-build4 を公開しました (頁を移った後の異常終了と応答停止の修正)</a></h2>
 <p><small>2026-10-14 · リリース</small></p>
 <p>頁を移った後に本文をクリックするとアプリが異常終了する問題と、支援技術を有効にして頁を移るとアプリが応答しなくなる問題を修正しました。同梱の INSTALL・README の DEB のファイル名の誤りも修正しました。</p>
@@ -69,7 +69,7 @@
 <p>縦組みで閉じ括弧が行末に来ると行が途中で切れる現象が直りました。35 文字入る行に 17 文字しか入らず、text-align: justify が残りを引き伸ばすため字間が倍に開いていました。13 通りの設定のうち 8 通りで起きていたものがすべて解消します。横組みでは起きません。当方から上流へ報告し (crbug 542686223) Chromium 側で修正されたものです。レンダリングエンジンは Chromium 153.0.8010.36 になりました。同梱のデモが --version に応じるようになり、不具合を報告するときに版を一意に示せます。測ったのは 1 行に入る文字数で、段組みの列末に残る余地は測っていません。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.2-build2">v1.2.2-build2 を公開しました</a></h2>
 <p><small>2026-09-10 · リリース</small></p>
-<p>同梱していたリリースノートの誤りを訂正しました。build1 の記述で「前版の回避を取り除いた」としていましたが、取り除いておらず、この版でも入ったままです。記述を実物に合わせました。あわせて、API リファレンスの見出しが 1 版前の「対象バージョン BlinkGTK 1.2.1 (Chromium 152.0.7977.64)」のままだったのを、実際の版数に直しました。プログラムの中身は build1 と同じで、組版の結果は変わりません (同梱書類の版数表記と、版数を名乗る文字列が 1.2.2-build2 になります)。誤りは BlinkGTK-Readium からの照会で判明しました。</p>
+<p>同梱していたリリースノートの誤りを訂正しました。build1 の記述で「前版の回避を取り除いた」としていましたが、取り除いておらず、この版でも入ったままです。記述を実物に合わせました。あわせて、API リファレンスの見出しが 1 版前の「対象バージョン BlinkGTK 1.2.1 (Chromium 152.0.7977.64)」のままだったのを、実際の版数に直しました。プログラムの中身は build1 と同じで、組版の結果は変わりません (同梱書類の版数表記と、版数を名乗る文字列が 1.2.2-build2 になります)。誤りは、BlinkGTK を組み込んでいる EPUB リーダーの開発チームからの問い合わせで分かりました。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.1-build3">v1.2.1-build3 を公開しました</a></h2>
 <p><small>2026-09-08 · リリース</small></p>
 <p>不具合を報告するときに、どの版で起きたかが実行時に分かるようになりました。これまで実行時に版を問い合わせると 1.2.1 としか返らず、build 番号が取れませんでした。同じ版でも build が違えば挙動が違うことがあり、外部の利用者はパッケージのファイル名から版を読むしかありませんでした。blink_gtk_get_version_full() が 1.2.1-build3 を返します。既存の blink_gtk_get_version() の戻り値は変わりません。あわせて、画面が出ないときの配送ログが実際に呼んだ操作と Wayland の buffer 識別子を記すようになり、測定を打ち切る枚数も伸ばせます。描画経路のライブ切替に EGL 経路が加わりました(BLINKGTK_GPU_MODE=egl で起動した場合のみ)。</p>

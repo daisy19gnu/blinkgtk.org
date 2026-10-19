@@ -4,8 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK Environment Variables Reference (Canonical Supported
-List) — BlinkGTK</title>
+  <title>BlinkGTK Environment Variables Reference — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -24,11 +23,11 @@ List) — BlinkGTK</title>
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="Environment variables interpreted by BlinkGTK are defined in three tiers. Embedders may only depend on tier 1 (publicly supported).">
+<meta name="description" content="This document is Chapter 9 (Environment Variables) of the API Reference Manual. Every environment variable BlinkGTK reads is listed here; a name that is not her">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/environment-variables-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK Environment Variables Reference (Canonical Supported List) — BlinkGTK">
-<meta property="og:description" content="Environment variables interpreted by BlinkGTK are defined in three tiers. Embedders may only depend on tier 1 (publicly supported).">
+<meta property="og:title" content="BlinkGTK Environment Variables Reference — BlinkGTK">
+<meta property="og:description" content="This document is Chapter 9 (Environment Variables) of the API Reference Manual. Every environment variable BlinkGTK reads is listed here; a name that is not her">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/environment-variables-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,28 +42,30 @@ List) — BlinkGTK</title>
   <a href="../index.html">Documentation</a> ·
   <a href="../../index.html">BlinkGTK</a>
 </div><div class="card doc">
-<h1
-id="blinkgtk-environment-variables-reference-canonical-supported-list">BlinkGTK
-Environment Variables Reference (Canonical Supported List)</h1>
+<h1 id="blinkgtk-environment-variables-reference">BlinkGTK Environment
+Variables Reference</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Last updated</strong>: 2026-09-02 (BlinkGTK 1.2.2 / Chromium 153
-baseline; canonical source for Chapter 9 of the API Reference Manual,
-#121)</p>
-<p>Environment variables interpreted by BlinkGTK are defined in three
-tiers. <strong>Embedders may only depend on tier 1 (publicly
-supported).</strong></p>
+<strong>Last updated</strong>: 2026-10-19 (BlinkGTK 1.2.4-build4 /
+Chromium 155.0.8059.39)</p>
+<p>This document is Chapter 9 (Environment Variables) of the API
+Reference Manual. Every environment variable BlinkGTK reads is listed
+here; a name that is not here is not used by BlinkGTK.</p>
+<p>The variables are divided into three groups. <strong>Applications
+that embed BlinkGTK should rely only on the first group, "Publicly
+supported".</strong></p>
 <ul>
 <li><strong>Publicly supported</strong> — Stable API. Backward
 compatibility is maintained; changes are announced in release
 notes.</li>
-<li><strong>Escape hatches</strong> — Troubleshooting switches that
-disable fixes/mechanisms which are ON by default. <strong>Do not set
-these in normal operation.</strong> Use them only to isolate problems,
-never as permanent configuration (they may be removed in future releases
-after notice).</li>
+<li><strong>Escape hatches (switches for isolating problems)</strong> —
+Switches that turn off a fix or mechanism that is on by default and go
+back to the earlier behaviour. <strong>Do not set these in normal
+operation.</strong> Use them only to check whether a problem is caused
+by that fix, never as permanent configuration (they may be removed in a
+future release, with notice).</li>
 <li><strong>Internal diagnostics</strong> — For development and
 investigation. <strong>Unsupported and unwarranted</strong>; may change
-or disappear without notice. Embedders must not depend on them.</li>
+or disappear without notice. Applications should not rely on them.</li>
 </ul>
 <hr />
 <h2 id="1-publicly-supported-variables">1. Publicly Supported
@@ -109,8 +110,9 @@ is <strong>disabled</strong> if it is <code>0</code> or unreadable. Ask
 <td><code>BLINKGTK_EXTRA_SCHEMES</code></td>
 <td>comma-separated scheme names</td>
 <td>unset</td>
-<td>Registers additional custom URL schemes as standard schemes (e.g.
-<code>ebook</code>). Used with the custom scheme loader</td>
+<td>Registers your own URL schemes (e.g. <code>ebook</code>) as standard
+schemes, treated like <code>https</code>. Used together with the handler
+that loads your scheme (custom scheme loader)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_SCROLL_SPEED</code></td>
@@ -254,41 +256,49 @@ nothing and does not delay startup</td>
 <td><strong>Windows only, experimental (from BlinkGTK for Windows
 1.2.4-build4).</strong> With the value <code>vulkan</code>, the result
 of Chromium's GPU compositing is handed to GTK's Vulkan renderer without
-reading it back to the CPU (path name <code>P4</code>). Disabled by
-default. <strong>Confirmed on one Intel Iris Xe machine only.</strong>
-Not used on Linux</td>
+reading it back to the CPU. This is what the site and the Windows
+release announcements call "GPU path P4" (the only value you set is
+<code>vulkan</code>). Disabled by default. <strong>Confirmed on one
+Intel Iris Xe machine only.</strong> Not used on Linux</td>
 </tr>
 </tbody>
 </table>
 <h2 id="2-escape-hatches-leave-at-defaults">2. Escape Hatches (leave at
 defaults)</h2>
+<p>Use these when a problem appears and one of the fixes below may be
+involved: they turn off just that fix so you can check. If the symptom
+goes away, please report it with the version you use and the
+symptom.</p>
 <table>
 <thead>
 <tr>
 <th>Variable</th>
 <th>Effect when set (e.g. =0)</th>
-<th>Related</th>
+<th>Related fix</th>
 </tr>
 </thead>
 <tbody>
 <tr>
 <td><code>BLINKGTK_PUMP_LEGACY=1</code></td>
-<td>Disables the fd-watcher pump, reverting to the legacy g_idle pump
-(idle CPU increases)</td>
-<td>#115</td>
+<td>Switches the main loop from the method that watches the Wayland
+connection (fd-watcher pump) back to the earlier method (g_idle pump)
+(CPU usage while idle increases)</td>
+<td>Fix in 1.1.0: CPU usage of nearly one core while nothing was
+happening</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_PUMP_RESCUE=0</code></td>
-<td>Disables the pump wakeup guarantee (100 ms heartbeat)</td>
-<td>#120</td>
+<td>Disables the guarantee that wakes the main loop every 100 ms</td>
+<td>Added in 1.1.0 together with the fix for the page staying blank
+(below)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_QUEUE_DRAW_TIMER=1</code></td>
 <td>Since 1.2.4. Always runs the periodic redraw every 16 ms, as earlier
 versions did. By default 1.2.4 does not run it for BlinkWebView, so a
-static page is not redrawn over and over (lower CPU usage while idle,
-blinkgtk-dist #8). <code>=0</code> always stops it</td>
-<td>dist#8</td>
+static page is not redrawn over and over (lower CPU usage while idle).
+<code>=0</code> always stops it</td>
+<td>Change in 1.2.4: a static page is no longer redrawn every 16 ms</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_T2_AUTO=0</code></td>
@@ -296,17 +306,17 @@ blinkgtk-dist #8). <code>=0</code> always stops it</td>
 (a path that receives the composited result through shared memory
 instead of capturing it) on a scale-1 display, and uses the same path as
 earlier versions. By default 1.2.4 selects T2 at scale 1, which lowers
-CPU usage on pages where only a small area changes (blinkgtk-dist #8).
-T2 is not used on displays with a scale other than 1, and the original
-path is restored when the window moves to one.
-<code>BLINKGTK_USE_MOJO_IPC=0</code> does the same</td>
-<td>dist#8</td>
+CPU usage on pages where only a small area changes. T2 is not used on
+displays with a scale other than 1, and the original path is restored
+when the window moves to one. <code>BLINKGTK_USE_MOJO_IPC=0</code> does
+the same</td>
+<td>Change in 1.2.4: T2 became the default on scale-1 displays</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
-<td>Disables the capture damage gate (frame-copy suppression while
-idle)</td>
-<td>#115</td>
+<td>Disables the mechanism that skips copying the screen (capture) when
+nothing has changed (capture damage gate)</td>
+<td>Fix in 1.1.0: CPU usage while idle</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_FORCE_SINGLE_THREADED=1</code></td>
@@ -316,8 +326,10 @@ rendering stalls)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_120_INVAL_FALLBACK=0</code></td>
-<td>Disables the invalidation fallback (fix for persistent-blank)</td>
-<td>#120 fixG</td>
+<td>Disables the fallback used when the area to redraw is computed as
+empty (invalidation fallback)</td>
+<td>Fix in 1.1.0: right after a large font-size change, the page could
+stay blank</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_AUTO_FALLBACK=0</code></td>
@@ -333,13 +345,15 @@ fallbacks on machines with slow GPU startup</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
-<td>Disables activation re-damage (fix for persistent-blank)</td>
-<td>#120 fixF</td>
+<td>Disables the mechanism that asks for one more redraw when a new
+rendering result is activated (activation re-damage)</td>
+<td>Same (fix for the page staying blank)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_120_CKB_REDRAW=0</code></td>
-<td>Disables checkerboard re-damage (safety net)</td>
-<td>#120 fixE</td>
+<td>Disables the mechanism that asks for a redraw when parts not yet
+drawn (checkerboard) remain</td>
+<td>Backup measure for the same problem</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
@@ -348,7 +362,8 @@ fallbacks on machines with slow GPU startup</td>
 (<code>devicePixelRatio</code> 1.25 / 1.5). In 1.2.3 and earlier (since
 1.2.0-build3), the scale the engine adds automatically was rounded up to
 an integer, so pages were drawn at 2</td>
-<td>#117</td>
+<td>Opt-in since 1.1.0. Fixed in 1.2.4 to draw at the fractional
+scale</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_RESIZE_BRIDGE=0</code></td>
@@ -379,19 +394,46 @@ browser memory keep growing while an animated page is shown</strong>
 investigation. <strong>Listed for completeness only; their
 specifications are not published.</strong> Unwarranted and removable
 without notice.</p>
-<p><code>BLINKGTK_120_CC_DIAG</code> /
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Variables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update notice tests</td>
+<td><code>BLINKGTK_UPDATE_CHECK_URL</code> (replaces the URL checked;
+for the local server of <code>check-update-notice.sh</code>)</td>
+</tr>
+<tr>
+<td>Investigating the page-stays-blank problem</td>
+<td><code>BLINKGTK_120_CC_DIAG</code> /
 <code>BLINKGTK_120_DISP_DIAG</code> /
 <code>BLINKGTK_120_CLIP_DIAG</code> / <code>BLINKGTK_120_DIAG</code> /
 <code>BLINKGTK_120_PAINT_KICK</code> / <code>BLINKGTK_120_FI_ROW1</code>
-(fault injection; verification only) / <code>BLINKGTK_VBREAK_P0</code> /
-<code>BLINKGTK_TOC_P0</code> / <code>BLINKGTK_LAYOUT_DEBUG</code> /
-<code>BLINKGTK_RUBY_RESERVE_EM</code> / <code>BLINKGTK_EGL_DIAG</code> /
+(fault injection; verification only) /
+<code>BLINKGTK_120_TYPEB_FIX</code></td>
+</tr>
+<tr>
+<td>Typesetting</td>
+<td><code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
+<code>BLINKGTK_LAYOUT_DEBUG</code> /
+<code>BLINKGTK_RUBY_RESERVE_EM</code></td>
+</tr>
+<tr>
+<td>EGL path</td>
+<td><code>BLINKGTK_EGL_DIAG</code> /
 <code>BLINKGTK_EGL_MANUAL_VIEWPORT</code> /
 <code>BLINKGTK_EGL_BRIDGE_SETTLE_MS</code> /
 <code>BLINKGTK_EGL_GTK4_NATIVE</code> /
-<code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
-<code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
-<code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
+<code>BLINKGTK_EGL_RECIPIENT_ALWAYS</code> (prototype: always create the
+EGL recipient surface, regardless of the active render path)</td>
+</tr>
+<tr>
+<td>Output layer and compositing</td>
+<td><code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
 <code>BLINKGTK_T2_DELIVER_EMPTY</code> (negative control: on T2, deliver
 frames without waiting for the renderer's first frame) /
@@ -404,44 +446,58 @@ selecting T2 on a scale-1 display; on by default since 1.2.4) /
 <code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (testing only: delay
 loading the stored permissions) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
-<code>BLINKGTK_120_TYPEB_FIX</code> /
-<code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
-<code>BLINKGTK_HARNESS_AUDIT</code> /
-<code>BLINKGTK_AURA_SHOW_IMMEDIATE</code> /
 <code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
-<code>BLINKGTK_GX_LOG</code> (one line per EGL delivery event:
+<code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
+<code>BLINKGTK_AURA_SHOW_IMMEDIATE</code></td>
+</tr>
+<tr>
+<td>Live render path switching</td>
+<td><code>BLINKGTK_BLINKSHIFT_AUTOSWAP</code> /
+<code>BLINKGTK_BLINKSHIFT_EGL_RECREATE</code> /
+<code>BLINKGTK_BLINKSHIFT_NO_KICK</code></td>
+</tr>
+<tr>
+<td>Tracing and measurement</td>
+<td><code>BLINKGTK_GX_LOG</code> (one line per EGL delivery event:
 <code>BJGX &lt;event&gt; t=&lt;ms&gt; buf=&lt;wl_buffer wire id&gt; submit=&lt;n&gt;</code>)
 / <code>BLINKGTK_CAPTURE_TRACE</code> / <code>BLINKGTK_MOJO_TRACE</code>
-/ <code>BLINKGTK_EGL_RECIPIENT_ALWAYS</code> (prototype: always create
-the EGL recipient surface, regardless of the active render path) /
-<code>BLINKGTK_DELIVER_LOG_MAX</code> (maximum EGL delivery log lines;
-default 5. Lets you follow which operation ran and which wl_buffer it
-used into the steady state when nothing appears on screen) /
-<code>BLINKGTK_CONTENT_PROBE_MAX</code> (extends <strong>measurement
+/ <code>BLINKGTK_TRACE_PIXEL_SUPPLIER</code> /
+<code>BLINKGTK_HARNESS_AUDIT</code> / <code>BLINKGTK_MINORI</code> /
+<code>BLINKGTK_PROFILE_DIR</code> /
+<code>BLINKGTK_RESIZE_FIT</code></td>
+</tr>
+<tr>
+<td>Verification only</td>
+<td><code>BLINKGTK_DELIVER_LOG_MAX</code> (maximum EGL delivery log
+lines; default 5. Lets you follow which operation ran and which
+wl_buffer it used into the steady state when nothing appears on screen)
+/ <code>BLINKGTK_CONTENT_PROBE_MAX</code> (extends <strong>measurement
 only</strong> into steady state; the display decision still uses the
-first 8 frames) / <code>BLINKGTK_TEST_ALLOC_LOG</code> /
-<code>BLINKGTK_TEST_GATE_FAKE_PRE</code> (negative control: substitutes
-the gate's baseline) / <code>BLINKGTK_TEST_FOCUS_LOG</code> /
+first 8 frames) / <code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
+<code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
+<code>BLINKGTK_TEST_ALLOC_LOG</code> /
+<code>BLINKGTK_TEST_GATE_FAKE_PRE</code> (negative control: replaces the
+reference value the check compares against) /
+<code>BLINKGTK_TEST_FOCUS_LOG</code> /
 <code>BLINKGTK_TEST_SWITCH_PATH</code>
-(<code>&lt;path id&gt;:&lt;ms&gt;</code> — switch render path
-automatically) / <code>BLINKGTK_BLINKSHIFT_AUTOSWAP</code> /
-<code>BLINKGTK_BLINKSHIFT_EGL_RECREATE</code> /
-<code>BLINKGTK_BLINKSHIFT_NO_KICK</code> / <code>BLINKGTK_MINORI</code>
-/ <code>BLINKGTK_PROFILE_DIR</code> / <code>BLINKGTK_RESIZE_FIT</code> /
-<code>BLINKGTK_TRACE_PIXEL_SUPPLIER</code> /
+(<code>&lt;path id&gt;:&lt;ms&gt;</code>) /
 <code>BLINKGTK_TEST_COMPOSITOR_RECREATE</code> /
 <code>BLINKGTK_TEST_DISPOSE_QUIT_MS</code> /
 <code>BLINKGTK_TEST_EXECV_RESTART</code> /
 <code>BLINKGTK_TEST_OUTPUT_SWAP</code> /
-<code>BLINKGTK_TEST_OUTPUT_SWAP_SKIP</code></p>
+<code>BLINKGTK_TEST_OUTPUT_SWAP_SKIP</code></td>
+</tr>
+</tbody>
+</table>
 <h2
 id="3b-development-demo-simple_browser-only--no-effect-in-the-distribution">3b.
 Development demo (<code>simple_browser</code>) only — no effect in the
 distribution</h2>
 <p><strong>These have no effect on the library or on the sample
 <code>blinkgtk_browser</code> that ships in the packages.</strong> Only
-our development demo <code>simple_browser</code> reads them, and
-<code>simple_browser</code> is not included in the packages.</p>
+<code>simple_browser</code>, the demo used to develop BlinkGTK, reads
+them, and <code>simple_browser</code> is not included in the
+packages.</p>
 <table>
 <thead>
 <tr>
@@ -450,11 +506,6 @@ our development demo <code>simple_browser</code> reads them, and
 </tr>
 </thead>
 <tbody>
-<tr>
-<td>Update notice tests</td>
-<td><code>BLINKGTK_UPDATE_CHECK_URL</code> (replaces the URL checked;
-for the local server of <code>check-update-notice.sh</code>)</td>
-</tr>
 <tr>
 <td><code>BLINKGTK_RESTART_ACTIVATION=0</code></td>
 <td>Stops carrying the activation token across a restart (carrying it
@@ -544,8 +595,8 @@ has no effect)</td>
 <ul>
 <li><code>c-api-reference-en.md</code> §BLINKGTK_GPU_MODE (to be
 consolidated into this reference)</li>
-<li>This file is the canonical source for Chapter 9 of the API Reference
-Manual (#121)</li>
+<li>For changes in each version, see the bundled release notes and the
+version history</li>
 </ul>
 </body>
 </html>

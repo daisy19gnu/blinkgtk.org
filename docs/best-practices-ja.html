@@ -119,7 +119,8 @@
 ベストプラクティス集です。本書は BlinkGTK 本体の API リファレンス<br />
 (<code>docs/04-user-guides/api-reference/</code>)
 と併せて参照してください。</p>
-<p>クライアント実装者からの提案 (Issue #81 ほか) を反映しています。</p>
+<p>BlinkGTK を組み込んで電子書籍・読み上げ (EPUB / DAISY)
+のアプリを作っている方々からの提案を反映しています。</p>
 <hr />
 <h2 id="1-固定遅延ゼロのイベント駆動パターン">1.
 固定遅延ゼロのイベント駆動パターン</h2>
@@ -245,7 +246,7 @@ assertion を<br />
 </tr>
 <tr>
 <td>JS DOM 操作リスク</td>
-<td>あり (Issue #78 系 assertion)</td>
+<td>あり (ページ切り替えの最中に DOM を書き換えることになる)</td>
 <td>なし</td>
 </tr>
 <tr>
@@ -385,7 +386,8 @@ API</strong></li>
 <p>詳細は <code>docs/04-user-guides/api-reference/</code> を参照。</p>
 <hr />
 <h2 id="6-今後の追加パターン">6. 今後の追加パターン</h2>
-<p>本書はクライアント実装者からの提案を継続的に反映します。<br />
+<p>本書は BlinkGTK
+を使ってアプリを作っている方からの提案を継続的に反映します。<br />
 新規パターン提案は GitHub Issue でお寄せください。</p>
 <h3 id="反映予定-将来">反映予定 (将来)</h3>
 <ul>
@@ -401,11 +403,10 @@ API</strong></li>
 <li><code>docs/04-user-guides/getting-started/</code> (導入ガイド)</li>
 <li><code>docs/04-user-guides/troubleshooting-ja.md</code>
 (トラブルシューティング)</li>
-<li>Issue #81 (本書の出発点となった提案)</li>
 </ul>
 <hr />
-<p><strong>Reported originally by</strong>:
-クライアント実装者コミュニティ (Issue #81)<br />
+<p><strong>提案元</strong>: BlinkGTK
+を組み込んでアプリを作っている方々<br />
 <strong>整理・公開</strong>: BlinkGTK Project</p>
 </body>
 </html>

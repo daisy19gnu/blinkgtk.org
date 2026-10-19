@@ -145,7 +145,7 @@ href="RELEASE_NOTES-1.2.3-en.html">English</a></p>
 スレッドで応答を待たない形に修正しました<br />
 (応答しない状態を作った試験で 32.8 秒 → 6.0 秒)</li>
 <li><strong>許可の保存 (<code>BlinkGTK Permissions.json</code>) を、UI
-スレッドで読み込んでいました</strong> (#146)。<br />
+スレッドで読み込んでいました</strong>。<br />
 UI
 スレッドの外で読むように修正しました。読み終わる前にアプリが置いた値・消した値は、<br />
 ファイルの値より優先されます</li>
@@ -171,18 +171,18 @@ ibus 1.5.35 以降は ibus の側でも修正されています</li>
 30MB)。読み込みに必要な設定ファイルが同梱されておらず、どこからも使われて<br />
 いませんでした。SwiftShader の Vulkan は引き続き同梱しています</li>
 </ul>
-<h2 id="build3-で直したこと">build3 で直したこと</h2>
+<h2 id="build3-で修正したこと">build3 で修正したこと</h2>
 <ul>
 <li><strong>独自スキーム (<code>ebook://</code> など) で配った 5 MB
 以上の音声を <code>&lt;audio&gt;</code>
 で開くと、アプリのウィンドウごと<br />
-応答しなくなっていました</strong> (#137)。本文を UI
+応答しなくなっていました</strong>。本文を UI
 スレッドの上でデータパイプに最後まで書き込んでいたため、<br />
 <code>&lt;audio&gt;</code> が途中で読むのをやめると、UI
 スレッドが待ち続けていました。一時停止中でも再生中でも起きます<br />
 (2.5 MB は正常、5・10・151 MB
 は止まることを確かめました)。本文は受け手が読んだ分だけ裏で書くように<br />
-直しました。151 MB (60 分) の音声でも、読み込みから再生の準備まで約 1
+修正しました。151 MB (60 分) の音声でも、読み込みから再生の準備まで約 1
 秒で進み、シークもできます。<br />
 公開 API は変わりません。余分なメモリも使いません</li>
 <li>独自スキームの <code>&lt;audio&gt;</code> が出す範囲の要求は
@@ -273,14 +273,14 @@ id="画面へ出さない宣言の下でも撮影できます">画面へ出さ�
 を<br />
 呼ぶと 1 枚だけ表示して撮ります (1.2.3-build1 までは 2
 秒で失敗していました)。</p>
-<h2 id="build2-で直したこと">build2 で直したこと</h2>
+<h2 id="build2-で修正したこと">build2 で修正したこと</h2>
 <ul>
-<li><strong>swiftshader モードで画面に何も出なかった</strong> (KNAVI
-#151)。撮影と表示が止まる扱いを EGL にだけ<br />
+<li><strong>swiftshader
+モードで画面に何も出なかった</strong>。撮影と表示が止まる扱いを EGL
+にだけ<br />
 適用します。WebGL の描画も表示されます</li>
-<li><strong>解放関数の注記</strong>
-(#130)。<code>blink_handoff_meta_serialize()</code> の戻り値は
-<code>g_free()</code> で解放します<br />
+<li><strong>解放関数の注記</strong>。<code>blink_handoff_meta_serialize()</code>
+の戻り値は <code>g_free()</code> で解放します<br />
 (ヘッダと文書が C
 標準ライブラリの解放関数と読める書き方でした)。解放の仕方が書かれていなかった<br />
 <code>blink_web_view_get_devtools_url()</code> /
@@ -318,8 +318,8 @@ id="画面へ出さない宣言の下でも撮影できます">画面へ出さ�
 <h2 id="build1-でできるようになったこと">build1
 でできるようになったこと</h2>
 <h3
-id="javascript画像localstorage-の有効無効が効くようになりました">JavaScript・画像・localStorage
-の有効/無効が効くようになりました</h3>
+id="javascript画像localstorage-の有効無効がページに反映されるようになりました">JavaScript・画像・localStorage
+の有効/無効がページに反映されるようになりました</h3>
 <p><code>blink_web_view_set_javascript_enabled()</code>
 などの設定が、ページに反映されるように<br />
 なりました。1.2.2 までは値を覚えるだけで、<strong><code>FALSE</code>
@@ -335,24 +335,24 @@ id="javascript画像localstorage-の有効無効が効くようになりまし�
 <tbody>
 <tr>
 <td><code>blink_web_view_set_javascript_enabled()</code></td>
-<td>効く (<code>FALSE</code> でページのスクリプトが止まる)</td>
+<td>反映される (<code>FALSE</code> でページのスクリプトが止まる)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_set_images_enabled()</code></td>
-<td>効く (<code>FALSE</code> で画像が読み込まれない)</td>
+<td>反映される (<code>FALSE</code> で画像が読み込まれない)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_set_local_storage_enabled()</code></td>
-<td>効く (<code>FALSE</code> で <code>localStorage</code>
+<td>反映される (<code>FALSE</code> で <code>localStorage</code>
 が使えない)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_set_default_font_size()</code></td>
-<td>効く (30 を渡すと本文が 30px)</td>
+<td>反映される (30 を渡すと本文が 30px)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_set_default_encoding()</code></td>
-<td><strong>まだ効きません</strong> (文字コードの指定が無いページは
+<td><strong>まだ反映されません</strong> (文字コードの指定が無いページは
 <code>windows-1252</code> のまま)</td>
 </tr>
 </tbody>
@@ -405,7 +405,7 @@ Fedora 45 / GNOME
 切り替えで同じ経路を選んで測りました)。</p>
 <p>1.2.2 と同じ動作 (IBus を名指しする)
 にしたい場合は、<code>BLINKGTK_IM_MODULE=ibus</code> を<br />
-指定してください。効くのは BlinkGTK
+指定してください。この指定が適用されるのは BlinkGTK
 のビューだけです。<code>blink_gtk_get_im_module()</code> で<br />
 いま設定している値を確かめられます (既定は空文字列 = GTK に任せる)。</p>
 <h3
@@ -435,12 +435,12 @@ id="計測したい区間に自分で目印を打てます">計測したい区�
 <p>機能の一覧は chromestatus.com の Chromium 154
 のものです。当方で実測したのは<br />
 上記の縦組みに関わるものではなく、描画・入力・起動の範囲です。</p>
-<h2 id="build1-で直したこと">build1 で直したこと</h2>
+<h2 id="build1-で修正したこと">build1 で修正したこと</h2>
 <ul>
 <li><p>1.2.1 で入れた独自の回避
 (縦組みで閉じ括弧が行末に来ると行が途中で切れる件) を<br />
 <strong>取り除きました</strong>。Chromium 153
-で上流が同じ症状を直しており、1.2.2 では回避が<br />
+で上流が同じ症状を修正しており、1.2.2 では回避が<br />
 結果を変えていないことを測ったうえで、1.2.2 には残していました</p></li>
 <li><p><code>load-failed</code>
 シグナルのヘッダの注記が実装と違っていました。ハンドラの正しい形は<br />
@@ -465,8 +465,9 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1
 <ul>
 <li>入力メソッドの既定 (上記)。以前の動作は
 <code>BLINKGTK_IM_MODULE=ibus</code> で戻せます</li>
-<li>1.2.2 までは効いていなかった 4
-つの設定が効きます。<code>FALSE</code> を渡していたアプリでは、<br />
+<li>1.2.2 までは反映されていなかった 4
+つの設定が反映されます。<code>FALSE</code>
+を渡していたアプリでは、<br />
 ページのスクリプトや画像が止まるようになります</li>
 </ul>
 <hr />
@@ -480,7 +481,7 @@ class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1
 出荷形で確かめています (1.2.2
 では同じ検査が失敗することも確かめています)。<br />
 画像・localStorage・既定の文字サイズも出荷形で確かめ、既定の文字コードは<br />
-効かないことを確かめています</li>
+まだ反映されないことを確かめています</li>
 <li><strong>独自スキームとリソースの自動検出</strong>: MIME
 の引数・<code>fetch()</code>・リソースを指定しない<br />
 起動の 3 点を、出荷形で確かめています (1.2.2 では 3 点とも失敗)</li>

@@ -285,8 +285,8 @@ crash.</strong> Opening a<br />
 book and closing it right away — an ordinary action — triggered it.
 Closing<br />
 after the page had rendered did not, which made it easy to miss.</p>
-<p>The cause was ours. While the page container is being torn down,
-a<br />
+<p>The cause was in BlinkGTK. While the page container is being torn
+down, a<br />
 "navigation finished" notification is delivered, and our handler was
 still<br />
 looking at something we had already released. We now detach the
@@ -346,8 +346,8 @@ are joined by the buffer id<br />
 and the submission counter.</p>
 <h3 id="porting-to-a-third-platform-got-easier">Porting to a third
 platform got easier</h3>
-<p>Alongside the Windows and MIU Darwin ports, the view implementations
-now have<br />
+<p>Alongside the Windows port and a port to another platform, the view
+implementations now have<br />
 platform-neutral names, removing per-platform branches from the shared
 code.<br />
 <strong>No user-visible change.</strong></p>

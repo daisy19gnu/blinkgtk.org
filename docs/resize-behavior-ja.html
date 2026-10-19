@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="v1.0.10 iter8 以降の BlinkWebView は、親コンテナのサイズ変更に自動追従します。 本ドキュメントではその動作仕様、移行時の注意点、および過去バージョンとの 違いを解説します。">
+<meta name="description" content="v1.0.10 (2026-04-20 以降に配布したもの) から、BlinkWebView は親コンテナのサイズ変更に自動追従します。 本ドキュメントではその動作仕様、移行時の注意点、および過去バージョンとの 違いを解説します。">
 <link rel="canonical" href="https://blinkgtk.org/docs/resize-behavior-ja.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK リサイズ動作仕様 — BlinkGTK">
-<meta property="og:description" content="v1.0.10 iter8 以降の BlinkWebView は、親コンテナのサイズ変更に自動追従します。 本ドキュメントではその動作仕様、移行時の注意点、および過去バージョンとの 違いを解説します。">
+<meta property="og:description" content="v1.0.10 (2026-04-20 以降に配布したもの) から、BlinkWebView は親コンテナのサイズ変更に自動追従します。 本ドキュメントではその動作仕様、移行時の注意点、および過去バージョンとの 違いを解説します。">
 <meta property="og:url" content="https://blinkgtk.org/docs/resize-behavior-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -110,8 +110,8 @@
 <h1 id="blinkgtk-リサイズ動作仕様">BlinkGTK リサイズ動作仕様</h1>
 <p><strong>バージョン</strong>: 1.2.4-build4 (Chromium
 155.0.8059.39)</p>
-<p>v1.0.10 iter8 以降の BlinkWebView
-は、親コンテナのサイズ変更に自動追従します。<br />
+<p>v1.0.10 (2026-04-20 以降に配布したもの) から、BlinkWebView
+は親コンテナのサイズ変更に自動追従します。<br />
 本ドキュメントではその動作仕様、移行時の注意点、および過去バージョンとの<br />
 違いを解説します。</p>
 <hr />
@@ -186,9 +186,10 @@ Chromium の<br />
 親コンテナサイズに追従します。</p>
 <hr />
 <h2 id="3-過去バージョンとの違い">3. 過去バージョンとの違い</h2>
-<h3 id="31-v1010-iter7-以前-issue-58">3.1 v1.0.10 iter7 以前 (Issue
-#58)</h3>
-<p>v1.0.10 iter7 以前では、<code>BlinkWebView</code>
+<h3
+id="31-それより前の版-v109-以前と2026-04-20-より前に配布した-v1010">3.1
+それより前の版 (v1.0.9 以前と、2026-04-20 より前に配布した v1.0.10)</h3>
+<p>それより前の版では、<code>BlinkWebView</code>
 が親コンテナサイズに追従せず、<br />
 Chromium 初期デフォルトの <strong>800x600
 固定で描画</strong>されていました。HiDPI 環境では<br />
@@ -202,7 +203,8 @@ deprecated で、<br />
 <code>GtkWidgetClass::size_allocate_vfunc</code> を override
 するしかありません。<br />
 C アプリからは現実的に困難でした。</p>
-<h3 id="32-v1010-iter8-以降">3.2 v1.0.10 iter8 以降</h3>
+<h3 id="32-v1010-2026-04-20-以降に配布したもの-から">3.2 v1.0.10
+(2026-04-20 以降に配布したもの) から</h3>
 <p><code>blink_gtk_api.cc</code> に以下を追加して解消:</p>
 <ol type="1">
 <li><strong><code>GtkWidgetClass::size_allocate</code> vfunc を
@@ -222,9 +224,9 @@ BlinkWebView クラスで override</strong>
 <li>HiDPI 切替時に現在サイズを再通知</li>
 </ul></li>
 </ol>
-<ul>
-<li>管理番号: BlinkGTK #58</li>
-</ul>
+<p>前の版で <code>blink_web_view_set_canvas_size()</code>
+を回避策として呼んでいたアプリは、<br />
+その呼び出しを消してかまいません (残しても動作します。4.2 を参照)。</p>
 <hr />
 <h2 id="4-注意点">4. 注意点</h2>
 <h3 id="41-最小サイズが-0-になる">4.1 最小サイズが 0 になる</h3>
@@ -267,7 +269,7 @@ Chromium 側ビューの bounds
 <li><a href="./external-integration-ja.html">外部プロジェクト統合</a></li>
 </ul>
 <hr />
-<p><strong>最終更新</strong>: 2026-04-20 (v1.0.10 iter8)<br />
+<p><strong>最終更新</strong>: 2026-04-20 (v1.0.10)<br />
 <strong>作成者</strong>: BlinkGTK Project</p>
 </body>
 </html>

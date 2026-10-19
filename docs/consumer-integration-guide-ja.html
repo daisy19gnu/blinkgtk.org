@@ -210,8 +210,8 @@ shim が含まれているので、pkg-config を通せば自動的にそうな�
 パッケージ構成（runtime / devel / gir、v1.1.0 以降）</h3>
 <p>v1.1.0 以降、BlinkGTK は WebKitGTK と同等に <strong>runtime / devel /
 gir の 3 分割</strong>で<br />
-配布されます（バイナリのみ、GitHub Releases）。consumer 開発では runtime
-に加えて<br />
+配布されます（バイナリのみ、GitHub Releases）。BlinkGTK
+を組み込むアプリを開発するときは、runtime に加えて<br />
 devel（+ 必要なら gir）を導入します。</p>
 <table>
 <thead>
@@ -220,7 +220,7 @@ devel（+ 必要なら gir）を導入します。</p>
 <th>RPM</th>
 <th>DEB</th>
 <th>内容</th>
-<th>consumer での役割</th>
+<th>アプリにとっての役割</th>
 </tr>
 </thead>
 <tbody>
@@ -261,8 +261,10 @@ symlink</td>
 <p>devel パッケージが <code>blinkgtk-0.1.pc</code>
 を提供するため、導入後は下記 3.1 の pkg-config が<br />
 そのまま解決します（<code>.pc</code> の <code>Libs:</code> は FHS
-配置後も shim 直接リンクを維持します。<br />
-Issue #90）。runtime
+配置後も allocator shim を実行ファイルへ直接リンクする指定を<br />
+保っています。この直接リンクが無いと、Chromium 148
+以降を元にした版ではページの読み込みが<br />
+確定せず画面が黒いままになります）。runtime
 のみ導入した環境ではアプリの実行はできますが、ビルド<br />
 （pkg-config / ヘッダ）はできません。</p>
 <blockquote>
@@ -338,9 +340,7 @@ WebView の埋め込み</h2>
 の<br />
 teardown が <code>AtExitManager</code> 破棄後に走り、終了時に NOTREACHED
 で異常終了することがあります<br />
-（過去 issue
-で観測）。安全網として未終了検出時の自動終了処理も登録されますが、consumer
-は<br />
+（以前の版で実際に起きています）。安全網として未終了検出時の自動終了処理も登録されますが、アプリからは<br />
 明示的に <code>blink_gtk_shutdown()</code> を呼ぶことを推奨します。</p>
 <h3 id="42-webview-の生成と-ui-への埋め込み">4.2 WebView の生成と UI
 への埋め込み</h3>
@@ -355,8 +355,8 @@ teardown が <code>AtExitManager</code> 破棄後に走り、終了時に NOTREA
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>gtk_overlay_set_child<span class="op">(</span>GTK_OVERLAY<span class="op">(</span>overlay<span class="op">),</span> web_view<span class="op">);</span></span></code></pre></div>
 <p><strong><code>blink_web_view_new_container()</code>
 は非推奨（deprecated）です。</strong> 旧コンテナ生成 API は<br />
-Chromium 148 以降で描画されません（#90
-関連）。<code>blink_web_view_new()</code>（自己描画）を使い、<br />
+Chromium 148
+以降を元にした版では描画されません。<code>blink_web_view_new()</code>（自己描画）を使い、<br />
 コンテナが必要なら <strong>自前の <code>GtkOverlay</code> /
 <code>GtkBox</code></strong> に載せてください。</p>
 <h3 id="43-繰り返しの-load_uri">4.3 繰り返しの load_uri</h3>
@@ -449,8 +449,8 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb13-1"><a href="#
 <ul>
 <li><code>BLINKGTK_RUBY_RESERVE_EM</code> —
 列の切断幅から、ルビの張り出しぶんとして控除する量（em）。<br />
-<strong>既定は 0（控除しない）です。</strong>（Chromium 152 baseline
-版より。それ以前は 0.5）<br />
+<strong>既定は 0（控除しない）です。</strong>（Chromium 152 を元にした
+v1.2.1 から。それより前の版は 0.5）<br />
 控除は列の容量を削るため、行がちょうど 1
 本入らなくなることがあります。<br />
 旧来の挙動が必要な場合のみ <code>BLINKGTK_RUBY_RESERVE_EM=0.5</code>
@@ -675,8 +675,8 @@ GTK の API は、原則として<strong>メインスレッド（GTK メイン<b
 バージョンのビルドツリーからファイルを混ぜないでください。</p>
 <h3 id="82-ランタイムデータファイルの同梱">8.2
 ランタイムデータファイルの同梱</h3>
-<p>実行時に次のファイル群が必要です。consumer
-アプリの配布物に同梱してください。</p>
+<p>実行時に次のファイル群が必要です。BlinkGTK
+を組み込むアプリの配布物に同梱してください。</p>
 <ul>
 <li><code>content_shell.pak</code>（UI /
 デフォルトスタイルシート。欠けると CSS が崩れる）</li>

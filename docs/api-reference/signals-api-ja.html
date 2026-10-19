@@ -1059,8 +1059,9 @@ IndexedDB</li>
 <p><code>blink_web_view_switch_render_path()</code>
 で要求した描画経路のライブ切替<br />
 (BlinkShift)
-の<strong>完了通知</strong>です。切替は非同期で、結果はこのシグナルだけが<br />
-正本です (関数の返り値は「要求を受理したか」のみ)。</p>
+の<strong>完了通知</strong>です。切替は非同期です。切替が成功したかどうかは、<br />
+このシグナルで受け取ってください
+(関数の返り値が示すのは「要求を受け付けたか」だけです)。</p>
 <div class="sourceCode" id="cb14"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_render_path_changed<span class="op">(</span>BlinkWebView <span class="op">*</span>view<span class="op">,</span></span>
 <span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>path_id<span class="op">,</span>   <span class="co">/* &quot;P1&quot; / &quot;P2&quot; */</span></span>
 <span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a>                                   <span class="dt">const</span> <span class="dt">char</span> <span class="op">*</span>result<span class="op">,</span>    <span class="co">/* 下表 */</span></span>

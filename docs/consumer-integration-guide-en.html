@@ -207,8 +207,8 @@ the shim as a direct NEEDED entry).</p>
 (runtime / devel / gir, v1.1.0+)</h3>
 <p>From v1.1.0, BlinkGTK ships as <strong>three split packages</strong>
 like WebKitGTK<br />
-(binary-only, GitHub Releases). For consumer development, install the
-runtime<br />
+(binary-only, GitHub Releases). To develop an app that embeds BlinkGTK,
+install the runtime<br />
 plus devel (and gir if needed).</p>
 <table>
 <thead>
@@ -217,7 +217,7 @@ plus devel (and gir if needed).</p>
 <th>RPM</th>
 <th>DEB</th>
 <th>Contents</th>
-<th>Consumer role</th>
+<th>Role for your app</th>
 </tr>
 </thead>
 <tbody>
@@ -257,10 +257,13 @@ symlink</td>
 <span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                 ./libblinkgtk-0.1-dev_<span class="op">&lt;</span>VER<span class="op">&gt;</span>-1_amd64.deb</span></code></pre></div>
 <p>The devel package provides <code>blinkgtk-0.1.pc</code>, so
 pkg-config (section 3.1) works<br />
-out of the box after installation. Its <code>Libs:</code> keeps the
-direct allocator shim<br />
-link even after the FHS path rewrite (Issue #90). A runtime-only install
-can run<br />
+out of the box after installation. Its <code>Libs:</code> keeps linking
+the allocator shim<br />
+directly into your executable even after the FHS path rewrite. Without
+that direct<br />
+link, versions based on Chromium 148 or later never finish committing
+the page load<br />
+and the window stays black. A runtime-only install can run<br />
 apps but cannot build them (no pkg-config / headers).</p>
 <blockquote>
 <p>For tarball (FHS) installs, extract both runtime and devel into the
@@ -330,9 +333,9 @@ loop.</li>
 <p><strong>Always call shutdown.</strong> If you end the process without
 calling <code>blink_gtk_shutdown()</code>, Chromium's<br />
 teardown runs after <code>AtExitManager</code> is destroyed and may
-abort with NOTREACHED at exit (observed in<br />
-a past issue). An auto-shutdown safety net is registered for the
-not-shut-down case, but consumers<br />
+abort with NOTREACHED at exit (this actually<br />
+happened in earlier versions). An auto-shutdown safety net is registered
+for the not-shut-down case, but applications<br />
 are advised to call <code>blink_gtk_shutdown()</code> explicitly.</p>
 <h3 id="42-creating-and-embedding-the-webview">4.2 Creating and
 embedding the WebView</h3>
@@ -348,7 +351,7 @@ embedding the WebView</h3>
 <p><strong><code>blink_web_view_new_container()</code> is
 deprecated.</strong> The old container-creating API does not
 render<br />
-on Chromium 148 and later (related to #90). Use
+in versions based on Chromium 148 and later. Use
 <code>blink_web_view_new()</code> (self-rendering) and, if you<br />
 need a container, put it in your own <strong><code>GtkOverlay</code> /
 <code>GtkBox</code></strong>.</p>
@@ -455,9 +458,9 @@ longer orthogonal. Apply the vertical writing mode to an element
 <li><code>BLINKGTK_RUBY_RESERVE_EM</code> - how much (in em) to subtract
 from the column fragmentation<br />
 width to leave room for ruby overhang. <strong>The default is 0 (no
-subtraction)</strong> as of the<br />
-Chromium 152 baseline release; it was 0.5 before that. The subtraction
-eats into column<br />
+subtraction)</strong> as of<br />
+v1.2.1, the first version based on Chromium 152; it was 0.5 in earlier
+versions. The subtraction eats into column<br />
 capacity and can cost exactly one line per column. Set<br />
 <code>BLINKGTK_RUBY_RESERVE_EM=0.5</code> only if you need the old
 behaviour.</li>
@@ -691,7 +694,7 @@ them causes a fatal V8 error at startup that prevents launch.</p>
 <h3 id="82-bundling-runtime-data-files">8.2 Bundling runtime data
 files</h3>
 <p>The following files are required at run time. Bundle them with your
-consumer application.</p>
+application.</p>
 <ul>
 <li><code>content_shell.pak</code> (UI / default stylesheet; missing it
 breaks CSS)</li>

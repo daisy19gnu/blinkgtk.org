@@ -169,11 +169,11 @@ class="sourceCode ini"><code class="sourceCode ini"><span id="cb2-1"><a href="#c
 <p><code>Icon=</code>
 には<strong>拡張子もパスも書きません</strong>。アプリ ID
 をそのまま書きます。</p>
-<p>書式の詳細は<br />
+<p>書式は<br />
 <a
 href="https://specifications.freedesktop.org/desktop-entry-spec/latest/">Desktop
 Entry Specification</a><br />
-が正本です。</p>
+で定められています。詳細はそちらを参照してください。</p>
 <p>置いたら索引を更新します。</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> update-desktop-database /usr/share/applications</span></code></pre></div>
 <h2 id="アイコンを置く">アイコンを置く</h2>
@@ -213,9 +213,9 @@ class="sourceCode xml"><code class="sourceCode xml"><span id="cb7-1"><a href="#c
 <span id="cb7-20"><a href="#cb7-20" aria-hidden="true" tabindex="-1"></a>&lt;/<span class="kw">component</span>&gt;</span></code></pre></div>
 <p>書式の検証ができます。</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">appstreamcli</span> validate /usr/share/metainfo/org.example.MyReader.metainfo.xml</span></code></pre></div>
-<p>仕様は <a
+<p>書式は <a
 href="https://www.freedesktop.org/software/appstream/docs/">AppStream</a>
-が正本です。</p>
+の仕様書で定められています。</p>
 <h2 id="ファイルを関連付ける">ファイルを関連付ける</h2>
 <p><code>.desktop</code> の <code>MimeType=</code>
 に書いたうえで、独自形式なら MIME 型そのものを登録します。</p>

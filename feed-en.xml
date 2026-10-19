@@ -12,7 +12,7 @@
     <id>tag:blinkgtk.org,2026:2026-10-18-windows-124-build4:en</id>
     <updated>2026-10-18T00:00:00Z</updated>
     <category term="release"/>
-    <summary>BlinkGTK for Windows now bundles a Vulkan-enabled GTK and adds an experimental GPU path. The path is used only when the environment variable BLINKGTK_WIN_GPU_PATH=vulkan is set. It is disabled by default and confirmed on one Intel Iris Xe machine only. In 1.2.4-build2, blink_gtk_has_typesetting_feature() returned TRUE for hanging punctuation although it did not work; this release fixes that. Chromium stays at 155.0.8059.39, and the engine-side changes for hanging punctuation (#153) and warichu (#154) in the Linux build are not included.</summary>
+    <summary>BlinkGTK for Windows now bundles a Vulkan-enabled GTK and adds an experimental GPU path. The path is used only when the environment variable BLINKGTK_WIN_GPU_PATH=vulkan is set. It is disabled by default and confirmed on one Intel Iris Xe machine only. In 1.2.4-build2, blink_gtk_has_typesetting_feature() returned TRUE for hanging punctuation although it did not work; this release fixes that. Chromium stays at 155.0.8059.39, and the engine-side changes for hanging punctuation and warichu made in the Linux build are not included.</summary>
   </entry>
   <entry>
     <title>v1.2.4-build4 released (fixes after navigation)</title>
@@ -164,7 +164,7 @@
     <id>tag:blinkgtk.org,2026:2026-09-10-build2-122:en</id>
     <updated>2026-09-10T00:00:00Z</updated>
     <category term="release"/>
-    <summary>Corrects an error in the release notes shipped with build1. They said our previous workaround had been removed; it had not, and it is still present in this release. The wording now matches the artifact. The API reference heading also still read “Target version: BlinkGTK 1.2.1 (Chromium 152.0.7977.64)” from one release back; it now states the actual version. The program is otherwise identical to build1 and typeset output does not change; what changes is the version shown in the bundled documents and the reported version string, now 1.2.2-build2. The error was found through an enquiry from BlinkGTK-Readium.</summary>
+    <summary>Corrects an error in the release notes shipped with build1. They said our previous workaround had been removed; it had not, and it is still present in this release. The wording now matches the artifact. The API reference heading also still read “Target version: BlinkGTK 1.2.1 (Chromium 152.0.7977.64)” from one release back; it now states the actual version. The program is otherwise identical to build1 and typeset output does not change; what changes is the version shown in the bundled documents and the reported version string, now 1.2.2-build2. The error was found through an enquiry from the developers of an EPUB reader built on BlinkGTK.</summary>
   </entry>
   <entry>
     <title>v1.2.1-build3 released</title>
