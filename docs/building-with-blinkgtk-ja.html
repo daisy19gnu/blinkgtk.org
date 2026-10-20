@@ -174,10 +174,8 @@
 という、原因の分かり<br />
 にくい症状になります。</p>
 <p>確認方法:</p>
-<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> allocator_shim</span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 行以上出れば OK。何も出なければ pkg-config を経由していない</span></span></code></pre></div>
+<div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 行以上出れば OK。何も出なければ pkg-config を経由していない</span></span></code></pre></div>
 <h2 id="3-インクルードは-blink_gtkh-だけ">3. インクルードは
 <code>blink_gtk.h</code> だけ</h2>
 <div class="sourceCode" id="cb5"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
@@ -190,6 +188,7 @@
 alt="BlinkGTK アプリケーションのライフサイクル。リソースの場所指定、blink_gtk_init、ウィンドウと WebView の作成、読み込みとメインループ、終了処理の 5 段。" /></p>
 <p><em>呼び出しの順序が重要です。特に <code>blink_gtk_init()</code> は
 GTK より先に呼びます。</em></p>
+<p>次のコードを <code>myapp.c</code> という名前で保存します。</p>
 <div class="sourceCode" id="cb6"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
 <span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
@@ -211,61 +210,74 @@ GTK より先に呼びます。</em></p>
 <span id="cb6-19"><a href="#cb6-19" aria-hidden="true" tabindex="-1"></a>    g_signal_connect<span class="op">(</span>app<span class="op">,</span> <span class="st">&quot;activate&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_activate<span class="op">),</span> NULL<span class="op">);</span></span>
 <span id="cb6-20"><a href="#cb6-20" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* BlinkGTK は Chromium のブラウザメインループを回す必要がある。</span></span>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_run() ではそれが回らず、ページが読み込まれない</span></span>
-<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">     * (navigation が commit しない)。</span></span>
-<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a>    GError <span class="op">*</span>error <span class="op">=</span> NULL<span class="op">;</span></span>
-<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(!</span>g_application_register<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">),</span> NULL<span class="op">,</span> <span class="op">&amp;</span>error<span class="op">))</span> <span class="op">{</span></span>
-<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>        g_printerr<span class="op">(</span><span class="st">&quot;アプリケーションの登録に失敗しました: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> error <span class="op">?</span> error<span class="op">-&gt;</span>message <span class="op">:</span> <span class="st">&quot;不明なエラー&quot;</span><span class="op">);</span></span>
-<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>        g_clear_error<span class="op">(&amp;</span>error<span class="op">);</span></span>
-<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a>        g_object_unref<span class="op">(</span>app<span class="op">);</span></span>
-<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
-<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a>    g_application_activate<span class="op">(</span>G_APPLICATION<span class="op">(</span>app<span class="op">));</span></span>
-<span id="cb6-32"><a href="#cb6-32" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
-<span id="cb6-33"><a href="#cb6-33" aria-hidden="true" tabindex="-1"></a>    g_object_unref<span class="op">(</span>app<span class="op">);</span></span>
-<span id="cb6-34"><a href="#cb6-34" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
-<span id="cb6-35"><a href="#cb6-35" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">     * (navigation が commit しない)。blink_gtk_application_run() が</span></span>
+<span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">     * 正しい順序 (register → activate → BlinkGTK のループ) を代行し、</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">     * 最後のウィンドウが閉じると自動で終了する。</span></span>
+<span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span></span>
+<span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_application_run<span class="op">(</span>app<span class="op">);</span>   <span class="co">/* 1.2.0-build9 以降 */</span></span>
+<span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    g_object_unref<span class="op">(</span>app<span class="op">);</span></span>
+<span id="cb6-28"><a href="#cb6-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
+<span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <p><strong>注意</strong>: <code>blink_web_view_new()</code> は
 <code>GtkWidget *</code> を返しますが、BlinkGTK の<br />
 API は <code>BlinkWebView *</code>
 を取ります。<code>BLINK_WEB_VIEW()</code> でキャストしてください。</p>
 <h2 id="5-makefile-の例">5. Makefile の例</h2>
+<p><code>myapp.c</code> と同じ場所に <code>Makefile</code>
+という名前で保存します。最後の行の先頭は空白ではなくタブです。</p>
 <pre class="make"><code>CC      ?= cc
 PKGS     = blinkgtk-0.1
 CFLAGS  += -O2 -Wall $(shell pkg-config --cflags $(PKGS))
 LDLIBS  += $(shell pkg-config --libs $(PKGS))
 
 myapp: myapp.c
-    $(CC) $(CFLAGS) -o $@ $&lt; $(LDLIBS)</code></pre>
+	$(CC) $(CFLAGS) -o $@ $&lt; $(LDLIBS)</code></pre>
+<p>ビルドして起動します。</p>
+<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">make</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./myapp</span></span></code></pre></div>
 <h2 id="6-実行時に必要なもの">6. 実行時に必要なもの</h2>
 <h3 id="wayland-が必要です">Wayland が必要です</h3>
 <p>BlinkGTK は <strong>Wayland 専用</strong>です。X11
 では動作しません。Wayland セッションで<br />
 実行するか、ヘッドレス検証には Weston の headless
 バックエンドを使ってください。</p>
-<div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">weston</span> <span class="at">--backend</span><span class="op">=</span>headless-backend.so <span class="at">--width</span><span class="op">=</span>1024 <span class="at">--height</span><span class="op">=</span>768 <span class="kw">&amp;</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">WAYLAND_DISPLAY</span><span class="op">=</span>wayland-1</span></code></pre></div>
+<div class="sourceCode" id="cb9"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="ex">weston</span> <span class="at">--backend</span><span class="op">=</span>headless-backend.so <span class="at">--width</span><span class="op">=</span>1024 <span class="at">--height</span><span class="op">=</span>768 <span class="kw">&amp;</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">WAYLAND_DISPLAY</span><span class="op">=</span>wayland-1</span></code></pre></div>
 <h3 id="chromium-のリソースファイルの位置">Chromium
 のリソースファイルの位置</h3>
 <p>Chromium は ICU データ (<code>icudtl.dat</code>)、V8
 スナップショット<br />
 (<code>snapshot_blob.bin</code> /
 <code>v8_context_snapshot.bin</code>)、リソースパック<br />
-(<code>content_shell.pak</code>) を必要とします。これらは<br />
-<strong>カレントディレクトリではなく実行ファイルのあるディレクトリを基準に</strong><br />
-探索されます。</p>
-<p>RPM / DEB
-でインストールした場合は正しい場所に配置されるため、通常は何もする<br />
-必要はありません。tarball
-を展開して使う場合や、実行ファイルを別の場所に置いた<br />
-場合は次のエラーになります。</p>
+(<code>content_shell.pak</code>)
+を必要とします。カレントディレクトリは見ず、次の順に探します。</p>
+<ol type="1">
+<li><code>blink_gtk_set_resources_path()</code> で指定した場所
+(指定した場合はここだけを見ます)</li>
+<li>実行ファイルのあるディレクトリ</li>
+<li>そこに <code>icudtl.dat</code> が無ければ、<code>libblinkgtk</code>
+が置かれた場所 (<code>&lt;libdir&gt;</code>) を基準に<br />
+<code>&lt;libdir&gt;/blinkgtk-0.1/chromium/</code>、<code>&lt;libdir&gt;/chromium/</code>、<code>&lt;libdir&gt;/</code>
+の順 (1.2.3 以降)</li>
+</ol>
+<p>RPM / DEB でインストールした場合や、tarball を <code>/</code>
+に展開した場合は 3 で見つかるため、<br />
+通常は何もする必要はありません。リソースをこれらと違う場所に置くと、起動時に<br />
+次のエラーになります。</p>
 <pre><code>ERROR:base/i18n/icu_util.cc: Invalid file descriptor to ICU data received.
 FATAL:base/i18n/icu_util.cc: Check failed: result.</code></pre>
-<p>このときは、実行ファイルをリソースと同じディレクトリに置くか、ライブラリ<br />
-探索パスを合わせてください。</p>
-<div class="sourceCode" id="cb10"><pre
-class="sourceCode sh"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/blinkgtk-0.1:<span class="dt">\</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a>/opt/blinkgtk/usr/lib64/blinkgtk-0.1/chromium</span></code></pre></div>
+<p>このときは、<code>blink_gtk_init()</code> より前に
+<code>blink_gtk_set_resources_path()</code> で<br />
+リソースのディレクトリを指定してください。</p>
+<div class="sourceCode" id="cb11"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a>blink_gtk_set_resources_path<span class="op">(</span><span class="st">&quot;/opt/myapp/lib/chromium/&quot;</span><span class="op">);</span>  <span class="co">/* blink_gtk_init() より前 */</span></span></code></pre></div>
+<p>ライブラリも別の場所 (例 <code>/opt/blinkgtk</code>)
+に展開した場合は、実行時のライブラリの<br />
+探索パスも合わせます。</p>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode sh"><code class="sourceCode bash"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">LD_LIBRARY_PATH</span><span class="op">=</span>/opt/blinkgtk/usr/lib64/blinkgtk-0.1:<span class="dt">\</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a>/opt/blinkgtk/usr/lib64/blinkgtk-0.1/chromium</span></code></pre></div>
 <h2 id="7-うまくいかないときの確認順序">7.
 うまくいかないときの確認順序</h2>
 <table>

@@ -146,7 +146,9 @@ available.</p>
 </tbody>
 </table>
 <h2 id="creating-one">Creating one</h2>
-<p>Three constructors. Pick by what you need.</p>
+<p>In new applications, use <code>blink_web_view_new()</code> and, if
+you need a container, put the<br />
+WebView in your own <code>GtkOverlay</code> / <code>GtkBox</code>.</p>
 <table>
 <thead>
 <tr>
@@ -159,12 +161,7 @@ available.</p>
 <tr>
 <td><code>blink_web_view_new()</code></td>
 <td><code>BlinkWebView</code> (GtkWidget*)</td>
-<td>The usual choice. You place it yourself</td>
-</tr>
-<tr>
-<td><code>blink_web_view_new_container()</code></td>
-<td><code>GtkOverlay</code> wrapping a BlinkWebView</td>
-<td>When you would rather not wire up the overlay yourself</td>
+<td><strong>Use this.</strong> You place it yourself</td>
 </tr>
 <tr>
 <td><code>blink_web_view_new_with_gpu_mode()</code></td>
@@ -172,11 +169,20 @@ available.</p>
 <td><strong>Cannot select the path</strong> (fixed at init). Call
 <code>blink_gtk_set_gpu_mode()</code> before init</td>
 </tr>
+<tr>
+<td><code>blink_web_view_new_container()</code></td>
+<td><code>GtkOverlay</code> wrapping a BlinkWebView</td>
+<td>Kept for existing applications. Do not use it in new
+applications</td>
+</tr>
 </tbody>
 </table>
-<p>Note that <code>blink_web_view_new_container()</code> returns a
-<strong>GtkOverlay</strong>. Get the<br />
-<code>BlinkWebView</code> inside it with:</p>
+<p><code>blink_web_view_new_container()</code> only wraps a WebView
+created with <code>blink_web_view_new()</code><br />
+in a <code>GtkOverlay</code>. The <code>GtkPicture</code> inside is left
+over from an earlier rendering method<br />
+and draws nothing. Existing applications that use it can get the inner
+<code>BlinkWebView</code> with:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>overlay <span class="op">=</span> blink_web_view_new_container<span class="op">();</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>BlinkWebView <span class="op">*</span>view <span class="op">=</span> g_object_get_data<span class="op">(</span>G_OBJECT<span class="op">(</span>overlay<span class="op">),</span> <span class="st">&quot;blinkgtk-webview&quot;</span><span class="op">);</span></span></code></pre></div>
 <p>For the rendering path, see the <a

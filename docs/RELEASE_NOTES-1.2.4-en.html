@@ -114,6 +114,110 @@ Notes</h1>
 href="RELEASE_NOTES-1.2.4-ja.html">日本語</a> | English</p>
 <p>The rendering engine is updated to <strong>Chromium 155</strong>.</p>
 <hr />
+<h2 id="if-you-are-upgrading-from-123">If you are upgrading from
+1.2.3</h2>
+<p>Find the rows that match how you use BlinkGTK. Each row links to the
+full description.</p>
+<p>This table is for the Linux version. BlinkGTK for Windows does not
+include the typesetting features (hanging punctuation, warichu), and
+they do not work there. On Windows, see <a
+href="https://blinkgtk.org/docs/windows-getting-started-en.html#upgrading-from-an-earlier-version">Upgrading
+from an earlier version</a> in the Windows guide. If you build with MSVC
+and <code>/WX</code>, add <code>/utf-8</code>: the Japanese comments in
+<code>blink_gtk.h</code> trigger warning C4819 (<a
+href="#what-build1-lets-you-do">details</a>).</p>
+<table>
+<thead>
+<tr>
+<th>How you use it</th>
+<th>What changes</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>dnf on Fedora 44</td>
+<td>You stay on v1.2.3. Updates do not fail</td>
+<td>Nothing (<a href="#fedora-44-support-has-ended">details</a>)</td>
+</tr>
+<tr>
+<td>dnf on Fedora 45</td>
+<td>The repository configuration comes in
+<code>blinkgtk-release</code></td>
+<td>Run one command once (<a
+href="#fedora-44-support-has-ended">steps</a>)</td>
+</tr>
+<tr>
+<td>A <code>.repo</code> placed with <code>curl</code></td>
+<td>Kept as <code>blinkgtk.repo.rpmorig</code>, not used</td>
+<td>Nothing (<a href="#fedora-44-support-has-ended">details</a>)</td>
+</tr>
+<tr>
+<td>Installing RPM files directly</td>
+<td>The main package needs <code>blinkgtk-release</code></td>
+<td>Also specify the <code>blinkgtk-release</code> RPM (<a
+href="#fedora-44-support-has-ended">details</a>)</td>
+</tr>
+<tr>
+<td>Installing DEB files by hand</td>
+<td>The correct name is
+<code>..._&lt;version&gt;-1_amd64.deb</code></td>
+<td>Use this name (<a href="#what-build4-fixes">details</a>)</td>
+</tr>
+<tr>
+<td>Pages using <code>::first-line</code></td>
+<td>Line height computed as before
+<code>FirstLineTextMetrics</code></td>
+<td>Nothing (<a
+href="#changes-for-japanese-typesetting-chromium-155">details</a>)</td>
+</tr>
+<tr>
+<td>Pages that set <code>margin-trim</code></td>
+<td>The setting now applies</td>
+<td>Nothing (<a
+href="#changes-for-japanese-typesetting-chromium-155">details</a>)</td>
+</tr>
+<tr>
+<td>Pages that set <code>hanging-punctuation: allow-end</code>
+(Linux)</td>
+<td>Enabled by default; punctuation hangs at the line end</td>
+<td>Nothing (<a href="#what-build1-lets-you-do">details</a>)</td>
+</tr>
+<tr>
+<td><code>text-decoration</code> over spaces at line start or end</td>
+<td>No line is drawn over those spaces</td>
+<td>To revert: <code>text-decoration-skip-spaces: none</code> (<a
+href="#behavior-changes-in-build1">details</a>)</td>
+</tr>
+<tr>
+<td>Async capture on the software path</td>
+<td>In most cases returns the screen at the time of the request</td>
+<td>Nothing (<a href="#what-build3-adds-or-changes">details</a>)</td>
+</tr>
+<tr>
+<td>Built-in AI APIs</td>
+<td>All report that they are unavailable</td>
+<td>Nothing (<a href="#what-build3-adds-or-changes">details</a>)</td>
+</tr>
+<tr>
+<td>Software rendering on a scale-1 display</td>
+<td>Received through a path that does not use capture</td>
+<td>To revert: <code>BLINKGTK_T2_AUTO=0</code> (<a
+href="#what-build1-makes-faster">details</a>)</td>
+</tr>
+<tr>
+<td>Static pages in BlinkWebView</td>
+<td>No longer redrawn every 16 ms</td>
+<td>To revert: <code>BLINKGTK_QUEUE_DRAW_TIMER=1</code> (<a
+href="#what-build1-makes-faster">details</a>)</td>
+</tr>
+<tr>
+<td>GTK on a backend other than Wayland</td>
+<td>One warning is printed; behavior unchanged</td>
+<td>Nothing (<a href="#behavior-changes-in-build1">details</a>)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="fedora-44-support-has-ended">Fedora 44 support has ended</h2>
 <ul>
 <li><strong>v1.2.3 is the last release for Fedora 44.</strong> From
@@ -172,9 +276,9 @@ selection, so clicks did not trigger it.</li>
 <li><strong>With accessibility enabled, navigating to another page could
 make the app stop responding.</strong> After the old document's view was
 destroyed, the bridge to assistive technologies still pointed at the
-destroyed tree, and when an assistive technology (AT-SPI) queried an
-item of the old document, the main thread did not return. Without
-assistive technologies this did not happen.</li>
+destroyed accessibility tree, and when an assistive technology (AT-SPI)
+queried an item of the old document, the main thread did not return.
+Without assistive technologies this did not happen.</li>
 <li><strong>The bundled INSTALL and README gave the wrong DEB file
 names</strong> (<code>libblinkgtk-0.1-0_&lt;version&gt;_amd64.deb</code>
 instead of <code>..._&lt;version&gt;-1_amd64.deb</code>), so the

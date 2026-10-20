@@ -348,13 +348,15 @@ embedding the WebView</h3>
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">// embed in your own layout (e.g. GtkOverlay)</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> overlay <span class="op">=</span> gtk_overlay_new<span class="op">();</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>gtk_overlay_set_child<span class="op">(</span>GTK_OVERLAY<span class="op">(</span>overlay<span class="op">),</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong><code>blink_web_view_new_container()</code> is
-deprecated.</strong> The old container-creating API does not
-render<br />
-in versions based on Chromium 148 and later. Use
-<code>blink_web_view_new()</code> (self-rendering) and, if you<br />
-need a container, put it in your own <strong><code>GtkOverlay</code> /
-<code>GtkBox</code></strong>.</p>
+<p><strong>Use <code>blink_web_view_new()</code> and, if you need a
+container, put it in your own <code>GtkOverlay</code> /
+<code>GtkBox</code>.</strong><br />
+<code>blink_web_view_new_container()</code> only wraps a WebView created
+with <code>blink_web_view_new()</code> in a
+<code>GtkOverlay</code>.<br />
+The <code>GtkPicture</code> inside is left over from an earlier
+rendering method and draws nothing. Do not use it in new
+applications.</p>
 <h3 id="43-repeated-load_uri">4.3 Repeated load_uri</h3>
 <p>Calling <code>blink_web_view_load_uri()</code> repeatedly on the same
 WebView is safe. The internal renderer<br />
@@ -463,7 +465,11 @@ v1.2.1, the first version based on Chromium 152; it was 0.5 in earlier
 versions. The subtraction eats into column<br />
 capacity and can cost exactly one line per column. Set<br />
 <code>BLINKGTK_RUBY_RESERVE_EM=0.5</code> only if you need the old
-behaviour.</li>
+behaviour. It is a switch for isolating problems (an<br />
+"escape hatch" in the <a
+href="api-reference/environment-variables-en.html">environment variable
+list</a>) and may be removed in a<br />
+future release with notice.</li>
 </ul>
 <hr />
 <h2 id="6-application-integration">6. Application integration</h2>

@@ -144,7 +144,9 @@ GtkWidget を継承しているので、他の GTK ウィジェットと同じ�
 </tbody>
 </table>
 <h2 id="作る">作る</h2>
-<p>3 通りあります。用途で選んでください。</p>
+<p>新しく書くアプリでは <code>blink_web_view_new()</code>
+を使い、コンテナが要るなら自前の<br />
+<code>GtkOverlay</code> / <code>GtkBox</code> に載せてください。</p>
 <table>
 <thead>
 <tr>
@@ -157,12 +159,7 @@ GtkWidget を継承しているので、他の GTK ウィジェットと同じ�
 <tr>
 <td><code>blink_web_view_new()</code></td>
 <td><code>BlinkWebView</code> (GtkWidget*)</td>
-<td>通常はこれ。自分でコンテナに入れる</td>
-</tr>
-<tr>
-<td><code>blink_web_view_new_container()</code></td>
-<td><code>GtkOverlay</code> (中に BlinkWebView)</td>
-<td>重ね合わせ表示を自前で組みたくないとき</td>
+<td><strong>これを使います。</strong> 自分でコンテナに入れる</td>
 </tr>
 <tr>
 <td><code>blink_web_view_new_with_gpu_mode()</code></td>
@@ -171,11 +168,19 @@ GtkWidget を継承しているので、他の GTK ウィジェットと同じ�
 で確定済)。<code>blink_gtk_set_gpu_mode()</code> を init
 より前に呼ぶこと</td>
 </tr>
+<tr>
+<td><code>blink_web_view_new_container()</code></td>
+<td><code>GtkOverlay</code> (中に BlinkWebView)</td>
+<td>既存のアプリのために残している関数。新しく書くアプリでは使わない</td>
+</tr>
 </tbody>
 </table>
-<p><code>blink_web_view_new_container()</code> が返すのは
-<strong>GtkOverlay</strong> です。中の<br />
-<code>BlinkWebView</code> は次で取り出します。</p>
+<p><code>blink_web_view_new_container()</code>
+は、<code>blink_web_view_new()</code> で作った WebView を<br />
+<code>GtkOverlay</code> に入れて返すだけの関数です。中の
+<code>GtkPicture</code> は以前の描画方式の名残りで、<br />
+何も描きません。既存のアプリで使っている場合、中の
+<code>BlinkWebView</code> は次で取り出せます。</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>overlay <span class="op">=</span> blink_web_view_new_container<span class="op">();</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>BlinkWebView <span class="op">*</span>view <span class="op">=</span> g_object_get_data<span class="op">(</span>G_OBJECT<span class="op">(</span>overlay<span class="op">),</span> <span class="st">&quot;blinkgtk-webview&quot;</span><span class="op">);</span></span></code></pre></div>
 <p>描画経路の指定は <a href="./settings-api-ja.html">設定 API</a>

@@ -1279,33 +1279,31 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb12-1"><a href=
 <span id="cb17-3"><a href="#cb17-3" aria-hidden="true" tabindex="-1"></a>                          <span class="dt">int</span> error_code<span class="op">,</span></span>
 <span id="cb17-4"><a href="#cb17-4" aria-hidden="true" tabindex="-1"></a>                          gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb17-5"><a href="#cb17-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">/* ダウンロード可能なファイルタイプを検出 */</span></span>
-<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_str_has_suffix<span class="op">(</span>failing_url<span class="op">,</span> <span class="st">&quot;.pdf&quot;</span><span class="op">)</span> <span class="op">||</span> g_str_has_suffix<span class="op">(</span>failing_url<span class="op">,</span> <span class="st">&quot;.zip&quot;</span><span class="op">)</span> <span class="op">||</span></span>
+<span id="cb17-6"><a href="#cb17-6" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="op">(</span>g_str_has_suffix<span class="op">(</span>failing_url<span class="op">,</span> <span class="st">&quot;.pdf&quot;</span><span class="op">)</span> <span class="op">||</span> g_str_has_suffix<span class="op">(</span>failing_url<span class="op">,</span> <span class="st">&quot;.zip&quot;</span><span class="op">)</span> <span class="op">||</span> g_str_has_suffix<span class="op">(</span>failing_url<span class="op">,</span> <span class="st">&quot;.tar.gz&quot;</span><span class="op">))</span> <span class="op">{</span></span>
 <span id="cb17-7"><a href="#cb17-7" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>g_str_has_suffix<span class="op">(</span>failing_url<span class="op">,</span> <span class="st">&quot;.tar.gz&quot;</span><span class="op">))</span> <span class="op">{</span></span>
-<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>        GtkWidget<span class="op">*</span> dialog <span class="op">=</span> gtk_message_dialog_new<span class="op">(</span></span>
-<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>            NULL<span class="op">,</span></span>
-<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>            GTK_DIALOG_MODAL<span class="op">,</span></span>
-<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>            GTK_MESSAGE_QUESTION<span class="op">,</span></span>
-<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>            GTK_BUTTONS_YES_NO<span class="op">,</span></span>
-<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;ダウンロード&quot;</span></span>
-<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        <span class="op">);</span></span>
-<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>        gtk_message_dialog_format_secondary_text<span class="op">(</span></span>
-<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>            GTK_MESSAGE_DIALOG<span class="op">(</span>dialog<span class="op">),</span></span>
-<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;このファイルをダウンロードしますか？</span><span class="sc">\n\n%s</span><span class="st">&quot;</span><span class="op">,</span></span>
-<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a>            failing_url</span>
-<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>        <span class="op">);</span></span>
-<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> response <span class="op">=</span> gtk_dialog_run<span class="op">(</span>GTK_DIALOG<span class="op">(</span>dialog<span class="op">));</span></span>
-<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>        gtk_widget_destroy<span class="op">(</span>dialog<span class="op">);</span></span>
-<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>response <span class="op">==</span> GTK_RESPONSE_YES<span class="op">)</span> <span class="op">{</span></span>
-<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>            g_print<span class="op">(</span><span class="st">&quot;ダウンロード開始: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> failing_url<span class="op">);</span></span>
-<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>            <span class="co">/* 実際のダウンロード処理 */</span></span>
-<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
-<span id="cb17-31"><a href="#cb17-31" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
-<span id="cb17-32"><a href="#cb17-32" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<span id="cb17-8"><a href="#cb17-8" aria-hidden="true" tabindex="-1"></a>        GtkWidget<span class="op">*</span> dialog <span class="op">=</span> gtk_message_dialog_new<span class="op">(</span></span>
+<span id="cb17-9"><a href="#cb17-9" aria-hidden="true" tabindex="-1"></a>            NULL<span class="op">,</span></span>
+<span id="cb17-10"><a href="#cb17-10" aria-hidden="true" tabindex="-1"></a>            GTK_DIALOG_MODAL<span class="op">,</span></span>
+<span id="cb17-11"><a href="#cb17-11" aria-hidden="true" tabindex="-1"></a>            GTK_MESSAGE_QUESTION<span class="op">,</span></span>
+<span id="cb17-12"><a href="#cb17-12" aria-hidden="true" tabindex="-1"></a>            GTK_BUTTONS_YES_NO<span class="op">,</span></span>
+<span id="cb17-13"><a href="#cb17-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;ダウンロード&quot;</span></span>
+<span id="cb17-14"><a href="#cb17-14" aria-hidden="true" tabindex="-1"></a>        <span class="op">);</span></span>
+<span id="cb17-15"><a href="#cb17-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-16"><a href="#cb17-16" aria-hidden="true" tabindex="-1"></a>        gtk_message_dialog_format_secondary_text<span class="op">(</span></span>
+<span id="cb17-17"><a href="#cb17-17" aria-hidden="true" tabindex="-1"></a>            GTK_MESSAGE_DIALOG<span class="op">(</span>dialog<span class="op">),</span></span>
+<span id="cb17-18"><a href="#cb17-18" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;このファイルをダウンロードしますか？</span><span class="sc">\n\n%s</span><span class="st">&quot;</span><span class="op">,</span></span>
+<span id="cb17-19"><a href="#cb17-19" aria-hidden="true" tabindex="-1"></a>            failing_url</span>
+<span id="cb17-20"><a href="#cb17-20" aria-hidden="true" tabindex="-1"></a>        <span class="op">);</span></span>
+<span id="cb17-21"><a href="#cb17-21" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-22"><a href="#cb17-22" aria-hidden="true" tabindex="-1"></a>        <span class="dt">int</span> response <span class="op">=</span> gtk_dialog_run<span class="op">(</span>GTK_DIALOG<span class="op">(</span>dialog<span class="op">));</span></span>
+<span id="cb17-23"><a href="#cb17-23" aria-hidden="true" tabindex="-1"></a>        gtk_widget_destroy<span class="op">(</span>dialog<span class="op">);</span></span>
+<span id="cb17-24"><a href="#cb17-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb17-25"><a href="#cb17-25" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="op">(</span>response <span class="op">==</span> GTK_RESPONSE_YES<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb17-26"><a href="#cb17-26" aria-hidden="true" tabindex="-1"></a>            g_print<span class="op">(</span><span class="st">&quot;ダウンロード開始: </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> failing_url<span class="op">);</span></span>
+<span id="cb17-27"><a href="#cb17-27" aria-hidden="true" tabindex="-1"></a>            <span class="co">/* 実際のダウンロード処理 */</span></span>
+<span id="cb17-28"><a href="#cb17-28" aria-hidden="true" tabindex="-1"></a>        <span class="op">}</span></span>
+<span id="cb17-29"><a href="#cb17-29" aria-hidden="true" tabindex="-1"></a>    <span class="op">}</span></span>
+<span id="cb17-30"><a href="#cb17-30" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
 <hr />
 <h2 id="トラブルシューティング">トラブルシューティング</h2>
 <h3 id="シグナルが発火しない">シグナルが発火しない</h3>

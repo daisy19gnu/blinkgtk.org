@@ -126,6 +126,18 @@
   .doc td code, .doc th code, .doc td a, .doc th a { overflow-wrap: normal; word-break: normal; }
   .doc table { border-collapse: collapse; width: 100%; display: block; overflow-x: auto; }
   .doc th, .doc td { border: 1px solid rgba(128,128,128,.3); padding: .45em .7em; text-align: left; }
+  /* 狭い画面では表の 1 列目 (変数名・項目名) を左に留める (2026-10-19、レビューの指摘
+   * 「360px では説明を読む間に変数名が視界から外れる」)。表は自身の中で横スクロールするので、
+   * 1 列目だけ sticky にして、2 列目以降を読んでいる間も何の行かが見えるようにする。
+   * 1 列目は画面の 4 割までにし、長い変数名は表の中でも折り返す */
+  @media (max-width: 600px) {
+    .doc td:first-child, .doc th:first-child { position: sticky; left: 0; z-index: 1;
+      background: #ffffff; max-width: 40vw; box-shadow: 1px 0 0 rgba(128,128,128,.3); }
+    .doc td:first-child code { overflow-wrap: anywhere; word-break: break-all; }
+  }
+  @media (max-width: 600px) and (prefers-color-scheme: dark) {
+    .doc td:first-child, .doc th:first-child { background: #1a2027; }
+  }
   .doc blockquote { border-left: 3px solid rgba(128,128,128,.4); margin-left: 0; padding-left: 1em; }
   /* 図は必ず明るい台紙に載せる。SVG の地の文字は #333 で描かれており、
    * 暗色表示の本文背景に直接置くと沈んで読めなくなるため (2026-08-04)。 */

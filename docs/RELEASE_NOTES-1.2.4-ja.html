@@ -115,6 +115,105 @@ href="RELEASE_NOTES-1.2.4-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 155</strong>
 に更新しました。</p>
 <hr />
+<h2 id="前の版-123-から上げる方へ">前の版 (1.2.3) から上げる方へ</h2>
+<p>使い方に当たる行を確かめてください。詳しい説明は各行のリンク先にあります。</p>
+<p>この表は Linux 版のものです。BlinkGTK for Windows では組版の機能
+(ぶら下げ・割注) が入っておらず、動作しません。Windows の方は <a
+href="https://blinkgtk.org/docs/windows-getting-started-ja.html#前の版から上げる方">Windows
+版の「前の版から上げる方」</a> を確かめてください。MSVC で
+<code>/WX</code> を使う場合は、<code>blink_gtk.h</code>
+の日本語のコメントで警告 C4819 が出るので <code>/utf-8</code>
+を付けてください (<a
+href="#build1-でできるようになったこと">詳細</a>)。</p>
+<table>
+<thead>
+<tr>
+<th>対象の使い方</th>
+<th>変わること</th>
+<th>必要な対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Fedora 44 で dnf を使う</td>
+<td>v1.2.3 に留まる。更新でエラーにならない</td>
+<td>不要 (<a href="#fedora-44-のサポートを終了しました">詳細</a>)</td>
+</tr>
+<tr>
+<td>Fedora 45 で dnf を使う</td>
+<td>リポジトリの設定を <code>blinkgtk-release</code> で配る</td>
+<td>1 行のコマンドを 1 回実行 (<a
+href="#fedora-44-のサポートを終了しました">手順</a>)</td>
+</tr>
+<tr>
+<td><code>curl</code> で置いた <code>.repo</code> がある</td>
+<td><code>blinkgtk.repo.rpmorig</code> として残り、使われない</td>
+<td>不要 (<a href="#fedora-44-のサポートを終了しました">詳細</a>)</td>
+</tr>
+<tr>
+<td>RPM ファイルを直接入れる</td>
+<td>本体が <code>blinkgtk-release</code> を必要とする</td>
+<td><code>blinkgtk-release</code> の RPM も一緒に指定 (<a
+href="#fedora-44-のサポートを終了しました">詳細</a>)</td>
+</tr>
+<tr>
+<td>DEB ファイルを手で入れる</td>
+<td>正しい名前は <code>..._&lt;版&gt;-1_amd64.deb</code></td>
+<td>この名前で指定 (<a href="#build4-で修正したこと">詳細</a>)</td>
+</tr>
+<tr>
+<td><code>::first-line</code> を使う頁</td>
+<td>行の高さが <code>FirstLineTextMetrics</code> の前の計算に戻る</td>
+<td>不要 (<a href="#日本語組版に関わる変更-chromium-155">詳細</a>)</td>
+</tr>
+<tr>
+<td><code>margin-trim</code> を指定した頁</td>
+<td>指定が反映される</td>
+<td>不要 (<a href="#日本語組版に関わる変更-chromium-155">詳細</a>)</td>
+</tr>
+<tr>
+<td><code>hanging-punctuation: allow-end</code> を指定した頁
+(Linux)</td>
+<td>既定で有効になり、行末でぶら下がる</td>
+<td>不要 (<a href="#build1-でできるようになったこと">詳細</a>)</td>
+</tr>
+<tr>
+<td>行頭・行末の空白に <code>text-decoration</code></td>
+<td>空白の部分に線が引かれない</td>
+<td>以前の描画は <code>text-decoration-skip-spaces: none</code> (<a
+href="#build1-で挙動が変わるもの">詳細</a>)</td>
+</tr>
+<tr>
+<td>software の非同期の撮影</td>
+<td>ほとんどの場合、要求した時点の画面を返す</td>
+<td>不要 (<a
+href="#build3-でできるようになったこと変わったこと">詳細</a>)</td>
+</tr>
+<tr>
+<td>組み込み AI の API</td>
+<td>どれも「使えない」と答える</td>
+<td>不要 (<a
+href="#build3-でできるようになったこと変わったこと">詳細</a>)</td>
+</tr>
+<tr>
+<td>拡大率 1 の画面の software の描画</td>
+<td>撮影を使わない経路で受け取る</td>
+<td>以前の経路は <code>BLINKGTK_T2_AUTO=0</code> (<a
+href="#build1-で速くなったこと">詳細</a>)</td>
+</tr>
+<tr>
+<td>BlinkWebView で静止した頁</td>
+<td>16ms ごとに描き直さない</td>
+<td>以前の動作は <code>BLINKGTK_QUEUE_DRAW_TIMER=1</code> (<a
+href="#build1-で速くなったこと">詳細</a>)</td>
+</tr>
+<tr>
+<td>GTK を Wayland 以外で動かす</td>
+<td>警告を 1 件出す。動作は変えていない</td>
+<td>不要 (<a href="#build1-で挙動が変わるもの">詳細</a>)</td>
+</tr>
+</tbody>
+</table>
 <h2 id="fedora-44-のサポートを終了しました">Fedora 44
 のサポートを終了しました</h2>
 <ul>
@@ -168,7 +267,7 @@ Release にある <code>blinkgtk-release-*.noarch.rpm</code>
 <code>user-select: none</code>
 を当てている頁では、クリックで選択が変わらないので、クリックでは起きませんでした。</li>
 <li><strong>支援技術を有効にして頁を移ると、アプリが応答しなくなることがありました。</strong>
-前の文書の部品が破棄された後も、支援技術への橋渡しが、破棄された木を指したままでした。支援技術
+前の文書の部品が破棄された後も、支援技術への橋渡しが、破棄済みのアクセシビリティツリーを指したままでした。支援技術
 (AT-SPI)
 が前の文書の項目を問い合わせると、メインスレッドが戻らなくなっていました。支援技術を使わない場合は起きませんでした。</li>
 <li><strong>同梱の INSTALL と README が、DEB

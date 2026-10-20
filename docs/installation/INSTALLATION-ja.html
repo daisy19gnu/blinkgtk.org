@@ -125,7 +125,10 @@ tarball）を取得してください。ソースからのビルドは配布物�
 devel）</a></li>
 <li><a href="#インストール方法">インストール方法</a>
 <ul>
-<li><a href="#fedora--rhelrpm">Fedora / RHEL（RPM）</a></li>
+<li><a href="#fedora--rheldnf-リポジトリ--更新も-dnf-に任せる">Fedora /
+RHEL（dnf リポジトリ）</a></li>
+<li><a href="#fedora--rhelrpm-を個別に">Fedora / RHEL（RPM
+を個別に）</a></li>
 <li><a href="#debian--ubuntudeb">Debian / Ubuntu（DEB）</a></li>
 <li><a href="#tarballfhs-レイアウト">Tarball（FHS レイアウト）</a></li>
 </ul></li>
@@ -273,25 +276,25 @@ Releases に<br />
 <p>リポジトリを登録せず、ダウンロードした RPM を直接入れる場合。</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime のみ（アプリ実行）</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc45.x86_64.rpm</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.4-build4.fc45.x86_64.rpm</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 開発する場合は devel + gir も</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc45.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-1.fc45.x86_64.rpm</span></code></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.4-build4.fc45.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.4-build4.fc45.x86_64.rpm</span></code></pre></div>
 <h3 id="debian--ubuntudeb">Debian / Ubuntu（DEB）</h3>
 <div class="sourceCode" id="cb7"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb        <span class="co"># runtime</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.4-build4-1_amd64.deb        <span class="co"># runtime</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.4-build4-1_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
 <h3 id="tarballfhs-レイアウト">Tarball（FHS レイアウト）</h3>
 <p>runtime / devel とも FHS
 レイアウト（<code>usr/lib64/...</code>）です。root（<code>/</code>）に展開します。</p>
 <div class="sourceCode" id="cb8"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.4-build4-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                                    <span class="co"># ld.so.conf.d を反映</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel（BlinkGTK を組み込むアプリを開発するときのみ）</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-<span class="op">&lt;</span>VERSION<span class="op">&gt;</span>-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-1.2.4-build4-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
 <p><code>ldconfig</code> は runtime に含まれる
 <code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code><br />
 （private ディレクトリを検索パスに追加）を反映するために実行します。</p>
@@ -300,24 +303,21 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="
 <h3 id="runtimeアプリ実行">runtime（アプリ実行）</h3>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># 公開 ABI が ld.so で解決されるか</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ldconfig <span class="at">-p</span> <span class="kw">|</span></span>
-<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> libblinkgtk-0.1</span>
-<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>    <span class="ex">libblinkgtk-0.1.so.0</span> <span class="er">(</span><span class="ex">libc6,x86-64</span><span class="kw">)</span> <span class="ex">=</span><span class="op">&gt;</span> /usr/lib64/libblinkgtk-0.1.so.0</span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb9-7"><a href="#cb9-7" aria-hidden="true" tabindex="-1"></a><span class="co"># サンプルブラウザ（Wayland セッションで）</span></span>
-<span id="cb9-8"><a href="#cb9-8" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> /usr/libexec/blinkgtk-0.1/blinkgtk_browser</span></code></pre></div>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> ldconfig <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> libblinkgtk-0.1</span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a>	<span class="ex">libblinkgtk-0.1.so.0</span> <span class="er">(</span><span class="ex">libc6,x86-64</span><span class="kw">)</span> <span class="ex">=</span><span class="op">&gt;</span> /usr/lib64/libblinkgtk-0.1.so.0</span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># サンプルブラウザ（Wayland セッションで）</span></span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> /usr/libexec/blinkgtk-0.1/blinkgtk_browser</span></code></pre></div>
 <h3 id="develpkg-config">devel（pkg-config）</h3>
 <div class="sourceCode" id="cb10"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--modversion</span> blinkgtk-0.1</span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="op">&lt;</span>VERSION<span class="op">&gt;</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--cflags</span> blinkgtk-0.1</span>
-<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a><span class="ex">-I/usr/include/blinkgtk-0.1</span> <span class="at">-I</span>/usr/include/gtk-4.0 ... <span class="at">-pthread</span></span>
-<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--libs</span> blinkgtk-0.1</span>
-<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a><span class="ex">-L/usr/lib64</span> <span class="at">-L</span>/usr/lib64/blinkgtk-0.1 <span class="at">-L</span>/usr/lib64/blinkgtk-0.1/chromium <span class="dt">\</span></span>
-<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a>  <span class="at">-lblinkgtk-0.1</span> <span class="at">-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</span> ...</span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--modversion</span> blinkgtk-0.1     <span class="co"># 版数を表示する。-buildN は付かない (例 1.2.4)</span></span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--cflags</span> blinkgtk-0.1</span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="ex">-I/usr/include/blinkgtk-0.1</span> <span class="at">-I</span>/usr/include/gtk-4.0 ... <span class="at">-pthread</span></span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a><span class="ex">$</span> pkg-config <span class="at">--libs</span> blinkgtk-0.1</span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a><span class="ex">-L/usr/lib64</span> <span class="at">-L</span>/usr/lib64/blinkgtk-0.1 <span class="at">-L</span>/usr/lib64/blinkgtk-0.1/chromium <span class="dt">\</span></span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>  <span class="at">-lblinkgtk-0.1</span> <span class="at">-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</span> ...</span></code></pre></div>
 <p><strong>重要</strong>: <code>--libs</code> に PartitionAlloc
 allocator shim<br />
 （<code>-lbase_allocator_partition_allocator_src_partition_alloc_allocator_shim</code>）が<br />
@@ -370,9 +370,7 @@ class="sourceCode bash"><code class="sourceCode bash"><span id="cb14-1"><a href=
 <p>ld.so の検索パスに private ディレクトリが反映されていません。</p>
 <div class="sourceCode" id="cb15"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                          <span class="co"># /etc/ld.so.conf.d/blinkgtk-0.1.conf を反映</span></span>
-<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span></span>
-<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> libblinkgtk-0.1     <span class="co"># 解決を確認</span></span></code></pre></div>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a><span class="ex">ldconfig</span> <span class="at">-p</span> <span class="kw">|</span> <span class="fu">grep</span> libblinkgtk-0.1     <span class="co"># 解決を確認</span></span></code></pre></div>
 <h3 id="2-pkg-config-が-blinkgtk-01-を検出しない">2. pkg-config が
 blinkgtk-0.1 を検出しない</h3>
 <p>devel パッケージ未導入、または <code>PKG_CONFIG_PATH</code>

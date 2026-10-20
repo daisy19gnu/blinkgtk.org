@@ -549,9 +549,13 @@ text/html</strong></td>
 </table>
 <p><strong>複数 WebView での注意</strong>: 登録の実体はプロセス全体で 1
 つです。WebView ごとに<br />
-違う内容を返したい場合は、コールバック第 1 引数の <code>web_view</code>
-で分岐するか、<br />
-スキーム名を分けてください。また、現在の実装では WebView
+違う内容を返したい場合は、URI のホスト名やパス
+(<code>app://reader/...</code> と<br />
+<code>app://settings/...</code> など)
+で区別するか、スキーム名を分けてください。コールバックの<br />
+第 1 引数 <code>web_view</code> は登録したときの WebView
+で、要求を出した WebView ではないため、<br />
+分岐には使えません。また、現在の実装では WebView
 を破棄しても登録は<br />
 自動解除されません。<strong>破棄する前に <code>callback=NULL</code>
 で解除</strong>してください<br />
@@ -1048,8 +1052,9 @@ percent-decode<br />
 </tr>
 <tr>
 <td>スキーム登録がプロセス全体で共有</td>
-<td>WebView ごとに内容を変えるなら <code>web_view</code>
-引数で分岐、破棄前に解除</td>
+<td>WebView ごとに内容を変えるなら URI
+のホスト名・パスか、別のスキーム名で区別する (<code>web_view</code>
+引数は登録した WebView で、要求元ではない)。破棄前に解除</td>
 </tr>
 </tbody>
 </table>

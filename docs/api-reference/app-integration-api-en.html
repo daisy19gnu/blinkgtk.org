@@ -559,10 +559,14 @@ scheme, the last registration serves all of them</td>
 </table>
 <p><strong>Multiple WebViews:</strong> there is one registration per
 scheme per process. To<br />
-serve different content per WebView, branch on the callback's
-<code>web_view</code><br />
-argument or use different scheme names. Also, in the current
-implementation<br />
+serve different content per WebView, tell them apart by the host or path
+of<br />
+the URI (such as <code>app://reader/...</code> and
+<code>app://settings/...</code>) or use different<br />
+scheme names. The callback's <code>web_view</code> argument is the
+WebView that registered<br />
+the scheme, not the one that made the request, so it cannot be used to
+branch. Also, in the current implementation<br />
 destroying a WebView does <strong>not</strong> unregister its schemes —
 <strong>unregister<br />
 (callback=NULL) before destroying it</strong>, or a handler pointing at
@@ -1079,8 +1083,10 @@ remove</li>
 </tr>
 <tr>
 <td>Scheme registration is process-wide</td>
-<td>Branch on the <code>web_view</code> argument; unregister before
-destroying a WebView</td>
+<td>To serve different content per WebView, tell them apart by the URI
+host or path, or use different scheme names (the <code>web_view</code>
+argument is the registering WebView, not the requester); unregister
+before destroying a WebView</td>
 </tr>
 </tbody>
 </table>

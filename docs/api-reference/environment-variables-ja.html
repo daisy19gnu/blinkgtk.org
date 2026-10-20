@@ -333,13 +333,16 @@ pump) から以前の方式 (g_idle pump) に戻す(待機中の CPU
 <td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
 <td>新しい描画結果を有効にしたとき、もう一度描き直させる仕組み
 (activation 再 damage) を無効化</td>
-<td>同上 (白紙のまま固定される問題の修正)</td>
+<td>1.1.0 の修正:
+文字サイズを大きく変えた直後に、頁が白紙のまま固定される問題</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_120_CKB_REDRAW=0</code></td>
 <td>まだ描かれていない部分 (checkerboard)
 が残ったときに描き直させる仕組みを無効化</td>
-<td>同上の問題に対する予備の対策</td>
+<td>1.1.0 の修正
+(文字サイズを大きく変えた直後に、頁が白紙のまま固定される問題)
+に対する予備の対策</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
@@ -355,6 +358,14 @@ pump) から以前の方式 (g_idle pump) に戻す(待機中の CPU
 <td><code>BLINKGTK_EGL_RESIZE_BRIDGE=0</code></td>
 <td>egl resize ブリッジを無効化</td>
 <td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RUBY_RESERVE_EM=0.5</code></td>
+<td>段組みの列の切断幅から、ルビの張り出しぶん (0.5em)
+を差し引く、v1.2.0
+までの動作に戻す。差し引くと列に入る量が減り、行がちょうど 1
+本入らなくなることがある</td>
+<td>v1.2.1 の変更: 既定を 0 (差し引かない) にした</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_FRAME_COPY=1</code></td>
@@ -400,8 +411,7 @@ renderer とブラウザのメモリが増え続けます</strong> (1.2.3
 <tr>
 <td>組版</td>
 <td><code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
-<code>BLINKGTK_LAYOUT_DEBUG</code> /
-<code>BLINKGTK_RUBY_RESERVE_EM</code></td>
+<code>BLINKGTK_LAYOUT_DEBUG</code></td>
 </tr>
 <tr>
 <td>EGL 経路</td>
@@ -417,9 +427,9 @@ renderer とブラウザのメモリが増え続けます</strong> (1.2.3
 <td><code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
 <code>BLINKGTK_T2_DELIVER_EMPTY</code> (陰性対照: T2 で renderer
-の最初のフレームを待たずに配送する) / <code>BLINKGTK_T2_DAMAGE</code>
-(試作・既定オフ: T2 で Viz が描き直した範囲を GTK
-に伝え、変わった範囲だけテクスチャを更新する) /
+の最初のフレームを待たずに、描画結果を画面へ渡す) /
+<code>BLINKGTK_T2_DAMAGE</code> (試作・既定オフ: T2 で Viz
+が描き直した範囲を GTK に伝え、変わった範囲だけテクスチャを更新する) /
 <code>BLINKGTK_T2_DAMAGE_TEST_SHRINK</code> (陰性対照: 伝える範囲を 1 px
 狭める) / <code>BLINKGTK_T2_AUTO</code> (<code>0</code> で、拡大率 1
 の画面で T2 を自動で選ぶのをやめる。1.2.4 から既定で有効) /
@@ -438,7 +448,8 @@ renderer とブラウザのメモリが増え続けます</strong> (1.2.3
 </tr>
 <tr>
 <td>追跡・計測</td>
-<td><code>BLINKGTK_GX_LOG</code> (EGL の配送を 1 行 1
+<td><code>BLINKGTK_GX_LOG</code> (EGL の描画結果を画面へ渡す処理を、1 行
+1
 事象で出す診断ログ。<code>BJGX &lt;事象&gt; t=&lt;ms&gt; buf=&lt;wl_buffer の wire id&gt; submit=&lt;通番&gt;</code>
 形式) / <code>BLINKGTK_CAPTURE_TRACE</code> /
 <code>BLINKGTK_MOJO_TRACE</code> /
@@ -449,7 +460,8 @@ renderer とブラウザのメモリが増え続けます</strong> (1.2.3
 </tr>
 <tr>
 <td>検証専用</td>
-<td><code>BLINKGTK_DELIVER_LOG_MAX</code> (EGL 配送ログの行数上限。既定
+<td><code>BLINKGTK_DELIVER_LOG_MAX</code> (EGL
+の描画結果を画面へ渡す処理のログの行数上限。既定
 5。画面が出ないときに、どの操作が呼ばれたか・どの wl_buffer
 だったかを定常状態まで追える) / <code>BLINKGTK_CONTENT_PROBE_MAX</code>
 (定常状態の中身を <strong>計測だけ</strong> 延長する。表示の判定は先頭 8
@@ -567,8 +579,8 @@ id="3b-開発用デモ-simple_browser-だけのもの--配布物では使われ�
 <hr />
 <h2 id="関連">関連</h2>
 <ul>
-<li><code>c-api-reference-ja.md</code>
-§BLINKGTK_GPU_MODE(本リファレンスへ統合予定)</li>
+<li><a href="../gpu-modes-ja.html">GPU モード解説</a> —
+<code>BLINKGTK_GPU_MODE</code> で選べる描画モードと選び方</li>
 <li>版ごとの変更は、同梱のリリースノートと改版履歴を参照してください</li>
 </ul>
 </body>

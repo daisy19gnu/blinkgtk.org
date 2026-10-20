@@ -236,8 +236,9 @@ these phases in one direction.</p>
 <tr>
 <td>(2) Creating the WebView</td>
 <td><code>blink_web_view_new()</code> /
-<code>_new_with_gpu_mode()</code> / <code>_new_container()</code></td>
-<td>Returns a GtkWidget</td>
+<code>_new_with_gpu_mode()</code></td>
+<td>Returns a GtkWidget. If you need a container, put it in your own
+<code>GtkOverlay</code> / <code>GtkBox</code></td>
 </tr>
 <tr>
 <td>(3) Registration before load</td>
@@ -350,10 +351,17 @@ on the main thread, before any other GTK/GLib call.</p>
 <li>The return type is <code>GtkWidget*</code>. Use the
 <code>BLINK_WEB_VIEW()</code> /<br />
 <code>BLINK_IS_WEB_VIEW()</code> macros for type-safe access.</li>
-<li><code>new_container()</code> is a convenience that builds a
-<code>GtkOverlay</code> + <code>GtkPicture</code><br />
-for you. Retrieve the inner <code>BlinkWebView*</code> with<br />
-<code>g_object_get_data(overlay, "blinkgtk-webview")</code>.</li>
+<li><strong>Create the WebView with <code>blink_web_view_new()</code>
+and, if you need a container, put it in your own<br />
+<code>GtkOverlay</code> / <code>GtkBox</code>.</strong>
+<code>new_container()</code> only wraps a WebView created with
+<code>blink_web_view_new()</code><br />
+in a <code>GtkOverlay</code>. The <code>GtkPicture</code> inside is left
+over from an earlier rendering method and draws<br />
+nothing. Do not use it in new applications (existing applications that
+use it can retrieve the inner<br />
+<code>BlinkWebView*</code> with
+<code>g_object_get_data(overlay, "blinkgtk-webview")</code>).</li>
 <li><strong>The GPU mode is process-wide</strong> (as implemented in
 v1.0.2). If you create<br />
 several WebViews with different modes in one process, the mode of the

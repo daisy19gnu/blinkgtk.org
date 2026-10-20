@@ -223,8 +223,9 @@ devel パッケージをすべて展開して確認)。現在配られている<
 <tr>
 <td>(2) WebView 生成</td>
 <td><code>blink_web_view_new()</code> /
-<code>_new_with_gpu_mode()</code> / <code>_new_container()</code></td>
-<td>GtkWidget として返る</td>
+<code>_new_with_gpu_mode()</code></td>
+<td>GtkWidget として返る。コンテナが要るなら自前の
+<code>GtkOverlay</code> / <code>GtkBox</code> に載せる</td>
 </tr>
 <tr>
 <td>(3) ロード前登録</td>
@@ -325,11 +326,17 @@ GTK/GLib 呼び出しより前に 1 回だけ呼ぶ。</p>
 <li>返り値は <code>GtkWidget*</code>。型安全アクセスには
 <code>BLINK_WEB_VIEW()</code> / <code>BLINK_IS_WEB_VIEW()</code><br />
 マクロを使う。</li>
-<li><code>new_container()</code> は <code>GtkOverlay</code> +
-<code>GtkPicture</code> を自動構築して返す簡易系。<br />
-中の <code>BlinkWebView*</code> は
+<li><strong>WebView は <code>blink_web_view_new()</code>
+で作り、コンテナが要るなら自前の <code>GtkOverlay</code> /
+<code>GtkBox</code> に載せる。</strong><br />
+<code>new_container()</code> は、<code>blink_web_view_new()</code>
+で作った WebView を <code>GtkOverlay</code>
+に入れて返すだけの関数。<br />
+中の <code>GtkPicture</code>
+は以前の描画方式の名残りで、何も描かない。新しく書くアプリでは使わない<br />
+(既存のアプリで使っている場合、中の <code>BlinkWebView*</code> は
 <code>g_object_get_data(overlay, "blinkgtk-webview")</code>
-で取る。</li>
+で取れる)。</li>
 <li><strong>GPU モードはプロセス全体で 1 つ</strong>(v1.0.2
 時点の実装)。同一プロセスで異なる<br />
 モードの WebView を複数作っても、最初の 1

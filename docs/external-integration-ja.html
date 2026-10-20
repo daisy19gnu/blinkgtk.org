@@ -373,9 +373,7 @@ HTML が空背景の可能性</li>
 <code>blinkgtk-0.1</code> が見つからない」</h3>
 <div class="sourceCode" id="cb10"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="bu">export</span> <span class="va">PKG_CONFIG_PATH</span><span class="op">=</span>/usr/local/lib/pkgconfig:<span class="va">$PKG_CONFIG_PATH</span></span>
-<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--list-all</span> <span class="kw">|</span></span>
-<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> blinkgtk</span></code></pre></div>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a><span class="ex">pkg-config</span> <span class="at">--list-all</span> <span class="kw">|</span> <span class="fu">grep</span> blinkgtk</span></code></pre></div>
 <p>tarball インストールの場合はインストール先の
 <code>lib/pkgconfig</code> を<br />
 <code>PKG_CONFIG_PATH</code> に追加してください。</p>

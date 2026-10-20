@@ -347,13 +347,15 @@ fallbacks on machines with slow GPU startup</td>
 <td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
 <td>Disables the mechanism that asks for one more redraw when a new
 rendering result is activated (activation re-damage)</td>
-<td>Same (fix for the page staying blank)</td>
+<td>Fix in 1.1.0: right after a large font-size change, the page could
+stay blank</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_120_CKB_REDRAW=0</code></td>
 <td>Disables the mechanism that asks for a redraw when parts not yet
 drawn (checkerboard) remain</td>
-<td>Backup measure for the same problem</td>
+<td>Backup measure for the fix in 1.1.0 (right after a large font-size
+change, the page could stay blank)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
@@ -369,6 +371,14 @@ scale</td>
 <td><code>BLINKGTK_EGL_RESIZE_BRIDGE=0</code></td>
 <td>Disables the egl resize bridge</td>
 <td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RUBY_RESERVE_EM=0.5</code></td>
+<td>Restores the behaviour up to v1.2.0: subtract the ruby overhang
+(0.5em) from the column fragmentation width in multi-column layout. The
+subtraction reduces what fits in a column and can cost exactly one
+line</td>
+<td>v1.2.1 change: the default became 0 (no subtraction)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_FRAME_COPY=1</code></td>
@@ -419,8 +429,7 @@ for the local server of <code>check-update-notice.sh</code>)</td>
 <tr>
 <td>Typesetting</td>
 <td><code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
-<code>BLINKGTK_LAYOUT_DEBUG</code> /
-<code>BLINKGTK_RUBY_RESERVE_EM</code></td>
+<code>BLINKGTK_LAYOUT_DEBUG</code></td>
 </tr>
 <tr>
 <td>EGL path</td>
@@ -458,7 +467,8 @@ loading the stored permissions) /
 </tr>
 <tr>
 <td>Tracing and measurement</td>
-<td><code>BLINKGTK_GX_LOG</code> (one line per EGL delivery event:
+<td><code>BLINKGTK_GX_LOG</code> (one line per event when the EGL
+rendering result is handed to the screen:
 <code>BJGX &lt;event&gt; t=&lt;ms&gt; buf=&lt;wl_buffer wire id&gt; submit=&lt;n&gt;</code>)
 / <code>BLINKGTK_CAPTURE_TRACE</code> / <code>BLINKGTK_MOJO_TRACE</code>
 / <code>BLINKGTK_TRACE_PIXEL_SUPPLIER</code> /
@@ -468,10 +478,11 @@ loading the stored permissions) /
 </tr>
 <tr>
 <td>Verification only</td>
-<td><code>BLINKGTK_DELIVER_LOG_MAX</code> (maximum EGL delivery log
-lines; default 5. Lets you follow which operation ran and which
-wl_buffer it used into the steady state when nothing appears on screen)
-/ <code>BLINKGTK_CONTENT_PROBE_MAX</code> (extends <strong>measurement
+<td><code>BLINKGTK_DELIVER_LOG_MAX</code> (maximum lines of the log for
+handing EGL rendering results to the screen; default 5. Lets you follow
+which operation ran and which wl_buffer it used into the steady state
+when nothing appears on screen) /
+<code>BLINKGTK_CONTENT_PROBE_MAX</code> (extends <strong>measurement
 only</strong> into steady state; the display decision still uses the
 first 8 frames) / <code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
 <code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
@@ -593,8 +604,8 @@ has no effect)</td>
 <hr />
 <h2 id="see-also">See also</h2>
 <ul>
-<li><code>c-api-reference-en.md</code> §BLINKGTK_GPU_MODE (to be
-consolidated into this reference)</li>
+<li><a href="../gpu-modes-en.html">GPU modes</a> — the rendering modes
+<code>BLINKGTK_GPU_MODE</code> selects and how to choose one</li>
 <li>For changes in each version, see the bundled release notes and the
 version history</li>
 </ul>

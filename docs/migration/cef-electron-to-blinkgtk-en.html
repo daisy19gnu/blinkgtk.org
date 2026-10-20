@@ -1,0 +1,1060 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>Switching from CEF or Electron to BlinkGTK — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="../docs.css" />
+<meta name="description" content="This guide helps you decide whether to move an application built with CEF (Chromium Embedded Framework) or Electron to BlinkGTK. For each thing your current set">
+<link rel="canonical" href="https://blinkgtk.org/docs/migration/cef-electron-to-blinkgtk-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Switching from CEF or Electron to BlinkGTK — BlinkGTK">
+<meta property="og:description" content="This guide helps you decide whether to move an application built with CEF (Chromium Embedded Framework) or Electron to BlinkGTK. For each thing your current set">
+<meta property="og:url" content="https://blinkgtk.org/docs/migration/cef-electron-to-blinkgtk-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/migration/cef-electron-to-blinkgtk-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/migration/cef-electron-to-blinkgtk-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/migration/cef-electron-to-blinkgtk-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="../index.html">Documentation</a> ·
+  <a href="../../index.html">BlinkGTK</a>
+</div><div class="card doc">
+<h1 id="switching-from-cef-or-electron-to-blinkgtk">Switching from CEF
+or Electron to BlinkGTK</h1>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Applies to</strong>: BlinkGTK 1.2.4-build4 (Chromium
+155.0.8059.39)</p>
+<p><a href="./cef-electron-to-blinkgtk-ja.html">日本語</a></p>
+<p>This guide helps you decide whether to move an application built with
+CEF<br />
+(Chromium Embedded Framework) or Electron to BlinkGTK. For each thing
+your<br />
+current setup does, the tables show what to use in BlinkGTK. Where
+BlinkGTK has<br />
+no equivalent, the tables and the section "Features without an
+equivalent, and<br />
+other differences" say so plainly.</p>
+<p>Every BlinkGTK function in the tables is declared in the public
+header shipped<br />
+with the packages, <code>blink_gtk/blink_gtk.h</code>.</p>
+<h2 id="who-this-is-for">Who this is for</h2>
+<ul>
+<li>You embed CEF in a C or C++ application and want it to become a GTK4
+application</li>
+<li>You built a desktop application with Electron and want to rebuild it
+for Linux with GTK4</li>
+<li>You want to judge whether to switch before you start moving
+code</li>
+</ul>
+<p>If you are coming from WebKitGTK, read the<br />
+<a href="./webkitgtk-to-blinkgtk-en.html">WebKitGTK migration guide</a>
+instead. There the<br />
+replacements are nearly one to one.</p>
+<h2 id="check-these-first">Check these first</h2>
+<p>Before switching, check that the following four points fit your
+application.</p>
+<table>
+<thead>
+<tr>
+<th>Item</th>
+<th>What BlinkGTK requires</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Operating system</td>
+<td>Linux, <strong>Wayland sessions only</strong>. It does not run on
+X11. For Windows, BlinkGTK for Windows is distributed separately. There
+is no macOS version</td>
+</tr>
+<tr>
+<td>Toolkit</td>
+<td>You build a GTK4 application. Windows, menus and dialogs are
+GTK's</td>
+</tr>
+<tr>
+<td>Application language</td>
+<td>C. Through GObject Introspection, Python and other languages can use
+it too</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>Not included. Code you wrote in Electron's main process is rewritten
+in C, Python or similar</td>
+</tr>
+</tbody>
+</table>
+<p>If you need one code base that ships to Windows, macOS and Linux, as
+CEF and<br />
+Electron allow, BlinkGTK is not a good fit.</p>
+<h2 id="how-the-model-differs">How the model differs</h2>
+<ol type="1">
+<li><strong>The web view is a single GTK widget.</strong>
+<code>blink_web_view_new()</code> returns a<br />
+<code>GtkWidget*</code>. Put it in a <code>GtkWindow</code> or a
+<code>GtkBox</code> and it is shown. The engine<br />
+never owns the window, unlike CEF's <code>CefWindowInfo</code> or
+Electron's <code>BrowserWindow</code></li>
+<li><strong>Your application does not assemble the browser's process
+layout.</strong> There is<br />
+no function corresponding to CEF's <code>CefExecuteProcess()</code>, and
+you do not provide<br />
+a separate executable for subprocesses. The library starts and manages
+its<br />
+processes itself</li>
+<li><strong>Handlers are functions and signals, not classes.</strong>
+Instead of returning handler<br />
+classes from a <code>CefClient</code>, you register functions per web
+view or connect to<br />
+GObject signals</li>
+<li><strong>You run BlinkGTK's main loop.</strong> Use
+<code>blink_gtk_run_main_loop()</code>, not<br />
+<code>g_main_loop_run()</code> or <code>g_application_run()</code> (see
+below). GLib's <code>g_timeout_add()</code><br />
+and <code>g_idle_add()</code> still work under this loop</li>
+<li><strong>Your application and the page talk through
+messages.</strong> There are two-way<br />
+messages comparable to Electron's <code>ipcMain</code> /
+<code>ipcRenderer</code>. There is no way to<br />
+expose C functions directly to the page (such as CEF's
+<code>CefV8Handler</code>)</li>
+</ol>
+<h2 id="mapping-tables">Mapping tables</h2>
+<p>The "BlinkGTK" column lists functions and signal names from the
+public header.<br />
+Connect to signals with <code>g_signal_connect()</code>.</p>
+<h3 id="initialization-and-shutdown">Initialization and shutdown</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Subprocess entry point</td>
+<td><code>CefExecuteProcess()</code></td>
+<td>(not needed)</td>
+<td>Not needed. There is no corresponding function</td>
+</tr>
+<tr>
+<td>Initialize the engine</td>
+<td><code>CefInitialize()</code></td>
+<td>wait for <code>app.whenReady()</code></td>
+<td><code>blink_gtk_init(&amp;argc, &amp;argv)</code>. Call it on the
+main thread <strong>before any GTK or GLib call</strong>.
+<code>FALSE</code> means it failed</td>
+</tr>
+<tr>
+<td>Tell it where the resources are</td>
+<td><code>resources_dir_path</code> / <code>locales_dir_path</code> in
+<code>CefSettings</code></td>
+<td>(Electron carries its own; nothing to set)</td>
+<td><code>blink_gtk_set_resources_path()</code>. To place the ICU data
+elsewhere, also <code>blink_gtk_set_icu_data_path()</code>. Call both
+before <code>blink_gtk_init()</code></td>
+</tr>
+<tr>
+<td>Choose the rendering mode</td>
+<td>command-line switches</td>
+<td><code>app.disableHardwareAcceleration()</code> and similar</td>
+<td><code>blink_gtk_set_gpu_mode()</code>. Call it before
+<code>blink_gtk_init()</code></td>
+</tr>
+<tr>
+<td>Shut down</td>
+<td><code>CefShutdown()</code></td>
+<td><code>app.quit()</code></td>
+<td>Leave the loop with <code>blink_gtk_quit_main_loop()</code>, then
+call <code>blink_gtk_shutdown()</code></td>
+</tr>
+<tr>
+<td>Check the version</td>
+<td><code>cef_version_info()</code></td>
+<td><code>process.versions</code></td>
+<td><code>blink_gtk_get_version()</code> /
+<code>blink_gtk_get_chromium_version()</code></td>
+</tr>
+</tbody>
+</table>
+<p>If you do not set the resource location, BlinkGTK looks next to the
+executable<br />
+first, then near the library. With the RPM or DEB packages no setting is
+needed.</p>
+<h3 id="main-loop">Main loop</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run the loop</td>
+<td><code>CefRunMessageLoop()</code></td>
+<td>(Electron runs it)</td>
+<td><code>blink_gtk_run_main_loop()</code></td>
+</tr>
+<tr>
+<td>Leave the loop</td>
+<td><code>CefQuitMessageLoop()</code></td>
+<td><code>app.quit()</code></td>
+<td><code>blink_gtk_quit_main_loop()</code></td>
+</tr>
+<tr>
+<td>Pump the engine from your own loop</td>
+<td><code>CefDoMessageLoopWork()</code></td>
+<td>—</td>
+<td><strong>Not available.</strong> Leave the loop to
+<code>blink_gtk_run_main_loop()</code> and do your work from GLib timers
+and signals</td>
+</tr>
+<tr>
+<td>Build on <code>GtkApplication</code></td>
+<td>—</td>
+<td>—</td>
+<td><code>blink_gtk_application_run()</code>, used instead of
+<code>g_application_run()</code>. The loop ends when the last window is
+closed</td>
+</tr>
+<tr>
+<td>Prevent a second instance</td>
+<td>—</td>
+<td><code>app.requestSingleInstanceLock()</code></td>
+<td><code>blink_gtk_application_run()</code> follows
+<code>GApplication</code>'s single-instance behaviour. A second launch
+is forwarded to the first</td>
+</tr>
+</tbody>
+</table>
+<p>If you run the loop with <code>g_application_run()</code>, the
+application builds and starts<br />
+but pages never load. When you use <code>GtkApplication</code>, always
+use<br />
+<code>blink_gtk_application_run()</code>.</p>
+<h3 id="windows-and-web-views">Windows and web views</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a web view</td>
+<td><code>CefBrowserHost::CreateBrowser()</code></td>
+<td><code>new BrowserWindow()</code></td>
+<td><code>blink_web_view_new()</code>. Put the returned
+<code>GtkWidget*</code> in a window with
+<code>gtk_window_set_child()</code> or similar</td>
+</tr>
+<tr>
+<td>Create a window</td>
+<td><code>CefWindowInfo</code> / Views</td>
+<td><code>BrowserWindow</code></td>
+<td>GTK's <code>gtk_window_new()</code></td>
+</tr>
+<tr>
+<td>Several web views in one window</td>
+<td>several browsers</td>
+<td><code>WebContentsView</code></td>
+<td>Create several web views and lay them out in a <code>GtkBox</code>
+or similar</td>
+</tr>
+<tr>
+<td>Separate storage (cookies, cache)</td>
+<td><code>CefRequestContext</code></td>
+<td><code>session.fromPartition()</code></td>
+<td><code>blink_web_view_new_with_profile("name")</code></td>
+</tr>
+<tr>
+<td>Answer a request to open a new window</td>
+<td><code>CefLifeSpanHandler::OnBeforePopup()</code></td>
+<td><code>webContents.setWindowOpenHandler()</code></td>
+<td>The <code>decide-navigation</code> signal. For a new window, take
+the web view with <code>blink_navigation_decision_create_view()</code>
+and put it in a window of your own</td>
+</tr>
+<tr>
+<td>Answer a fullscreen request</td>
+<td><code>CefDisplayHandler::OnFullscreenModeChange()</code></td>
+<td><code>enter-html-full-screen</code></td>
+<td><code>blink_web_view_set_fullscreen_handler()</code></td>
+</tr>
+</tbody>
+</table>
+<p>Convert to <code>BlinkWebView*</code> with
+<code>BLINK_WEB_VIEW()</code> before passing the view to<br />
+BlinkGTK functions. GTK functions take it as it is.</p>
+<h3 id="loading-urls-and-navigation">Loading URLs and navigation</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open a URL</td>
+<td><code>CefFrame::LoadURL()</code></td>
+<td><code>loadURL()</code></td>
+<td><code>blink_web_view_load_uri()</code></td>
+</tr>
+<tr>
+<td>Show an HTML string</td>
+<td>data URL</td>
+<td><code>loadURL('data:...')</code></td>
+<td><code>blink_web_view_load_html(view, html, base_uri)</code></td>
+</tr>
+<tr>
+<td>Back, forward, reload, stop</td>
+<td><code>GoBack()</code> / <code>GoForward()</code> /
+<code>Reload()</code> / <code>StopLoad()</code></td>
+<td><code>navigationHistory.goBack()</code> and similar</td>
+<td><code>blink_web_view_go_back()</code> / <code>go_forward()</code> /
+<code>reload()</code> / <code>stop()</code></td>
+</tr>
+<tr>
+<td>Can it go back or forward</td>
+<td><code>CanGoBack()</code> / <code>CanGoForward()</code></td>
+<td><code>navigationHistory.canGoBack()</code> and similar</td>
+<td><code>blink_web_view_can_go_back()</code> /
+<code>can_go_forward()</code></td>
+</tr>
+<tr>
+<td>Follow the load state</td>
+<td><code>CefLoadHandler</code></td>
+<td><code>did-finish-load</code> and similar</td>
+<td>The <code>load-changed</code> signal
+(<code>BLINK_LOAD_STARTED</code> / <code>COMMITTED</code> /
+<code>FINISHED</code>); failures arrive as <code>load-failed</code></td>
+</tr>
+<tr>
+<td>Follow title and URL changes</td>
+<td><code>CefDisplayHandler::OnTitleChange()</code> /
+<code>OnAddressChange()</code></td>
+<td><code>page-title-updated</code> / <code>did-navigate</code></td>
+<td>The <code>title-changed</code> / <code>uri-changed</code> signals.
+Read the values with <code>blink_web_view_get_title()</code> /
+<code>get_uri()</code></td>
+</tr>
+<tr>
+<td>Block, or open externally, a navigation the page started</td>
+<td><code>CefRequestHandler::OnBeforeBrowse()</code></td>
+<td><code>will-navigate</code></td>
+<td>The <code>decide-navigation</code> signal, answered with
+<code>blink_navigation_decision_use()</code> / <code>ignore()</code> /
+<code>open_external()</code></td>
+</tr>
+</tbody>
+</table>
+<p><code>BLINK_LOAD_STARTED</code> from <code>load-changed</code>
+arrives only when you call<br />
+<code>blink_web_view_load_uri()</code> or <code>load_html()</code>. It
+does not arrive for link clicks<br />
+or back and forward. See the <a
+href="../api-reference/signals-api-en.html">Signals API</a> for
+details.</p>
+<h3 id="talking-to-the-page-running-javascript-and-messages">Talking to
+the page (running JavaScript and messages)</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run JavaScript in the page</td>
+<td><code>CefFrame::ExecuteJavaScript()</code></td>
+<td><code>webContents.executeJavaScript()</code></td>
+<td><code>blink_web_view_execute_javascript(view, script, callback, user_data)</code>.
+The result reaches the callback as a JSON string. It is not a
+Promise</td>
+</tr>
+<tr>
+<td>Insert a script before the page's own</td>
+<td><code>CefRenderProcessHandler::OnContextCreated()</code></td>
+<td>preload script</td>
+<td><code>blink_web_view_inject_user_script(view, script, TRUE)</code>.
+Register it before the first <code>blink_web_view_load_uri()</code></td>
+</tr>
+<tr>
+<td>Insert CSS</td>
+<td>insert through JavaScript</td>
+<td><code>webContents.insertCSS()</code></td>
+<td><code>blink_web_view_inject_user_stylesheet()</code></td>
+</tr>
+<tr>
+<td>Page → application</td>
+<td><code>CefMessageRouter</code> (<code>window.cefQuery</code>)</td>
+<td><code>ipcRenderer.send()</code> → <code>ipcMain.on()</code></td>
+<td><code>window.blinkgtk.postMessage('name', data)</code> in the page,
+<code>blink_web_view_register_message_handler()</code> in the
+application</td>
+</tr>
+<tr>
+<td>Application → page</td>
+<td>call a function with <code>ExecuteJavaScript()</code></td>
+<td><code>webContents.send()</code> → <code>ipcRenderer.on()</code></td>
+<td><code>blink_web_view_send_message_to_page()</code> in the
+application, <code>window.blinkgtk.addMessageHandler('name', fn)</code>
+in the page</td>
+</tr>
+<tr>
+<td>Decide which API the page sees</td>
+<td>register functions with <code>CefV8Handler</code></td>
+<td><code>contextBridge.exposeInMainWorld()</code></td>
+<td><strong>Not available.</strong> Exchange data through the two
+<code>window.blinkgtk</code> functions, and insert wrapper functions on
+the page side with <code>inject_user_script()</code></td>
+</tr>
+<tr>
+<td>Ask and wait for an answer</td>
+<td><code>cefQuery</code> success and failure callbacks</td>
+<td><code>ipcRenderer.invoke()</code> /
+<code>ipcMain.handle()</code></td>
+<td><strong>Not available.</strong> Send with <code>postMessage</code>
+from the page and answer with <code>send_message_to_page()</code> from
+the application. Attach an ID that pairs requests and answers on the
+page side</td>
+</tr>
+</tbody>
+</table>
+<p>Points to watch with messages:</p>
+<ul>
+<li><code>data</code> sent from the page reaches the application as
+<strong>Base64 bytes</strong>. Decode it<br />
+with <code>g_base64_decode()</code>. From the application to the page,
+the string is passed as it is</li>
+<li><code>send_message_to_page()</code> silently drops the message when
+nobody listens yet. The<br />
+reliable way is to have the page tell you it is ready before you
+send</li>
+<li><code>addMessageHandler()</code> registrations in the page are lost
+on every navigation. The<br />
+registrations on the application side stay</li>
+<li>Any script in the page can call <code>postMessage</code>. Validate
+what arrives in the application</li>
+</ul>
+<p>See <a
+href="../api-reference/app-integration-api-en.html#js--c-messaging">"JS ↔︎
+C messaging"</a><br />
+in the App integration API for details.</p>
+<h3 id="custom-schemes-and-where-to-put-your-resources">Custom schemes
+and where to put your resources</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Register a scheme name</td>
+<td><code>CefApp::OnRegisterCustomSchemes()</code></td>
+<td><code>protocol.registerSchemesAsPrivileged()</code></td>
+<td>Call <code>blink_gtk_register_scheme("myapp")</code> before
+<code>blink_gtk_init()</code>. <code>app</code>, <code>res</code>,
+<code>resource</code>, <code>ebook</code> and <code>blinkgtk</code> are
+registered from the start</td>
+</tr>
+<tr>
+<td>Answer requests for the scheme</td>
+<td><code>CefRegisterSchemeHandlerFactory()</code> +
+<code>CefResourceHandler</code></td>
+<td><code>protocol.handle()</code></td>
+<td><code>blink_web_view_register_custom_scheme_full()</code>. The
+callback receives the URI and returns the body as <code>GBytes</code>
+and the type in <code>out_mime</code></td>
+</tr>
+<tr>
+<td>Show your application's own HTML</td>
+<td>a custom scheme or <code>file://</code></td>
+<td><code>loadFile()</code></td>
+<td>Serving it from a custom scheme is the reliable way. Pages from a
+custom scheme are treated like HTTPS, and <code>fetch()</code>
+works</td>
+</tr>
+<tr>
+<td>Intercept http / https requests</td>
+<td><code>CefResourceRequestHandler</code></td>
+<td><code>session.webRequest</code> /
+<code>protocol.handle('https')</code></td>
+<td><strong>Not available</strong></td>
+</tr>
+</tbody>
+</table>
+<p>Points to watch with scheme handlers:</p>
+<ul>
+<li>The callback receives only the URI. There is no way to return a
+status code,<br />
+a redirect or response headers</li>
+<li>The callback runs synchronously on the main thread. Prepare heavy
+work in advance</li>
+<li>There is one registration per scheme for the whole process.
+Registering the same scheme<br />
+from another web view replaces the earlier registration. The callback's
+first argument is<br />
+the web view that registered the scheme, not the one that made the
+request. To serve<br />
+different content to different web views, tell them apart by the host or
+path of the URI,<br />
+such as <code>app://reader/...</code> and
+<code>app://settings/...</code></li>
+<li>Do not join the URI straight onto a file path. Resolve it with
+<code>realpath()</code> or similar<br />
+and check that it is under your application's directory before opening
+it</li>
+</ul>
+<h3 id="developer-tools-and-debugging">Developer tools and
+debugging</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open the developer tools</td>
+<td><code>CefBrowserHost::ShowDevTools()</code></td>
+<td><code>webContents.openDevTools()</code></td>
+<td>Open remote debugging with
+<code>blink_web_view_open_devtools(view, 0)</code>, then open the URL
+from <code>blink_web_view_get_devtools_url()</code> in Chrome or
+Chromium, or connect from <code>chrome://inspect</code></td>
+</tr>
+<tr>
+<td>Listen on a fixed port</td>
+<td><code>remote_debugging_port</code> in <code>CefSettings</code></td>
+<td><code>--remote-debugging-port</code></td>
+<td><code>blink_web_view_open_devtools(view, port)</code></td>
+</tr>
+<tr>
+<td>Close the developer tools</td>
+<td><code>CloseDevTools()</code></td>
+<td><code>closeDevTools()</code></td>
+<td><code>blink_web_view_close_devtools()</code></td>
+</tr>
+<tr>
+<td>Do not allow the developer tools</td>
+<td>—</td>
+<td><code>devTools: false</code></td>
+<td><code>BLINK_CONTENT_POLICY_NO_DEVTOOLS</code> with
+<code>blink_web_view_set_content_policy()</code></td>
+</tr>
+</tbody>
+</table>
+<p>There is no way to show the developer tools inside your application's
+window.<br />
+They open in a separate Chrome or Chromium window.</p>
+<h3 id="other-common-features">Other common features</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>alert / confirm / prompt</td>
+<td><code>CefJSDialogHandler</code></td>
+<td>(shown by Electron)</td>
+<td><code>blink_web_view_set_javascript_dialog_handler()</code></td>
+</tr>
+<tr>
+<td>Choose a file</td>
+<td><code>CefDialogHandler</code></td>
+<td><code>dialog.showOpenDialog()</code></td>
+<td>For <code>&lt;input type="file"&gt;</code> in the page,
+<code>blink_web_view_set_file_chooser_handler()</code>. From the
+application, GTK's <code>GtkFileDialog</code></td>
+</tr>
+<tr>
+<td>Downloads</td>
+<td><code>CefDownloadHandler</code></td>
+<td><code>will-download</code></td>
+<td><code>blink_web_view_set_download_handler()</code>. Follow progress
+through the <code>BlinkDownload</code> passed with the
+<code>download-started</code> signal</td>
+</tr>
+<tr>
+<td>HTTP authentication</td>
+<td><code>CefRequestHandler::GetAuthCredentials()</code></td>
+<td>the <code>login</code> event</td>
+<td><code>blink_web_view_set_auth_handler()</code></td>
+</tr>
+<tr>
+<td>Certificate errors</td>
+<td><code>CefRequestHandler::OnCertificateError()</code></td>
+<td><code>certificate-error</code></td>
+<td><code>blink_web_view_set_certificate_error_handler()</code></td>
+</tr>
+<tr>
+<td>Permission requests (location, camera, ...)</td>
+<td><code>CefPermissionHandler</code></td>
+<td><code>session.setPermissionRequestHandler()</code></td>
+<td>The <code>permission-request</code> signal, answered with
+<code>blink_permission_request_allow()</code> / <code>deny()</code>.
+Requests are denied if you do nothing</td>
+</tr>
+<tr>
+<td>Cookies</td>
+<td><code>CefCookieManager</code></td>
+<td><code>session.cookies</code></td>
+<td><code>blink_web_view_get_cookies()</code> /
+<code>set_cookie()</code> / <code>delete_all_cookies()</code></td>
+</tr>
+<tr>
+<td>User-Agent</td>
+<td><code>user_agent</code> in <code>CefSettings</code></td>
+<td><code>setUserAgent()</code></td>
+<td><code>blink_web_view_set_user_agent()</code></td>
+</tr>
+<tr>
+<td>Find in page</td>
+<td><code>CefBrowserHost::Find()</code></td>
+<td><code>findInPage()</code></td>
+<td><code>blink_web_view_find_in_page()</code> /
+<code>stop_finding()</code></td>
+</tr>
+<tr>
+<td>Zoom</td>
+<td><code>SetZoomLevel()</code></td>
+<td><code>setZoomFactor()</code></td>
+<td><code>blink_web_view_set_zoom_level()</code></td>
+</tr>
+<tr>
+<td>Write a PDF</td>
+<td><code>PrintToPDF()</code></td>
+<td><code>printToPDF()</code></td>
+<td><code>blink_web_view_print_to_pdf_with_options()</code></td>
+</tr>
+<tr>
+<td>Capture the view as an image</td>
+<td>—</td>
+<td><code>capturePage()</code></td>
+<td><code>blink_web_view_capture_screenshot()</code> /
+<code>_async()</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="distribution-packages-and-dependencies">Distribution (packages
+and dependencies)</h3>
+<table>
+<thead>
+<tr>
+<th>Task</th>
+<th>CEF</th>
+<th>Electron</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Build</td>
+<td>CEF binary distribution and CMake</td>
+<td>npm</td>
+<td>Compile and link with
+<code>pkg-config --cflags --libs blinkgtk-0.1</code></td>
+</tr>
+<tr>
+<td>What is needed to run</td>
+<td>ship CEF's shared libraries and resources with the application</td>
+<td>ship the Electron executable</td>
+<td>The runtime package (RPM: <code>blinkgtk-bin</code>, DEB:
+<code>libblinkgtk-0.1-0</code>). GTK4 comes from the operating
+system</td>
+</tr>
+<tr>
+<td>What is needed to build</td>
+<td>—</td>
+<td>—</td>
+<td>The devel package (RPM: <code>blinkgtk-bin-devel</code>, DEB:
+<code>libblinkgtk-0.1-dev</code>). For Python and other languages, also
+the gir package (RPM: <code>blinkgtk-bin-gir</code>)</td>
+</tr>
+<tr>
+<td>Ship together with the application</td>
+<td>ship it in the application directory</td>
+<td>electron-builder and similar</td>
+<td>Pack a tar.gz following the <a
+href="../portable-app-guide-en.html">portable application guide</a></td>
+</tr>
+</tbody>
+</table>
+<p><strong>Link through pkg-config.</strong> If you only write
+<code>-lblinkgtk</code> by hand, the<br />
+application can build and start but show no page. The reason and how to
+check<br />
+are in the <a href="../consumer-integration-guide-en.html">integration
+guide</a>.</p>
+<p>When you ship BlinkGTK together with your application, you must also
+include the<br />
+license notices such as <code>THIRD_PARTY_NOTICES.html</code>. See<br />
+<a
+href="../portable-app-guide-en.html#6-license-obligations-mandatory">"License
+obligations"</a><br />
+in the portable application guide.</p>
+<h2 id="minimal-example-c">Minimal example (C)</h2>
+<p>This example serves the application's own HTML over the
+<code>app://</code> scheme,<br />
+sends a message from a button in the page to the application, and sends
+an answer<br />
+back. It corresponds to Electron's <code>ipcRenderer.send()</code>
+combined with <code>webContents.send()</code>.</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* cef-electron-migration.c */</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;blink_gtk/blink_gtk.h&gt;</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;gtk/gtk.h&gt;</span></span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a><span class="pp">#include </span><span class="im">&lt;string.h&gt;</span></span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">const</span> <span class="dt">char</span> page_html<span class="op">[]</span> <span class="op">=</span></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;!doctype html&gt;&lt;meta charset=&#39;utf-8&#39;&gt;&lt;title&gt;sample&lt;/title&gt;&quot;</span></span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;button id=&#39;b&#39;&gt;Send to the application&lt;/button&gt;&lt;p id=&#39;out&#39;&gt;&lt;/p&gt;&quot;</span></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;script&gt;&quot;</span></span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;window.blinkgtk.addMessageHandler(&#39;reply&#39;, function (data) {&quot;</span></span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;  document.getElementById(&#39;out&#39;).textContent = data;&quot;</span></span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;});&quot;</span></span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;document.getElementById(&#39;b&#39;).onclick = function () {&quot;</span></span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;  window.blinkgtk.postMessage(&#39;hello&#39;, &#39;ping&#39;);&quot;</span></span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;};&quot;</span></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>    <span class="st">&quot;&lt;/script&gt;&quot;</span><span class="op">;</span></span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a><span class="co">/* Called for each request to app://main/... Only the URI is passed in */</span></span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> GBytes<span class="op">*</span> on_app_scheme<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> <span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> uri<span class="op">,</span></span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>                             <span class="dt">char</span><span class="op">**</span> out_mime<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-21"><a href="#cb1-21" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>view<span class="op">;</span> <span class="op">(</span><span class="dt">void</span><span class="op">)</span>uri<span class="op">;</span> <span class="op">(</span><span class="dt">void</span><span class="op">)</span>user_data<span class="op">;</span></span>
+<span id="cb1-22"><a href="#cb1-22" aria-hidden="true" tabindex="-1"></a>  <span class="op">*</span>out_mime <span class="op">=</span> g_strdup<span class="op">(</span><span class="st">&quot;text/html&quot;</span><span class="op">);</span></span>
+<span id="cb1-23"><a href="#cb1-23" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> g_bytes_new_static<span class="op">(</span>page_html<span class="op">,</span> strlen<span class="op">(</span>page_html<span class="op">));</span></span>
+<span id="cb1-24"><a href="#cb1-24" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-25"><a href="#cb1-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-26"><a href="#cb1-26" aria-hidden="true" tabindex="-1"></a><span class="co">/* Receives postMessage(&#39;hello&#39;, ...) from the page. data is Base64 */</span></span>
+<span id="cb1-27"><a href="#cb1-27" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_hello<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> name<span class="op">,</span> <span class="dt">const</span> guint8<span class="op">*</span> data<span class="op">,</span> gsize length<span class="op">,</span></span>
+<span id="cb1-28"><a href="#cb1-28" aria-hidden="true" tabindex="-1"></a>                     gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-29"><a href="#cb1-29" aria-hidden="true" tabindex="-1"></a>  BlinkWebView<span class="op">*</span> view <span class="op">=</span> BLINK_WEB_VIEW<span class="op">(</span>user_data<span class="op">);</span></span>
+<span id="cb1-30"><a href="#cb1-30" aria-hidden="true" tabindex="-1"></a>  gchar<span class="op">*</span> encoded <span class="op">=</span> g_strndup<span class="op">((</span><span class="dt">const</span> gchar<span class="op">*)</span>data<span class="op">,</span> length<span class="op">);</span></span>
+<span id="cb1-31"><a href="#cb1-31" aria-hidden="true" tabindex="-1"></a>  gsize decoded_len <span class="op">=</span> <span class="dv">0</span><span class="op">;</span></span>
+<span id="cb1-32"><a href="#cb1-32" aria-hidden="true" tabindex="-1"></a>  guchar<span class="op">*</span> decoded <span class="op">=</span> g_base64_decode<span class="op">(</span>encoded<span class="op">,</span> <span class="op">&amp;</span>decoded_len<span class="op">);</span></span>
+<span id="cb1-33"><a href="#cb1-33" aria-hidden="true" tabindex="-1"></a>  g_print<span class="op">(</span><span class="st">&quot;</span><span class="sc">%s</span><span class="st">: </span><span class="sc">%.*s\n</span><span class="st">&quot;</span><span class="op">,</span> name<span class="op">,</span> <span class="op">(</span><span class="dt">int</span><span class="op">)</span>decoded_len<span class="op">,</span> <span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*)</span>decoded<span class="op">);</span></span>
+<span id="cb1-34"><a href="#cb1-34" aria-hidden="true" tabindex="-1"></a>  blink_web_view_send_message_to_page<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;reply&quot;</span><span class="op">,</span> <span class="st">&quot;pong&quot;</span><span class="op">);</span></span>
+<span id="cb1-35"><a href="#cb1-35" aria-hidden="true" tabindex="-1"></a>  g_free<span class="op">(</span>decoded<span class="op">);</span></span>
+<span id="cb1-36"><a href="#cb1-36" aria-hidden="true" tabindex="-1"></a>  g_free<span class="op">(</span>encoded<span class="op">);</span></span>
+<span id="cb1-37"><a href="#cb1-37" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-38"><a href="#cb1-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-39"><a href="#cb1-39" aria-hidden="true" tabindex="-1"></a><span class="co">/* Result of execute_javascript: a JSON string, or empty if it could not run */</span></span>
+<span id="cb1-40"><a href="#cb1-40" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_title<span class="op">(</span><span class="dt">const</span> <span class="dt">char</span><span class="op">*</span> result<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-41"><a href="#cb1-41" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>user_data<span class="op">;</span></span>
+<span id="cb1-42"><a href="#cb1-42" aria-hidden="true" tabindex="-1"></a>  g_print<span class="op">(</span><span class="st">&quot;document.title = </span><span class="sc">%s\n</span><span class="st">&quot;</span><span class="op">,</span> result<span class="op">[</span><span class="dv">0</span><span class="op">]</span> <span class="op">?</span> result <span class="op">:</span> <span class="st">&quot;(not run)&quot;</span><span class="op">);</span></span>
+<span id="cb1-43"><a href="#cb1-43" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-44"><a href="#cb1-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-45"><a href="#cb1-45" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_load_changed<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> BlinkLoadEvent event<span class="op">,</span></span>
+<span id="cb1-46"><a href="#cb1-46" aria-hidden="true" tabindex="-1"></a>                            gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-47"><a href="#cb1-47" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>user_data<span class="op">;</span></span>
+<span id="cb1-48"><a href="#cb1-48" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>event <span class="op">==</span> BLINK_LOAD_FINISHED<span class="op">)</span></span>
+<span id="cb1-49"><a href="#cb1-49" aria-hidden="true" tabindex="-1"></a>    blink_web_view_execute_javascript<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;document.title&quot;</span><span class="op">,</span> on_title<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb1-50"><a href="#cb1-50" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-51"><a href="#cb1-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-52"><a href="#cb1-52" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> gboolean on_close<span class="op">(</span>GtkWindow<span class="op">*</span> window<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
+<span id="cb1-53"><a href="#cb1-53" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>window<span class="op">;</span> <span class="op">(</span><span class="dt">void</span><span class="op">)</span>user_data<span class="op">;</span></span>
+<span id="cb1-54"><a href="#cb1-54" aria-hidden="true" tabindex="-1"></a>  blink_gtk_quit_main_loop<span class="op">();</span></span>
+<span id="cb1-55"><a href="#cb1-55" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> FALSE<span class="op">;</span></span>
+<span id="cb1-56"><a href="#cb1-56" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb1-57"><a href="#cb1-57" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-58"><a href="#cb1-58" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> main<span class="op">(</span><span class="dt">int</span> argc<span class="op">,</span> <span class="dt">char</span><span class="op">*</span> argv<span class="op">[])</span> <span class="op">{</span></span>
+<span id="cb1-59"><a href="#cb1-59" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* Corresponds to CefInitialize(). Call it before GTK */</span></span>
+<span id="cb1-60"><a href="#cb1-60" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>blink_gtk_init<span class="op">(&amp;</span>argc<span class="op">,</span> <span class="op">&amp;</span>argv<span class="op">))</span> <span class="op">{</span></span>
+<span id="cb1-61"><a href="#cb1-61" aria-hidden="true" tabindex="-1"></a>    g_printerr<span class="op">(</span><span class="st">&quot;blink_gtk_init() failed</span><span class="sc">\n</span><span class="st">&quot;</span><span class="op">);</span></span>
+<span id="cb1-62"><a href="#cb1-62" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> <span class="dv">1</span><span class="op">;</span></span>
+<span id="cb1-63"><a href="#cb1-63" aria-hidden="true" tabindex="-1"></a>  <span class="op">}</span></span>
+<span id="cb1-64"><a href="#cb1-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-65"><a href="#cb1-65" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> window <span class="op">=</span> gtk_window_new<span class="op">();</span></span>
+<span id="cb1-66"><a href="#cb1-66" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_title<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="st">&quot;BlinkGTK&quot;</span><span class="op">);</span></span>
+<span id="cb1-67"><a href="#cb1-67" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_default_size<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> <span class="dv">800</span><span class="op">,</span> <span class="dv">600</span><span class="op">);</span></span>
+<span id="cb1-68"><a href="#cb1-68" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>window<span class="op">,</span> <span class="st">&quot;close-request&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_close<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb1-69"><a href="#cb1-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-70"><a href="#cb1-70" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* Corresponds to CreateBrowser() / new BrowserWindow() */</span></span>
+<span id="cb1-71"><a href="#cb1-71" aria-hidden="true" tabindex="-1"></a>  GtkWidget<span class="op">*</span> web_view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb1-72"><a href="#cb1-72" aria-hidden="true" tabindex="-1"></a>  gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> web_view<span class="op">);</span></span>
+<span id="cb1-73"><a href="#cb1-73" aria-hidden="true" tabindex="-1"></a>  BlinkWebView<span class="op">*</span> view <span class="op">=</span> BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">);</span></span>
+<span id="cb1-74"><a href="#cb1-74" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-75"><a href="#cb1-75" aria-hidden="true" tabindex="-1"></a>  blink_web_view_register_custom_scheme_full<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;app&quot;</span><span class="op">,</span> on_app_scheme<span class="op">,</span> NULL<span class="op">);</span></span>
+<span id="cb1-76"><a href="#cb1-76" aria-hidden="true" tabindex="-1"></a>  blink_web_view_register_message_handler<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;hello&quot;</span><span class="op">,</span> on_hello<span class="op">,</span> view<span class="op">);</span></span>
+<span id="cb1-77"><a href="#cb1-77" aria-hidden="true" tabindex="-1"></a>  g_signal_connect<span class="op">(</span>web_view<span class="op">,</span> <span class="st">&quot;load-changed&quot;</span><span class="op">,</span> G_CALLBACK<span class="op">(</span>on_load_changed<span class="op">),</span> NULL<span class="op">);</span></span>
+<span id="cb1-78"><a href="#cb1-78" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-79"><a href="#cb1-79" aria-hidden="true" tabindex="-1"></a>  blink_web_view_load_uri<span class="op">(</span>view<span class="op">,</span> <span class="st">&quot;app://main/index.html&quot;</span><span class="op">);</span></span>
+<span id="cb1-80"><a href="#cb1-80" aria-hidden="true" tabindex="-1"></a>  gtk_window_present<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">));</span></span>
+<span id="cb1-81"><a href="#cb1-81" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-82"><a href="#cb1-82" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* Corresponds to CefRunMessageLoop() */</span></span>
+<span id="cb1-83"><a href="#cb1-83" aria-hidden="true" tabindex="-1"></a>  <span class="dt">int</span> status <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb1-84"><a href="#cb1-84" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-85"><a href="#cb1-85" aria-hidden="true" tabindex="-1"></a>  <span class="co">/* Corresponds to CefShutdown() */</span></span>
+<span id="cb1-86"><a href="#cb1-86" aria-hidden="true" tabindex="-1"></a>  blink_gtk_shutdown<span class="op">();</span></span>
+<span id="cb1-87"><a href="#cb1-87" aria-hidden="true" tabindex="-1"></a>  <span class="cf">return</span> status<span class="op">;</span></span>
+<span id="cb1-88"><a href="#cb1-88" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p>Build and run:</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">cc</span> cef-electron-migration.c <span class="at">-o</span> cef-electron-migration <span class="va">$(</span><span class="ex">pkg-config</span> <span class="at">--cflags</span> <span class="at">--libs</span> blinkgtk-0.1<span class="va">)</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="ex">./cef-electron-migration</span></span></code></pre></div>
+<p>Run it in a Wayland session. When you press the button, the terminal
+prints<br />
+<code>hello: ping</code> and the page shows <code>pong</code>.</p>
+<h2 id="features-without-an-equivalent-and-other-differences">Features
+without an equivalent, and other differences</h2>
+<p>BlinkGTK's public API has no equivalent for the following.</p>
+<table>
+<thead>
+<tr>
+<th>Feature</th>
+<th>Name in CEF / Electron</th>
+<th>What to do instead</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>macOS, running on X11</td>
+<td>(both supported)</td>
+<td>Not available</td>
+</tr>
+<tr>
+<td>Node.js</td>
+<td>Electron's main process and preload</td>
+<td>Write the code in C or a language that uses GObject
+Introspection</td>
+</tr>
+<tr>
+<td>Pump the engine from your own loop</td>
+<td><code>CefDoMessageLoopWork()</code></td>
+<td>Leave the loop to <code>blink_gtk_run_main_loop()</code> and use
+GLib timers</td>
+</tr>
+<tr>
+<td>Render off screen and receive the pixels</td>
+<td>CEF windowless rendering (<code>OnPaint</code>)</td>
+<td>Not available. For single images,
+<code>blink_web_view_capture_screenshot()</code></td>
+</tr>
+<tr>
+<td>Expose C functions directly to the page</td>
+<td><code>CefV8Handler</code> / <code>contextBridge</code></td>
+<td><code>window.blinkgtk</code> messages plus wrapper functions
+inserted with <code>inject_user_script()</code></td>
+</tr>
+<tr>
+<td>Request and answer as a pair</td>
+<td><code>cefQuery</code> / <code>ipcRenderer.invoke()</code></td>
+<td>Combine two messages</td>
+</tr>
+<tr>
+<td>Intercept or rewrite http / https requests</td>
+<td><code>CefResourceRequestHandler</code> /
+<code>session.webRequest</code></td>
+<td>Not available. Serve your own content over a custom scheme</td>
+</tr>
+<tr>
+<td>Status codes, headers and redirects from a scheme handler</td>
+<td><code>CefResourceHandler</code> / the <code>Response</code> from
+<code>protocol.handle()</code></td>
+<td>Not available. Only the body and its type can be returned</td>
+</tr>
+<tr>
+<td>Print dialog</td>
+<td><code>CefBrowserHost::Print()</code> /
+<code>webContents.print()</code></td>
+<td>Not available. Write a PDF with
+<code>blink_web_view_print_to_pdf_with_options()</code></td>
+</tr>
+<tr>
+<td>Developer tools inside your window</td>
+<td><code>ShowDevTools()</code> / <code>openDevTools()</code></td>
+<td>Open remote debugging in a separate Chrome or Chromium</td>
+</tr>
+<tr>
+<td>Extensions</td>
+<td>loading extensions in CEF or Electron</td>
+<td>Not available</td>
+</tr>
+<tr>
+<td>Application auto-update</td>
+<td>Electron's <code>autoUpdater</code></td>
+<td>Not available. Update through the operating system's package
+manager</td>
+</tr>
+<tr>
+<td>Menus, tray, notifications</td>
+<td>Electron's <code>Menu</code> / <code>Tray</code> /
+<code>Notification</code></td>
+<td>Use GTK and GLib (<code>GMenu</code>, <code>GNotification</code> and
+so on)</td>
+</tr>
+</tbody>
+</table>
+<p>Other differences:</p>
+<ul>
+<li><strong>Calls come from the main thread only.</strong> Call the
+functions in the public header<br />
+from the GTK main thread. Callbacks are also called on the main
+thread</li>
+<li><strong>Some things are fixed before initialization.</strong> The
+resource location, the<br />
+rendering mode and custom scheme names cannot be changed after
+<code>blink_gtk_init()</code></li>
+<li><strong>Do not free what <code>blink_web_view_get_uri()</code> and
+<code>get_title()</code> return.</strong> The next<br />
+call to the same function overwrites it, so copy it if you keep it</li>
+</ul>
+<p>If a missing feature stops you from switching, tell us through<br />
+<a href="https://github.com/daisy19gnu/blinkgtk-dist/issues">bug reports
+and requests</a> or at<br />
+<a href="mailto:contact@blinkgtk.org">contact@blinkgtk.org</a>.</p>
+<h2 id="what-to-read-next">What to read next</h2>
+<ul>
+<li><a href="../building-with-blinkgtk-en.html">Building an
+application</a> — from installation to the first run</li>
+<li><a href="../consumer-integration-guide-en.html">Integration guide</a>
+— linking and runtime requirements</li>
+<li><a href="../api-reference/app-integration-api-en.html">App integration
+API</a> — custom schemes, messages, script injection</li>
+<li><a href="../api-reference/signals-api-en.html">Signals API</a> — load
+state, navigation decisions, permissions</li>
+<li><a href="../api-reference/ui-handlers-api-en.html">UI handlers API</a>
+— dialogs, file choosers, downloads</li>
+<li><a href="../api-reference/devtools-api-en.html">DevTools API</a></li>
+<li><a href="../api-reference/howto-index-en.html">How-to index</a> — find
+functions by what you want to do</li>
+<li><a href="../tutorials/python-tutorial-en.html">Building in
+Python</a></li>
+<li><a href="../portable-app-guide-en.html">Portable application
+guide</a></li>
+<li><a href="./webkitgtk-to-blinkgtk-en.html">WebKitGTK migration
+guide</a></li>
+</ul>
+<h2 id="change-history">Change history</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Change</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-10-19</td>
+<td>First version</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>

@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Each figure carries the date it was measured. The package sizes and the number of bundled documents are measured on the ZIP we ship (measured 2026-10-11). Note:">
+<meta name="description" content="BlinkGTK for Windows lets you use Chromium&#x27;s rendering engine (Blink) as a GTK4 widget, from C. Unpack the ZIP and run bin\blinkgtk_browser.exe and it works at ">
 <link rel="canonical" href="https://blinkgtk.org/docs/windows-getting-started-en.html">
 <meta property="og:type" content="article">
 <meta property="og:title" content="BlinkGTK for Windows — Getting started — BlinkGTK">
-<meta property="og:description" content="Each figure carries the date it was measured. The package sizes and the number of bundled documents are measured on the ZIP we ship (measured 2026-10-11). Note:">
+<meta property="og:description" content="BlinkGTK for Windows lets you use Chromium&#x27;s rendering engine (Blink) as a GTK4 widget, from C. Unpack the ZIP and run bin\blinkgtk_browser.exe and it works at ">
 <meta property="og:url" content="https://blinkgtk.org/docs/windows-getting-started-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -44,326 +44,228 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-for-windows--getting-started">BlinkGTK for Windows —
 Getting started</h1>
-<blockquote>
-<p><strong>Each figure carries the date it was measured.</strong> The
-package sizes and the<br />
-number of bundled documents are measured <strong>on the ZIP we
-ship</strong> (measured 2026-10-11).<br />
-Note: <strong>We do not state when the ZIP was built</strong>, because
-that changes every time<br />
-it is rebuilt. For the exact byte count and hash of each ZIP, see<br />
-<code>&lt;package name&gt;.verify.json</code> (<code>size</code> /
-<code>sha256</code>) and <code>SHA256SUMS</code> (hashes only),<br />
-published alongside the packages. This release was checked on Windows 11
-Pro<br />
-build 26300 on <strong>2026-10-18</strong> (the extract-and-run check of
-the package).</p>
-</blockquote>
-<p>BlinkGTK, running on Windows. It follows the same versioning as the
-Linux build<br />
-(Chromium version plus BlinkGTK patch level).<br />
-This release, <strong>1.2.4-build4, has the same version number as Linux
-1.2.4-build4</strong>;<br />
-both are Chromium 155.0.8059.39.<br />
-<strong>However, the changes applied to the Chromium source (typesetting
-and layout) are the same as in 1.2.4-build2</strong> (our Windows view
-in <code>content.dll</code>, RenderWidgetHostViewWin, did change, for
-the GPU path). The BlinkGTK-layer changes of Linux build3 and build4 are
-included, but <strong>the engine-side changes for hanging punctuation
-(#153, which came with Linux build1) and warichu (#154, which came with
-build3) are not</strong> (so, for this release only, "the same number
-means the same engine changes" does not hold).<br />
-<code>blink_gtk_has_typesetting_feature</code> returns FALSE for both
-names in this release (the Windows 1.2.4-build2 returned TRUE for
-hanging punctuation, which does not work; that was wrong and is fixed in
-this release).</p>
-<p><strong>The public API matches Linux 1.2.4-build2 except for one
-entry point.</strong> Since 1.2.3-build4 the public API has grown by two
-entry points (<code>blink_gtk_set_update_check</code> and
-<code>blink_gtk_has_typesetting_feature</code>, the same as on
-Linux).<br />
-However, the 51 entry points new to the Windows build in 1.2.3-build3
-(added in Linux 1.2.2 and 1.2.3)<br />
-have not yet been called on Windows. We have called 66 of the 154 public
-entry points on Windows<br />
-(§0 of the bundled <code>docs\api-windows-notes-en.md</code>), all of
-them ones that were already there in 1.2.1-build3.<br />
-<strong>The comparison with Linux (the number of public entry points,
-etc.) uses values measured on 2026-10-11 against Linux 1.2.4-build2. It
-was not re-measured against Linux build3 and build4.</strong></p>
-<p><strong>How this is counted</strong>: an entry point counts as public
-API when it is both declared<br />
-in the public header and exported from the shared library
-(<code>.so</code> / <code>.dll</code>). The header<br />
-declarations include the two <code>_get_type</code> functions that
-<code>G_DECLARE_FINAL_TYPE</code> declares<br />
-(<code>BlinkWebView</code> and <code>BlinkDownload</code>). By that
-definition <strong>Linux has 155 and Windows has 154</strong>.</p>
-<p><strong>How this was measured</strong> (both 2026-10-11): for Linux,
-the header from the upstream<br />
-1.2.4-build2 devel package and the <code>.so</code> from its runtime
-package, read with <code>nm -D</code>:<br />
-the intersection of 156 header declarations and the 192 exports whose
-names start with<br />
-<code>blink_</code> = <strong>155</strong> (two more exports than
-1.2.3-build4, and both added entry points are in the header, so both are
-public API;<br />
-the same procedure on 1.2.3-build4 gives 154 / 190 / 153, matching the
-earlier measurement. The procedure and results are in<br />
-<code>docs/evidence/linux-api-count-2026-10-11/</code> of our
-development repository). For Windows, the intersection of 155 public
-header declarations in<br />
-this release and the 165 DLL exports (<code>dumpbin /exports</code>)
-whose names start with <code>blink_</code><br />
-= <strong>154</strong>. The name filter only leaves out internal<br />
-symbols that the header does not declare, so it does not change the
-intersection.<br />
-The Windows header figure of 155 leaves out
-<code>blink_web_view_attach_to_external_surface</code><br />
-(inside <code>#ifndef _WIN32</code>) and includes
-<code>blink_gtk_sandbox_init</code>. §0 of the bundled<br />
-<code>docs\api-windows-notes-en.md</code> counts the declarations marked
-<code>BLINKGTK_EXPORT</code> instead<br />
-(which include the former and not the latter), so its 155 is a different
-set;<br />
-the intersection of 154 is the same.<br />
-Note: with the counting method otherwise the same on both platforms,
-only the conditional-compilation handling is<br />
-mirrored — on Windows we drop what is inside
-<code>#ifndef _WIN32</code>, on Linux what is<br />
-inside <code>#ifdef _WIN32</code>, so that declarations invisible to
-that platform's users<br />
-are not counted.</p>
-<table>
-<tbody>
-<tr>
-<td><strong>Missing</strong> on Windows</td>
-<td><code>blink_web_view_attach_to_external_surface</code>
-(Wayland-specific)</td>
-</tr>
-<tr>
-<td><strong>Only</strong> on Windows</td>
-<td>none</td>
-</tr>
-</tbody>
-</table>
-<p><strong>One more entry point sits outside those
-counts.</strong><br />
-<code>blink_gtk_sandbox_init()</code> is declared in the header on both
-platforms, but neither<br />
-shared library exports it. On Windows it is linked into your executable
-through the<br />
-static library <code>blinkgtk_sandbox.lib</code> (shipped in the devel
-ZIP).<br />
-<strong>You cannot call it on Linux</strong> (see below).</p>
-<p><strong>About the two sandbox entry points</strong> (measured
-2026-10-11; exports were checked with <code>nm -D</code> for the Linux
-<code>.so</code> and <code>dumpbin /exports</code> for the Windows
-DLL):</p>
+<p>BlinkGTK for Windows lets you use Chromium's rendering engine (Blink)
+as a GTK4 widget, from C.<br />
+Unpack the ZIP and run <code>bin\blinkgtk_browser.exe</code> and it
+works at once (no administrator rights needed).<br />
+The API is nearly the same as the Linux version, so you can use the same
+code on both operating systems (the differences are collected in
+"Differences from the Linux version" below).</p>
+<p>This page describes <strong>v1.2.4-build4</strong> (Chromium
+155.0.8059.39). We checked on Windows 11 Pro (build 26300), on
+2026-10-18, that it unpacks and runs.</p>
+<p><strong>Contents</strong>: <a href="#who-it-is-for">Who it is for</a>
+/ <a href="#run-it">Run it</a> / <a href="#check-that-it-works">Check
+that it works</a> / <a href="#requirements">Requirements</a> / <a
+href="#embedding-it-in-your-app">Embedding it in your app</a> / <a
+href="#upgrading-from-an-earlier-version">Upgrading from an earlier
+version</a> / <a href="#differences-from-the-linux-version">Differences
+from the Linux version</a> / <a href="#the-experimental-gpu-path">The
+experimental GPU path</a> / <a href="#if-something-goes-wrong">If
+something goes wrong</a></p>
+<hr />
+<h2 id="who-it-is-for">Who it is for</h2>
+<ul>
+<li><strong>You want to embed the same rendering engine as Chromium in a
+GTK4 app.</strong> BlinkGTK works as a <code>GtkWidget</code> and is
+driven by a C API.</li>
+<li><strong>You are considering moving from WebView2, CEF or
+Electron.</strong> WebView2 is a Windows-only component (Win32, WinUI,
+WPF and similar), so the code is not shared with Linux. CEF has C and
+C++ APIs and also runs on Linux, and Electron is a framework for
+JavaScript apps. What is different about BlinkGTK is that you can
+<strong>use it from C as a GTK4 widget</strong>. It is an option when
+you write a GTK4 app in C and want to use the same code on Linux and
+Windows. It is not a drop-in replacement for an existing app.</li>
+<li><strong>You want to try Japanese vertical text and
+typesetting.</strong> There is an experimental adjustment for vertical
+text (see <a href="#differences-from-the-linux-version">Differences from
+the Linux version</a>). However, the hanging punctuation (typesetting
+that lets punctuation hang past the end of a line) and warichu (inline
+cutting notes: small notes set in two lines inside a line) that the
+Linux version has are not included in this Windows version.</li>
+</ul>
+<hr />
+<h2 id="run-it">Run it</h2>
+<h3 id="1-download-and-unpack">1. Download and unpack</h3>
+<p>Get the ZIP files from <code>v1.2.4-build4-windows</code> in the <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/releases">Releases of
+blinkgtk-dist</a>.</p>
 <table>
 <thead>
 <tr>
-<th></th>
-<th>Linux 1.2.4-build2</th>
-<th>This Windows build</th>
+<th>File</th>
+<th>Use</th>
 </tr>
 </thead>
 <tbody>
 <tr>
-<td>Declared in the header</td>
-<td>yes (both)</td>
-<td>yes (both)</td>
+<td><code>blinkgtk-1.2.4-build4-windows-x64.zip</code></td>
+<td><strong>To run it</strong> (portable). Start with this one</td>
 </tr>
 <tr>
-<td><code>blink_gtk_init_with_sandbox()</code> in the shared
-library</td>
-<td>yes</td>
-<td>yes</td>
+<td><code>blinkgtk-devel-1.2.4-build4-windows-x64.zip</code></td>
+<td><strong>To embed it</strong> (headers and libraries; see <a
+href="#embedding-it-in-your-app">Embedding it in your app</a>)</td>
 </tr>
 <tr>
-<td><code>blink_gtk_sandbox_init()</code> available</td>
-<td><strong>no</strong></td>
-<td><strong>yes</strong> (through the static library
-<code>blinkgtk_sandbox.lib</code>, shipped in the devel ZIP)</td>
+<td><code>SHA256SUMS</code></td>
+<td>To check the ZIPs. Compare it with the output of
+<code>certutil -hashfile &lt;ZIP&gt; SHA256</code></td>
 </tr>
 </tbody>
 </table>
-<p><strong><code>blink_gtk_sandbox_init()</code> is Windows-only and
-cannot be called on Linux.</strong><br />
-The header marks it "Windows only." and says of Linux:<br />
-"The Linux shared library does not export it, so calling it there fails
-to link."<br />
-On Linux, call <code>blink_gtk_init()</code> or pass <code>NULL</code>
-to <code>blink_gtk_init_with_sandbox()</code>;<br />
-code shared between the platforms can guard the call with
-<code>#ifdef G_OS_WIN32</code><br />
-(per the same header note). The same header names the Windows source
-as<br />
-<code>lib/blinkgtk_sandbox.lib</code> in the BlinkGTK for Windows devel
-ZIP, from 1.2.1-build3.<br />
-<code>Since:</code> is <code>1.2.1</code> for
-<code>blink_gtk_sandbox_init()</code> and <code>1.2.2</code> for<br />
-<code>blink_gtk_init_with_sandbox()</code>. This note reads the same in
-the Linux 1.2.4-build2<br />
-devel header and in this release's header (compared 2026-10-11).<br />
-(Issue #141, which the note on
-<code>blink_gtk_init_with_sandbox()</code> cites, is a<br />
-question <strong>we</strong> filed in the upstream repository.)</p>
-<hr />
-<h2 id="what-you-get">What you get</h2>
-<table>
-<tbody>
-<tr>
-<td><strong>portable ZIP</strong></td>
-<td>Extract and run. GTK4 is bundled, so there is nothing else to
-install</td>
-</tr>
-<tr>
-<td><strong>devel ZIP</strong></td>
-<td>For embedding: public API headers, import libraries, and the GTK4
-development files</td>
-</tr>
-</tbody>
-</table>
-<p><strong>There is no installer (MSI) yet</strong> — only the design
-has been decided.</p>
-<hr />
-<h2 id="getting-it-running">Getting it running</h2>
-<h3 id="1-extract">1. Extract</h3>
-<p>Put the ZIP anywhere. <strong>Administrator rights are not
-required.</strong></p>
+<p>Unpack the portable ZIP anywhere. It includes the GTK4 and VC++
+runtime DLLs, so there is nothing else to install. There is no installer
+(MSI) yet.</p>
 <h3 id="2-a-warning-may-appear-the-first-time">2. A warning may appear
 the first time</h3>
-<p><strong>These packages are not code-signed.</strong> Microsoft
-Defender SmartScreen may warn<br />
-you when you download the ZIP with a browser and run it. Follow the
-prompts to<br />
-run it anyway.</p>
-<p>Signing can be added later, so the packages ship unsigned.</p>
-<blockquote>
-<p>Note: <strong>We do not have a screenshot of this yet.</strong><br />
-On our development machine we do not fetch the package through a
-browser, so it<br />
-never carries the Mark of the Web. <strong>That machine cannot reproduce
-the warning.</strong><br />
-We will add the screenshot, with the exact button labels, once we have
-run<br />
-download-to-launch on a clean Windows install.</p>
-</blockquote>
-<h3 id="3-run-it">3. Run it</h3>
-<p>Run <code>bin\blinkgtk_browser.exe</code>.<br />
-<strong>Without an argument it opens
-<code>https://google.com/</code></strong> (this needs an Internet<br />
-connection). Pass a URL to open that page instead.</p>
+<p>This package is not code-signed. If you download it with a browser
+and run it, Microsoft Defender SmartScreen may show a warning. Follow
+the prompt to continue (in general, choose "More info" in the warning
+and then "Run anyway"; we have not captured the actual screen for this
+release).</p>
+<h3 id="3-run">3. Run</h3>
 <pre><code>cd blinkgtk-1.2.4-build4-windows-x64\bin
 blinkgtk_browser.exe
 blinkgtk_browser.exe https://example.com/</code></pre>
-<p><code>blinkgtk_browser</code> is a minimal sample that shows only
-what is needed to embed<br />
-BlinkGTK. A console window also opens and shows the program's status
-messages.</p>
+<p>Without an argument it opens <code>https://google.com/</code> (an
+internet connection is needed). With a URL argument it opens that
+page.<br />
+<code>blinkgtk_browser</code> is a minimal sample that shows only what
+you need to embed BlinkGTK.</p>
+<hr />
+<h2 id="check-that-it-works">Check that it works</h2>
+<ul>
+<li>If a web page appears in the window, it works.</li>
+<li>The executable tells you the version you have. Trust this rather
+than the numbers on the site or in the documents.</li>
+</ul>
+<pre><code>&gt; blinkgtk_browser.exe --version
+BlinkGTK 1.2.4-build4 (Chromium 155.0.8059.39)</code></pre>
+<ul>
+<li>If nothing appears, the window stays white, or it exits at once, see
+<a href="#if-something-goes-wrong">If something goes wrong</a>.</li>
+</ul>
 <hr />
 <h2 id="requirements">Requirements</h2>
 <table>
 <tbody>
 <tr>
 <td>OS</td>
-<td>Windows 10 (64-bit) or later</td>
+<td>Windows 10 (64-bit) or later. <strong>We verified on Windows 11
+Pro</strong> (builds 26200 and 26300); we have not verified on Windows
+10</td>
 </tr>
 <tr>
 <td>CPU</td>
-<td>x64 (<strong>32-bit is not supported</strong>)</td>
+<td>x64 (32-bit is not supported)</td>
 </tr>
 <tr>
 <td>Disk space</td>
-<td>ZIP about 377 MiB + about 1,048 MiB extracted. <strong>You need both
-while extracting</strong> — about 1.4 GiB in practice (1,425 MiB rounded
-up; measured 2026-10-11)</td>
+<td>About 1.4 GiB (ZIP 377 MiB + about 1,048 MiB unpacked; you need both
+while unpacking)</td>
 </tr>
 <tr>
 <td>GTK4</td>
-<td><strong>Bundled.</strong> Do not install it separately</td>
+<td><strong>Bundled.</strong> Do not install it separately (mixing it
+with a GTK4 installed another way may fail to link with the bundled
+one)</td>
 </tr>
 <tr>
-<td>Visual C++ runtime</td>
-<td><strong>DLLs bundled</strong> (no need to run the Redistributable
-installer)</td>
+<td>VC++ runtime</td>
+<td>DLLs bundled (you do not need the redistributable installer)</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>Note: <strong>MiB here means 1,048,576 bytes.</strong> The GitHub
-Releases page uses the same<br />
-unit and labels it "MB", so <strong>the ZIP shows as 377 MB
-there</strong> (checked<br />
-2026-09-23 by comparing the API byte counts of a release in another
-public<br />
-repository with its Releases page). Tools that count in 1,000,000-byte
-units show 395 MB.<br />
-<strong>The bundled documents use the same unit</strong> — all six that
-print<br />
-sizes (<code>INSTALLATION-ja.md</code>,
-<code>INSTALLATION-en.md</code>,<br />
-<code>building-with-blinkgtk-ja.md</code>,
-<code>portable-app-guide-ja.md</code>, <code>faq-ja.md</code>,<br />
-<code>linux-windows-differences-ja.md</code>) state that MB means MiB
-(checked<br />
-mechanically, 2026-09-28).</p>
-</blockquote>
-<blockquote>
-<p><strong>Do not install GTK4 separately.</strong> Windows has two
-incompatible GTK4 ABIs<br />
-(gvsbuild = MSVC ABI, MSYS2 = MinGW ABI). Code built against a different
-ABI<br />
-will not link against the bundled GTK4.<br />
-(This is the general rule. <strong>We have not actually tried mixing
-them.</strong>)</p>
-</blockquote>
-<p>Note: We verified this on <strong>Windows 11 Pro (builds 26200 and
-26300)</strong>. We have not tested<br />
-Windows 10.</p>
-<p>Note: <strong>By default, handing rendered output to GTK has only one
-path: <code>software</code>.</strong><br />
-<strong>There is an experimental GPU path</strong> (Windows only; enable
-it with the environment variable
-<code>BLINKGTK_WIN_GPU_PATH=vulkan</code>. <strong>Confirmed on one
-Intel Iris Xe machine only.</strong> Disabled by default. See §6 of the
-bundled <code>docs\gpu-modes-ja.md</code>).<br />
-This release bundles a Vulkan-enabled GTK (<code>gtk-4-1.dll</code>);
-the default path, without the environment variable, does not
-change.<br />
-The EGL render path itself (<code>blink_web_view_egl.cc</code>,
-<code>blink_wayland_surface.cc</code>)<br />
-is not part of the Windows build: <strong>how the receiving surface gets
-composited is<br />
-undesigned</strong>, and a DirectComposition-based shape is under
-consideration.<br />
-<code>blink_gtk_ensure_egl_recipient()</code> and friends, exported but
-not declared in the<br />
-public header, <strong>remain in <code>blinkgtk.dll</code> to keep the
-ABI</strong>, but return 0 on Windows.</p>
-<blockquote>
-<p>The environment variable <code>BLINKGTK_GPU_MODE</code> is read
-(checked 2026-10-11 on this release).</p>
-<ul>
-<li><code>egl</code> starts Chromium without <code>--disable-gpu</code>
-and changes the reported path name to <code>"P3"</code>.<br />
-An ANGLE window was also created, so Chromium may render with the GPU
-internally<br />
-(how far it uses the GPU is not measured). <strong>Handing the output to
-GTK stays the same as with software.</strong></li>
-<li><code>swiftshader</code> is treated like <code>software</code> on
-Windows (<code>--disable-gpu</code> is added).</li>
-</ul>
-<p>In cmd, quote the assignment, as in
-<code>set "BLINKGTK_GPU_MODE=egl"</code>.<br />
-Writing <code>set BLINKGTK_GPU_MODE=egl &amp;&amp; …</code> leaves a
-trailing space in the value, which then does not match
-<code>egl</code>.</p>
-</blockquote>
+<p>The GitHub Releases page shows the same ZIP as "377 MB". Tools that
+count in units of 1,000,000 bytes show 395 MB.</p>
 <hr />
-<h2 id="differences-from-the-linux-build">Differences from the Linux
-build</h2>
+<h2 id="embedding-it-in-your-app">Embedding it in your app</h2>
+<p>The devel ZIP
+(<code>blinkgtk-devel-1.2.4-build4-windows-x64.zip</code>) contains the
+public API headers, the import libraries and the GTK4 development
+files.</p>
+<ul>
+<li><strong>What you need to build</strong>: Visual Studio Build Tools
+(we checked 2026) with the "Desktop development with C++" workload, and
+the Windows SDK.</li>
+<li><strong>Compiler options</strong>:
+<code>/MD /DCOMPONENT_BUILD</code>. <strong>On Japanese Windows with
+MSVC, add <code>/utf-8</code> too</strong> (otherwise the Japanese
+comments in the headers cause warning C4819).</li>
+<li><strong>The embedding guide (<code>building-with-blinkgtk</code>),
+the GPU document and the environment-variable document are in Japanese
+only</strong> (there are no English versions yet).</li>
+<li>The full procedure is in the bundled
+<code>docs\building-with-blinkgtk-ja.md</code>. The source of a minimal
+sample is not included in the current package
+(<code>blinkgtk_browser.exe</code> is the executable only).</li>
+</ul>
+<p><strong>Three things to note.</strong></p>
+<ol type="1">
+<li><strong>Do not write your own forward declarations of the public
+API</strong> (Windows only). The headers declare it with
+<code>__declspec(dllimport)</code>; a declaration without it in the same
+translation unit makes clang warn. Use only the headers.</li>
+<li><strong>Free return values that the caller owns with
+<code>g_free()</code></strong> (for example
+<code>blink_handoff_meta_serialize()</code>). This has been the rule
+since 1.2.3-build2.</li>
+<li><strong>To use the sandbox</strong>, link the static library
+<code>lib\blinkgtk_sandbox.lib</code> and call
+<code>blink_gtk_sandbox_init()</code> (Windows only; it cannot be called
+on Linux, so wrap it in <code>#ifdef G_OS_WIN32</code> when you share
+code between the two).</li>
+</ol>
+<p>The public API has <strong>154 entry points</strong>. Of these 154,
+the only difference from Linux is one entry point:
+<code>blink_web_view_attach_to_external_surface</code> (Wayland only) is
+not on Windows (<code>blink_gtk_sandbox_init()</code> above is
+Windows-only and is not counted in that number).<br />
+We have called 66 of them and confirmed they work. How they are counted,
+and how to list the ones not yet called, is in §0 of the bundled
+<code>docs\api-windows-notes-en.md</code>.</p>
+<hr />
+<h2 id="upgrading-from-an-earlier-version">Upgrading from an earlier
+version</h2>
+<p><strong>From 1.2.4-build2 to 1.2.4-build4:</strong></p>
+<ul>
+<li><strong>Replacing</strong>: unpack the new ZIP into a separate
+folder and try it; if it is fine, replace the old folder.</li>
+<li><strong>The public API did not change</strong> (still 154 entry
+points; the header declarations are the same, only the comments
+changed). We have not checked ABI compatibility, so <strong>please
+rebuild to be safe</strong>.</li>
+<li><strong>If you decide based on
+<code>blink_gtk_has_typesetting_feature()</code></strong>: the Windows
+1.2.4-build2 returned TRUE for
+<code>"hanging-punctuation:allow-end"</code>, which was wrong; the
+Windows engine does not include hanging punctuation and it does not
+work. <strong>This version returns FALSE for both names
+(<code>allow-end</code> and <code>warichu:single-line</code>).</strong>
+Do not detect it with <code>CSS.supports</code> or computed values (they
+can be true even when the typesetting is not in the engine).</li>
+<li><strong>The screenshot API</strong>
+(<code>blink_web_view_capture_screenshot_async()</code> and similar): in
+Linux 1.2.4-build3, a screenshot on the software path changed to return
+the content at the time of the request. This change is included, but we
+have not checked it on Windows.</li>
+<li><strong>GPU path</strong>: it is off by default, so you need to do
+nothing (see <a href="#the-experimental-gpu-path">The experimental GPU
+path</a>).</li>
+<li><strong>The bundled GTK changed</strong>: <code>gtk-4-1.dll</code>
+is now a Vulkan-enabled build (about 1 MB larger). The default path,
+without the environment variable, does not change.</li>
+</ul>
+<p><strong>From 1.2.3 or earlier</strong>: the first Windows 1.2.4 is
+1.2.4-build2 (Chromium moved from 154 to 155). Up to 1.2.3-build4,
+Chromium's internal checks (DCHECK) were enabled and a process could
+crash when an internal assumption failed. From 1.2.4 they are disabled
+in the build.</p>
+<hr />
+<h2 id="differences-from-the-linux-version">Differences from the Linux
+version</h2>
 <table>
 <thead>
 <tr>
@@ -380,257 +282,114 @@ build</h2>
 </tr>
 <tr>
 <td>GTK4</td>
-<td>from the OS packages</td>
-<td><strong>bundled</strong></td>
+<td>OS package</td>
+<td><strong>Bundled</strong></td>
 </tr>
 <tr>
-<td>Path that hands over rendered output</td>
+<td>How rendered output is handed to GTK</td>
 <td>software / EGL</td>
-<td><strong>software by default</strong> (EGL is not built). <strong>An
-experimental GPU path (P4) can be selected with an environment
-variable</strong> (Windows only; one Intel Iris Xe machine
-confirmed)</td>
+<td><strong>software by default.</strong> There is no EGL on Windows. An
+experimental GPU path can be selected with an environment variable
+(below)</td>
 </tr>
 <tr>
 <td><code>blink_web_view_attach_to_external_surface</code></td>
-<td>available</td>
-<td><strong>not available</strong> (Wayland-specific)</td>
+<td>Yes</td>
+<td>No (Wayland only)</td>
 </tr>
 <tr>
-<td>DCHECK (Chromium's internal assumption checks)</td>
-<td>disabled</td>
-<td><strong>disabled</strong> (from 1.2.4-build1; up to 1.2.3-build4 it
-was enabled, and where an internal assumption did not hold the Windows
-build ended that process abnormally; section 8 of the bundled Japanese
-<code>docs\linux-windows-differences-ja.md</code>)</td>
+<td>Hanging punctuation typesetting</td>
+<td>Yes (from 1.2.4-build1)</td>
+<td><strong>Not included in this version</strong></td>
 </tr>
 <tr>
-<td>Japanese vertical layout (default)</td>
-<td>column-grid snap is off by default</td>
-<td><strong>No column-grid snap difference</strong></td>
+<td>Warichu (inline cutting notes) typesetting</td>
+<td>Yes (from 1.2.4-build3)</td>
+<td><strong>Not included in this version</strong></td>
 </tr>
 <tr>
-<td>Same, with the flag <code>CJKVerticalColumnFragmentation</code>
-enabled</td>
-<td>four layout changes apply (together called column-grid snap)</td>
-<td><strong>apply</strong> (from 1.2.3-build4; one site differs from
-upstream, see below)</td>
+<td>Japanese vertical text layout</td>
+<td>Experimental adjustment off by default</td>
+<td>Same (off by default)</td>
 </tr>
 </tbody>
 </table>
-<blockquote>
-<p>Note: <strong>Vertical Japanese layout is not guaranteed to match
-between the two<br />
-platforms.</strong></p>
-<p><strong>The vertical-layout changes are in the Windows build from
-1.2.3-build4. They are off by default on both platforms.</strong><br />
-The flag that turns them on,
-<code>CJKVerticalColumnFragmentation</code>, is <strong>one BlinkGTK
-adds</strong> (it is not<br />
-a Chromium upstream feature). It has <code>status: "experimental"</code>
-in<br />
-<code>runtime_enabled_features.json5</code>, that is <strong>off by
-default</strong>, and <strong>the<br />
-product code never turns it on.</strong></p>
-<p><strong>How this was counted</strong> (measured 2026-09-27 on the
-upstream 1.2.3-build3 tree<br />
-and the Windows tree at that time): calls to the forcing setter<br />
-<code>SetCJKVerticalColumnFragmentation...</code> <strong>across the
-whole upstream tree</strong> — <strong>zero</strong>.<br />
-Enabling it on the command line (<code>--enable-blink-features</code>)
-likewise never appears<br />
-in product code (zero under <code>third_party/blinkgtk/</code>).<br />
-For 1.2.3-build4: the lines added between upstream 1.2.3-build3 and
-1.2.3-build4 (9 files) contain<br />
-none of these strings and not the flag name either (checked
-2026-09-28).</p>
-<p><strong>The flag is enabled when you start with either of
-these:</strong></p>
+<p>The <strong>experimental vertical-text adjustment</strong> (it aligns
+vertical lines inside multi-column layouts to the column grid) is off by
+default on both Linux and Windows.<br />
+To turn it on, add
+<code>--enable-blink-features=CJKVerticalColumnFragmentation</code>
+<strong>to the executable's command line</strong> (passing arguments to
+<code>blink_gtk_init()</code> from your app does not reach it).<br />
+We have not compared the rendered output of the two operating systems
+side by side, so there is no guarantee that the layout matches.</p>
+<p><strong>The environment variable <code>BLINKGTK_GPU_MODE</code> does
+not change how rendering is handed over on Windows.</strong> Even with
+<code>egl</code>, the hand-over to GTK is the same as software
+(Chromium's internal rendering may differ; we have not measured the
+result). To try the GPU, use <code>BLINKGTK_WIN_GPU_PATH</code>
+below.<br />
+When you set an environment variable in cmd, put it in quotes like
+<code>set "NAME=value"</code> (with
+<code>set NAME=value &amp;&amp; …</code> a trailing space becomes part
+of the value).</p>
+<hr />
+<h2 id="the-experimental-gpu-path">The experimental GPU path</h2>
+<p>Only when you set the environment variable
+<strong><code>BLINKGTK_WIN_GPU_PATH=vulkan</code></strong>, the result
+of Chromium's GPU compositing is handed to GTK's Vulkan renderer without
+being copied back into CPU memory (the usual path first copies the
+screen drawn by the GPU into CPU memory). <strong>A Vulkan-capable GPU
+and driver are required.</strong></p>
+<pre><code>set &quot;BLINKGTK_WIN_GPU_PATH=vulkan&quot; &amp;&amp; blinkgtk_browser.exe</code></pre>
 <ul>
-<li><code>--enable-blink-features=CJKVerticalColumnFragmentation</code></li>
-<li><code>--enable-experimental-web-platform-features</code> (the
-Chromium switch that enables all<br />
-<code>status: "experimental"</code> features; Chromium's
-<code>content/child/runtime_features.cc:576,586</code>)</li>
+<li><strong>It is experimental and confirmed on one Intel Iris Xe
+machine only.</strong> Other GPUs and drivers are unconfirmed. It is off
+by default.</li>
+<li>At the same frames per second, CPU use was 12–26% lower on a moving
+page and about 50% lower on a still page (relative to the usual path),
+and the GPU was used 5–14%. <strong>Each is a single 120-second
+measurement, taken when this path was introduced.</strong> We have not
+measured power (watts).</li>
+<li><strong>Not checked</strong>: changes of the screen scaling (DPI),
+and multiple windows. Even on a still page it copies about 60 times a
+second (the GPU is used about 14%).</li>
+<li>When Vulkan is not available (with a standard GTK, and with a
+simulated condition that points the Vulkan driver to a file that does
+not exist), it did not crash and the display did not break. We have not
+checked a machine that really has no driver.</li>
+<li>Usage, what we checked and the limits are in §6 of the bundled
+<code>docs\gpu-modes-ja.md</code> (Japanese only).</li>
 </ul>
-<p>On Windows, put either one <strong>on the executable's command
-line</strong>. Chromium reads its<br />
-arguments with <code>GetCommandLineW</code>, so passing
-<code>argv</code> to <code>blink_gtk_init()</code> from your<br />
-application does not reach it.<br />
-The vertical layout metrics JS API
-(<code>window.__blinkgtk.verticalFlowMetrics</code>) needs this
-flag.<br />
-On Windows too, either switch makes the API available, and calling it
-returns an object<br />
-(checked 2026-09-27 with a two-column vertical test page).</p>
-<p><strong>When the flag is on</strong>: conditions at four sites change
-the layout.<br />
-They round up the block size of a block that is a direct child of the
-multicol container and does not<br />
-itself take part in the column split, to a multiple of the column width
-(600px when <code>column-width</code> is auto);<br />
-snap lines that cross a column boundary to the column grid; fix the
-column height<br />
-of a vertical multicol whose column height is not yet determined, and
-let an orthogonal vertical child take part in the column split<br />
-(<code>block_layout_algorithm.cc:1418, 2888</code>,
-<code>column_layout_algorithm.cc:374</code> and<br />
-<code>fragmentation_utils.cc:357</code> in the upstream 1.2.3-build3
-tree). (Upstream calls all four together the<br />
-"SNAP 系 4 箇所" (the four SNAP sites), and "column-grid snap" on this
-page means all four.)</p>
-<p><strong>The Windows build up to 1.2.3-build3 did not have these four
-sites.</strong> 1.2.3-build4 takes the three upstream<br />
-files. Compared by md5 with the upstream 1.2.3-build4 tree, two files
-are identical and <code>fragmentation_utils.cc</code><br />
-differs at one site only (measured 2026-09-28): we added a condition
-that lets the DCHECK hit by the fourth site<br />
-pass while the flag is enabled. Up to 1.2.3-build4 the Windows build had
-DCHECK enabled (1.2.4-build1 and later have it disabled), so without
-that change the renderer exited<br />
-abnormally when a matching page was opened with the flag enabled (the
-Linux build has DCHECK disabled, so this<br />
-DCHECK does not run there).</p>
-<p>On a page with vertical text inside a horizontal multicol container,
-counting the rectangles of the text gives<br />
-16 with the flag and 1 without it (1 with the flag too, in the same
-state as 1.2.3-build3 and earlier; measured<br />
-2026-09-28). We have not checked the effects of letting that DCHECK
-pass.</p>
-<p><strong>Line breaking comes from the same source on both
-platforms</strong> (compared by md5, 2026-09-27).<br />
-Of the 275 <code>.cc</code> / <code>.h</code> files directly under
-Blink's <code>core/layout/inline</code>,<br />
-<code>platform/fonts/shaping</code> and <code>platform/text</code>, two
-differ: one only in comments, the other only<br />
-in diagnostic output that appears when a development environment
-variable is set (Linux only).<br />
-<code>runtime_enabled_features.json5</code> is identical too. The
-line-breaking difference we listed for<br />
-the earlier release (Windows on Chromium 152) does not apply to this
-one.</p>
-<p>Note: <strong>We have not compared rendered output (screenshots) from
-the two platforms side by side.</strong><br />
-What we checked is the difference in the sources; <strong>how much the
-rendering differs on screen<br />
-is not measured.</strong> Differences outside the source, such as fonts,
-have not been compared either,<br />
-nor whether the values the layout metrics API returns match Linux.</p>
-<p>See §2-b (the vertical layout metrics API) of the bundled<br />
-<code>docs\environment-variables-ja.md</code>.</p>
-</blockquote>
 <hr />
-<h2 id="if-you-are-embedding-it">If you are embedding it</h2>
-<p>The <code>devel</code> ZIP carries the public API headers and the
-import libraries.</p>
-<p><strong>Building also needs Visual Studio Build Tools and the Windows
-SDK</strong><br />
-(we checked with Visual Studio Build Tools 2026).<br />
-(Not having to install anything else, including GTK4, applies only to
-<em>running</em> it.)<br />
-Your own compile needs <code>/MD /DCOMPONENT_BUILD</code>.<br />
-For the libraries to link and the rest of the build steps, see the
-bundled <code>docs\building-with-blinkgtk-ja.md</code> (Japanese
-only).<br />
-<strong>If you use MSVC on Japanese Windows, also compile with
-<code>/utf-8</code>.</strong><br />
-Without it, the headers are read as code page 932, and the UTF-8
-Japanese comments in<br />
-the public headers and symbols such as © in the GTK headers raise
-warning C4819.</p>
-<p>The GTK4 development files are bundled because the public header
-<code>blink_gtk.h</code><br />
-does <code>#include &lt;gtk/gtk.h&gt;</code>.</p>
-<p><strong>Three things to know when you embed it (the first is
-Windows-specific).</strong></p>
-<ol type="1">
-<li><p><strong>Once you include the header, do not also write your own
-forward<br />
-declarations for the public API</strong> (Windows-specific). The header
-declares<br />
-them with <code>__declspec(dllimport)</code>, so a declaration without
-it in the same<br />
-translation unit makes clang warn (<code>-Winconsistent-dllimport</code>
-if the header<br />
-comes first, <code>-Wdll-attribute-on-redeclaration</code> if yours
-does). With warnings<br />
-treated as errors (<code>-Werror</code> / <code>/WX</code>) the build
-stops (we have not checked<br />
-how MSVC's cl.exe reports it). Use the header alone.</p></li>
-<li><p><strong>Free a returned string the caller owns with
-<code>g_free()</code></strong> —<br />
-<code>blink_handoff_meta_serialize()</code> is the example. The
-implementation<br />
-allocates with <code>g_strdup_printf()</code>, so <strong>the contract
-is <code>g_free()</code></strong>.</p>
-<blockquote>
-<p>The API reference and its example said <code>free()</code> up to
-1.2.3-build1, and<br />
-<strong>1.2.3-build2 changed them, and the header, to
-<code>g_free()</code></strong> (#130). This does not mean
-<code>free()</code><br />
-breaks in the current configuration — on Windows
-<code>blinkgtk.dll</code> and<br />
-<code>glib-2.0-0.dll</code> both use the CRT from DLLs (UCRT) (checked
-on this release<br />
-with <code>dumpbin /dependents</code>, 2026-09-28). <strong>We align it
-for the contract.</strong></p>
-</blockquote></li>
-<li><p><strong><code>blink_gtk_sandbox_init()</code> is not exported
-from the DLL.</strong> It is linked<br />
-into your executable through the static library
-<code>blinkgtk_sandbox.lib</code>,<br />
-which the devel ZIP carries. <strong>This entry point is Windows-only
-and cannot<br />
-be called on Linux</strong> (the Linux shared library does not export
-it; for what to<br />
-call on Linux instead, see the sandbox paragraph above). The background
-is<br />
-issue #141 in the upstream repository, filed by us.</p></li>
-</ol>
+<h2 id="if-something-goes-wrong">If something goes wrong</h2>
+<ul>
+<li><strong>If the window stays white or it exits at once</strong>: (1)
+start <code>blinkgtk_browser.exe --enable-logging</code> and note the
+messages printed in the console; (2) check that the ZIP is not corrupted
+with <code>SHA256SUMS</code>; (3) check that you have not mixed in a
+GTK4 installed another way. If that does not fix it, report it (below)
+with the messages you noted.</li>
+<li><strong>Bundled documents</strong>: §5 of
+<code>docs\troubleshooting-en.md</code> (Japanese:
+<code>docs\troubleshooting-ja.md</code>) has the symptoms for users
+(§1–4 before it are for people who build Chromium itself). For symptoms
+that are not there, please report them.</li>
+<li><strong>Documentation entry point</strong>:
+<code>docs\00-index-en.md</code> (Japanese:
+<code>docs\00-index-ja.md</code>). Installation is
+<code>docs\INSTALLATION-en.md</code>, Windows-specific notes on the API
+are <code>docs\api-windows-notes-en.md</code>, and environment variables
+are in <code>docs\environment-variables-ja.md</code> (Japanese
+only).</li>
+<li><strong>Reports and questions</strong>: please use <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues">Issues of
+blinkgtk-dist</a>. Include the version (the output of
+<code>--version</code>), the Windows build number and the steps to
+reproduce.</li>
+</ul>
 <hr />
-<h2 id="reading-the-version">Reading the version</h2>
-<p><code>1.2.4-build4</code> is the same version number as BlinkGTK
-itself, <strong>tied to the<br />
-Chromium version and the BlinkGTK patch level.</strong> This one is
-Chromium<br />
-155.0.8059.39.</p>
-<p>You can ask the binary in your hands:</p>
-<pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.4-build4 (Chromium 155.0.8059.39)</code></pre>
-<p><strong>Trust what your copy prints, not the number on this
-page.</strong></p>
-<hr />
-<h2 id="where-the-rest-of-the-documentation-is">Where the rest of the
-documentation is</h2>
-<p>The package carries its documentation in <code>docs\</code>: 13
-documents in Japanese and<br />
-4 in English (PDF versions of each as well). Start at
-<code>docs\00-index-en.md</code>.</p>
-<table>
-<tbody>
-<tr>
-<td><code>docs\INSTALLATION-en.md</code></td>
-<td>Installing it</td>
-</tr>
-<tr>
-<td><code>docs\troubleshooting-en.md</code></td>
-<td>When it does not work</td>
-</tr>
-<tr>
-<td><code>docs\api-windows-notes-en.md</code></td>
-<td>Windows-specific notes on the API</td>
-</tr>
-</tbody>
-</table>
-<blockquote>
-<p>The environment-variable reference
-(<code>docs\environment-variables-ja.md</code>) is<br />
-<strong>Japanese only</strong> — there is no English edition yet.</p>
-</blockquote>
-<hr />
-<h2 id="revision-history">Revision history</h2>
+<h2 id="change-history">Change history</h2>
 <table>
 <thead>
 <tr>
@@ -640,253 +399,20 @@ documents in Japanese and<br />
 </thead>
 <tbody>
 <tr>
-<td>2026-09-19</td>
-<td>First version</td>
-</tr>
-<tr>
-<td>2026-09-21</td>
-<td>Added evidence for the public API counts (measured on both
-platforms). Noted that <code>blink_gtk_init_with_sandbox()</code>
-disagrees with the note in the header upstream ships. Stated that sizes
-are MiB</td>
-</tr>
-<tr>
-<td>2026-09-22</td>
-<td>Corrected the description of Japanese vertical layout. <strong>With
-default settings (flag off) column-grid snap takes effect on neither
-platform</strong>, so a difference appears only when the flag is passed.
-The line-breaking difference comes from the Chromium version (Windows
-152, Linux 153); the causal claim written earlier has been withdrawn
-(Note: that withdrawal rested on 153 measurements only and went too far;
-corrected in the 2026-09-23 row)</td>
-</tr>
-<tr>
-<td>2026-09-22</td>
-<td>Removed the upstream site source line numbers from the body (that
-block is regenerated on every release). Moved the evidence paths and the
-points we are asking upstream to confirm into the note for the upstream
-project</td>
-</tr>
-<tr>
-<td>2026-09-22</td>
-<td>Matched each claim to the measurement that actually supports it.
-Removed the ZIP build date from the body (it changes on every rebuild).
-Moved the repository paths and the points we are asking upstream to
-confirm out of the body and into the note for the upstream project</td>
-</tr>
-<tr>
-<td>2026-09-22</td>
-<td>Backed the claim that nothing turns it on with the right
-measurement: zero calls to the forcing setter on both trees. The figure
-cited before belonged to a different claim</td>
-</tr>
-<tr>
-<td>2026-09-22</td>
-<td>Moved the notes for the upstream project into a separate cover note.
-They had been in an HTML comment, but the upstream site is generated
-with pandoc and <strong>pandoc passes HTML comments through</strong> (a
-comment in upstream's own <code>version-history-ja.md:17</code> appears
-verbatim on the published page). The draft now contains no HTML
-comments. Aligned the measurement dates</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Corrected the measurement date of the public API counts to
-2026-09-21, the date of the recorded evidence. Aligned the disk-space
-row with the date at the top (2026-09-22). Reworded history entries that
-would have announced unreported items on the published page</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Important: The statement that GitHub Releases shows decimal MB (577
-MiB = 605 MB) <strong>was backwards</strong>. The Releases page uses
-1,048,576-byte units, so the ZIP shows as 577 MB there. Checked against
-API byte counts</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Quoted the compiler message exactly, and referred to the
-environment-variables section by its number</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Removed quotation marks from phrases that were not verbatim (our own
-summaries, a reading of the table), matching the Japanese page.
-Corrected the date of the <code>simple_browser</code> header measurement
-to 2026-09-21, the date on record</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Moved the most recent Windows 11 check to 2026-09-23. Removed
-quotation marks from a translated program message, a self-quotation and
-a term definition</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Stated that the export counts cover only names starting with
-<code>blink</code> / <code>blink_</code>. Corrected what happens with
-your own forward declarations (clang warns; the build stops only with
-<code>-Werror</code> / <code>/WX</code>)</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Removed the total export counts (the two sides were not counted the
-same way). Narrowed the forward-declaration note to a header and your
-own declaration in the same translation unit (your own declaration alone
-gives no warning; checked with clang, not with cl.exe)</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Corrected the line-breaking note: upstream measured only 153 (with
-the upstream flag both on and off; with it on the change moves no
-values); on 152, which has no such flag, the missing #131 change may
-also contribute. The exact ZIP size is in <code>verify.json</code>;
-<code>SHA256SUMS</code> has hashes only. Size measurement date moved to
-2026-09-23. Removed the total export counts from the history</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>Stated the range of the upstream measurement (153 only, its test
-pages and two fonts; the symptom appears when a span is involved).
-Limited "only the verification harness" to the BlinkGTK tree. Removed
-emphasis that was not in the quoted header text</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>The differences-from-Linux table said "No difference" for default
-vertical layout, contradicting note (2) below; narrowed it to
-column-grid snap. Softened the note heading from "does not match" to "is
-not guaranteed to match" (no side-by-side rendering comparison was
-made)</td>
-</tr>
-<tr>
-<td>2026-09-23</td>
-<td>The previous history row named the wrong table (it is the
-differences-from-Linux table, not the requirements table). The opening
-now says "number of bundled documents" instead of "file counts" (the
-page gives no file count)</td>
-</tr>
-<tr>
-<td>2026-09-24</td>
-<td>Updated for the switch of the shipped executable from
-<code>simple_browser</code> to <code>blinkgtk_browser</code> (same rule
-as BlinkGTK itself: simple_browser is a development demo and is not
-shipped). Important: The Defender exclusions we gave as the reason we
-cannot reproduce SmartScreen were not actually in place (measured
-2026-09-24; <code>C:\chromium</code> was added to the exclusions the
-same day). The reason is the missing Mark of the Web, so the exclusion
-wording has been removed</td>
-</tr>
-<tr>
-<td>2026-09-24</td>
-<td>Applied upstream's document checks (2026-09-24): stated that the
-Linux comparisons are against 1.2.2-build6 (Chromium 153), the latest
-when we compared, and that we have not compared against 1.2.3-build1
-(Chromium 154, released 2026-09-24); new_with_profile is now described
-as the 1.2.2-build6 highlight; checked that the quoted upstream header
-sentence is unchanged in 1.2.3 and said so; replaced emoji with words
-(Note: / Important:); measurement dates updated to 2026-09-24</td>
-</tr>
-<tr>
-<td>2026-09-25</td>
-<td>Rewrote the sandbox paragraph for the
-<code>blink_gtk_sandbox_init()</code> note revised in upstream
-1.2.3-build2 (Windows-only, not callable on Linux, what to call on Linux
-instead, <code>Since:</code>). The earlier sentence is kept as what the
-header said as of 1.2.3-build1. Troubleshooting item 3 (cannot be called
-on Linux yet, because the packages do not ship the static library) now
-says it is Windows-only</td>
-</tr>
-<tr>
-<td>2026-09-27</td>
-<td>The note on freeing now says upstream changed the text to
-<code>g_free()</code> in 1.2.3-build2 (#130); it still said the question
-was open</td>
-</tr>
-<tr>
-<td>2026-09-27</td>
-<td>Made the subject of the note on freeing precise (it was the API
-reference and its example that said <code>free()</code>)</td>
-</tr>
-<tr>
-<td>2026-09-27</td>
-<td>Updated for 1.2.3-build3 (Chromium 154.0.8037.57). Re-measured the
-Linux comparison against Linux 1.2.3-build3, the same version number
-(public API: Linux 153, Windows 152; the count now includes the two
-<code>_get_type</code> functions from
-<code>G_DECLARE_FINAL_TYPE</code>). Removed the note that the four Linux
-1.2.2 entry points are missing (this release has them). Rewrote the
-sandbox table for 1.2.3-build3 on both sides. Sizes are now 464 / 1,316
-MiB, and the build check uses Visual Studio Build Tools 2026. Added the
-<code>/utf-8</code> note. Removed the vertical-layout line-breaking
-difference (Chromium version and line-breaking change), since the
-line-breaking sources are now identical. Important: corrected the claim
-that <code>BLINKGTK_GPU_MODE=egl</code> still renders through software
-(egl starts Chromium without <code>--disable-gpu</code>, and an ANGLE
-window is created; what stays the same is handing the output to GTK).
-Added that <code>--enable-experimental-web-platform-features</code> also
-enables the vertical-layout flag (checked in the code and by
-measurement), described the four Linux sites separately, and widened the
-line-breaking comparison to 275 files</td>
-</tr>
-<tr>
-<td>2026-09-27</td>
-<td>Stated that the 51 entry points new to the Windows build in this
-release have not yet been called on Windows (matching the Release notes
-and the news item)</td>
-</tr>
-<tr>
-<td>2026-09-27</td>
-<td>Aligned the description of the first of the four layout sites with
-the code (a direct child of the multicol container that does not take
-part in the column split; 600px when column-width is auto). Stopped
-calling only the second site column-grid snap, following upstream, which
-calls all four the SNAP sites</td>
-</tr>
-<tr>
-<td>2026-09-28</td>
-<td>Updated for 1.2.3-build4. Re-compared with Linux 1.2.3-build4
-(public API unchanged: Linux 153 / Windows 152; Linux exports 190 with
-one internal addition). Described the four vertical-layout sites now
-present (one DCHECK site differs from upstream) and added a DCHECK row
-to the differences table. 65 entry points called</td>
-</tr>
-<tr>
-<td>2026-09-29</td>
-<td>Re-measured the disk space after dropping the two development Vulkan
-libraries from the package (ZIP 464 to 457 MiB, extracted 1,316 to 1,291
-MiB). The console now reads "status messages"</td>
-</tr>
-<tr>
 <td>2026-10-11</td>
-<td>Updated for 1.2.4-build1 (Chromium 155.0.8059.39). Re-compared with
-Linux 1.2.4-build1 (public API: Linux 155 / Windows 154; the counting
-procedure was first run on 1.2.3-build4 and matched the earlier 154 /
-190 / 153). Re-measured the disk space (ZIP 376 MiB, 1,046 MiB
-extracted). DCHECK is now disabled, so the table was changed. The
-comparisons for the vertical-layout changes (md5 against upstream and so
-on) were taken on 1.2.3-build4 and were not repeated on
-1.2.4-build1</td>
-</tr>
-<tr>
-<td>2026-10-11</td>
-<td>Version changed to 1.2.4-build2 (to match the Linux 1.2.4-build2
-number). The only change from build1 is that the update-check receive
-limit is now 4 MiB, the same as upstream. Re-measured on the build2
-package; the numbers are the same as build1. The update check, the
-public API and egl were also re-checked on build2</td>
+<td>1.2.4-build2 (Chromium 155)</td>
 </tr>
 <tr>
 <td>2026-10-18</td>
-<td>Version changed to 1.2.4-build4 (to match the Linux 1.2.4-build4
-number). Added the BlinkGTK-layer changes, a bundled Vulkan-enabled GTK
-with an experimental GPU path (P4, confirmed on one Intel Iris Xe
-machine only), and the correction of
-<code>blink_gtk_has_typesetting_feature</code> (build2 was wrong).
-<strong>The changes applied to the Chromium source (typesetting and
-layout) are the same as build2</strong> (no warichu or hanging
-punctuation in the engine). The measurements compared with Linux stay at
-the 1.2.4-build2 values (not re-measured for build4)</td>
+<td>Updated for 1.2.4-build4: bundled Vulkan-enabled GTK, the
+experimental GPU path, and the corrected answers of
+<code>blink_gtk_has_typesetting_feature</code></td>
+</tr>
+<tr>
+<td>2026-10-19</td>
+<td>Rewritten around the readers (who it is for, run it, check that it
+works, upgrading, and so on). Internal numbers and measurement records
+were removed</td>
 </tr>
 </tbody>
 </table>

@@ -183,10 +183,8 @@ LDLIBS  += $(shell pkg-config --libs blinkgtk-0.1)</code></pre>
 の <code>Libs</code> に<br />
 shim が含まれているので、pkg-config を通せば自動的にそうなります。</p>
 <p>確認するにはこうします。</p>
-<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> allocator_shim</span>
-<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 行以上出れば OK。何も出なければ pkg-config を通っていない</span></span></code></pre></div>
+<div class="sourceCode" id="cb3"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./myapp <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co"># 1 行以上出れば OK。何も出なければ pkg-config を通っていない</span></span></code></pre></div>
 <h3 id="23-未リンク時の症状">2.3 未リンク時の症状</h3>
 <p>shim を直接リンクしないと、Chromium 148 以降ではレンダラの
 <strong>navigation commit が失敗</strong> し、<br />
@@ -302,16 +300,12 @@ shim を<strong>明示的に<br />
 <p>リンク後、実行ファイルが shim を直接 NEEDED
 しているかを確認します。これは描画不具合の<br />
 <strong>第一手</strong>としても有効です。</p>
-<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your_app <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="fu">grep</span> allocator_shim</span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="co"># → 1 行出れば直接 NEEDED 済み。出なければ未リンク（黒画面の原因）。</span></span></code></pre></div>
+<div class="sourceCode" id="cb7"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your_app <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">grep</span> allocator_shim</span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="co"># → 1 行出れば直接 NEEDED 済み。出なければ未リンク（黒画面の原因）。</span></span></code></pre></div>
 <p>内部サンプルとの差分比較も有効です。</p>
 <div class="sourceCode" id="cb8"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./your_app        <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> /tmp/app.needed</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./blinkgtk_browser  <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sort</span> <span class="op">&gt;</span> /tmp/ref.needed</span>
-<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> /tmp/ref.needed /tmp/app.needed</span></code></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="ex">readelf</span> <span class="at">-d</span> ./blinkgtk_browser  <span class="kw">|</span> <span class="fu">grep</span> NEEDED <span class="kw">|</span> <span class="fu">sort</span> <span class="op">&gt;</span> /tmp/ref.needed</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">diff</span> /tmp/ref.needed /tmp/app.needed</span></code></pre></div>
 <hr />
 <h2 id="4-ライフサイクルと-webview-の埋め込み">4. ライフサイクルと
 WebView の埋め込み</h2>
@@ -353,12 +347,14 @@ teardown が <code>AtExitManager</code> 破棄後に走り、終了時に NOTREA
 <span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="co">// 自前のレイアウトに埋め込む（例: GtkOverlay）</span></span>
 <span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>GtkWidget<span class="op">*</span> overlay <span class="op">=</span> gtk_overlay_new<span class="op">();</span></span>
 <span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a>gtk_overlay_set_child<span class="op">(</span>GTK_OVERLAY<span class="op">(</span>overlay<span class="op">),</span> web_view<span class="op">);</span></span></code></pre></div>
-<p><strong><code>blink_web_view_new_container()</code>
-は非推奨（deprecated）です。</strong> 旧コンテナ生成 API は<br />
-Chromium 148
-以降を元にした版では描画されません。<code>blink_web_view_new()</code>（自己描画）を使い、<br />
-コンテナが必要なら <strong>自前の <code>GtkOverlay</code> /
-<code>GtkBox</code></strong> に載せてください。</p>
+<p><strong><code>blink_web_view_new()</code>
+を使い、コンテナが必要なら自前の <code>GtkOverlay</code> /
+<code>GtkBox</code> に載せてください。</strong><br />
+<code>blink_web_view_new_container()</code>
+は、<code>blink_web_view_new()</code> で作った WebView を
+<code>GtkOverlay</code> に入れて返すだけの<br />
+関数です。中に入っている <code>GtkPicture</code>
+は以前の描画方式の名残りで、何も描きません。新しく書くアプリでは使わないでください。</p>
 <h3 id="43-繰り返しの-load_uri">4.3 繰り返しの load_uri</h3>
 <p>同一 WebView に対して <code>blink_web_view_load_uri()</code>
 を繰り返し呼ぶことは安全です。内部の<br />
@@ -454,7 +450,10 @@ v1.2.1 から。それより前の版は 0.5）<br />
 控除は列の容量を削るため、行がちょうど 1
 本入らなくなることがあります。<br />
 旧来の挙動が必要な場合のみ <code>BLINKGTK_RUBY_RESERVE_EM=0.5</code>
-を指定してください。</li>
+を指定してください。これは不具合の切り分けのための<br />
+スイッチで (<a
+href="api-reference/environment-variables-ja.html">環境変数の一覧</a>
+の「エスケープハッチ」)、将来の版で予告のうえ外すことがあります。</li>
 </ul>
 <hr />
 <h2 id="6-アプリ機能連携">6. アプリ機能連携</h2>
@@ -551,17 +550,15 @@ API（requestFullscreen）</h3>
 <div class="sourceCode" id="cb18"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb18-1"><a href="#cb18-1" aria-hidden="true" tabindex="-1"></a><span class="dt">static</span> <span class="dt">void</span> on_fullscreen<span class="op">(</span>BlinkWebView<span class="op">*</span> view<span class="op">,</span> gboolean enter<span class="op">,</span> gpointer user_data<span class="op">)</span> <span class="op">{</span></span>
 <span id="cb18-2"><a href="#cb18-2" aria-hidden="true" tabindex="-1"></a>  <span class="op">(</span><span class="dt">void</span><span class="op">)</span>user_data<span class="op">;</span></span>
 <span id="cb18-3"><a href="#cb18-3" aria-hidden="true" tabindex="-1"></a>  GtkRoot<span class="op">*</span> root <span class="op">=</span> gtk_widget_get_root<span class="op">(</span>GTK_WIDGET<span class="op">(</span>view<span class="op">));</span></span>
-<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>root <span class="op">||</span></span>
-<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a><span class="op">!</span>GTK_IS_WINDOW<span class="op">(</span>root<span class="op">))</span> <span class="cf">return</span><span class="op">;</span></span>
-<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>enter<span class="op">)</span></span>
-<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    gtk_window_fullscreen<span class="op">(</span>GTK_WINDOW<span class="op">(</span>root<span class="op">));</span></span>
-<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
-<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a>    gtk_window_unfullscreen<span class="op">(</span>GTK_WINDOW<span class="op">(</span>root<span class="op">));</span></span>
-<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
-<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb18-13"><a href="#cb18-13" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebView 生成後に一度だけ登録 */</span></span>
-<span id="cb18-14"><a href="#cb18-14" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_fullscreen_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> on_fullscreen<span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
+<span id="cb18-4"><a href="#cb18-4" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(!</span>root <span class="op">||</span> <span class="op">!</span>GTK_IS_WINDOW<span class="op">(</span>root<span class="op">))</span> <span class="cf">return</span><span class="op">;</span></span>
+<span id="cb18-5"><a href="#cb18-5" aria-hidden="true" tabindex="-1"></a>  <span class="cf">if</span> <span class="op">(</span>enter<span class="op">)</span></span>
+<span id="cb18-6"><a href="#cb18-6" aria-hidden="true" tabindex="-1"></a>    gtk_window_fullscreen<span class="op">(</span>GTK_WINDOW<span class="op">(</span>root<span class="op">));</span></span>
+<span id="cb18-7"><a href="#cb18-7" aria-hidden="true" tabindex="-1"></a>  <span class="cf">else</span></span>
+<span id="cb18-8"><a href="#cb18-8" aria-hidden="true" tabindex="-1"></a>    gtk_window_unfullscreen<span class="op">(</span>GTK_WINDOW<span class="op">(</span>root<span class="op">));</span></span>
+<span id="cb18-9"><a href="#cb18-9" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span>
+<span id="cb18-10"><a href="#cb18-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb18-11"><a href="#cb18-11" aria-hidden="true" tabindex="-1"></a><span class="co">/* WebView 生成後に一度だけ登録 */</span></span>
+<span id="cb18-12"><a href="#cb18-12" aria-hidden="true" tabindex="-1"></a>blink_web_view_set_fullscreen_handler<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>web_view<span class="op">),</span> on_fullscreen<span class="op">,</span> NULL<span class="op">);</span></span></code></pre></div>
 <p>補足:</p>
 <ul>
 <li><p><code>requestFullscreen()</code> は Web
