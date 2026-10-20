@@ -415,9 +415,10 @@ id="画面への受け渡しを止めたい場合-提示ポリシー">画面へ�
 <ul>
 <li>GPU が使えない機械では、5 秒後に software
 へ自動で切り替わり、理由が標準エラー出力に出ます。<strong>切り替わったかどうかは、この標準エラー出力の警告で確かめてください。</strong>
-<code>blink_web_view_get_gpu_mode()</code>、起動完了のログの「描画経路=」、<code>blink_web_view_get_render_path()</code>、export
-した handoff meta のモード名は、切り替わった後も egl のまま
-(受け渡しの方法は GPU のメモリ = <code>"P3"</code>) です</li>
+次のものは、切り替わった後も egl のままです (受け渡しの方法は GPU
+のメモリ =
+<code>"P3"</code>)。<code>blink_web_view_get_gpu_mode()</code>、<code>blink_web_view_get_render_path()</code>、起動完了のログの「描画経路=」、export
+した handoff meta のモード名</li>
 <li>自動の切替を止めるには <code>BLINKGTK_EGL_AUTO_FALLBACK=0</code>
 を指定します (その場合、GPU
 が使えないと画面は白いままになります)。待ち時間は
