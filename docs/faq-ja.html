@@ -110,7 +110,7 @@
 </div><div class="card doc">
 <h1 id="よくあるご質問">よくあるご質問</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>バージョン</strong>: 1.2.4-build4</p>
+<strong>バージョン</strong>: 1.2.5-build1</p>
 <p>導入をご検討中の方から、実際に使い始めた方まで、よくいただくご質問をまとめました。</p>
 <p>ここに無いことは <a href="./troubleshooting-ja.html">困ったときは</a>
 をご覧いただくか、<br />
@@ -228,13 +228,42 @@ Blink で、Chromium の安定版に追従しています。</p>
 <p>C から使うのが基本です。加えて <strong>GObject Introspection</strong>
 に対応しているので、<br />
 Python・Rust・JavaScript・Vala などからも呼べます。</p>
+<p>Python から使えるのは <strong>1.2.5 以降</strong>です (1.2.4
+までは、Chromium が子プロセスとして python3
+を起動してしまい、起動できませんでした)。<br />
+<code>BlinkGTK.gtk_init()</code> で初期化し、<code>app.run()</code>
+ではなく <code>BlinkGTK.gtk_application_run()</code>
+で回してください。<br />
+実行は <code>blinkgtk-run python3 hello.py</code> のように
+<code>blinkgtk-run</code> を通します (通さないと HTTPS
+の頁を開いたときに異常終了します)。<br />
+ほかに、Wayland のデスクトップ、PyGObject (Fedora:
+<code>python3-gobject</code> / Debian・Ubuntu:
+<code>python3-gi</code>)、GTK 4 と BlinkGTK の型情報 (Fedora:
+<code>gtk4</code> と <code>blinkgtk-bin-gir</code> / Debian・Ubuntu:
+<code>gir1.2-gtk-4.0</code> と <code>gir1.2-blinkgtk-0.1</code>)
+が要ります。</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>view <span class="op">=</span> BlinkGTK.WebView.new()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span></code></pre></div>
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK, Gtk</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>BlinkGTK.gtk_init(sys.argv[:<span class="dv">1</span>])          <span class="co"># GTK のウィジェットを作る前に 1 回</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    win <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app, default_width<span class="op">=</span><span class="dv">800</span>, default_height<span class="op">=</span><span class="dv">600</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    win.set_child(view)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    win.present()</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.Hello&#39;</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>rc <span class="op">=</span> BlinkGTK.gtk_application_run(app)   <span class="co"># app.run() では頁が読み込まれない</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>BlinkGTK.gtk_shutdown()</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>sys.exit(rc)</span></code></pre></div>
 <p>チュートリアルは <a
 href="./tutorials/python-tutorial-ja.html">Python</a> と<br />
 <a href="./tutorials/rust-tutorial-ja.html">Rust</a>

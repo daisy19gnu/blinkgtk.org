@@ -110,7 +110,7 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-gobject-signals-api-リファレンス">BlinkGTK GObject
 Signals API リファレンス</h1>
-<p><strong>バージョン</strong>: 1.2.4-build4<br />
+<p><strong>バージョン</strong>: 1.2.5-build1<br />
 <strong>最終更新</strong>: 2026-07-30<br />
 <strong>言語</strong>: 日本語 |</p>
 <p><a href="./signals-api-en.html">English</a></p>
@@ -381,14 +381,28 @@ href="./app-integration-api-ja.html">アプリ連携 API</a>)<br />
 までは意味しません (描画完成の通知は現在未提供です)。</p>
 <h3 id="スピナー-読み込み中表示-の正しい止め方">スピナー
 (読み込み中表示) の正しい止め方</h3>
-<p><code>FINISHED</code>
+<p><strong>1.2.5 からは <code>notify::is-loading</code>
+で切り替えるのが確実です。</strong> 読み込みの開始と終了のたびに<br />
+通知が来て、<code>blink_web_view_is_loading()</code>
+の値が変わっています。<code>STARTED</code> が来ない操作<br />
+(戻る・再読み込み) や、<code>FINISHED</code> が来ない応答
+(<code>load_uri()</code> で開いた HTTP 204) でも来ることを<br />
+確かめています (ダウンロードでは試していません)。1.2.4
+までは、読み込みの終わりに<br />
+<code>FALSE</code> の通知が来ませんでした。</p>
+<p><code>load-changed</code>
+だけで切り替える場合は、<code>FINISHED</code>
 だけで止めると永久スピナーになるケースがあります:</p>
 <ul>
 <li>コミットされない失敗 (キャンセル等) → <code>load-failed</code>
 で止める</li>
-<li><strong>ダウンロードになったナビゲーション / HTTP 204・205 応答 →
-どのシグナルも<br />
-来ません</strong> (完全に無音)。<code>blink_web_view_is_loading()</code>
+<li><strong>ダウンロードになったナビゲーション →
+どのシグナルも来ません</strong> (完全に無音)。<br />
+HTTP 204・205 の応答も無音と書いていましたが、<code>load_uri()</code>
+で開いた 204 では<br />
+<code>load-failed</code> に中断の -3 が届くことを 1.2.5 で確かめました
+(リンクからの 204
+は試していません)。<code>blink_web_view_is_loading()</code>
 を保険にした<br />
 タイムアウトを併用してください</li>
 </ul>
@@ -447,9 +461,15 @@ href="./app-integration-api-ja.html">アプリ連携 API</a>)<br />
 メインページの URL と比較するガードを推奨</td>
 </tr>
 <tr>
-<td>ダウンロード化 / 204・205</td>
+<td>ダウンロード化</td>
 <td>—</td>
 <td>どのシグナルも来ません</td>
+</tr>
+<tr>
+<td><code>load_uri()</code> で開いた HTTP 204</td>
+<td>○</td>
+<td><code>error_code = -3</code>。<code>FINISHED</code> は来ない (1.2.5
+で確認。205・リンクからの 204 は未確認)</td>
 </tr>
 </tbody>
 </table>

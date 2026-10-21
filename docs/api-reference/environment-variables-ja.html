@@ -46,8 +46,8 @@
 <h1 id="blinkgtk-環境変数リファレンス">BlinkGTK
 環境変数リファレンス</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>最終更新</strong>: 2026-10-19 (BlinkGTK 1.2.4-build4 / Chromium
-155.0.8059.39)</p>
+<strong>最終更新</strong>: 2026-10-19 (BlinkGTK 1.2.5-build1 / Chromium
+156.0.8078.47)</p>
 <p>API リファレンスマニュアルの第 9 章 (環境変数)
 にあたる文書です。BlinkGTK
 が読む環境変数は、すべてこの一覧に載せています。ここに無い名前は
@@ -238,6 +238,20 @@ API、<code>api.github.com</code>)
 に置きます。Windows
 の版とは取り違えません。通信できないときは何も案内しません
 (起動は待たせません)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SUBPROCESS_PATH</code></td>
+<td>実行ファイルのパス、または <code>0</code></td>
+<td>未設定 (自動)</td>
+<td><strong>1.2.5 から。</strong> Python (PyGObject)・GJS など、BlinkGTK
+を直接リンクしていないプログラムから使うと、BlinkGTK は子プロセス
+(zygote ほか) を、BlinkGTK と一緒にインストールされる
+<code>blinkgtk-subprocess</code> で起動します (RPM・DEB では
+<code>/usr/libexec/blinkgtk-0.1/blinkgtk-subprocess</code>)。サンドボックスは有効のままです。1.2.4
+までは子プロセスに python3 などが起動され、Python
+からは起動できませんでした。場所を変えて配った場合はこの変数でパスを指定します。<code>0</code>
+を指定すると子プロセスの実行ファイルを替えません (1.2.4 までの動き)。C
+のアプリは自分の実行ファイルが子プロセスを兼ねるので、指定は要りません</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_WIN_GPU_PATH</code></td>

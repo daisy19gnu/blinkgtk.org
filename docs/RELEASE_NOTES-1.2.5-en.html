@@ -1,0 +1,362 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.5-build1 Release Notes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Release date: 2026-10-22 / Chromium: 156.0.8078.47 / Language: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.5-build1 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-10-22 / Chromium: 156.0.8078.47 / Language: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a> ·
+  <span class="langsw"><a href="RELEASE_NOTES-1.2.5-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
+</div><div class="card doc">
+<h1 id="blinkgtk-125-build1-release-notes">BlinkGTK 1.2.5-build1 Release
+Notes</h1>
+<p><strong>Release date</strong>: 2026-10-22 /
+<strong>Chromium</strong>: 156.0.8078.47 / Language: <a
+href="RELEASE_NOTES-1.2.5-ja.html">日本語</a> | English</p>
+<p>The rendering engine is updated to <strong>Chromium 156</strong>.
+<strong>BlinkGTK can now be used from Python (PyGObject).</strong></p>
+<hr />
+<h2 id="upgrading-from-124">Upgrading from 1.2.4</h2>
+<p>Check the rows that match how you use BlinkGTK. Each row links to the
+details.</p>
+<p>This table is for Linux. For BlinkGTK for Windows, see <a
+href="https://blinkgtk.org/docs/windows-getting-started-en.html#upgrading-from-an-earlier-version">Upgrading
+from an earlier version</a> in the Windows guide.</p>
+<table>
+<thead>
+<tr>
+<th>How you use it</th>
+<th>What changes</th>
+<th>What to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>From Python (PyGObject)</td>
+<td>It starts (up to 1.2.4 it could not start)</td>
+<td>Run it as <code>blinkgtk-run python3 app.py</code> and use the new
+initialization and main loop (<a
+href="#blinkgtk-can-now-be-used-from-python">details</a>)</td>
+</tr>
+<tr>
+<td>Receiving <code>load-failed</code> from Python or other
+bindings</td>
+<td>The handler is called; the error code arrives as an int</td>
+<td>Nothing (<a
+href="#blinkgtk-can-now-be-used-from-python">details</a>)</td>
+</tr>
+<tr>
+<td>Shipping BlinkGTK in your own form (not the RPM, DEB or tarball as
+is)</td>
+<td>New files <code>blinkgtk-subprocess</code> and
+<code>blinkgtk-run</code> are needed</td>
+<td>Ship both from <code>libexec/blinkgtk-0.1/</code>. If you put
+<code>blinkgtk-subprocess</code> elsewhere, set
+<code>BLINKGTK_SUBPROCESS_PATH</code>. <code>blinkgtk-run</code> looks
+for the allocator shim in <code>lib64/blinkgtk-0.1/chromium/</code>
+relative to itself
+(<code>lib/&lt;multiarch&gt;/blinkgtk-0.1/chromium/</code> for DEB); if
+you change the layout, set <code>BLINKGTK_SHIM</code> to the shim (<a
+href="#blinkgtk-can-now-be-used-from-python">details</a>)</td>
+</tr>
+<tr>
+<td>Using the introspection data (typelib) from Python and others</td>
+<td>More APIs can be called (functions, methods and constructors: 93 →
+148)</td>
+<td>Just update the package (<a
+href="#blinkgtk-can-now-be-used-from-python">details</a>)</td>
+</tr>
+<tr>
+<td>Using <code>set_user_agent()</code></td>
+<td>Applied to pages opened with <code>load_uri()</code> and on
+<code>reload()</code> too (up to 1.2.4 only
+<code>load_html()</code>)</td>
+<td>Nothing (<a href="#fixed-in-build1">details</a>)</td>
+</tr>
+<tr>
+<td>Using <code>set_zoom_level()</code> / <code>zoom-level</code></td>
+<td>The value is treated as a factor (1.0 = 100%); up to 1.2.4, 1.5 gave
+about 131% and 0.0 was returned at 100%</td>
+<td>Review any compensation for the old behavior and any stored values
+(<a href="#fixed-in-build1">details</a>)</td>
+</tr>
+<tr>
+<td>Switching a loading indicator on
+<code>notify::is-loading</code></td>
+<td>A notification with <code>False</code> now arrives when loading
+ends</td>
+<td>Nothing (<a href="#fixed-in-build1">details</a>)</td>
+</tr>
+<tr>
+<td>Pages with <code>text-decoration</code> over leading or trailing
+spaces</td>
+<td>The line is drawn over the spaces too (as up to 1.2.3)</td>
+<td>Nothing (<a
+href="#japanese-typesetting-changes-chromium-156">details</a>)</td>
+</tr>
+<tr>
+<td>Pages that set <code>text-decoration-skip-spaces</code></td>
+<td>The property has no effect</td>
+<td>Nothing (<a
+href="#japanese-typesetting-changes-chromium-156">details</a>)</td>
+</tr>
+<tr>
+<td>Elements with <code>overflow: clip</code> on one axis and scrolling
+on the other</td>
+<td>The <code>clip</code> axis does not scroll</td>
+<td>Nothing (<a href="#new-in-chromium-156">details</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="blinkgtk-can-now-be-used-from-python">BlinkGTK can now be used
+from Python</h2>
+<ul>
+<li><strong>Up to 1.2.4, BlinkGTK could not start when used from
+Python.</strong> Chromium starts its child processes with "its own
+executable". A C application's executable can serve as the child
+process, but for a Python program the executable is python3, which
+cannot, so it aborted.</li>
+<li><strong>From 1.2.5, when BlinkGTK is used from a program that does
+not link it directly (such as Python), it starts the child processes
+with the bundled <code>blinkgtk-subprocess</code>.</strong> The RPM, DEB
+and tarball all install it at
+<code>/usr/libexec/blinkgtk-0.1/blinkgtk-subprocess</code>. The sandbox
+stays enabled.
+<ul>
+<li>If you ship it in a different place, set its path in
+<code>BLINKGTK_SUBPROCESS_PATH</code>. Setting <code>0</code> restores
+the 1.2.4 behavior.</li>
+<li>C applications are unchanged: their own executable still serves as
+the child process.</li>
+</ul></li>
+<li><strong>Requirements</strong>: BlinkGTK 1.2.5 or later, a Wayland
+desktop, PyGObject (Fedora: <code>python3-gobject</code> / Debian,
+Ubuntu: <code>python3-gi</code>), and the GTK 4 and BlinkGTK
+introspection data (Fedora: <code>gtk4</code> and
+<code>blinkgtk-bin-gir</code> / Debian, Ubuntu:
+<code>gir1.2-gtk-4.0</code> and <code>gir1.2-blinkgtk-0.1</code>). Setup
+steps are in the <a
+href="https://blinkgtk.org/docs/tutorials/python-tutorial-en.html">Python
+tutorial</a>.</li>
+<li><strong>Run Python programs through
+<code>blinkgtk-run</code></strong>:
+<code>blinkgtk-run python3 app.py</code>. BlinkGTK (Chromium) needs its
+memory allocator to be loaded from the very start of the process. In
+Python, BlinkGTK is loaded later, so without <code>blinkgtk-run</code>
+the program aborts when it opens an HTTPS page (this did not happen with
+data URLs or local files). <code>blinkgtk-run</code> preloads the
+allocator with the <code>LD_PRELOAD</code> environment variable and then
+runs the given program. It is <code>/usr/bin/blinkgtk-run</code> in the
+RPM and DEB packages, and <code>usr/bin/blinkgtk-run</code> where you
+extracted the tarball.</li>
+<li><strong>Write Python programs this way.</strong> Initialize with
+<code>BlinkGTK.gtk_init()</code> and run with
+<code>BlinkGTK.gtk_application_run()</code> instead of
+<code>app.run()</code> (with <code>app.run()</code> the Chromium loop
+does not run and pages do not load). It returns when the last window is
+closed; call <code>BlinkGTK.gtk_shutdown()</code> after it.</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK, Gtk</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>BlinkGTK.gtk_init(sys.argv[:<span class="dv">1</span>])</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    win <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app, default_width<span class="op">=</span><span class="dv">800</span>, default_height<span class="op">=</span><span class="dv">600</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    win.set_child(view)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    win.present()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.Hello&#39;</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>rc <span class="op">=</span> BlinkGTK.gtk_application_run(app)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>BlinkGTK.gtk_shutdown()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>sys.exit(rc)</span></code></pre></div>
+<ul>
+<li><strong><code>load-failed</code> can now be received from Python and
+other bindings.</strong> Since 1.1.0 the signal's argument was
+registered as the enum <code>BlinkLoadError</code>, while the value
+actually passed was the Chromium net error code (-3 for an aborted
+load). Python could not convert it, so the handler was never called.
+From 1.2.5 it arrives as an int, as documented. C callers are
+unaffected.</li>
+<li><strong>The introspection data (typelib) used from Python and other
+languages is regenerated.</strong> The data shipped until now dated from
+16 August 2026, and APIs missing from it could not be called from Python
+and other languages. The number of functions, methods and constructors
+went from 93 to 148.</li>
+<li>The Python tutorials (getting started, events, settings) and the
+example programs are rewritten in this form.</li>
+<li>What we checked: a minimal Python program run through
+<code>blinkgtk-run</code> loads an HTTPS page
+(<code>https://example.com/</code>) and a data URL, closes its window
+and exits normally (packaged layout, headless weston, sandbox enabled).
+The 20 complete programs in the tutorials were also run against the
+built library with the allocator preloaded the same way. Languages other
+than Python, such as GJS, have not been tried.</li>
+</ul>
+<h2 id="japanese-typesetting-changes-chromium-156">Japanese typesetting
+changes (Chromium 156)</h2>
+<ul>
+<li><strong>Upstream moved <code>text-decoration-skip-spaces</code> back
+to experimental.</strong> In 1.2.4 (Chromium 155) it was enabled by
+default, so decorations such as underlines were not drawn over leading
+and trailing spaces (including full-width spaces). In 1.2.5 the line is
+drawn over those spaces again, as up to 1.2.3, and
+<code>text-decoration-skip-spaces</code> has no effect. This is based on
+reading the code; the rendering was not measured.</li>
+<li>Emphasis marks are normally not placed on punctuation, but
+<code>#</code> <code>%</code> <code>&amp;</code> <code>@</code> and a
+few others are exceptions that do receive them; this exception list,
+enabled since Chromium 155, is now permanent. The behavior does not
+change.</li>
+</ul>
+<h2 id="new-in-chromium-156">New in Chromium 156</h2>
+<p>Features enabled by default that matter to page authors:</p>
+<ul>
+<li><strong>The CSS <code>random()</code> function</strong>: random
+values inside calculations.</li>
+<li><strong>The value <code>pair</code> for
+<code>scroll-snap-type</code></strong>.</li>
+<li><strong>Elements that scroll on one axis only</strong>: with
+<code>overflow: clip</code> on one axis and scrolling (<code>auto</code>
+and so on) on the other, <code>clip</code> used to be replaced by
+<code>hidden</code>, making the element scroll on both axes. From 156
+<code>clip</code> is kept and that axis does not scroll.</li>
+<li><strong>JavaScript
+<code>import ... with { type: "text" }</code></strong>: loads a file's
+contents as a string.</li>
+</ul>
+<h2 id="fixed-in-build1">Fixed in build1</h2>
+<ul>
+<li><strong>The User-Agent set with <code>set_user_agent()</code> did
+not reach pages opened with <code>load_uri()</code></strong> (it did
+with <code>load_html()</code>). It now also applies to pages reloaded
+with <code>reload()</code>.</li>
+<li><strong>Zoom (<code>set_zoom_level()</code> /
+<code>get_zoom_level()</code> / <code>zoom-level</code>) is now treated
+as a factor (1.0 = 100%), as documented.</strong> Up to 1.2.4 the value
+was passed as Chromium's logarithmic level, so 1.5 gave about 131% and
+<code>get_zoom_level()</code> returned 0.0 at 100%.</li>
+<li>The three items under "BlinkGTK can now be used from Python" (could
+not start, <code>load-failed</code> could not be received, outdated
+introspection data).</li>
+<li><strong><code>notify::is-loading</code> never reported
+<code>False</code> when loading ended.</strong> It was notified only
+once, at onload (while still loading), so applications that switch a
+loading indicator on this property never stopped it. From 1.2.5 it is
+notified each time loading starts and ends. Both notifications also
+arrive for operations where <code>load-changed</code> does not emit
+<code>STARTED</code> (checked with back and reload) and for responses
+that do not emit <code>FINISHED</code> (an HTTP 204 opened with
+<code>load_uri()</code>; <code>load-failed</code> then delivers -3,
+aborted). Navigations that turn into downloads were not tried.</li>
+</ul>
+</body>
+</html>
+</div></div>

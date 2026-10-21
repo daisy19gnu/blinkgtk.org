@@ -46,7 +46,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.4-build4 / 言語: 日本語 | <a
+<p>バージョン: 1.2.5-build1 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -72,9 +72,19 @@ href="version-history-en.html">English</a></p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.4-build4</strong> ← 公開中</td>
+<td><strong>v1.2.5-build1</strong> ← 公開中</td>
+<td>2026-10-22</td>
+<td><strong>156.0.8078.47</strong></td>
+<td>レンダリングエンジンを Chromium 156 に更新しました。Python
+(PyGObject) から BlinkGTK を使えるようになりました (起動用コマンド
+blinkgtk-run を同梱)。set_user_agent() が load_uri()
+で開いた頁にも反映され、拡大率は倍率 (1.0 = 100%)
+として扱われ、読み込みが終わると is-loading が False に戻ります。</td>
+</tr>
+<tr>
+<td>v1.2.4-build4</td>
 <td>2026-10-14</td>
-<td><strong>155.0.8059.39</strong></td>
+<td>155.0.8059.39</td>
 <td>頁を移った後に本文をクリックするとアプリが異常終了する問題と、支援技術を有効にして頁を移るとアプリが応答しなくなる問題を解消しました。同梱の
 INSTALL・README の DEB のファイル名の誤りも修正しました。</td>
 </tr>

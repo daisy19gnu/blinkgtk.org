@@ -110,7 +110,7 @@
 </div><div class="card doc">
 <h1 id="blinkgtk-gobject-signals-api-reference">BlinkGTK GObject Signals
 API Reference</h1>
-<p><strong>Version</strong>: 1.2.4-build4<br />
+<p><strong>Version</strong>: 1.2.5-build1<br />
 <strong>Last updated</strong>: 2026-07-30<br />
 <strong>Language</strong>: English |</p>
 <p><a href="./signals-api-ja.html">日本語</a></p>
@@ -396,15 +396,27 @@ finished appearing (a paint-complete notification is not yet
 provided).</p>
 <h3 id="stopping-a-loading-spinner-correctly">Stopping a loading spinner
 correctly</h3>
-<p>Stopping only on <code>FINISHED</code> can leave the spinner running
-forever:</p>
+<p><strong>From 1.2.5, switch it on
+<code>notify::is-loading</code>.</strong> It is notified each time
+loading starts and<br />
+ends, and <code>blink_web_view_is_loading()</code> has changed by then.
+It also arrives for operations<br />
+without <code>STARTED</code> (back, reload) and for responses that do
+not emit <code>FINISHED</code> (an HTTP 204 opened<br />
+with <code>load_uri()</code>); downloads were not tried. Up to 1.2.4 no
+<code>FALSE</code> notification arrived when loading ended.</p>
+<p>If you switch it only on <code>load-changed</code>, stopping only on
+<code>FINISHED</code> can leave the spinner running forever:</p>
 <ul>
 <li>Non-committed failures (cancellations etc.) → also stop on
 <code>load-failed</code></li>
-<li><strong>Navigations that turn into downloads, or HTTP 204/205
-responses, fire<br />
-no signal at all</strong> (complete silence). Add a timeout backed
-by<br />
+<li><strong>Navigations that turn into downloads fire no signal at
+all</strong> (complete silence).<br />
+HTTP 204/205 responses were also described as silent, but an HTTP 204
+opened with<br />
+<code>load_uri()</code> delivers <code>load-failed</code> with -3
+(aborted), checked in 1.2.5 (204 from a link not tried). Add a timeout
+backed by<br />
 <code>blink_web_view_is_loading()</code> as a safety net</li>
 </ul>
 <hr />
@@ -461,9 +473,15 @@ COMMITTED + FINISHED and the built-in error page is shown</td>
 guard by comparing against the main page URL</td>
 </tr>
 <tr>
-<td>Turned into a download / 204 / 205</td>
+<td>Turned into a download</td>
 <td>—</td>
 <td>No signal at all</td>
+</tr>
+<tr>
+<td>HTTP 204 opened with <code>load_uri()</code></td>
+<td>○</td>
+<td><code>error_code = -3</code>; no <code>FINISHED</code> (checked in
+1.2.5; 205 and 204 from a link not checked)</td>
 </tr>
 </tbody>
 </table>

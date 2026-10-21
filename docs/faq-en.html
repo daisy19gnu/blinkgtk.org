@@ -110,7 +110,7 @@
 </div><div class="card doc">
 <h1 id="frequently-asked-questions">Frequently asked questions</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Version</strong>: 1.2.4-build4</p>
+<strong>Version</strong>: 1.2.5-build1</p>
 <p>Questions we are asked, from people considering BlinkGTK through to
 people<br />
 already building with it.</p>
@@ -232,16 +232,44 @@ redistribute.</p>
 <hr />
 <h2 id="will-it-work-for-me">Will it work for me?</h2>
 <h3 id="which-languages-can-i-use">Which languages can I use?</h3>
-<p>C is the baseline. On top of that it supports <strong>GObject
+<p>C is the main way to use it. It also supports <strong>GObject
 Introspection</strong>, so<br />
 Python, Rust, JavaScript and Vala can call it too.</p>
+<p>Python works from <strong>1.2.5</strong> on (up to 1.2.4, Chromium
+started python3 as its child process and BlinkGTK could not
+start).<br />
+Initialize with <code>BlinkGTK.gtk_init()</code> and run with
+<code>BlinkGTK.gtk_application_run()</code> instead of
+<code>app.run()</code>.<br />
+Run the program through <code>blinkgtk-run</code>, as in
+<code>blinkgtk-run python3 hello.py</code> (without it, the program
+aborts when it opens an HTTPS page).<br />
+You also need a Wayland desktop, PyGObject (Fedora:
+<code>python3-gobject</code> / Debian, Ubuntu: <code>python3-gi</code>),
+and the GTK 4 and BlinkGTK introspection data (Fedora: <code>gtk4</code>
+and <code>blinkgtk-bin-gir</code> / Debian, Ubuntu:
+<code>gir1.2-gtk-4.0</code> and <code>gir1.2-blinkgtk-0.1</code>).</p>
 <div class="sourceCode" id="cb2"><pre
-class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
-<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
-<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK</span>
-<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>view <span class="op">=</span> BlinkGTK.WebView.new()</span>
-<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a>view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span></code></pre></div>
+class="sourceCode python"><code class="sourceCode python"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK, Gtk</span>
+<span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a>BlinkGTK.gtk_init(sys.argv[:<span class="dv">1</span>])          <span class="co"># once, before creating GTK widgets</span></span>
+<span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-9"><a href="#cb2-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb2-10"><a href="#cb2-10" aria-hidden="true" tabindex="-1"></a>    win <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app, default_width<span class="op">=</span><span class="dv">800</span>, default_height<span class="op">=</span><span class="dv">600</span>)</span>
+<span id="cb2-11"><a href="#cb2-11" aria-hidden="true" tabindex="-1"></a>    view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb2-12"><a href="#cb2-12" aria-hidden="true" tabindex="-1"></a>    win.set_child(view)</span>
+<span id="cb2-13"><a href="#cb2-13" aria-hidden="true" tabindex="-1"></a>    win.present()</span>
+<span id="cb2-14"><a href="#cb2-14" aria-hidden="true" tabindex="-1"></a>    view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span>
+<span id="cb2-15"><a href="#cb2-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb2-16"><a href="#cb2-16" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.Hello&#39;</span>)</span>
+<span id="cb2-17"><a href="#cb2-17" aria-hidden="true" tabindex="-1"></a>app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb2-18"><a href="#cb2-18" aria-hidden="true" tabindex="-1"></a>rc <span class="op">=</span> BlinkGTK.gtk_application_run(app)   <span class="co"># pages do not load with app.run()</span></span>
+<span id="cb2-19"><a href="#cb2-19" aria-hidden="true" tabindex="-1"></a>BlinkGTK.gtk_shutdown()</span>
+<span id="cb2-20"><a href="#cb2-20" aria-hidden="true" tabindex="-1"></a>sys.exit(rc)</span></code></pre></div>
 <p>There are tutorials for <a
 href="./tutorials/python-tutorial-en.html">Python</a> and<br />
 <a href="./tutorials/rust-tutorial-en.html">Rust</a>.</p>

@@ -47,7 +47,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.4-build4 / Language: English | <a
+<p>Version: 1.2.5-build1 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -70,9 +70,19 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.4-build4</strong> ← current</td>
+<td><strong>v1.2.5-build1</strong> ← current</td>
+<td>2026-10-22</td>
+<td><strong>156.0.8078.47</strong></td>
+<td>The rendering engine is updated to Chromium 156. BlinkGTK can now be
+used from Python (PyGObject); the launcher blinkgtk-run is included.
+set_user_agent() now applies to pages opened with load_uri(), the zoom
+level is treated as a factor (1.0 = 100%), and is-loading returns to
+False when loading finishes.</td>
+</tr>
+<tr>
+<td>v1.2.4-build4</td>
 <td>2026-10-14</td>
-<td><strong>155.0.8059.39</strong></td>
+<td>155.0.8059.39</td>
 <td>Fixed a crash when clicking the page after a navigation, and the app
 no longer stops responding when navigating with accessibility enabled.
 The DEB file names in the bundled INSTALL and README are corrected.</td>

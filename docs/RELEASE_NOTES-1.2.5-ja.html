@@ -1,0 +1,356 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.5-build1 リリースノート — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="リリース日: 2026-10-22 / Chromium: 156.0.8078.47 / 言語: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.5-build1 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-10-22 / Chromium: 156.0.8078.47 / 言語: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a> ·
+  <span class="langsw"><strong>日本語</strong> / <a href="RELEASE_NOTES-1.2.5-en.html" hreflang="en" lang="en">English</a></span>
+</div><div class="card doc">
+<h1 id="blinkgtk-125-build1-リリースノート">BlinkGTK 1.2.5-build1
+リリースノート</h1>
+<p><strong>リリース日</strong>: 2026-10-22 / <strong>Chromium</strong>:
+156.0.8078.47 / 言語: 日本語 | <a
+href="RELEASE_NOTES-1.2.5-en.html">English</a></p>
+<p>レンダリングエンジンを <strong>Chromium 156</strong>
+に更新しました。あわせて、<strong>Python (PyGObject) から BlinkGTK
+を使えるようになりました</strong>。</p>
+<hr />
+<h2 id="前の版-124-から上げる方へ">前の版 (1.2.4) から上げる方へ</h2>
+<p>使い方に当たる行を確かめてください。詳しい説明は各行のリンク先にあります。</p>
+<p>この表は Linux 版のものです。BlinkGTK for Windows の方は <a
+href="https://blinkgtk.org/docs/windows-getting-started-ja.html#前の版から上げる方">Windows
+版の「前の版から上げる方」</a> を確かめてください。</p>
+<table>
+<thead>
+<tr>
+<th>対象の使い方</th>
+<th>変わること</th>
+<th>必要な対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Python (PyGObject) から使う</td>
+<td>起動できるようになる (1.2.4 までは起動できなかった)</td>
+<td><code>blinkgtk-run python3 app.py</code>
+の形で実行し、初期化と回し方を新しい形に (<a
+href="#python-から使えるようになりました">詳細</a>)</td>
+</tr>
+<tr>
+<td>Python などから <code>load-failed</code> を受け取る</td>
+<td>ハンドラが呼ばれるようになる。エラー番号は int で届く</td>
+<td>不要 (<a href="#python-から使えるようになりました">詳細</a>)</td>
+</tr>
+<tr>
+<td>BlinkGTK を独自の形で配る (RPM・DEB・tarball
+をそのまま使わない)</td>
+<td>新しいファイル <code>blinkgtk-subprocess</code> と
+<code>blinkgtk-run</code> が要る</td>
+<td><code>libexec/blinkgtk-0.1/</code> の 2
+つも同梱する。<code>blinkgtk-subprocess</code> を別の場所に置く場合は
+<code>BLINKGTK_SUBPROCESS_PATH</code> で指定。<code>blinkgtk-run</code>
+は自分の場所から <code>lib64/blinkgtk-0.1/chromium/</code> (DEB では
+<code>lib/&lt;アーキテクチャ名&gt;/blinkgtk-0.1/chromium/</code>) の
+allocator shim を探す。配置を変える場合は <code>BLINKGTK_SHIM</code> で
+shim の場所を指定 (<a
+href="#python-から使えるようになりました">詳細</a>)</td>
+</tr>
+<tr>
+<td>Python などから型情報 (typelib) で使う</td>
+<td>呼べる API が増える (関数・メソッド・コンストラクタ 93 → 148)</td>
+<td>パッケージを更新するだけ (<a
+href="#python-から使えるようになりました">詳細</a>)</td>
+</tr>
+<tr>
+<td><code>set_user_agent()</code> を使う</td>
+<td><code>load_uri()</code> で開いた頁と <code>reload()</code>
+にも反映される (1.2.4 までは <code>load_html()</code> だけ)</td>
+<td>不要 (<a href="#build1-で修正したこと">詳細</a>)</td>
+</tr>
+<tr>
+<td><code>set_zoom_level()</code> / <code>zoom-level</code> を使う</td>
+<td>値が倍率 (1.0 = 100%) として扱われる。1.2.4 までは 1.5 で約
+131%、100% のとき 0.0 を返していた</td>
+<td>古い動きに合わせて値を補正していた場合や、値を保存している場合は見直す
+(<a href="#build1-で修正したこと">詳細</a>)</td>
+</tr>
+<tr>
+<td><code>notify::is-loading</code> で読み込み中の表示を切り替える</td>
+<td>読み込みが終わったときに <code>False</code>
+の通知が来るようになる</td>
+<td>不要 (<a href="#build1-で修正したこと">詳細</a>)</td>
+</tr>
+<tr>
+<td>行頭・行末の空白に <code>text-decoration</code> を掛けた頁</td>
+<td>空白の部分にも線が引かれる (1.2.3 までと同じ)</td>
+<td>不要 (<a href="#日本語組版に関わる変更-chromium-156">詳細</a>)</td>
+</tr>
+<tr>
+<td><code>text-decoration-skip-spaces</code> を指定した頁</td>
+<td>指定が反映されない</td>
+<td>不要 (<a href="#日本語組版に関わる変更-chromium-156">詳細</a>)</td>
+</tr>
+<tr>
+<td>一方の向きを
+<code>overflow: clip</code>、他方をスクロールにした要素</td>
+<td><code>clip</code> の向きはスクロールしない</td>
+<td>不要 (<a
+href="#chromium-156-で使えるようになったもの">詳細</a>)</td>
+</tr>
+</tbody>
+</table>
+<h2 id="python-から使えるようになりました">Python
+から使えるようになりました</h2>
+<ul>
+<li><strong>1.2.4 までは、Python から BlinkGTK
+を使うと起動できませんでした。</strong> Chromium
+は子プロセスを「自分の実行ファイル」で起動します。C
+のアプリなら自分の実行ファイルが子プロセスを兼ねますが、Python
+のプログラムでは実行ファイルが python3
+になり、子プロセスとして動けずに異常終了していました。</li>
+<li><strong>1.2.5 では、BlinkGTK を直接リンクしていないプログラム
+(Python など) から使われたとき、子プロセスを同梱の
+<code>blinkgtk-subprocess</code> で起動します。</strong>
+RPM・DEB・tarball とも
+<code>/usr/libexec/blinkgtk-0.1/blinkgtk-subprocess</code>
+に入ります。サンドボックスは有効のままです。
+<ul>
+<li>場所を変えて配る場合は <code>BLINKGTK_SUBPROCESS_PATH</code>
+でパスを指定します。<code>0</code> を指定すると、1.2.4
+までの動きに戻ります。</li>
+<li>C
+のアプリは、これまでどおり自分の実行ファイルが子プロセスを兼ねます。何も変わりません。</li>
+</ul></li>
+<li><strong>必要なもの</strong>: BlinkGTK 1.2.5 以降、Wayland
+のデスクトップ、PyGObject (Fedora: <code>python3-gobject</code> /
+Debian・Ubuntu: <code>python3-gi</code>)、GTK 4 と BlinkGTK の型情報
+(Fedora: <code>gtk4</code> と <code>blinkgtk-bin-gir</code> /
+Debian・Ubuntu: <code>gir1.2-gtk-4.0</code> と
+<code>gir1.2-blinkgtk-0.1</code>)。導入の手順は <a
+href="https://blinkgtk.org/docs/tutorials/python-tutorial-ja.html">Python
+のチュートリアル</a> にあります。</li>
+<li><strong>Python のプログラムは <code>blinkgtk-run</code>
+を通して実行します</strong>:
+<code>blinkgtk-run python3 app.py</code>。BlinkGTK (Chromium)
+のメモリ割り当ての仕組みは、プロセスの最初から読み込まれている必要があります。Python
+では BlinkGTK が後から読み込まれるため、<code>blinkgtk-run</code>
+を通さないと HTTPS の頁を開いたときに異常終了します (データの URL
+や手元のファイルの頁では起きませんでした)。<code>blinkgtk-run</code>
+は仕組みを環境変数 <code>LD_PRELOAD</code>
+で先に読み込ませてから、指定したプログラムを実行します。RPM・DEB では
+<code>/usr/bin/blinkgtk-run</code>、tarball では展開した場所の
+<code>usr/bin/blinkgtk-run</code> です。</li>
+<li><strong>Python のプログラムは次の形で書きます。</strong>
+<code>BlinkGTK.gtk_init()</code> で初期化し、<code>app.run()</code>
+ではなく <code>BlinkGTK.gtk_application_run()</code> で回します
+(<code>app.run()</code> では Chromium
+の処理が回らず、頁が読み込まれません)。最後のウィンドウを閉じると戻るので、その後に
+<code>BlinkGTK.gtk_shutdown()</code> を呼びます。</li>
+</ul>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;Gtk&#39;</span>, <span class="st">&#39;4.0&#39;</span>)</span>
+<span id="cb1-4"><a href="#cb1-4" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
+<span id="cb1-5"><a href="#cb1-5" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK, Gtk</span>
+<span id="cb1-6"><a href="#cb1-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-7"><a href="#cb1-7" aria-hidden="true" tabindex="-1"></a>BlinkGTK.gtk_init(sys.argv[:<span class="dv">1</span>])</span>
+<span id="cb1-8"><a href="#cb1-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-9"><a href="#cb1-9" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app):</span>
+<span id="cb1-10"><a href="#cb1-10" aria-hidden="true" tabindex="-1"></a>    win <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app, default_width<span class="op">=</span><span class="dv">800</span>, default_height<span class="op">=</span><span class="dv">600</span>)</span>
+<span id="cb1-11"><a href="#cb1-11" aria-hidden="true" tabindex="-1"></a>    view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb1-12"><a href="#cb1-12" aria-hidden="true" tabindex="-1"></a>    win.set_child(view)</span>
+<span id="cb1-13"><a href="#cb1-13" aria-hidden="true" tabindex="-1"></a>    win.present()</span>
+<span id="cb1-14"><a href="#cb1-14" aria-hidden="true" tabindex="-1"></a>    view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span>
+<span id="cb1-15"><a href="#cb1-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb1-16"><a href="#cb1-16" aria-hidden="true" tabindex="-1"></a>app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&#39;org.example.Hello&#39;</span>)</span>
+<span id="cb1-17"><a href="#cb1-17" aria-hidden="true" tabindex="-1"></a>app.<span class="ex">connect</span>(<span class="st">&#39;activate&#39;</span>, on_activate)</span>
+<span id="cb1-18"><a href="#cb1-18" aria-hidden="true" tabindex="-1"></a>rc <span class="op">=</span> BlinkGTK.gtk_application_run(app)</span>
+<span id="cb1-19"><a href="#cb1-19" aria-hidden="true" tabindex="-1"></a>BlinkGTK.gtk_shutdown()</span>
+<span id="cb1-20"><a href="#cb1-20" aria-hidden="true" tabindex="-1"></a>sys.exit(rc)</span></code></pre></div>
+<ul>
+<li><strong>Python などから <code>load-failed</code>
+を受け取れるようになりました。</strong> 1.1.0
+から、このシグナルの引数を列挙型 <code>BlinkLoadError</code>
+として登録していましたが、実際に渡すのは Chromium のエラー番号 (中断なら
+-3) でした。そのため Python
+では値を変換できず、ハンドラが一度も呼ばれていませんでした。1.2.5
+からは文書どおり int として届きます。C の受け取りは変わりません。</li>
+<li><strong>Python などから使う型情報 (typelib)
+を作り直しました。</strong> これまで配っていた型情報は 2026 年 8 月 16
+日のもので、それに載っていなかった API を Python
+などから呼べませんでした。関数・メソッド・コンストラクタの数は 93 から
+148 になりました。</li>
+<li>Python のチュートリアル (入門・イベント・設定)
+と例のプログラムを、この形に書き直しました。</li>
+<li>確かめたこと: Python
+の最小構成のプログラムが、<code>blinkgtk-run</code> を通して HTTPS の頁
+(<code>https://example.com/</code>) とデータの URL
+を読み込み、ウィンドウを閉じて正常に終了すること (配布物の形、headless
+の
+weston、サンドボックスを有効にしたまま)。チュートリアルの完全なプログラム
+20
+本も、ビルドしたライブラリで、同じく仕組みを先に読み込ませて動かしました。GJS
+など Python 以外の言語では試していません。</li>
+</ul>
+<h2 id="日本語組版に関わる変更-chromium-156">日本語組版に関わる変更
+(Chromium 156)</h2>
+<ul>
+<li><strong><code>text-decoration-skip-spaces</code>
+が、上流で試験段階に戻りました。</strong> 1.2.4 (Chromium 155)
+では既定で有効になり、行頭と行末の空白 (全角スペースを含む)
+には下線などの装飾が引かれなくなっていました。1.2.5
+では空白の部分にも線が引かれ、1.2.3
+までと同じ描画に戻ります。<code>text-decoration-skip-spaces</code>
+の指定は反映されません。コードを読んでの判断で、描画は測っていません。</li>
+<li>約物には通常は圏点を付けませんが、<code>#</code> <code>%</code>
+<code>&amp;</code> <code>@</code> などには付ける例外が、Chromium 155
+から有効だったものとして恒久化されました。挙動は変わりません。</li>
+</ul>
+<h2 id="chromium-156-で使えるようになったもの">Chromium 156
+で使えるようになったもの</h2>
+<p>既定で有効になったもののうち、頁を作る方に関わるものです。</p>
+<ul>
+<li><strong>CSS の <code>random()</code> 関数</strong>:
+計算式の中で乱数を使えます。</li>
+<li><strong><code>scroll-snap-type</code> の値
+<code>pair</code></strong> を指定できます。</li>
+<li><strong>一方の向きだけスクロールする要素</strong>: 一方の向きを
+<code>overflow: clip</code>、他方をスクロール (<code>auto</code> など)
+にしたとき、これまでは <code>clip</code> が <code>hidden</code>
+に置き換えられ、両方の向きでスクロールできる要素になっていました。156
+からは <code>clip</code> のまま残り、その向きはスクロールしません。</li>
+<li><strong>JavaScript の
+<code>import ... with { type: "text" }</code></strong>:
+ファイルの中身を文字列として読み込めます。</li>
+</ul>
+<h2 id="build1-で修正したこと">build1 で修正したこと</h2>
+<ul>
+<li><strong><code>set_user_agent()</code> で設定した User-Agent
+が、<code>load_uri()</code> で開いた頁に届いていませんでした</strong>
+(<code>load_html()</code> では届いていました)。<code>reload()</code>
+で読み込み直した頁にも届くようにしました。</li>
+<li><strong>ズーム (<code>set_zoom_level()</code> /
+<code>get_zoom_level()</code> / <code>zoom-level</code>)
+を、説明どおり倍率 (1.0 = 100%) として扱うようにしました。</strong>
+1.2.4 までは Chromium の対数のレベルとして渡しており、1.5 を指定すると約
+131% になり、100% のとき <code>get_zoom_level()</code> は 0.0
+を返していました。</li>
+<li>上の「Python から使えるようになりました」の 3 件
+(起動できない、<code>load-failed</code>
+を受け取れない、型情報が古い)。</li>
+<li><strong>読み込みが終わっても <code>notify::is-loading</code> の
+<code>False</code> の通知が来ませんでした。</strong> 通知は onload
+の時点 (まだ読み込み中) の 1
+回だけで、読み込み中の表示をこのプロパティで切り替えるアプリでは表示が止まりませんでした。1.2.5
+からは、読み込みの開始と終了のたびに通知します。<code>load-changed</code>
+の <code>STARTED</code> が来ない操作 (戻る・再読み込みで確かめました)
+や、<code>FINISHED</code> が来ない応答 (<code>load_uri()</code> で開いた
+HTTP 204。このときは <code>load-failed</code> に中断の -3 が届きます)
+でも、開始と終了の通知が来ます。ダウンロードになった移動では試していません。</li>
+</ul>
+</body>
+</html>
+</div></div>

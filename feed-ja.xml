@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-10-18T00:00:00Z</updated>
+  <updated>2026-10-22T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.5-build1 を公開しました (Chromium 156、Python から使えるように)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1"/>
+    <id>tag:blinkgtk.org,2026:2026-10-22-build1-125:ja</id>
+    <updated>2026-10-22T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>レンダリングエンジンを Chromium 156 に更新しました。Python (PyGObject) から BlinkGTK を使えるようになり、起動用のコマンド blinkgtk-run を同梱しました。set_user_agent() が load_uri() で開いた頁にも反映されるなど、API の動きも修正しました。</summary>
+  </entry>
   <entry>
     <title>BlinkGTK for Windows v1.2.4-build4 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build4-windows"/>

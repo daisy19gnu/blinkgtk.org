@@ -46,8 +46,8 @@
 <h1 id="blinkgtk-environment-variables-reference">BlinkGTK Environment
 Variables Reference</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Last updated</strong>: 2026-10-19 (BlinkGTK 1.2.4-build4 /
-Chromium 155.0.8059.39)</p>
+<strong>Last updated</strong>: 2026-10-19 (BlinkGTK 1.2.5-build1 /
+Chromium 156.0.8078.47)</p>
 <p>This document is Chapter 9 (Environment Variables) of the API
 Reference Manual. Every environment variable BlinkGTK reads is listed
 here; a name that is not here is not used by BlinkGTK.</p>
@@ -249,6 +249,22 @@ most once a day and keeps the result in
 <code>$XDG_CACHE_HOME/blinkgtk/update-check</code>. Windows releases are
 not mistaken for Linux ones. When the network is unavailable it says
 nothing and does not delay startup</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SUBPROCESS_PATH</code></td>
+<td>Path to an executable, or <code>0</code></td>
+<td>Unset (automatic)</td>
+<td><strong>Since 1.2.5.</strong> When BlinkGTK is used from a program
+that does not link it directly, such as Python (PyGObject) or GJS,
+BlinkGTK starts its child processes (the zygote and others) with
+<code>blinkgtk-subprocess</code>, which is installed with BlinkGTK
+(<code>/usr/libexec/blinkgtk-0.1/blinkgtk-subprocess</code> in the RPM
+and DEB packages). The sandbox stays enabled. Up to 1.2.4, python3 or a
+similar interpreter was started as the child process, so BlinkGTK could
+not be started from Python. If you ship the file in a different place,
+set its path here. <code>0</code> keeps the child process executable
+unchanged (the 1.2.4 behavior). C applications do not need this: their
+own executable serves as the child process</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_WIN_GPU_PATH</code></td>
