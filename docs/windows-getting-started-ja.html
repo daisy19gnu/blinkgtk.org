@@ -40,7 +40,8 @@
 <body>
 <div class="wrap"><div class="navbar">
   <a href="index.html">Documentation</a> ·
-  <a href="../index.html">BlinkGTK</a>
+  <a href="../index.html">BlinkGTK</a> ·
+  <span class="langsw"><strong>日本語</strong> / <a href="windows-getting-started-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
 <h1 id="blinkgtk-for-windows--はじめかた">BlinkGTK for Windows —
 はじめかた</h1>
@@ -64,29 +65,104 @@ href="#困ったとき">困ったとき</a></p>
 <hr />
 <h2 id="どんな方向けか">どんな方向けか</h2>
 <ul>
-<li><strong>GTK4 のアプリに、Chromium
+<li><p><strong>GTK4 のアプリに、Chromium
 と同じ描画エンジンを組み込みたい方。</strong> BlinkGTK は
-<code>GtkWidget</code> として使え、C の API で操作できます。</li>
-<li><strong>WebView2・CEF・Electron
+<code>GtkWidget</code> として使え、C の API で操作できます。</p></li>
+<li><p><strong>WebView2・CEF・Electron
 から乗り換えを考えている方。</strong> WebView2 は Windows 専用の部品
 (Win32・WinUI・WPF など) で、Linux と共通のコードにはなりません。CEF は
 Linux でも動く C と C++ の API、Electron は JavaScript
 のアプリの枠組みです。BlinkGTK の違いは、<strong>GTK4
 のウィジェットとして C から使える</strong>ことです。GTK4 のアプリを C
 で書き、Linux と Windows
-で同じコードを使いたいときに選択肢になります。既存のアプリをそのまま置き換えるものではありません。</li>
-<li><strong>日本語の縦組みや組版を試したい方。</strong>
+で同じコードを使いたいときに選択肢になります。既存のアプリをそのまま置き換えるものではありません。</p></li>
+<li><p><strong>WebKitGTK から乗り換えを考えている方。</strong> BlinkGTK
+は、WebKitGTK に似た名前の API
+を持ちます。ただし、細かい挙動までの互換は確かめていません。名前の対応は次のとおりです。</p>
+<table>
+<thead>
+<tr>
+<th>用途</th>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ビューの作成</td>
+<td><code>webkit_web_view_new()</code></td>
+<td><code>blink_web_view_new()</code></td>
+</tr>
+<tr>
+<td>URL の読み込み</td>
+<td><code>webkit_web_view_load_uri()</code></td>
+<td><code>blink_web_view_load_uri()</code></td>
+</tr>
+<tr>
+<td>HTML 文字列の読み込み</td>
+<td><code>webkit_web_view_load_html()</code></td>
+<td><code>blink_web_view_load_html()</code></td>
+</tr>
+<tr>
+<td>読み込みの通知</td>
+<td><code>load-changed</code> シグナル</td>
+<td>同じ名前の <code>load-changed</code>
+シグナル。<strong>ただし、値の並びが違います</strong> (下の注)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>注: <code>load-changed</code>
+の値は、数値をそのまま流用しないでください。</strong> BlinkGTK の
+<code>BLINK_LOAD_STARTED</code>=0、<code>BLINK_LOAD_COMMITTED</code>=1、<code>BLINK_LOAD_FINISHED</code>=2、<code>BLINK_LOAD_REDIRECTED</code>=3
+です (ヘッダ <code>blink_gtk.h</code> の
+<code>BlinkLoadEvent</code>)。WebKitGTK は REDIRECTED が 1 で、COMMITTED
+と FINISHED がそれぞれ 1
+つ後ろにずれるため、数値を流用すると誤判定します。必ず
+<code>BLINK_LOAD_*</code>
+の名前で比べてください。<code>BLINK_LOAD_REDIRECTED</code>
+は予約で、今は通知されません。</p></li>
+<li><p><strong>日本語の縦組みや組版を試したい方。</strong>
 縦組みの実験的な調整があります (下の <a href="#linux-版との違い">Linux
 版との違い</a>)。ただし、この版の Windows には、Linux 版にあるぶら下げ
 (行末の句読点を行の外へ出す組版) と割注 (小さな注を 2
-列に組んで行の中に入れる組版) は入っていません。</li>
+列に組んで行の中に入れる組版) は入っていません。</p></li>
 </ul>
+<p><strong>何をしたいかで、用意するものが変わります。</strong></p>
+<table>
+<thead>
+<tr>
+<th>したいこと</th>
+<th>用意するもの</th>
+<th>読むところ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>まず動かしてみる</td>
+<td>ZIP (portable) を展開するだけ。ビルド環境は要りません</td>
+<td><a href="#動かす">動かす</a></td>
+</tr>
+<tr>
+<td>自分のアプリに組み込む</td>
+<td>devel ZIP と、Visual Studio Build Tools (C++
+のコンパイラ)。<strong>無ければ入れ方から</strong></td>
+<td><a href="#組み込む方">組み込む方</a> と、同梱の
+<code>docs\building-with-blinkgtk-ja.md</code> の §0</td>
+</tr>
+<tr>
+<td>Chromium 本体をビルドする</td>
+<td><strong>通常は要りません。</strong> 配布の ZIP を使ってください
+(本体のビルドは、長い時間と大きなディスクが要ります)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="動かす">動かす</h2>
 <h3 id="1-ダウンロードして展開する">1. ダウンロードして展開する</h3>
 <p><a
-href="https://github.com/daisy19gnu/blinkgtk-dist/releases">blinkgtk-dist
-の Releases</a> の <code>v1.2.4-build4-windows</code> から、ZIP
+href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build4-windows">blinkgtk-dist
+の <code>v1.2.4-build4-windows</code> のリリース</a> から、ZIP
 を取得します。</p>
 <table>
 <thead>
@@ -115,6 +191,11 @@ href="#組み込む方">組み込む方</a>)</td>
 <p>portable ZIP を、任意の場所に展開します。GTK4 と VC++ ランタイムの
 DLL も入っているので、別に入れるものはありません。インストーラ (MSI)
 はまだありません。</p>
+<p><img src="figs/extracted-folder.png"
+alt="展開したフォルダ。bin、docs、share の 3 つのフォルダができている" /></p>
+<p><em>展開すると、<code>bin</code> (実行ファイルと
+DLL)、<code>docs</code> (文書)、<code>share</code> (GTK4 のデータ) の 3
+つができます。</em></p>
 <h3 id="2-初回は警告が出ることがあります">2.
 初回は警告が出ることがあります</h3>
 <p>この配布物にはコード署名がありません。ブラウザで取得して実行すると、Microsoft
@@ -122,19 +203,31 @@ Defender SmartScreen
 の警告が出ることがあります。警告が出たら、案内に従って実行を続けてください
 (一般には、警告の「詳細情報」を選ぶと「実行」が選べます。実際の画面は、この版では撮れていません)。</p>
 <h3 id="3-実行する">3. 実行する</h3>
-<pre><code>cd blinkgtk-1.2.4-build4-windows-x64\bin
-blinkgtk_browser.exe
+<p>エクスプローラーで、展開したフォルダの <code>bin</code>
+を開き、<strong><code>blinkgtk_browser.exe</code>
+をダブルクリック</strong>します。引数なしだと
+<code>https://google.com/</code> を開きます
+(インターネットへの接続が要ります)。</p>
+<p>開きたいページを指定するときは、コマンドプロンプト
+(スタートメニューで「cmd」を検索) で、展開したフォルダの
+<code>bin</code> へ移ってから実行します。</p>
+<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.4-build4-windows-x64\bin&quot;
 blinkgtk_browser.exe https://example.com/</code></pre>
-<p>引数なしだと <code>https://google.com/</code> を開きます
-(インターネットへの接続が要ります)。引数に URL
-を渡すと、そのページを開きます。<br />
+<p>1 行目の <code>C:\BlinkGTK\...</code>
+は例です。<strong>自分が展開した先の実際のパスに置き換えてください</strong>
+(エクスプローラーのアドレス欄からパスをコピーできます)。<code>&lt;</code>
+<code>&gt;</code>
+を付けたまま貼ると、コマンドプロンプトが記号として解釈して失敗します。</p>
+<p>引数に URL を渡すと、そのページを開きます。<br />
 <code>blinkgtk_browser</code> は、BlinkGTK
 を組み込むのに必要なものだけを示す、最小のサンプルです。</p>
 <hr />
 <h2 id="動いたか確かめる">動いたか確かめる</h2>
 <ul>
-<li>ウィンドウに Web ページが表示されれば成功です。</li>
-<li>手元のものの版は、実行ファイルが答えます。サイトや文書の数字ではなく、これを見てください。</li>
+<li><p>ウィンドウに Web ページが表示されれば成功です。</p>
+<p><img src="figs/blinkgtk-browser-window.png"
+alt="blinkgtk_browser が Google のトップページを表示している画面" /></p></li>
+<li><p>手元のものの版は、実行ファイルが答えます。サイトや文書の数字ではなく、これを見てください。</p></li>
 </ul>
 <pre><code>&gt; blinkgtk_browser.exe --version
 BlinkGTK 1.2.4-build4 (Chromium 155.0.8059.39)</code></pre>
@@ -181,19 +274,35 @@ MB」と表示します。1,000,000 バイト単位で数えるツールでは 3
 に、公開 API のヘッダ、インポートライブラリ、GTK4
 の開発用ファイルが入っています。</p>
 <ul>
-<li><strong>ビルドに必要なもの</strong>: Visual Studio Build Tools (2026
-で確認) の「C++ によるデスクトップ開発」と、Windows SDK。</li>
-<li><strong>コンパイルのオプション</strong>:
+<li><p><strong>ビルドに必要なもの</strong>: Visual Studio Build Tools
+(2026 で確認) の「C++ によるデスクトップ開発」と、Windows
+SDK。<strong>ビルド環境がまだ無い方</strong>は、同梱の
+<code>docs\building-with-blinkgtk-ja.md</code> の §0
+に、入れ方から画面付きで書いてあります。Chromium
+本体のビルド環境は要りません。</p>
+<p><img src="figs/vs-installer-modify-workload.png"
+alt="Visual Studio Installer の「変更」の画面。左の一覧の「C++ によるデスクトップ開発」にチェックが入っている" /></p>
+<p><em>Visual Studio Installer
+の「変更」の画面です。アプリのビルドに使うのは、左の一覧の「C++
+によるデスクトップ開発」です
+(この画面ではチェックが入っています)。右の「インストールの詳細」にある「C++
+によるデスクトップ開発」は、この画面では折りたたまれています。<strong>展開して、Windows
+の SDK にチェックが入っているか確かめてください。</strong>
+足りないものを選んだときは、インストールを最後まで進めます。入れたあとは、同梱の
+<code>docs\building-with-blinkgtk-ja.md</code> の §0
+の「動くことを確かめる」で、<code>cl</code>
+が使えることを確かめます。この画面は、すでに導入済みの機械で撮りました。</em></p></li>
+<li><p><strong>コンパイルのオプション</strong>:
 <code>/MD /DCOMPONENT_BUILD</code>。<strong>日本語の Windows で MSVC
 を使う場合は <code>/utf-8</code> も付けてください</strong>
-(付けないと、ヘッダの日本語のコメントで警告 C4819 が出ます)。</li>
-<li><strong>組み込みの手順の文書
-(<code>building-with-blinkgtk</code>)、GPU
-の文書、環境変数の文書は、日本語のみです</strong>
-(英語版はまだありません)。</li>
-<li>手順の全体は、同梱の <code>docs\building-with-blinkgtk-ja.md</code>
-にあります。最小のサンプルのソースは、現在の配布物には入っていません
-(<code>blinkgtk_browser.exe</code> は実行ファイルだけです)。</li>
+(付けないと、ヘッダの日本語のコメントで警告 C4819 が出ます)。</p></li>
+<li><p>手順の全体は、同梱の
+<code>docs\building-with-blinkgtk-ja.md</code> (英語は
+<code>docs\building-with-blinkgtk-en.md</code>) にあります。devel ZIP の
+<code>examples\</code>
+に、最小のアプリのソースと、それをビルドするバッチが入っています。</p></li>
+<li><p>GPU の文書と環境変数の文書は、日本語のみです
+(英語版はまだありません)。</p></li>
 </ul>
 <p><strong>注意が 3 点あります。</strong></p>
 <ol type="1">
@@ -221,13 +330,19 @@ MB」と表示します。1,000,000 バイト単位で数えるツールでは 3
 <code>docs\api-windows-notes-ja.md</code> の §0 にあります。</p>
 <hr />
 <h2 id="前の版から上げる方">前の版から上げる方</h2>
+<p><strong>どの版から上げる場合も、手順は同じです。</strong></p>
+<ol type="1">
+<li>新しい ZIP
+を、別のフォルダに展開して試し、問題がなければ古いフォルダを置き換えます。</li>
+<li>自分のアプリに組み込んでいる場合は、新しい devel ZIP
+のヘッダとライブラリで<strong>再ビルドしてください</strong> (前の版の
+<code>blinkgtk.dll</code> との互換は確かめていません)。</li>
+</ol>
+<p>版ごとの注意は、次のとおりです。</p>
 <p><strong>1.2.4-build2 から 1.2.4-build4 へ上げる場合:</strong></p>
 <ul>
-<li><strong>入れ替え</strong>: 新しい ZIP
-を別のフォルダに展開して試し、問題がなければ古いフォルダを置き換えてください。</li>
 <li><strong>公開 API は増減していません</strong> (154
-本のまま。ヘッダの宣言も同じで、説明文だけが変わりました)。ただし ABI
-の互換は確かめていないので、<strong>念のため再ビルドしてください</strong>。</li>
+本のまま。ヘッダの宣言も同じで、説明文だけが変わりました)。</li>
 <li><strong><code>blink_gtk_has_typesetting_feature()</code>
 で判断していた場合</strong>: 1.2.4-build2 の Windows
 版は、<code>"hanging-punctuation:allow-end"</code> で TRUE
@@ -249,11 +364,11 @@ href="#試験段階の-gpu-の経路">試験段階の GPU の経路</a>)。</li>
 <code>gtk-4-1.dll</code> に差し替わっています (約 1 MB
 大きくなりました)。環境変数を指定しない既定の経路は変わりません。</li>
 </ul>
-<p><strong>1.2.3 以前から上げる場合</strong>: Windows 版は 1.2.4-build2
-が最初の 1.2.4 です (Chromium は 154 から 155
-に変わりました)。1.2.3-build4 までは、Chromium の内部の検査 (DCHECK)
-が有効で、内部の前提が崩れる場面でプロセスが異常終了することがありました。1.2.4
-からは無効にしてビルドしています。</p>
+<p><strong>1.2.3 以前から上げる場合</strong>:
+上の共通の手順をそのまま使ってください。Windows 版は 1.2.4-build2
+が最初の 1.2.4 で、Chromium が 154 から 155 に変わりました。1.2.3-build4
+までは、内部の前提が崩れる場面でプロセスが異常終了することがありました。1.2.4
+からは、その検査を無効にしてビルドしています。</p>
 <hr />
 <h2 id="linux-版との違い">Linux 版との違い</h2>
 <table>
@@ -345,7 +460,7 @@ GPU・ドライバーでは未確認です。既定では無効です。</li>
 のドライバーを存在しないファイルへ向けた疑似条件)
 でも、異常終了せず、表示は崩れませんでした。実際にドライバーが無い機械では確かめていません。</li>
 <li>使い方、確かめたこと、制限は、同梱の
-<code>docs\gpu-modes-ja.md</code> の §6 にあります。</li>
+<code>docs\gpu-modes-ja.md</code> の §1 にあります。</li>
 </ul>
 <hr />
 <h2 id="困ったとき">困ったとき</h2>
@@ -356,8 +471,9 @@ GPU・ドライバーでは未確認です。既定では無効です。</li>
 <code>SHA256SUMS</code> で確かめる (3) GTK4
 を別の入れ方のものと混ぜていないか確かめる。それでも直らなければ、下の報告先へ、控えたメッセージを添えてください。</li>
 <li><strong>同梱の文書</strong>: <code>docs\troubleshooting-ja.md</code>
-(英語は <code>docs\troubleshooting-en.md</code>) の §5
-に利用者向けの症状があります (その前の §1〜4 は、Chromium
+(英語は <code>docs\troubleshooting-en.md</code>) の §1〜§3
+に、試すこと・症状から引く索引・報告のしかたがあります (§4
+以降は、Chromium
 本体をビルドする方向けです)。載っていない症状は、報告先へ。</li>
 <li><strong>ドキュメントの入口</strong>:
 <code>docs\00-index-ja.md</code> (英語は
@@ -391,8 +507,29 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/issues">blinkgtk-dist
 </tr>
 <tr>
 <td>2026-10-19</td>
-<td>読者別の構成に書き直した
-(どんな方向けか・動かす・動いたか確かめる・前の版から上げる方、など)。内部の番号と測り方の記録を外した</td>
+<td>頁の構成を改めた。動かす手順・動いたかの確かめ方・前の版から上げる方への案内を分けた</td>
+</tr>
+<tr>
+<td>2026-10-19</td>
+<td>「何をしたいかで用意するものが変わる」の表と、ビルド環境の入れ方への案内を追加した</td>
+</tr>
+<tr>
+<td>2026-10-21</td>
+<td>展開したフォルダ・ブラウザの窓・Visual Studio Installer
+の画面を追加した</td>
+</tr>
+<tr>
+<td>2026-10-21</td>
+<td>実行の手順
+(ダブルクリック・コマンドプロンプト)、ダウンロードの案内、Visual Studio
+の画面の説明、WebKitGTK
+からの名前の対応、前の版から上げる手順を直した</td>
+</tr>
+<tr>
+<td>2026-10-21</td>
+<td><code>load-changed</code>
+の値の並びの違い、コマンドのパスの置き換え方、Visual Studio
+の画面で確かめる箇所を補った</td>
 </tr>
 </tbody>
 </table>

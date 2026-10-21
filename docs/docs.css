@@ -147,6 +147,7 @@
   .doc p > em:only-child { display: block; text-align: center; font-size: .88em;
                            opacity: .75; margin-top: -.8em; }
   .navbar { margin-bottom: 2em; font-size: .95em; }
+  .langsw { display: inline-block; white-space: nowrap; }
   .doclist { list-style: none; padding-left: 0; }
   .doclist li { margin: .35em 0; }
   .doclist .lang { font-size: .85em; opacity: .75; }

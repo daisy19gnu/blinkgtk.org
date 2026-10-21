@@ -40,7 +40,8 @@
 <body>
 <div class="wrap"><div class="navbar">
   <a href="index.html">Documentation</a> ·
-  <a href="../index.html">BlinkGTK</a>
+  <a href="../index.html">BlinkGTK</a> ·
+  <span class="langsw"><a href="windows-getting-started-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
 <h1 id="blinkgtk-for-windows--getting-started">BlinkGTK for Windows —
 Getting started</h1>
@@ -66,31 +67,108 @@ something goes wrong</a></p>
 <hr />
 <h2 id="who-it-is-for">Who it is for</h2>
 <ul>
-<li><strong>You want to embed the same rendering engine as Chromium in a
-GTK4 app.</strong> BlinkGTK works as a <code>GtkWidget</code> and is
-driven by a C API.</li>
-<li><strong>You are considering moving from WebView2, CEF or
+<li><p><strong>You want to embed the same rendering engine as Chromium
+in a GTK4 app.</strong> BlinkGTK works as a <code>GtkWidget</code> and
+is driven by a C API.</p></li>
+<li><p><strong>You are considering moving from WebView2, CEF or
 Electron.</strong> WebView2 is a Windows-only component (Win32, WinUI,
 WPF and similar), so the code is not shared with Linux. CEF has C and
 C++ APIs and also runs on Linux, and Electron is a framework for
 JavaScript apps. What is different about BlinkGTK is that you can
 <strong>use it from C as a GTK4 widget</strong>. It is an option when
 you write a GTK4 app in C and want to use the same code on Linux and
-Windows. It is not a drop-in replacement for an existing app.</li>
-<li><strong>You want to try Japanese vertical text and
+Windows. It is not a drop-in replacement for an existing app.</p></li>
+<li><p><strong>You are considering moving from WebKitGTK.</strong>
+BlinkGTK has APIs with names similar to WebKitGTK's. We have not checked
+compatibility down to the fine details of behavior. The names correspond
+as follows.</p>
+<table>
+<thead>
+<tr>
+<th>Purpose</th>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a view</td>
+<td><code>webkit_web_view_new()</code></td>
+<td><code>blink_web_view_new()</code></td>
+</tr>
+<tr>
+<td>Load a URL</td>
+<td><code>webkit_web_view_load_uri()</code></td>
+<td><code>blink_web_view_load_uri()</code></td>
+</tr>
+<tr>
+<td>Load an HTML string</td>
+<td><code>webkit_web_view_load_html()</code></td>
+<td><code>blink_web_view_load_html()</code></td>
+</tr>
+<tr>
+<td>Loading notification</td>
+<td><code>load-changed</code> signal</td>
+<td>a <code>load-changed</code> signal with the same name. <strong>The
+order of the values differs</strong> (see the note below)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>Note: do not reuse the numeric values of
+<code>load-changed</code>.</strong> In BlinkGTK,
+<code>BLINK_LOAD_STARTED</code>=0, <code>BLINK_LOAD_COMMITTED</code>=1,
+<code>BLINK_LOAD_FINISHED</code>=2 and
+<code>BLINK_LOAD_REDIRECTED</code>=3 (<code>BlinkLoadEvent</code> in the
+header <code>blink_gtk.h</code>). In WebKitGTK, REDIRECTED is 1 and
+COMMITTED and FINISHED are each one higher, so reusing the numbers gives
+wrong results. Always compare with the <code>BLINK_LOAD_*</code> names.
+<code>BLINK_LOAD_REDIRECTED</code> is reserved and is not emitted at
+present.</p></li>
+<li><p><strong>You want to try Japanese vertical text and
 typesetting.</strong> There is an experimental adjustment for vertical
 text (see <a href="#differences-from-the-linux-version">Differences from
 the Linux version</a>). However, the hanging punctuation (typesetting
 that lets punctuation hang past the end of a line) and warichu (inline
 cutting notes: small notes set in two lines inside a line) that the
-Linux version has are not included in this Windows version.</li>
+Linux version has are not included in this Windows version.</p></li>
 </ul>
+<p><strong>What you need depends on what you want to do.</strong></p>
+<table>
+<thead>
+<tr>
+<th>You want to</th>
+<th>You need</th>
+<th>Read</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Just try it</td>
+<td>Unpack the portable ZIP. No build environment needed</td>
+<td><a href="#run-it">Run it</a></td>
+</tr>
+<tr>
+<td>Embed it in your app</td>
+<td>The devel ZIP and Visual Studio Build Tools (a C++ compiler).
+<strong>If you have none, start from installing it</strong></td>
+<td><a href="#embedding-it-in-your-app">the embedding section below</a>,
+and section 0 of the bundled
+<code>docs\building-with-blinkgtk-en.md</code></td>
+</tr>
+<tr>
+<td>Build Chromium itself</td>
+<td><strong>Usually not needed.</strong> Use the released ZIPs (building
+it takes a long time and a lot of disk)</td>
+<td>—</td>
+</tr>
+</tbody>
+</table>
 <hr />
 <h2 id="run-it">Run it</h2>
 <h3 id="1-download-and-unpack">1. Download and unpack</h3>
-<p>Get the ZIP files from <code>v1.2.4-build4-windows</code> in the <a
-href="https://github.com/daisy19gnu/blinkgtk-dist/releases">Releases of
-blinkgtk-dist</a>.</p>
+<p>Get the ZIP files from the <a
+href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build4-windows"><code>v1.2.4-build4-windows</code>
+release of blinkgtk-dist</a>.</p>
 <table>
 <thead>
 <tr>
@@ -118,6 +196,11 @@ href="#embedding-it-in-your-app">Embedding it in your app</a>)</td>
 <p>Unpack the portable ZIP anywhere. It includes the GTK4 and VC++
 runtime DLLs, so there is nothing else to install. There is no installer
 (MSI) yet.</p>
+<p><img src="figs/extracted-folder.png"
+alt="The unpacked folder: three folders, bin, docs and share" /></p>
+<p><em>Unpacking gives three folders: <code>bin</code> (the executables
+and DLLs), <code>docs</code> (documentation) and <code>share</code>
+(GTK4 data).</em></p>
 <h3 id="2-a-warning-may-appear-the-first-time">2. A warning may appear
 the first time</h3>
 <p>This package is not code-signed. If you download it with a browser
@@ -126,20 +209,31 @@ the prompt to continue (in general, choose "More info" in the warning
 and then "Run anyway"; we have not captured the actual screen for this
 release).</p>
 <h3 id="3-run">3. Run</h3>
-<pre><code>cd blinkgtk-1.2.4-build4-windows-x64\bin
-blinkgtk_browser.exe
+<p>In File Explorer, open the <code>bin</code> folder of the unpacked
+folder and <strong>double-click
+<code>blinkgtk_browser.exe</code></strong>. Without an argument it opens
+<code>https://google.com/</code> (an internet connection is needed).</p>
+<p>To open a page of your choice, use a Command Prompt (search for "cmd"
+in the Start menu), move to the <code>bin</code> folder of the unpacked
+folder, and run:</p>
+<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.4-build4-windows-x64\bin&quot;
 blinkgtk_browser.exe https://example.com/</code></pre>
-<p>Without an argument it opens <code>https://google.com/</code> (an
-internet connection is needed). With a URL argument it opens that
-page.<br />
+<p>The <code>C:\BlinkGTK\...</code> on the first line is an example.
+<strong>Replace it with the actual path where you unpacked it</strong>
+(you can copy the path from the File Explorer address bar). If you paste
+<code>&lt;</code> and <code>&gt;</code> as they are, the Command Prompt
+treats them as symbols and fails.</p>
+<p>With a URL argument it opens that page.<br />
 <code>blinkgtk_browser</code> is a minimal sample that shows only what
 you need to embed BlinkGTK.</p>
 <hr />
 <h2 id="check-that-it-works">Check that it works</h2>
 <ul>
-<li>If a web page appears in the window, it works.</li>
-<li>The executable tells you the version you have. Trust this rather
-than the numbers on the site or in the documents.</li>
+<li><p>If a web page appears in the window, it works.</p>
+<p><img src="figs/blinkgtk-browser-window.png"
+alt="blinkgtk_browser showing the Google home page" /></p></li>
+<li><p>The executable tells you the version you have. Trust this rather
+than the numbers on the site or in the documents.</p></li>
 </ul>
 <pre><code>&gt; blinkgtk_browser.exe --version
 BlinkGTK 1.2.4-build4 (Chromium 155.0.8059.39)</code></pre>
@@ -187,20 +281,37 @@ count in units of 1,000,000 bytes show 395 MB.</p>
 public API headers, the import libraries and the GTK4 development
 files.</p>
 <ul>
-<li><strong>What you need to build</strong>: Visual Studio Build Tools
-(we checked 2026) with the "Desktop development with C++" workload, and
-the Windows SDK.</li>
-<li><strong>Compiler options</strong>:
+<li><p><strong>What you need to build</strong>: Visual Studio Build
+Tools (we checked 2026) with the "Desktop development with C++"
+workload, and the Windows SDK. <strong>If you do not have a build
+environment yet</strong>, section 0 of the bundled
+<code>docs\building-with-blinkgtk-en.md</code> explains how to install
+it, with screenshots. You do not need an environment to build
+Chromium.</p>
+<p><img src="figs/vs-installer-modify-workload.png"
+alt="The Modify screen of Visual Studio Installer. &quot;Desktop development with C++&quot; is ticked in the list on the left" /></p>
+<p><em>The Modify screen of Visual Studio Installer (Japanese UI). What
+you use to build apps is "Desktop development with C++" in the list on
+the left (ticked in this screenshot). "Desktop development with C++"
+under "Installation details" on the right is collapsed in this
+screenshot. <strong>Expand it and check that the Windows SDK is
+ticked.</strong> If you select something that was missing, let the
+installation run to the end. After installing, confirm that
+<code>cl</code> works by following "Check that it works" in section 0 of
+the bundled <code>docs\building-with-blinkgtk-en.md</code>. This
+screenshot was taken on a machine that already had it
+installed.</em></p></li>
+<li><p><strong>Compiler options</strong>:
 <code>/MD /DCOMPONENT_BUILD</code>. <strong>On Japanese Windows with
 MSVC, add <code>/utf-8</code> too</strong> (otherwise the Japanese
-comments in the headers cause warning C4819).</li>
-<li><strong>The embedding guide (<code>building-with-blinkgtk</code>),
-the GPU document and the environment-variable document are in Japanese
-only</strong> (there are no English versions yet).</li>
-<li>The full procedure is in the bundled
-<code>docs\building-with-blinkgtk-ja.md</code>. The source of a minimal
-sample is not included in the current package
-(<code>blinkgtk_browser.exe</code> is the executable only).</li>
+comments in the headers cause warning C4819).</p></li>
+<li><p>The full procedure is in the bundled
+<code>docs\building-with-blinkgtk-en.md</code> (Japanese:
+<code>docs\building-with-blinkgtk-ja.md</code>). The devel ZIP contains
+the source of a minimal app and a batch file that builds it, in
+<code>examples\</code>.</p></li>
+<li><p>The GPU document and the environment-variable document are in
+Japanese only (there are no English versions yet).</p></li>
 </ul>
 <p><strong>Three things to note.</strong></p>
 <ol type="1">
@@ -229,14 +340,20 @@ and how to list the ones not yet called, is in §0 of the bundled
 <hr />
 <h2 id="upgrading-from-an-earlier-version">Upgrading from an earlier
 version</h2>
+<p><strong>The steps are the same from any version.</strong></p>
+<ol type="1">
+<li>Unpack the new ZIP into a separate folder and try it; if it is fine,
+replace the old folder.</li>
+<li>If you embed BlinkGTK in your own app, <strong>rebuild it</strong>
+with the headers and libraries from the new devel ZIP (compatibility
+with the previous <code>blinkgtk.dll</code> was not checked).</li>
+</ol>
+<p>Notes for each version:</p>
 <p><strong>From 1.2.4-build2 to 1.2.4-build4:</strong></p>
 <ul>
-<li><strong>Replacing</strong>: unpack the new ZIP into a separate
-folder and try it; if it is fine, replace the old folder.</li>
 <li><strong>The public API did not change</strong> (still 154 entry
 points; the header declarations are the same, only the comments
-changed). We have not checked ABI compatibility, so <strong>please
-rebuild to be safe</strong>.</li>
+changed).</li>
 <li><strong>If you decide based on
 <code>blink_gtk_has_typesetting_feature()</code></strong>: the Windows
 1.2.4-build2 returned TRUE for
@@ -244,8 +361,8 @@ rebuild to be safe</strong>.</li>
 Windows engine does not include hanging punctuation and it does not
 work. <strong>This version returns FALSE for both names
 (<code>allow-end</code> and <code>warichu:single-line</code>).</strong>
-Do not detect it with <code>CSS.supports</code> or computed values (they
-can be true even when the typesetting is not in the engine).</li>
+Do not decide with <code>CSS.supports</code> or computed values (they
+return true even where the typesetting is not included).</li>
 <li><strong>The screenshot API</strong>
 (<code>blink_web_view_capture_screenshot_async()</code> and similar): in
 Linux 1.2.4-build3, a screenshot on the software path changed to return
@@ -258,11 +375,10 @@ path</a>).</li>
 is now a Vulkan-enabled build (about 1 MB larger). The default path,
 without the environment variable, does not change.</li>
 </ul>
-<p><strong>From 1.2.3 or earlier</strong>: the first Windows 1.2.4 is
-1.2.4-build2 (Chromium moved from 154 to 155). Up to 1.2.3-build4,
-Chromium's internal checks (DCHECK) were enabled and a process could
-crash when an internal assumption failed. From 1.2.4 they are disabled
-in the build.</p>
+<p><strong>From 1.2.3 or earlier</strong>: use the steps above as they
+are. The first Windows 1.2.4 is 1.2.4-build2 (Chromium moved from 154 to
+155). Up to 1.2.3-build4, a process could crash when an internal
+assumption failed. From 1.2.4 that check is disabled in the build.</p>
 <hr />
 <h2 id="differences-from-the-linux-version">Differences from the Linux
 version</h2>
@@ -358,7 +474,7 @@ second (the GPU is used about 14%).</li>
 simulated condition that points the Vulkan driver to a file that does
 not exist), it did not crash and the display did not break. We have not
 checked a machine that really has no driver.</li>
-<li>Usage, what we checked and the limits are in §6 of the bundled
+<li>Usage, what we checked and the limits are in §1 of the bundled
 <code>docs\gpu-modes-ja.md</code> (Japanese only).</li>
 </ul>
 <hr />
@@ -370,11 +486,11 @@ messages printed in the console; (2) check that the ZIP is not corrupted
 with <code>SHA256SUMS</code>; (3) check that you have not mixed in a
 GTK4 installed another way. If that does not fix it, report it (below)
 with the messages you noted.</li>
-<li><strong>Bundled documents</strong>: §5 of
+<li><strong>Bundled documents</strong>: §1 to §3 of
 <code>docs\troubleshooting-en.md</code> (Japanese:
-<code>docs\troubleshooting-ja.md</code>) has the symptoms for users
-(§1–4 before it are for people who build Chromium itself). For symptoms
-that are not there, please report them.</li>
+<code>docs\troubleshooting-ja.md</code>) have things to try, a symptom
+index and how to report (§4 and later are for people who build Chromium
+itself). For symptoms that are not there, please report them.</li>
 <li><strong>Documentation entry point</strong>:
 <code>docs\00-index-en.md</code> (Japanese:
 <code>docs\00-index-ja.md</code>). Installation is
@@ -410,9 +526,30 @@ experimental GPU path, and the corrected answers of
 </tr>
 <tr>
 <td>2026-10-19</td>
-<td>Rewritten around the readers (who it is for, run it, check that it
-works, upgrading, and so on). Internal numbers and measurement records
-were removed</td>
+<td>Reorganized the page: separate sections for running it, checking
+that it works, and upgrading from an earlier version</td>
+</tr>
+<tr>
+<td>2026-10-19</td>
+<td>Added a "what you need depends on what you want to do" table and a
+pointer to installing the build environment</td>
+</tr>
+<tr>
+<td>2026-10-21</td>
+<td>Added screenshots of the unpacked folder, the browser window and
+Visual Studio Installer</td>
+</tr>
+<tr>
+<td>2026-10-21</td>
+<td>Fixed the run steps (double-click, Command Prompt), the download
+link, the Visual Studio screenshot note, added the WebKitGTK name
+correspondence, and reworked the upgrade steps</td>
+</tr>
+<tr>
+<td>2026-10-21</td>
+<td>Added the difference in <code>load-changed</code> values, how to
+replace the path in the command, and what to check in the Visual Studio
+screenshot</td>
 </tr>
 </tbody>
 </table>
