@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1-windows">BlinkGTK for Windows v1.2.5-build1 released</a></h2>
+<p><small>2026-10-23 · Release</small></p>
+<p>BlinkGTK for Windows moves to Chromium 156.0.8078.47 and now matches the Linux v1.2.5-build1. Hanging punctuation and one-line warichu work on Windows too, and blink_gtk_has_typesetting_feature() returns TRUE for both &quot;hanging-punctuation:allow-end&quot; and &quot;warichu:single-line&quot;. The Linux 1.2.5 API changes (the load-failed error number is an int, is-loading returns to False when loading ends, and others) are included, but their behavior on Windows has not been checked yet. Rebuild apps that embed it with the new devel ZIP.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1">v1.2.5-build1 released (Chromium 156, usable from Python)</a></h2>
 <p><small>2026-10-22 · Release</small></p>
 <p>The rendering engine is updated to Chromium 156. BlinkGTK can now be used from Python (PyGObject), and the launcher blinkgtk-run is included. API behavior is also corrected; for example, set_user_agent() now applies to pages opened with load_uri().</p>

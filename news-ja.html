@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1-windows">BlinkGTK for Windows v1.2.5-build1 を公開しました</a></h2>
+<p><small>2026-10-23 · リリース</small></p>
+<p>BlinkGTK for Windows を Chromium 156.0.8078.47 に更新し、Linux 版 v1.2.5-build1 と同じ版になりました。ぶら下げと、1 行に収まる割注が Windows 版でも使えるようになり、blink_gtk_has_typesetting_feature() は &quot;hanging-punctuation:allow-end&quot; と &quot;warichu:single-line&quot; の両方で TRUE を返します。Linux 版 1.2.5 の API の変更 (load-failed のエラー番号が整数になる、is-loading が読み込みの終わりで False に戻るなど) も入りましたが、これらの Windows での動作はまだ確かめていません。組み込んだアプリは、新しい devel ZIP で再ビルドしてください。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1">v1.2.5-build1 を公開しました (Chromium 156、Python から使えるように)</a></h2>
 <p><small>2026-10-22 · リリース</small></p>
 <p>レンダリングエンジンを Chromium 156 に更新しました。Python (PyGObject) から BlinkGTK を使えるようになり、起動用のコマンド blinkgtk-run を同梱しました。set_user_agent() が load_uri() で開いた頁にも反映されるなど、API の動きも修正しました。</p>

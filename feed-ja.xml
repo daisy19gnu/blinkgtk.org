@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-10-22T00:00:00Z</updated>
+  <updated>2026-10-23T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>BlinkGTK for Windows v1.2.5-build1 を公開しました</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-10-23-windows-125-build1:ja</id>
+    <updated>2026-10-23T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>BlinkGTK for Windows を Chromium 156.0.8078.47 に更新し、Linux 版 v1.2.5-build1 と同じ版になりました。ぶら下げと、1 行に収まる割注が Windows 版でも使えるようになり、blink_gtk_has_typesetting_feature() は &quot;hanging-punctuation:allow-end&quot; と &quot;warichu:single-line&quot; の両方で TRUE を返します。Linux 版 1.2.5 の API の変更 (load-failed のエラー番号が整数になる、is-loading が読み込みの終わりで False に戻るなど) も入りましたが、これらの Windows での動作はまだ確かめていません。組み込んだアプリは、新しい devel ZIP で再ビルドしてください。</summary>
+  </entry>
   <entry>
     <title>v1.2.5-build1 を公開しました (Chromium 156、Python から使えるように)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1"/>
