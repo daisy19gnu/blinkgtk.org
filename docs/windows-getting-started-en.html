@@ -52,9 +52,9 @@ works at once (no administrator rights needed).<br />
 The API is nearly the same as the Linux version, so you can use the same
 code on both operating systems (the differences are collected in
 "Differences from the Linux version" below).</p>
-<p>This page describes <strong>v1.2.4-build4</strong> (Chromium
-155.0.8059.39). We checked on Windows 11 Pro (build 26300), on
-2026-10-18, that it unpacks and runs.</p>
+<p>This page describes <strong>v1.2.5-build1</strong> (Chromium
+156.0.8078.47). We checked on Windows 11 Pro (build 26300), on
+2026-10-23, that it unpacks and runs.</p>
 <p><strong>Contents</strong>: <a href="#who-it-is-for">Who it is for</a>
 / <a href="#run-it">Run it</a> / <a href="#check-that-it-works">Check
 that it works</a> / <a href="#requirements">Requirements</a> / <a
@@ -127,10 +127,11 @@ present.</p></li>
 <li><p><strong>You want to try Japanese vertical text and
 typesetting.</strong> There is an experimental adjustment for vertical
 text (see <a href="#differences-from-the-linux-version">Differences from
-the Linux version</a>). However, the hanging punctuation (typesetting
-that lets punctuation hang past the end of a line) and warichu (inline
-cutting notes: small notes set in two lines inside a line) that the
-Linux version has are not included in this Windows version.</p></li>
+the Linux version</a>). In this version on Windows, hanging punctuation
+(typesetting that lets punctuation hang past the end of a line) and
+one-line warichu (inline cutting notes: small notes set in two lines
+inside a line) work. Warichu that spans lines does not exist yet, even
+in the Linux version.</p></li>
 </ul>
 <p><strong>What you need depends on what you want to do.</strong></p>
 <table>
@@ -167,7 +168,7 @@ it takes a long time and a lot of disk)</td>
 <h2 id="run-it">Run it</h2>
 <h3 id="1-download-and-unpack">1. Download and unpack</h3>
 <p>Get the ZIP files from the <a
-href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.4-build4-windows"><code>v1.2.4-build4-windows</code>
+href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1-windows"><code>v1.2.5-build1-windows</code>
 release of blinkgtk-dist</a>.</p>
 <table>
 <thead>
@@ -178,11 +179,11 @@ release of blinkgtk-dist</a>.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>blinkgtk-1.2.4-build4-windows-x64.zip</code></td>
+<td><code>blinkgtk-1.2.5-build1-windows-x64.zip</code></td>
 <td><strong>To run it</strong> (portable). Start with this one</td>
 </tr>
 <tr>
-<td><code>blinkgtk-devel-1.2.4-build4-windows-x64.zip</code></td>
+<td><code>blinkgtk-devel-1.2.5-build1-windows-x64.zip</code></td>
 <td><strong>To embed it</strong> (headers and libraries; see <a
 href="#embedding-it-in-your-app">Embedding it in your app</a>)</td>
 </tr>
@@ -216,7 +217,7 @@ folder and <strong>double-click
 <p>To open a page of your choice, use a Command Prompt (search for "cmd"
 in the Start menu), move to the <code>bin</code> folder of the unpacked
 folder, and run:</p>
-<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.4-build4-windows-x64\bin&quot;
+<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.5-build1-windows-x64\bin&quot;
 blinkgtk_browser.exe https://example.com/</code></pre>
 <p>The <code>C:\BlinkGTK\...</code> on the first line is an example.
 <strong>Replace it with the actual path where you unpacked it</strong>
@@ -236,7 +237,7 @@ alt="blinkgtk_browser showing the Google home page" /></p></li>
 than the numbers on the site or in the documents.</p></li>
 </ul>
 <pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.4-build4 (Chromium 155.0.8059.39)</code></pre>
+BlinkGTK 1.2.5-build1 (Chromium 156.0.8078.47)</code></pre>
 <ul>
 <li>If nothing appears, the window stays white, or it exits at once, see
 <a href="#if-something-goes-wrong">If something goes wrong</a>.</li>
@@ -257,7 +258,7 @@ Pro</strong> (builds 26200 and 26300); we have not verified on Windows
 </tr>
 <tr>
 <td>Disk space</td>
-<td>About 1.4 GiB (ZIP 377 MiB + about 1,048 MiB unpacked; you need both
+<td>About 1.4 GiB (ZIP 378 MiB + about 1,051 MiB unpacked; you need both
 while unpacking)</td>
 </tr>
 <tr>
@@ -272,12 +273,12 @@ one)</td>
 </tr>
 </tbody>
 </table>
-<p>The GitHub Releases page shows the same ZIP as "377 MB". Tools that
-count in units of 1,000,000 bytes show 395 MB.</p>
+<p>The GitHub Releases page shows the same ZIP as "378 MB". Tools that
+count in units of 1,000,000 bytes show 396 MB.</p>
 <hr />
 <h2 id="embedding-it-in-your-app">Embedding it in your app</h2>
 <p>The devel ZIP
-(<code>blinkgtk-devel-1.2.4-build4-windows-x64.zip</code>) contains the
+(<code>blinkgtk-devel-1.2.5-build1-windows-x64.zip</code>) contains the
 public API headers, the import libraries and the GTK4 development
 files.</p>
 <ul>
@@ -349,6 +350,26 @@ with the headers and libraries from the new devel ZIP (compatibility
 with the previous <code>blinkgtk.dll</code> was not checked).</li>
 </ol>
 <p>Notes for each version:</p>
+<p><strong>From 1.2.4-build4 to 1.2.5-build1:</strong></p>
+<ul>
+<li><strong>Chromium moved from 155 to 156</strong> (156.0.8078.47).
+Compare how vertical text and typesetting look on your own pages.</li>
+<li><strong>Hanging punctuation and one-line warichu now work.</strong>
+<code>blink_gtk_has_typesetting_feature()</code> returns TRUE for both
+<code>"hanging-punctuation:allow-end"</code> and
+<code>"warichu:single-line"</code> (we checked that the answers match
+the actual behavior). If you wrote your own fallback on the assumption
+of FALSE, review it.</li>
+<li><strong>The Linux 1.2.5 changes are included</strong>: the
+<code>load-failed</code> error number is passed as an integer (int),
+<code>is-loading</code> returns to False when loading ends,
+<code>set_user_agent()</code> also applies to pages opened with
+<code>load_uri()</code> and to <code>reload()</code>, and the zoom level
+(<code>set_zoom_level()</code>) is a factor (1.0 = 100%). <strong>We
+have not checked the behavior of these on Windows.</strong></li>
+<li><strong>The public API did not change</strong> (still 154 entry
+points).</li>
+</ul>
 <p><strong>From 1.2.4-build2 to 1.2.4-build4:</strong></p>
 <ul>
 <li><strong>The public API did not change</strong> (still 154 entry
@@ -416,12 +437,12 @@ experimental GPU path can be selected with an environment variable
 <tr>
 <td>Hanging punctuation typesetting</td>
 <td>Yes (from 1.2.4-build1)</td>
-<td><strong>Not included in this version</strong></td>
+<td>Yes (from 1.2.5-build1)</td>
 </tr>
 <tr>
-<td>Warichu (inline cutting notes) typesetting</td>
+<td>Warichu (inline cutting notes) typesetting (one-line cases)</td>
 <td>Yes (from 1.2.4-build3)</td>
-<td><strong>Not included in this version</strong></td>
+<td>Yes (from 1.2.5-build1)</td>
 </tr>
 <tr>
 <td>Japanese vertical text layout</td>
@@ -550,6 +571,11 @@ correspondence, and reworked the upgrade steps</td>
 <td>Added the difference in <code>load-changed</code> values, how to
 replace the path in the command, and what to check in the Visual Studio
 screenshot</td>
+</tr>
+<tr>
+<td>2026-10-23</td>
+<td>Updated for 1.2.5-build1: Chromium 156, hanging punctuation and
+one-line warichu included, upgrade notes from 1.2.4-build4 added</td>
 </tr>
 </tbody>
 </table>
