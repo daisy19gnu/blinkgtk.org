@@ -211,6 +211,15 @@ i5-1140G7、Defender
 は既定の設定、2026-10-23)、展開した直後の初回は、窓が出るまで約 11
 秒かかり、2 回目以降は約 0.9 秒でした。機種や Defender
 の設定によって、時間は変わります。待てば起動するので、そのままお待ちください。</p>
+<p>開発の作業用に、Windows 11 の <strong>Dev Drive</strong>
+(開発者向けのボリューム) を使っている方は、Dev Drive
+に展開すると、初回も速くなります。Dev Drive では、Defender
+が「パフォーマンス
+モード」で動き、ファイルを開くときの検査を後で行うためです (Defender
+の保護は外れません)。当方の確認では (同じ機種)、窓が出るまで約 3
+秒でした。Dev Drive の作り方は、<a
+href="https://learn.microsoft.com/ja-jp/windows/dev-drive/">Microsoft
+の説明</a>を参照してください。</p>
 <h3 id="3-実行する">3. 実行する</h3>
 <p>エクスプローラーで、展開したフォルダの <code>bin</code>
 を開き、<strong><code>blinkgtk_browser.exe</code>
@@ -569,6 +578,10 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/issues">blinkgtk-dist
 <tr>
 <td>2026-10-24</td>
 <td>「展開した直後の初回は起動が遅いことがあります」の説明を足した</td>
+</tr>
+<tr>
+<td>2026-10-25</td>
+<td>Dev Drive に展開すると初回も速い、の説明を足した</td>
 </tr>
 </tbody>
 </table>
