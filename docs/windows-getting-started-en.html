@@ -209,6 +209,14 @@ and run it, Microsoft Defender SmartScreen may show a warning. Follow
 the prompt to continue (in general, choose "More info" in the warning
 and then "Run anyway"; we have not captured the actual screen for this
 release).</p>
+<p><strong>The first start right after unpacking can be slow.</strong>
+Microsoft Defender scans the newly written files (there are about 590
+DLLs). <strong>From the second start on, it is fast.</strong> In our
+check (Intel Core i5-1140G7, default Defender settings, 2026-10-23), the
+first start right after unpacking took about 11 seconds until the window
+appeared, and the later starts took about 0.9 seconds. The time varies
+with the machine and the Defender settings. It will start if you wait,
+so please wait.</p>
 <h3 id="3-run">3. Run</h3>
 <p>In File Explorer, open the <code>bin</code> folder of the unpacked
 folder and <strong>double-click
@@ -576,6 +584,11 @@ screenshot</td>
 <td>2026-10-23</td>
 <td>Updated for 1.2.5-build1: Chromium 156, hanging punctuation and
 one-line warichu included, upgrade notes from 1.2.4-build4 added</td>
+</tr>
+<tr>
+<td>2026-10-24</td>
+<td>Added a note that the first start right after unpacking can be
+slow</td>
 </tr>
 </tbody>
 </table>

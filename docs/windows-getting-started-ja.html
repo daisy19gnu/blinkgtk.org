@@ -203,6 +203,14 @@ DLL)、<code>docs</code> (文書)、<code>share</code> (GTK4 のデータ) の 3
 Defender SmartScreen
 の警告が出ることがあります。警告が出たら、案内に従って実行を続けてください
 (一般には、警告の「詳細情報」を選ぶと「実行」が選べます。実際の画面は、この版では撮れていません)。</p>
+<p><strong>展開した直後の初回は、起動が遅いことがあります。</strong>
+Microsoft Defender が、新しく置かれたファイル (DLL が 590
+件ほどあります) を検査するためです。<strong>2
+回目からは速くなります。</strong> 当方の確認では (Intel Core
+i5-1140G7、Defender
+は既定の設定、2026-10-23)、展開した直後の初回は、窓が出るまで約 11
+秒かかり、2 回目以降は約 0.9 秒でした。機種や Defender
+の設定によって、時間は変わります。待てば起動するので、そのままお待ちください。</p>
 <h3 id="3-実行する">3. 実行する</h3>
 <p>エクスプローラーで、展開したフォルダの <code>bin</code>
 を開き、<strong><code>blinkgtk_browser.exe</code>
@@ -557,6 +565,10 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/issues">blinkgtk-dist
 <td>2026-10-23</td>
 <td>1.2.5-build1 に更新した: Chromium 156、ぶら下げと 1
 行に収まる割注の取り込み、上げる手順に 1.2.4-build4 からの項を追加</td>
+</tr>
+<tr>
+<td>2026-10-24</td>
+<td>「展開した直後の初回は起動が遅いことがあります」の説明を足した</td>
 </tr>
 </tbody>
 </table>
