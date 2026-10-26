@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-10-23T00:00:00Z</updated>
+  <updated>2026-10-27T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.5-build2 を公開しました (頁の配色が GTK のテーマに合うように、起動を短く)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-10-27-build2-125:ja</id>
+    <updated>2026-10-27T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>頁の配色 (light / dark)・フォームの部品・スクロールバーが GTK のテーマの明暗に合い、アプリの実行中にテーマを切り替えると頁も切り替わります。以前の動き (頁は常に light) には BLINKGTK_FOLLOW_GTK_THEME=0 で戻せます。あわせて起動を短くしました。</summary>
+  </entry>
   <entry>
     <title>BlinkGTK for Windows v1.2.5-build1 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1-windows"/>

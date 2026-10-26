@@ -277,25 +277,25 @@ Releases に<br />
 <p>リポジトリを登録せず、ダウンロードした RPM を直接入れる場合。</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime のみ（アプリ実行）</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.5-build1.fc45.x86_64.rpm</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.5-build2.fc45.x86_64.rpm</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 開発する場合は devel + gir も</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.5-build1.fc45.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.5-build1.fc45.x86_64.rpm</span></code></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.5-build2.fc45.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.5-build2.fc45.x86_64.rpm</span></code></pre></div>
 <h3 id="debian--ubuntudeb">Debian / Ubuntu（DEB）</h3>
 <div class="sourceCode" id="cb7"><pre
-class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.5-build1-1_amd64.deb        <span class="co"># runtime</span></span>
-<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.5-build1-1_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.5-build2-1_amd64.deb        <span class="co"># runtime</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.5-build2-1_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
 <h3 id="tarballfhs-レイアウト">Tarball（FHS レイアウト）</h3>
 <p>runtime / devel とも FHS
 レイアウト（<code>usr/lib64/...</code>）です。root（<code>/</code>）に展開します。</p>
 <div class="sourceCode" id="cb8"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime</span></span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.5-build1-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.5-build2-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
 <span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                                    <span class="co"># ld.so.conf.d を反映</span></span>
 <span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel（BlinkGTK を組み込むアプリを開発するときのみ）</span></span>
-<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-1.2.5-build1-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
+<span id="cb8-6"><a href="#cb8-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-1.2.5-build2-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
 <p><code>ldconfig</code> は runtime に含まれる
 <code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code><br />
 （private ディレクトリを検索パスに追加）を反映するために実行します。</p>

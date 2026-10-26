@@ -46,7 +46,7 @@
 <h1 id="blinkgtk-environment-variables-reference">BlinkGTK Environment
 Variables Reference</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Last updated</strong>: 2026-10-19 (BlinkGTK 1.2.5-build1 /
+<strong>Last updated</strong>: 2026-10-27 (BlinkGTK 1.2.5-build2 /
 Chromium 156.0.8078.47)</p>
 <p>This document is Chapter 9 (Environment Variables) of the API
 Reference Manual. Every environment variable BlinkGTK reads is listed
@@ -278,6 +278,45 @@ release announcements call "GPU path P4" (the only value you set is
 <code>vulkan</code>). Disabled by default. <strong>Confirmed on one
 Intel Iris Xe machine only.</strong> Not used on Linux</td>
 </tr>
+<tr>
+<td><code>BLINKGTK_NO_AUTO_SHUTDOWN</code></td>
+<td><code>1</code></td>
+<td>unset (clean up automatically)</td>
+<td><strong>Windows only (from the next BlinkGTK for Windows release;
+not in a released build).</strong> On Windows, BlinkGTK calls
+<code>blink_gtk_shutdown()</code> automatically when
+<code>blink_gtk_run_main_loop()</code> returns, so the process exits
+soon after the window is closed. With <code>1</code>, this automatic
+cleanup is skipped. This is for applications that keep using BlinkGTK
+after the main loop returns; such an application must call
+<code>blink_gtk_shutdown()</code> itself before it exits. Calling
+<code>blink_gtk_shutdown()</code> yourself is harmless: a second call
+does nothing. Not used on Linux</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FOLLOW_GTK_THEME</code></td>
+<td><code>0</code></td>
+<td>unset (follow the GTK theme)</td>
+<td><strong>From 1.2.5-build2.</strong> By default the page color scheme
+(<code>prefers-color-scheme</code>, form controls, scrollbars) follows
+whether the GTK theme is light or dark, and switching the theme while
+the app runs switches the page without reloading it. With
+<code>0</code>, pages are always light, as up to 1.2.5-build1. Use it in
+apps whose HTML is not ready for dark. Pages that do not set
+<code>color-scheme</code> keep a white background even without
+<code>0</code></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NETWORK_IN_PROCESS</code></td>
+<td><code>1</code></td>
+<td>unset (separate process)</td>
+<td><strong>From 1.2.5-build2.</strong> Runs networking inside the
+application process instead of in a separate process. Pages load sooner
+because a process is no longer started each time a page is opened. In
+exchange, if networking crashes, the application ends with it. By
+default networking runs in a separate process, so a crash ends only that
+process</td>
+</tr>
 </tbody>
 </table>
 <h2 id="2-escape-hatches-leave-at-defaults">2. Escape Hatches (leave at
@@ -302,6 +341,33 @@ connection (fd-watcher pump) back to the earlier method (g_idle pump)
 (CPU usage while idle increases)</td>
 <td>Fix in 1.1.0: CPU usage of nearly one core while nothing was
 happening</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEFER_ZYGOTE=0</code></td>
+<td>Restores the earlier order in which startup first waits until the
+helper process that creates child processes (the zygote) is ready
+(startup becomes slower)</td>
+<td>Improvement in 1.2.5-build2: faster startup (the window and the
+finished page load appear sooner)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FAST_RENDER_NODE=0</code></td>
+<td>Restores Chromium's original startup step that loads Mesa to check
+whether the GPU device (the render node under /dev/dri) is usable
+(startup becomes slower). Only matters on the software path (the
+default)</td>
+<td>Improvement in 1.2.5-build2: faster startup (the finished page load
+appears sooner)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_VK_DRIVER_SELECT=0</code></td>
+<td>Stops limiting the Vulkan drivers loaded at startup to the ones for
+the GPUs present on this machine (startup becomes slower). If you set
+the Vulkan loader's own variables (such as
+<code>VK_LOADER_DRIVERS_SELECT</code>), BlinkGTK leaves them
+unchanged</td>
+<td>Improvement in 1.2.5-build2: faster startup (the window appears
+sooner)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_PUMP_RESCUE=0</code></td>

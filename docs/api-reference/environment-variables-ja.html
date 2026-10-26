@@ -46,7 +46,7 @@
 <h1 id="blinkgtk-環境変数リファレンス">BlinkGTK
 環境変数リファレンス</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>最終更新</strong>: 2026-10-19 (BlinkGTK 1.2.5-build1 / Chromium
+<strong>最終更新</strong>: 2026-10-27 (BlinkGTK 1.2.5-build2 / Chromium
 156.0.8078.47)</p>
 <p>API リファレンスマニュアルの第 9 章 (環境変数)
 にあたる文書です。BlinkGTK
@@ -265,6 +265,45 @@ P4」と呼んでいるものです (指定する値は <code>vulkan</code>
 だけです)。既定は無効。<strong>Intel Iris Xe の 1
 機種でのみ確認。</strong> Linux では使われない</td>
 </tr>
+<tr>
+<td><code>BLINKGTK_NO_AUTO_SHUTDOWN</code></td>
+<td><code>1</code></td>
+<td>未設定 (自動で片づける)</td>
+<td><strong>Windows 専用 (BlinkGTK for Windows の 1.2.5-build1
+の次の版から (未出荷))。</strong> Windows
+では、<code>blink_gtk_run_main_loop()</code> が戻るときに BlinkGTK が
+<code>blink_gtk_shutdown()</code>
+を自動で呼び、窓を閉じたあと速やかにプロセスが終わります。<code>1</code>
+を指定すると、この自動の片づけをしません。メインループが戻ったあとも
+BlinkGTK
+を使い続けるアプリ向けです。その場合は、アプリが終わる前に自分で
+<code>blink_gtk_shutdown()</code> を呼んでください。アプリが
+<code>blink_gtk_shutdown()</code> を自分で呼んでも、2
+回目は何もしないので害はありません。Linux では使われない</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FOLLOW_GTK_THEME</code></td>
+<td><code>0</code></td>
+<td>未設定 (GTK のテーマに合わせる)</td>
+<td><strong>1.2.5-build2 から。</strong> 頁の配色
+(<code>prefers-color-scheme</code>・フォームの部品・スクロールバー) を
+GTK
+のテーマの明暗に合わせるのが既定です。アプリの実行中にテーマを切り替えると、頁も読み込み直さずに切り替わります。<code>0</code>
+を指定すると合わせず、頁は 1.2.5-build1 までと同じく常に light
+になります。頁の HTML が dark
+に対応していないアプリで使います。なお、<code>color-scheme</code>
+を指定していない頁は、<code>0</code>
+を指定しなくても地の色が白のままです</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NETWORK_IN_PROCESS</code></td>
+<td><code>1</code></td>
+<td>未設定 (別のプロセス)</td>
+<td><strong>1.2.5-build2 から。</strong>
+ネットワークの処理を、別のプロセスではなくアプリのプロセスの中で動かします。頁を開くたびにプロセスを
+1
+つ起動しなくなるので、頁の読み込みが早くなります。代わりに、ネットワークの処理が異常終了すると、アプリも一緒に終わります。既定では別のプロセスで動かし、異常終了はそのプロセスだけで済みます</td>
+</tr>
 </tbody>
 </table>
 <h2 id="2-エスケープハッチ既定のまま推奨">2.
@@ -286,6 +325,28 @@ pump) から以前の方式 (g_idle pump) に戻す(待機中の CPU
 の使用率が増えます)</td>
 <td>1.1.0 の修正: 何も操作していない間も CPU を 1
 コア近く使い続けていた問題</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEFER_ZYGOTE=0</code></td>
+<td>起動のときに、子プロセスを作るための補助のプロセス (zygote)
+の準備ができるのを最初に待つ、以前の順序に戻す (起動が遅くなります)</td>
+<td>1.2.5-build2 から。起動の短縮
+(窓の表示と頁の読み込み完了が早くなる)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FAST_RENDER_NODE=0</code></td>
+<td>起動のときに、GPU の装置 (/dev/dri のレンダーノード) が使えるかを
+Mesa を読み込んで確かめる、Chromium の元の手順に戻す
+(起動が遅くなります)。software の経路 (既定) のときだけ関係します</td>
+<td>1.2.5-build2 から。起動の短縮 (頁の読み込み完了が早くなる)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_VK_DRIVER_SELECT=0</code></td>
+<td>起動のときに、読み込む Vulkan のドライバを、この機械に在る GPU
+のものに絞らないようにする (起動が遅くなります)。Vulkan
+のローダの環境変数 (<code>VK_LOADER_DRIVERS_SELECT</code> など)
+を自分で設定している場合は、BlinkGTK はそれを変えません</td>
+<td>1.2.5-build2 から。起動の短縮 (窓が出るまでが早くなる)</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_PUMP_RESCUE=0</code></td>

@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build2">v1.2.5-build2 を公開しました (頁の配色が GTK のテーマに合うように、起動を短く)</a></h2>
+<p><small>2026-10-27 · リリース</small></p>
+<p>頁の配色 (light / dark)・フォームの部品・スクロールバーが GTK のテーマの明暗に合い、アプリの実行中にテーマを切り替えると頁も切り替わります。以前の動き (頁は常に light) には BLINKGTK_FOLLOW_GTK_THEME=0 で戻せます。あわせて起動を短くしました。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1-windows">BlinkGTK for Windows v1.2.5-build1 を公開しました</a></h2>
 <p><small>2026-10-23 · リリース</small></p>
 <p>BlinkGTK for Windows を Chromium 156.0.8078.47 に更新し、Linux 版 v1.2.5-build1 と同じ版になりました。ぶら下げと、1 行に収まる割注が Windows 版でも使えるようになり、blink_gtk_has_typesetting_feature() は &quot;hanging-punctuation:allow-end&quot; と &quot;warichu:single-line&quot; の両方で TRUE を返します。Linux 版 1.2.5 の API の変更 (load-failed のエラー番号が整数になる、is-loading が読み込みの終わりで False に戻るなど) も入りましたが、これらの Windows での動作はまだ確かめていません。組み込んだアプリは、新しい devel ZIP で再ビルドしてください。</p>

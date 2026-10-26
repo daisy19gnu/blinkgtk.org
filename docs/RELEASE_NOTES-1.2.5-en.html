@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.5-build1 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.5-build2 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-10-22 / Chromium: 156.0.8078.47 / Language: 日本語 | English">
+<meta name="description" content="Release date: 2026-10-27 / Chromium: 156.0.8078.47 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.5-build1 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-10-22 / Chromium: 156.0.8078.47 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.5-build2 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-10-27 / Chromium: 156.0.8078.47 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -108,17 +108,21 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="RELEASE_NOTES-1.2.5-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-125-build1-release-notes">BlinkGTK 1.2.5-build1 Release
+<h1 id="blinkgtk-125-build2-release-notes">BlinkGTK 1.2.5-build2 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-10-22 /
+<p><strong>Release date</strong>: 2026-10-27 /
 <strong>Chromium</strong>: 156.0.8078.47 / Language: <a
 href="RELEASE_NOTES-1.2.5-ja.html">日本語</a> | English</p>
 <p>The rendering engine is updated to <strong>Chromium 156</strong>.
 <strong>BlinkGTK can now be used from Python (PyGObject).</strong></p>
 <hr />
-<h2 id="upgrading-from-124">Upgrading from 1.2.4</h2>
+<h2 id="upgrading-from-an-earlier-version">Upgrading from an earlier
+version</h2>
 <p>Check the rows that match how you use BlinkGTK. Each row links to the
 details.</p>
+<p>If you upgrade from 1.2.5-build1, check the "Apps that use a dark GTK
+theme" row (the change in build2). The other rows are for upgrades from
+1.2.4.</p>
 <p>This table is for Linux. For BlinkGTK for Windows, see <a
 href="https://blinkgtk.org/docs/windows-getting-started-en.html#upgrading-from-an-earlier-version">Upgrading
 from an earlier version</a> in the Windows guide.</p>
@@ -165,6 +169,19 @@ href="#blinkgtk-can-now-be-used-from-python">details</a>)</td>
 148)</td>
 <td>Just update the package (<a
 href="#blinkgtk-can-now-be-used-from-python">details</a>)</td>
+</tr>
+<tr>
+<td>Apps that use a dark GTK theme</td>
+<td>From build2, the color scheme reported to pages
+(<code>prefers-color-scheme</code>) becomes dark (up to build1, it was
+always light). Pages that support dark (for example, pages that set
+<code>color-scheme</code>) get a dark background, form controls and
+scrollbars; pages that do not set <code>color-scheme</code> keep a white
+background. Switching the theme between light and dark while the app
+runs also switches the page</td>
+<td>To keep pages always light, set
+<code>BLINKGTK_FOLLOW_GTK_THEME=0</code> (<a
+href="#changed-in-build2">details</a>)</td>
 </tr>
 <tr>
 <td>Using <code>set_user_agent()</code></td>
@@ -331,6 +348,31 @@ and so on) on the other, <code>clip</code> used to be replaced by
 <li><strong>JavaScript
 <code>import ... with { type: "text" }</code></strong>: loads a file's
 contents as a string.</li>
+</ul>
+<h2 id="changed-in-build2">Changed in build2</h2>
+<ul>
+<li><strong>The page color scheme now follows the GTK theme.</strong> Up
+to build1, pages were always light even when GTK used a dark theme. From
+build2, the page's <code>prefers-color-scheme</code>, form controls and
+scrollbars match whether the GTK theme is light or dark. Switching
+between light and dark while the app runs switches the page without
+reloading it. To get the previous behavior (pages always light), set
+<code>BLINKGTK_FOLLOW_GTK_THEME=0</code>. The accent color and the
+selection color do not follow the GTK theme yet.</li>
+<li><strong>Faster startup.</strong> Four changes:
+<ul>
+<li>Startup no longer waits for the helper process that starts child
+processes (<code>BLINKGTK_DEFER_ZYGOTE=0</code> restores the old
+order)</li>
+<li>Fewer symbol lookups when the shared libraries are loaded (a linker
+setting; RPM packages also order the libraries to reduce lookups)</li>
+<li>On the software rendering path, the check of GPU devices that are
+not used is skipped (<code>BLINKGTK_FAST_RENDER_NODE=0</code> restores
+it)</li>
+<li>When the window is created, only the Vulkan drivers for the GPUs on
+the machine are loaded (<code>BLINKGTK_VK_DRIVER_SELECT=0</code>
+restores loading all of them)</li>
+</ul></li>
 </ul>
 <h2 id="fixed-in-build1">Fixed in build1</h2>
 <ul>

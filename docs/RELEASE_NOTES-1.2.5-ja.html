@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.5-build1 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.5-build2 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-10-22 / Chromium: 156.0.8078.47 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-10-27 / Chromium: 156.0.8078.47 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.5-build1 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-10-22 / Chromium: 156.0.8078.47 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.5-build2 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-10-27 / Chromium: 156.0.8078.47 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -108,17 +108,20 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="RELEASE_NOTES-1.2.5-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-125-build1-リリースノート">BlinkGTK 1.2.5-build1
+<h1 id="blinkgtk-125-build2-リリースノート">BlinkGTK 1.2.5-build2
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-10-22 / <strong>Chromium</strong>:
+<p><strong>リリース日</strong>: 2026-10-27 / <strong>Chromium</strong>:
 156.0.8078.47 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.5-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 156</strong>
 に更新しました。あわせて、<strong>Python (PyGObject) から BlinkGTK
 を使えるようになりました</strong>。</p>
 <hr />
-<h2 id="前の版-124-から上げる方へ">前の版 (1.2.4) から上げる方へ</h2>
+<h2 id="以前の版から上げる方へ">以前の版から上げる方へ</h2>
 <p>使い方に当たる行を確かめてください。詳しい説明は各行のリンク先にあります。</p>
+<p>1.2.5-build1 から上げる方は、表の「GTK のテーマを dark
+にしているアプリ」の行を確かめてください (build2
+で変わった点)。それ以外の行は 1.2.4 から上げる方向けです。</p>
 <p>この表は Linux 版のものです。BlinkGTK for Windows の方は <a
 href="https://blinkgtk.org/docs/windows-getting-started-ja.html#前の版から上げる方">Windows
 版の「前の版から上げる方」</a> を確かめてください。</p>
@@ -162,6 +165,18 @@ href="#python-から使えるようになりました">詳細</a>)</td>
 <td>呼べる API が増える (関数・メソッド・コンストラクタ 93 → 148)</td>
 <td>パッケージを更新するだけ (<a
 href="#python-から使えるようになりました">詳細</a>)</td>
+</tr>
+<tr>
+<td>GTK のテーマを dark にしているアプリ</td>
+<td>build2 から、頁に伝える配色の設定
+(<code>prefers-color-scheme</code>) が dark になる (build1 までは常に
+light)。dark に対応した頁 (<code>color-scheme</code> を指定した頁など)
+は、地の色・フォームの部品・スクロールバーが dark
+になる。<code>color-scheme</code>
+を指定していない頁の地の色は白のまま。実行中にテーマの明暗を切り替えると頁も切り替わる</td>
+<td>頁を常に light にしたい場合は
+<code>BLINKGTK_FOLLOW_GTK_THEME=0</code> (<a
+href="#build2-で変わったこと">詳細</a>)</td>
 </tr>
 <tr>
 <td><code>set_user_agent()</code> を使う</td>
@@ -325,6 +340,28 @@ weston、サンドボックスを有効にしたまま)。チュートリアル�
 <li><strong>JavaScript の
 <code>import ... with { type: "text" }</code></strong>:
 ファイルの中身を文字列として読み込めます。</li>
+</ul>
+<h2 id="build2-で変わったこと">build2 で変わったこと</h2>
+<ul>
+<li><strong>頁の配色を GTK のテーマに合わせるようにしました。</strong>
+build1 までは、GTK を dark にしていても頁は常に light でした。build2
+からは、頁の
+<code>prefers-color-scheme</code>・フォームの部品・スクロールバーが GTK
+のテーマの明暗に合います。アプリの実行中にテーマの明暗を切り替えると、頁を読み込み直さずに切り替わります。以前の動き
+(頁は常に light) に戻すには <code>BLINKGTK_FOLLOW_GTK_THEME=0</code>
+を指定します。アクセント色と選択範囲の色は、まだ GTK
+のテーマに合っていません。</li>
+<li><strong>起動を短くしました。</strong> 次の 4 つです。
+<ul>
+<li>子プロセスの準備を待たずに起動を進める (戻すには
+<code>BLINKGTK_DEFER_ZYGOTE=0</code>)</li>
+<li>共有ライブラリの読み込みで、シンボルの検索を減らす
+(リンクの設定の変更。RPM では読み込む順番も並べ替える)</li>
+<li>software の描画経路で、使わない GPU の装置の確認を省く (戻すには
+<code>BLINKGTK_FAST_RENDER_NODE=0</code>)</li>
+<li>窓を作るときに読み込む Vulkan のドライバを、その機械に在る GPU
+のものに絞る (戻すには <code>BLINKGTK_VK_DRIVER_SELECT=0</code>)</li>
+</ul></li>
 </ul>
 <h2 id="build1-で修正したこと">build1 で修正したこと</h2>
 <ul>
