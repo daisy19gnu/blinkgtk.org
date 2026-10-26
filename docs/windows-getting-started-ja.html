@@ -322,7 +322,7 @@ alt="Visual Studio Installer の「変更」の画面。左の一覧の「C++ �
 <li><p>GPU の文書と環境変数の文書は、日本語のみです
 (英語版はまだありません)。</p></li>
 </ul>
-<p><strong>注意が 3 点あります。</strong></p>
+<p><strong>注意が 4 点あります。</strong></p>
 <ol type="1">
 <li><strong>公開 API の前方宣言を、自分では書かないでください</strong>
 (Windows 固有)。ヘッダは <code>__declspec(dllimport)</code>
@@ -337,6 +337,13 @@ alt="Visual Studio Installer の「変更」の画面。左の一覧の「C++ �
 をリンクし、<code>blink_gtk_sandbox_init()</code> を呼びます (Windows
 専用です。Linux では呼べないので、両方の OS で同じコードを使うときは
 <code>#ifdef G_OS_WIN32</code> で囲んでください)。</li>
+<li><strong>メインループが戻ったら、終了する前に
+<code>blink_gtk_shutdown()</code> を呼んでください。</strong>
+1.2.5-build1 までの Windows 版では、省略すると、終了に 20
+秒以上かかり、最後に異常終了します (次の版 (未出荷)
+からは自動で行いますが、明示的に呼ぶ形を、引き続きすすめます)。呼ぶ位置は、サンプル
+(<code>blinkgtk_browser-windows.c</code>) の末尾の「6.
+終了処理」にあります。</li>
 </ol>
 <p>公開 API は <strong>154 本</strong>です。この 154 本のうち、Linux
 版との違いは 1 本だけで、Wayland 専用の
@@ -368,14 +375,29 @@ alt="Visual Studio Installer の「変更」の画面。左の一覧の「C++ �
 <code>"warichu:single-line"</code> の両方で TRUE を返します
 (実際の動作と合うことを確かめています)。FALSE
 を前提に、自前で代替の処理を入れていた場合は、見直してください。</li>
-<li><strong>Linux 版の 1.2.5 の変更を取り込みました</strong>:
-<code>load-failed</code> のエラー番号が整数 (int)
-で渡る、読み込みが終わると <code>is-loading</code> が False
-に戻る、<code>set_user_agent()</code> が <code>load_uri()</code> と
-<code>reload()</code> にも反映される、拡大率
-(<code>set_zoom_level()</code>) が倍率 (1.0 = 100%)
-になる。<strong>これらは Windows
-では、動作までは確かめていません。</strong></li>
+<li><strong>Linux 版の 1.2.5 の変更を取り込みました。Windows
+でも動作を確かめました</strong> (2026-10-26、1.2.5-build1 の配布物で、各
+1 回):
+<ul>
+<li><code>load-failed</code> のエラー番号が、整数 (int)
+で渡ります。確認: 引数が整数で、読み込みを別の頁に切り替えると
+<code>-3</code> が渡る。</li>
+<li>読み込みが終わると、<code>is-loading</code> が偽に戻ります。確認:
+読み込みの前後で、真・偽の通知が出る。</li>
+<li><code>set_user_agent()</code> が、<code>load_uri()</code>
+で開いた頁にも、<code>reload()</code> にも反映されます。確認:
+どちらの後も <code>navigator.userAgent</code> が指定した値。</li>
+<li>拡大率 (<code>set_zoom_level()</code>) が、倍率 (1.0 = 100%)
+になります。確認: 2.0 を指定すると、<code>get_zoom_level()</code> が 2.0
+で、<code>window.devicePixelRatio</code> が 2 倍。</li>
+</ul></li>
+<li><strong>終了処理を確認してください</strong> (既存のアプリ向け):
+メインループ (<code>blink_gtk_run_main_loop()</code>)
+が戻ったあとで、<code>blink_gtk_shutdown()</code>
+を呼んでいるか確かめてください。呼んでいないと、1.2.5-build1 までの
+Windows 版では、終了に 20 秒以上かかり、最後に異常終了します。次の版
+(未出荷)
+からは自動で行いますが、明示的に呼ぶ形を、引き続きすすめます。</li>
 <li><strong>公開 API は増減していません</strong> (154 本のまま)。</li>
 </ul>
 <p><strong>1.2.4-build2 から 1.2.4-build4 へ上げる場合:</strong></p>
@@ -582,6 +604,13 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/issues">blinkgtk-dist
 <tr>
 <td>2026-10-25</td>
 <td>Dev Drive に展開すると初回も速い、の説明を足した</td>
+</tr>
+<tr>
+<td>2026-10-26</td>
+<td>Windows 1.2.5-build1
+での、load-failed・is-loading・set_user_agent・zoom_level
+の動作の確認の結果と、終了処理 (<code>blink_gtk_shutdown()</code>)
+の注意を足した</td>
 </tr>
 </tbody>
 </table>

@@ -299,21 +299,23 @@ returns</td>
 </tr>
 <tr>
 <td>Not at all</td>
-<td>It works (the <code>atexit</code> safety net catches it), but
-teardown is left to atexit and the <strong>order is
-non-deterministic</strong>. <strong>Not recommended</strong></td>
+<td>On Linux it works (the <code>atexit</code> safety net catches it),
+but teardown is left to atexit and the <strong>order is
+non-deterministic</strong>. <strong>Not recommended</strong>. <strong>On
+Windows up to 1.2.5-build1, the process takes more than 20 seconds to
+exit and ends abnormally</strong></td>
 </tr>
 </tbody>
 </table>
-<p>Nothing breaks if you skip it because an <code>atexit</code> handler
-is registered once<br />
+<p>On Linux, skipping it still worked because an <code>atexit</code>
+handler is registered once<br />
 <code>ContentMainRunner::Run</code> succeeds, so teardown happens
 automatically while the<br />
 AtExitManager is alive. That is also why existing applications that
 never<br />
-called it kept working. Even so, <strong>call it explicitly so the
-order<br />
-is deterministic</strong>.</p>
+called it kept working. On Windows this path ends abnormally during
+exit,<br />
+so <strong>call it explicitly on every OS</strong>.</p>
 </blockquote>
 <h3 id="0-pre-init-configuration">(0) Pre-init configuration</h3>
 <p>The header states explicitly that these must be called

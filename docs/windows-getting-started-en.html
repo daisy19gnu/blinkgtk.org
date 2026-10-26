@@ -329,7 +329,7 @@ the source of a minimal app and a batch file that builds it, in
 <li><p>The GPU document and the environment-variable document are in
 Japanese only (there are no English versions yet).</p></li>
 </ul>
-<p><strong>Three things to note.</strong></p>
+<p><strong>Four things to note.</strong></p>
 <ol type="1">
 <li><strong>Do not write your own forward declarations of the public
 API</strong> (Windows only). The headers declare it with
@@ -344,6 +344,13 @@ since 1.2.3-build2.</li>
 <code>blink_gtk_sandbox_init()</code> (Windows only; it cannot be called
 on Linux, so wrap it in <code>#ifdef G_OS_WIN32</code> when you share
 code between the two).</li>
+<li><strong>When the main loop returns, call
+<code>blink_gtk_shutdown()</code> before exiting.</strong> With Windows
+versions up to 1.2.5-build1, leaving it out makes the process take more
+than 20 seconds to exit, and it ends abnormally (from the next version
+(not yet released) it is done automatically, but calling it explicitly
+is still recommended). See "6. Shut down" at the end of the sample
+(<code>blinkgtk_browser-windows.c</code>) for where to call it.</li>
 </ol>
 <p>The public API has <strong>154 entry points</strong>. Of these 154,
 the only difference from Linux is one entry point:
@@ -375,13 +382,29 @@ Compare how vertical text and typesetting look on your own pages.</li>
 <code>"warichu:single-line"</code> (we checked that the answers match
 the actual behavior). If you wrote your own fallback on the assumption
 of FALSE, review it.</li>
-<li><strong>The Linux 1.2.5 changes are included</strong>: the
-<code>load-failed</code> error number is passed as an integer (int),
-<code>is-loading</code> returns to False when loading ends,
-<code>set_user_agent()</code> also applies to pages opened with
-<code>load_uri()</code> and to <code>reload()</code>, and the zoom level
-(<code>set_zoom_level()</code>) is a factor (1.0 = 100%). <strong>We
-have not checked the behavior of these on Windows.</strong></li>
+<li><strong>The Linux 1.2.5 changes are included, and we checked them on
+Windows too</strong> (2026-10-26, once each, on the 1.2.5-build1
+package):
+<ul>
+<li>The <code>load-failed</code> error number is passed as an integer
+(int). Checked: the argument is an integer, and <code>-3</code> is
+passed when a load is replaced by another page.</li>
+<li><code>is-loading</code> returns to false when loading ends. Checked:
+true and false are notified around a load.</li>
+<li><code>set_user_agent()</code> also applies to a page opened with
+<code>load_uri()</code> and to <code>reload()</code>. Checked:
+<code>navigator.userAgent</code> is the specified value after both.</li>
+<li>The zoom level (<code>set_zoom_level()</code>) is a factor (1.0 =
+100%). Checked: after setting 2.0, <code>get_zoom_level()</code> returns
+2.0 and <code>window.devicePixelRatio</code> doubles.</li>
+</ul></li>
+<li><strong>Check your shutdown code</strong> (for existing apps): check
+that your app calls <code>blink_gtk_shutdown()</code> after the main
+loop (<code>blink_gtk_run_main_loop()</code>) returns. If it does not,
+with Windows versions up to 1.2.5-build1 the process takes more than 20
+seconds to exit and ends abnormally. From the next version (not yet
+released) it is done automatically, but calling it explicitly is still
+recommended.</li>
 <li><strong>The public API did not change</strong> (still 154 entry
 points).</li>
 </ul>
@@ -601,6 +624,12 @@ slow</td>
 <td>2026-10-25</td>
 <td>Added a note that unpacking onto a Dev Drive makes the first start
 fast</td>
+</tr>
+<tr>
+<td>2026-10-26</td>
+<td>Added the results of checking load-failed, is-loading,
+set_user_agent and zoom_level on Windows 1.2.5-build1, and a note on
+shutdown (<code>blink_gtk_shutdown()</code>)</td>
 </tr>
 </tbody>
 </table>

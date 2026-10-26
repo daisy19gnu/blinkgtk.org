@@ -281,17 +281,22 @@ devel パッケージをすべて展開して確認)。現在配られている<
 </tr>
 <tr>
 <td>呼ばない</td>
-<td>動作はする(<code>atexit</code> の安全網が働く)が、teardown が atexit
-任せで<strong>順序が非決定的</strong>。<strong>非推奨</strong></td>
+<td>Linux では動作はする(<code>atexit</code> の安全網が働く)が、teardown
+が atexit
+任せで<strong>順序が非決定的</strong>。<strong>非推奨</strong>。<strong>Windows
+の 1.2.5-build1 までは、プロセスの終了に 20
+秒以上かかり、最後に異常終了する</strong></td>
 </tr>
 </tbody>
 </table>
-<p>未呼出でも壊れないのは、<code>ContentMainRunner::Run</code> 成功後に
-<code>atexit</code> ハンドラが登録されており、<br />
+<p>Linux で未呼出でも動いていたのは、<code>ContentMainRunner::Run</code>
+成功後に <code>atexit</code> ハンドラが登録されており、<br />
 AtExitManager 生存中に自動 teardown
 されるため。<code>blink_gtk_shutdown()</code>
 を呼んでいない既存のアプリが<br />
-動いていた理由もこれ。ただし<strong>順序が決定的になる明示呼び出しを推奨</strong>する。</p>
+動いていた理由もこれ。Windows
+ではこの経路が終了の途中で異常終了するので、<strong>どの OS
+でも明示的に呼ぶ</strong>。</p>
 </blockquote>
 <h3 id="0-init-前設定">(0) init 前設定</h3>
 <p>以下は <strong><code>blink_gtk_init()</code>

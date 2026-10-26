@@ -156,7 +156,9 @@ alt="画面が出ないとき" /></p>
 回しません</strong>。読み込みが確定しないので、いつまでも白いままです。</p>
 <p>厄介なのは、<strong>コンパイルも起動も通ってしまう</strong>ことです。エラーも警告も出ません。</p>
 <div class="sourceCode" id="cb3"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* こちらを回してください */</span></span>
-<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> blink_gtk_run_main_loop<span class="op">();</span></span></code></pre></div>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="dt">int</span> rc <span class="op">=</span> blink_gtk_run_main_loop<span class="op">();</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a>blink_gtk_shutdown<span class="op">();</span>  <span class="co">/* メインループが戻ったら片づけてから終わる */</span></span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a><span class="cf">return</span> rc<span class="op">;</span></span></code></pre></div>
 <p><code>GtkApplication</code>
 と組み合わせる場合は、<code>activate</code> で窓を出したあとに<br />
 <code>blink_gtk_run_main_loop()</code> を回します。書き方は<br />

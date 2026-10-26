@@ -221,6 +221,15 @@ alt="Lifecycle of a BlinkGTK application: point at the resources, blink_gtk_init
 <span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    blink_gtk_shutdown<span class="op">();</span></span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>Shutting down</strong>: when the main loop
+(<code>blink_gtk_application_run()</code> or
+<code>blink_gtk_run_main_loop()</code>)<br />
+returns, always call <code>blink_gtk_shutdown()</code> before
+<code>main()</code> ends. Without it, the clean-up is left<br />
+to the very end of the process (atexit). On Windows it cannot finish
+cleanly there, and the process<br />
+may take a long time to exit and then end abnormally. Use the same code
+on Linux too.</p>
 <p><strong>Note</strong>: <code>blink_web_view_new()</code> returns a
 <code>GtkWidget *</code>, but the BlinkGTK API takes a<br />
 <code>BlinkWebView *</code>. Cast with

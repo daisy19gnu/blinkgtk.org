@@ -213,7 +213,7 @@ GTK より先に呼びます。</em></p>
 <span id="cb6-21"><a href="#cb6-21" aria-hidden="true" tabindex="-1"></a><span class="co">     * g_application_run() ではそれが回らず、ページが読み込まれない</span></span>
 <span id="cb6-22"><a href="#cb6-22" aria-hidden="true" tabindex="-1"></a><span class="co">     * (navigation が commit しない)。blink_gtk_application_run() が</span></span>
 <span id="cb6-23"><a href="#cb6-23" aria-hidden="true" tabindex="-1"></a><span class="co">     * 正しい順序 (register → activate → BlinkGTK のループ) を代行し、</span></span>
-<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">     * 最後のウィンドウが閉じると自動で終了する。</span></span>
+<span id="cb6-24"><a href="#cb6-24" aria-hidden="true" tabindex="-1"></a><span class="co">     * 最後のウィンドウが閉じると、この関数から戻る。</span></span>
 <span id="cb6-25"><a href="#cb6-25" aria-hidden="true" tabindex="-1"></a><span class="co">     */</span></span>
 <span id="cb6-26"><a href="#cb6-26" aria-hidden="true" tabindex="-1"></a>    <span class="dt">int</span> status <span class="op">=</span> blink_gtk_application_run<span class="op">(</span>app<span class="op">);</span>   <span class="co">/* 1.2.0-build9 以降 */</span></span>
 <span id="cb6-27"><a href="#cb6-27" aria-hidden="true" tabindex="-1"></a>    g_object_unref<span class="op">(</span>app<span class="op">);</span></span>
@@ -221,6 +221,15 @@ GTK より先に呼びます。</em></p>
 <span id="cb6-29"><a href="#cb6-29" aria-hidden="true" tabindex="-1"></a>    blink_gtk_shutdown<span class="op">();</span></span>
 <span id="cb6-30"><a href="#cb6-30" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> status<span class="op">;</span></span>
 <span id="cb6-31"><a href="#cb6-31" aria-hidden="true" tabindex="-1"></a><span class="op">}</span></span></code></pre></div>
+<p><strong>終わり方</strong>: メインループ
+(<code>blink_gtk_application_run()</code> や
+<code>blink_gtk_run_main_loop()</code>) が戻ったら、<br />
+必ず <code>blink_gtk_shutdown()</code> を呼んでから <code>main()</code>
+を終えてください。呼ばずに終えると、片づけは<br />
+プロセスの終了の間際 (atexit) に回ります。Windows
+ではその時点では正しく片づけられず、<br />
+終わるまでに時間がかかったうえ、異常終了することがあります。Linux
+でも同じ書き方にしてください。</p>
 <p><strong>注意</strong>: <code>blink_web_view_new()</code> は
 <code>GtkWidget *</code> を返しますが、BlinkGTK の<br />
 API は <code>BlinkWebView *</code>
