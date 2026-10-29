@@ -250,13 +250,13 @@ symlink</td>
 </tbody>
 </table>
 <div class="sourceCode" id="cb4"><pre class="sourceCode sh"><code class="sourceCode bash"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co"># Fedora/RHEL (開発時は runtime + devel + gir)</span></span>
-<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.5-build2.fc45.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.2.5-build2.fc45.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.5-build2.fc45.x86_64.rpm</span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.5-build3.fc45.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-devel-1.2.5-build3.fc45.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.5-build3.fc45.x86_64.rpm</span>
 <span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a><span class="co"># Debian/Ubuntu</span></span>
-<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.5-build2-1_amd64.deb <span class="dt">\</span></span>
-<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                 ./libblinkgtk-0.1-dev_1.2.5-build2-1_amd64.deb</span></code></pre></div>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.5-build3-1_amd64.deb <span class="dt">\</span></span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>                 ./libblinkgtk-0.1-dev_1.2.5-build3-1_amd64.deb</span></code></pre></div>
 <p>devel パッケージが <code>blinkgtk-0.1.pc</code>
 を提供するため、導入後は下記 3.1 の pkg-config が<br />
 そのまま解決します（<code>.pc</code> の <code>Libs:</code> は FHS

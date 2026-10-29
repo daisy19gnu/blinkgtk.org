@@ -52,9 +52,9 @@ works at once (no administrator rights needed).<br />
 The API is nearly the same as the Linux version, so you can use the same
 code on both operating systems (the differences are collected in
 "Differences from the Linux version" below).</p>
-<p>This page describes <strong>v1.2.5-build1</strong> (Chromium
+<p>This page describes <strong>v1.2.5-build2</strong> (Chromium
 156.0.8078.47). We checked on Windows 11 Pro (build 26300), on
-2026-10-23, that it unpacks and runs.</p>
+2026-10-27, that it unpacks and runs.</p>
 <p><strong>Contents</strong>: <a href="#who-it-is-for">Who it is for</a>
 / <a href="#run-it">Run it</a> / <a href="#check-that-it-works">Check
 that it works</a> / <a href="#requirements">Requirements</a> / <a
@@ -168,7 +168,7 @@ it takes a long time and a lot of disk)</td>
 <h2 id="run-it">Run it</h2>
 <h3 id="1-download-and-unpack">1. Download and unpack</h3>
 <p>Get the ZIP files from the <a
-href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build1-windows"><code>v1.2.5-build1-windows</code>
+href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build2-windows"><code>v1.2.5-build2-windows</code>
 release of blinkgtk-dist</a>.</p>
 <table>
 <thead>
@@ -179,11 +179,11 @@ release of blinkgtk-dist</a>.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>blinkgtk-1.2.5-build1-windows-x64.zip</code></td>
+<td><code>blinkgtk-1.2.5-build2-windows-x64.zip</code></td>
 <td><strong>To run it</strong> (portable). Start with this one</td>
 </tr>
 <tr>
-<td><code>blinkgtk-devel-1.2.5-build1-windows-x64.zip</code></td>
+<td><code>blinkgtk-devel-1.2.5-build2-windows-x64.zip</code></td>
 <td><strong>To embed it</strong> (headers and libraries; see <a
 href="#embedding-it-in-your-app">Embedding it in your app</a>)</td>
 </tr>
@@ -232,7 +232,7 @@ folder and <strong>double-click
 <p>To open a page of your choice, use a Command Prompt (search for "cmd"
 in the Start menu), move to the <code>bin</code> folder of the unpacked
 folder, and run:</p>
-<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.5-build1-windows-x64\bin&quot;
+<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.5-build2-windows-x64\bin&quot;
 blinkgtk_browser.exe https://example.com/</code></pre>
 <p>The <code>C:\BlinkGTK\...</code> on the first line is an example.
 <strong>Replace it with the actual path where you unpacked it</strong>
@@ -252,7 +252,7 @@ alt="blinkgtk_browser showing the Google home page" /></p></li>
 than the numbers on the site or in the documents.</p></li>
 </ul>
 <pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.5-build1 (Chromium 156.0.8078.47)</code></pre>
+BlinkGTK 1.2.5-build2 (Chromium 156.0.8078.47)</code></pre>
 <ul>
 <li>If nothing appears, the window stays white, or it exits at once, see
 <a href="#if-something-goes-wrong">If something goes wrong</a>.</li>
@@ -293,7 +293,7 @@ count in units of 1,000,000 bytes show 396 MB.</p>
 <hr />
 <h2 id="embedding-it-in-your-app">Embedding it in your app</h2>
 <p>The devel ZIP
-(<code>blinkgtk-devel-1.2.5-build1-windows-x64.zip</code>) contains the
+(<code>blinkgtk-devel-1.2.5-build2-windows-x64.zip</code>) contains the
 public API headers, the import libraries and the GTK4 development
 files.</p>
 <ul>
@@ -347,9 +347,9 @@ code between the two).</li>
 <li><strong>When the main loop returns, call
 <code>blink_gtk_shutdown()</code> before exiting.</strong> With Windows
 versions up to 1.2.5-build1, leaving it out makes the process take more
-than 20 seconds to exit, and it ends abnormally (from the next version
-(not yet released) it is done automatically, but calling it explicitly
-is still recommended). See "6. Shut down" at the end of the sample
+than 20 seconds to exit, and it ends abnormally (from 1.2.5-build2 it is
+done automatically, but calling it explicitly is still recommended). See
+"6. Shut down" at the end of the sample
 (<code>blinkgtk_browser-windows.c</code>) for where to call it.</li>
 </ol>
 <p>The public API has <strong>154 entry points</strong>. Of these 154,
@@ -372,6 +372,42 @@ with the headers and libraries from the new devel ZIP (compatibility
 with the previous <code>blinkgtk.dll</code> was not checked).</li>
 </ol>
 <p>Notes for each version:</p>
+<p><strong>From 1.2.5-build1 to 1.2.5-build2:</strong></p>
+<ul>
+<li><strong>Chromium stays at 156.0.8078.47.</strong> There are no
+changes to the typesetting and layout engine.</li>
+<li><strong>The page color scheme now follows the light/dark setting of
+the GTK theme</strong> (default). This covers the page's
+<code>prefers-color-scheme</code>. Set the environment variable
+<code>BLINKGTK_FOLLOW_GTK_THEME=0</code> to go back to always-light
+pages. Checked, with one page that switches colors by
+<code>prefers-color-scheme</code>: with
+<code>GTK_THEME=Adwaita:dark</code> the page is dark, with
+<code>GTK_THEME=Adwaita</code> it is light, and with <code>0</code> it
+stays light even under <code>Adwaita:dark</code> (Windows 11 Pro, one
+Intel Iris Xe machine, 2026-10-27). We did not check on Windows: the
+background of pages that do not specify <code>color-scheme</code>,
+standard parts such as scrollbars, or whether GTK follows the light/dark
+setting of the Windows system.</li>
+<li><strong>The shutdown when the main loop returns is now done
+automatically.</strong> Up to 1.2.5-build1, leaving out
+<code>blink_gtk_shutdown()</code> made the process take more than 20
+seconds to exit and end abnormally. Checked: the 1.2.5-build1 sample,
+which does not call it, run with the 1.2.5-build2 DLLs exits in about 1
+second with exit code 0 when it opens <code>about:blank</code> and its
+window is closed (one Intel Iris Xe machine, one run). Calling it
+explicitly is still recommended (calling it twice is safe). To stop the
+automatic shutdown, set <code>BLINKGTK_NO_AUTO_SHUTDOWN=1</code>.</li>
+<li><strong>The ZIP now contains
+<code>bin\blinkgtk_subprocess.exe</code>.</strong> It is the executable
+that BlinkGTK uses for child processes only when the main program does
+not link <code>blinkgtk.dll</code> directly. Normal apps that link
+<code>blinkgtk.dll</code> directly, such as
+<code>blinkgtk_browser.exe</code>, do not use it, and it is not meant to
+be run directly.</li>
+<li><strong>The public API did not change</strong> (still 154 entry
+points).</li>
+</ul>
 <p><strong>From 1.2.4-build4 to 1.2.5-build1:</strong></p>
 <ul>
 <li><strong>Chromium moved from 155 to 156</strong> (156.0.8078.47).
@@ -402,9 +438,8 @@ true and false are notified around a load.</li>
 that your app calls <code>blink_gtk_shutdown()</code> after the main
 loop (<code>blink_gtk_run_main_loop()</code>) returns. If it does not,
 with Windows versions up to 1.2.5-build1 the process takes more than 20
-seconds to exit and ends abnormally. From the next version (not yet
-released) it is done automatically, but calling it explicitly is still
-recommended.</li>
+seconds to exit and ends abnormally. From 1.2.5-build2 it is done
+automatically, but calling it explicitly is still recommended.</li>
 <li><strong>The public API did not change</strong> (still 154 entry
 points).</li>
 </ul>
@@ -630,6 +665,17 @@ fast</td>
 <td>Added the results of checking load-failed, is-loading,
 set_user_agent and zoom_level on Windows 1.2.5-build1, and a note on
 shutdown (<code>blink_gtk_shutdown()</code>)</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>The automatic shutdown is now stated as available from
+1.2.5-build2</td>
+</tr>
+<tr>
+<td>2026-10-27</td>
+<td>Updated for 1.2.5-build2: version numbers and file names; added the
+"From 1.2.5-build1 to 1.2.5-build2" notes (theme following, automatic
+shutdown, the child-process executable)</td>
 </tr>
 </tbody>
 </table>

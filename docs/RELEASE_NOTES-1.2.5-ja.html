@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.5-build2 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.5-build3 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-10-27 / Chromium: 156.0.8078.47 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-10-29 / Chromium: 156.0.8078.73 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.5-build2 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-10-27 / Chromium: 156.0.8078.47 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.5-build3 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-10-29 / Chromium: 156.0.8078.73 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -108,14 +108,25 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="RELEASE_NOTES-1.2.5-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-125-build2-リリースノート">BlinkGTK 1.2.5-build2
+<h1 id="blinkgtk-125-build3-リリースノート">BlinkGTK 1.2.5-build3
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-10-27 / <strong>Chromium</strong>:
-156.0.8078.47 / 言語: 日本語 | <a
+<p><strong>リリース日</strong>: 2026-10-29 / <strong>Chromium</strong>:
+156.0.8078.73 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.5-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 156</strong>
 に更新しました。あわせて、<strong>Python (PyGObject) から BlinkGTK
 を使えるようになりました</strong>。</p>
+<h2 id="build3-セキュリティ更新">build3: セキュリティ更新</h2>
+<p>Chromium <strong>156.0.8078.73</strong>
+に更新し、上流のセキュリティ修正を取り込みました。<br />
+この build3 は Linux 向けパッケージです (例:
+<code>blinkgtk-1.2.5-build3-linux-x86_64.tar.gz</code>)。</p>
+<h2 id="gpu-モードの確認状況">GPU モードの確認状況</h2>
+<p>ヘッドレスの Sway 1.12 で software・swiftshader・egl
+の各モードを起動しました。3 モードとも FATAL・NOTREACHED・クラッシュは 0
+件で、描画データの配送を確認しました。EGL は <code>deliver_dmabuf</code>
+を確認しています。この環境では Mutter
+による確認と、画面を見た状態での最終確認は行っていません。</p>
 <hr />
 <h2 id="以前の版から上げる方へ">以前の版から上げる方へ</h2>
 <p>使い方に当たる行を確かめてください。詳しい説明は各行のリンク先にあります。</p>
