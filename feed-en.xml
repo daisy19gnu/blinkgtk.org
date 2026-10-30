@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-10-29T00:00:00Z</updated>
+  <updated>2026-10-30T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>BlinkGTK for Windows v1.2.5-build3 released</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build3-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-10-30-windows-125-build3:en</id>
+    <updated>2026-10-30T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Updated BlinkGTK for Windows to Chromium 156.0.8078.73 with upstream security fixes. The portable and devel ZIPs are available.</summary>
+  </entry>
   <entry>
     <title>v1.2.5-build3 released (Chromium 156.0.8078.73 security fixes)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build3"/>
