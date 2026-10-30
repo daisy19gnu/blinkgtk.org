@@ -51,9 +51,10 @@ ZIP を展開して <code>bin\blinkgtk_browser.exe</code>
 を実行すれば、すぐに動きます (管理者権限は要りません)。<br />
 Linux 版とほぼ同じ API で、同じコードを両方の OS で使えます
 (違いは、下の「Linux 版との違い」にまとめました)。</p>
-<p>この頁は <strong>v1.2.5-build2</strong> (Chromium 156.0.8078.47)
-の内容です。Windows 11 Pro (build 26300) で、展開して実行するところまで
-2026-10-27 に確かめました。</p>
+<p>この頁は <strong>v1.2.5-build3</strong> (Chromium 156.0.8078.73)
+の内容です。Windows 11 Pro (build 26300) で、2026-10-30 にビルドと
+API・描画・表示経路の検査を行いました。ZIP
+自体の展開・起動確認も、最終パッケージの検査で確認しています。</p>
 <p><strong>目次</strong>: <a href="#どんな方向けか">どんな方向けか</a> /
 <a href="#動かす">動かす</a> / <a
 href="#動いたか確かめる">動いたか確かめる</a> / <a
@@ -162,8 +163,8 @@ Linux でも動く C と C++ の API、Electron は JavaScript
 <h2 id="動かす">動かす</h2>
 <h3 id="1-ダウンロードして展開する">1. ダウンロードして展開する</h3>
 <p><a
-href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build2-windows">blinkgtk-dist
-の <code>v1.2.5-build2-windows</code> のリリース</a> から、ZIP
+href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build3-windows">blinkgtk-dist
+の <code>v1.2.5-build3-windows</code> のリリース</a> から、ZIP
 を取得します。</p>
 <table>
 <thead>
@@ -174,11 +175,11 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build2-win
 </thead>
 <tbody>
 <tr>
-<td><code>blinkgtk-1.2.5-build2-windows-x64.zip</code></td>
+<td><code>blinkgtk-1.2.5-build3-windows-x64.zip</code></td>
 <td><strong>動かす用</strong> (portable)。まずこちら</td>
 </tr>
 <tr>
-<td><code>blinkgtk-devel-1.2.5-build2-windows-x64.zip</code></td>
+<td><code>blinkgtk-devel-1.2.5-build3-windows-x64.zip</code></td>
 <td><strong>組み込む用</strong> (ヘッダとライブラリ。<a
 href="#組み込む方">組み込む方</a>)</td>
 </tr>
@@ -196,7 +197,9 @@ DLL も入っているので、別に入れるものはありません。イン�
 alt="展開したフォルダ。bin、docs、share の 3 つのフォルダができている" /></p>
 <p><em>展開すると、<code>bin</code> (実行ファイルと
 DLL)、<code>docs</code> (文書)、<code>share</code> (GTK4 のデータ) の 3
-つができます。</em></p>
+つのフォルダと、ライセンス文
+(<code>LICENSE.chromium</code>、<code>LICENSE.blinkgtk</code>、<code>THIRD_PARTY_NOTICES.html</code>)
+ができます。</em></p>
 <h3 id="2-初回は警告が出ることがあります">2.
 初回は警告が出ることがあります</h3>
 <p>この配布物にはコード署名がありません。ブラウザで取得して実行すると、Microsoft
@@ -229,7 +232,7 @@ href="https://learn.microsoft.com/ja-jp/windows/dev-drive/">Microsoft
 <p>開きたいページを指定するときは、コマンドプロンプト
 (スタートメニューで「cmd」を検索) で、展開したフォルダの
 <code>bin</code> へ移ってから実行します。</p>
-<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.5-build2-windows-x64\bin&quot;
+<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.5-build3-windows-x64\bin&quot;
 blinkgtk_browser.exe https://example.com/</code></pre>
 <p>1 行目の <code>C:\BlinkGTK\...</code>
 は例です。<strong>自分が展開した先の実際のパスに置き換えてください</strong>
@@ -248,7 +251,7 @@ alt="blinkgtk_browser が Google のトップページを表示している画�
 <li><p>手元のものの版は、実行ファイルが答えます。サイトや文書の数字ではなく、これを見てください。</p></li>
 </ul>
 <pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.5-build2 (Chromium 156.0.8078.47)</code></pre>
+BlinkGTK 1.2.5-build3 (Chromium 156.0.8078.73)</code></pre>
 <ul>
 <li>表示されない、白いまま、起動してすぐ終わる、などのときは、<a
 href="#困ったとき">困ったとき</a>へ。</li>
@@ -269,7 +272,7 @@ Pro</strong> (build 26200 と 26300) で、Windows 10
 </tr>
 <tr>
 <td>空き容量</td>
-<td>約 1.4 GiB (ZIP 378 MiB + 展開後 約 1,051
+<td>約 1.4 GiB (ZIP 379 MiB + 展開後 約 1,056
 MiB。展開中は両方必要)</td>
 </tr>
 <tr>
@@ -283,12 +286,12 @@ MiB。展開中は両方必要)</td>
 </tr>
 </tbody>
 </table>
-<p>GitHub の Releases の画面は、同じ ZIP を「378
-MB」と表示します。1,000,000 バイト単位で数えるツールでは 396 MB
+<p>GitHub の Releases の画面は、同じ ZIP を「379
+MB」と表示します。1,000,000 バイト単位で数えるツールでは 397 MB
 と出ます。</p>
 <hr />
 <h2 id="組み込む方">組み込む方</h2>
-<p>devel ZIP (<code>blinkgtk-devel-1.2.5-build2-windows-x64.zip</code>)
+<p>devel ZIP (<code>blinkgtk-devel-1.2.5-build3-windows-x64.zip</code>)
 に、公開 API のヘッダ、インポートライブラリ、GTK4
 の開発用ファイルが入っています。</p>
 <ul>
@@ -364,6 +367,15 @@ alt="Visual Studio Installer の「変更」の画面。左の一覧の「C++ �
 <code>blinkgtk.dll</code> との互換は確かめていません)。</li>
 </ol>
 <p>版ごとの注意は、次のとおりです。</p>
+<p><strong>1.2.5-build2 から 1.2.5-build3 へ上げる場合:</strong></p>
+<ul>
+<li><strong>Chromium を 156.0.8078.47 から 156.0.8078.73
+に更新し、セキュリティ修正を取り込みました。</strong> 以前の Windows
+版をご利用の方は、上の共通の手順で更新してください。</li>
+<li>build2
+のテーマ追従、自動終了処理、子プロセス用の実行ファイルは引き続き含みます。設定の説明は、下の
+build1 から build2 への注意を参照してください。</li>
+</ul>
 <p><strong>1.2.5-build1 から 1.2.5-build2 へ上げる場合:</strong></p>
 <ul>
 <li><strong>Chromium は 156.0.8078.47 のままです。</strong>
@@ -655,6 +667,11 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/issues">blinkgtk-dist
 <td>1.2.5-build2 に更新した: 版数・ファイル名、上げる手順に 1.2.5-build1
 からの項 (テーマ追従、自動の終了処理、子プロセス用の実行ファイル)
 を追加</td>
+</tr>
+<tr>
+<td>2026-10-30</td>
+<td>1.2.5-build3 に更新した: Chromium 156.0.8078.73
+のセキュリティ更新、前版からの更新手順、ライセンス文書の案内</td>
 </tr>
 </tbody>
 </table>
