@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-10-30T00:00:00Z</updated>
+  <updated>2026-11-01T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.5-build4 を公開しました (Chromium 156.0.8078.79 のセキュリティ修正 21 件)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build4"/>
+    <id>tag:blinkgtk.org,2026:2026-11-01-build4-125:ja</id>
+    <updated>2026-11-01T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Chromium 156.0.8078.79 に更新し、セキュリティ修正 21 件 (Critical 1 件・High 19 件・Medium 1 件) を取り込みました。使い方の変更はありません。このうち File System Access に関わる 4 件は次の版 (build5) から有効になります。CVE の一覧はリンク先の頁にあります。</summary>
+  </entry>
   <entry>
     <title>BlinkGTK for Windows v1.2.5-build3 を公開しました</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build3-windows"/>

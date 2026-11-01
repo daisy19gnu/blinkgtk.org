@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.5-build3 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.5-build4 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -88,11 +88,11 @@
     code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="リリース日: 2026-10-29 / Chromium: 156.0.8078.73 / 言語: 日本語 | English">
+<meta name="description" content="リリース日: 2026-11-01 / Chromium: 156.0.8078.79 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.5-build3 リリースノート — BlinkGTK">
-<meta property="og:description" content="リリース日: 2026-10-29 / Chromium: 156.0.8078.73 / 言語: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.5-build4 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-11-01 / Chromium: 156.0.8078.79 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -108,19 +108,162 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="RELEASE_NOTES-1.2.5-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-125-build3-リリースノート">BlinkGTK 1.2.5-build3
+<h1 id="blinkgtk-125-build4-リリースノート">BlinkGTK 1.2.5-build4
 リリースノート</h1>
-<p><strong>リリース日</strong>: 2026-10-29 / <strong>Chromium</strong>:
-156.0.8078.73 / 言語: 日本語 | <a
+<p><strong>リリース日</strong>: 2026-11-01 / <strong>Chromium</strong>:
+156.0.8078.79 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.5-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 156</strong>
 に更新しました。あわせて、<strong>Python (PyGObject) から BlinkGTK
 を使えるようになりました</strong>。</p>
+<h2 id="build4-セキュリティ更新">build4: セキュリティ更新</h2>
+<p>Chromium <strong>156.0.8078.79</strong> に更新し、Chromium
+のセキュリティ修正 <strong>21 件</strong> (Critical 1 件・High 19
+件・Medium 1 件)
+を取り込みました。使い方の変更はありません。1.2.5-build3
+以前を使っている方は、この版へ上げてください。<br />
+このうち FileSystem の 4 件
+(CVE-2026-76025・CVE-2026-76028・CVE-2026-76030・CVE-2026-119272)
+は、BlinkGTK では次の版 (build5) から有効になります
+(下の一覧の後の説明を見てください)。<br />
+この build4 は Linux 向けパッケージです (例:
+<code>blinkgtk-1.2.5-build4-linux-x86_64.tar.gz</code>)。</p>
+<p>修正の一覧は Chromium の公式の発表 (<a
+href="https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02107719452.html">Stable
+Channel Update for Desktop、2026-10-29</a>) のとおりです。Chromium
+の修正なので、BlinkGTK で使っていない部品のもの (例: 自動入力)
+も含みます。1 件ずつ BlinkGTK に当てはまるかは確かめていません。</p>
+<details>
+<summary>CVE の一覧 (21 件)</summary>
+
+<table>
+<thead>
+<tr>
+<th>CVE</th>
+<th>重大度</th>
+<th>内容 (公式の発表の文言)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CVE-2026-76024</td>
+<td>Critical</td>
+<td>Memory corruption in MediaStream</td>
+</tr>
+<tr>
+<td>CVE-2026-76025</td>
+<td>High</td>
+<td>Use after free in FileSystem</td>
+</tr>
+<tr>
+<td>CVE-2026-76026</td>
+<td>High</td>
+<td>Memory corruption in Autofill</td>
+</tr>
+<tr>
+<td>CVE-2026-76027</td>
+<td>High</td>
+<td>Memory corruption in CacheStorage</td>
+</tr>
+<tr>
+<td>CVE-2026-76028</td>
+<td>High</td>
+<td>Use after free in FileSystem</td>
+</tr>
+<tr>
+<td>CVE-2026-76029</td>
+<td>High</td>
+<td>Memory corruption in Network</td>
+</tr>
+<tr>
+<td>CVE-2026-76030</td>
+<td>High</td>
+<td>Memory corruption in FileSystem</td>
+</tr>
+<tr>
+<td>CVE-2026-76031</td>
+<td>High</td>
+<td>Use after free in Input</td>
+</tr>
+<tr>
+<td>CVE-2026-119260</td>
+<td>High</td>
+<td>Use after free in Frames</td>
+</tr>
+<tr>
+<td>CVE-2026-119261</td>
+<td>High</td>
+<td>Improper input validation in Skia</td>
+</tr>
+<tr>
+<td>CVE-2026-119262</td>
+<td>High</td>
+<td>Improper input validation in V8</td>
+</tr>
+<tr>
+<td>CVE-2026-119263</td>
+<td>High</td>
+<td>Memory corruption in GarbageCollection</td>
+</tr>
+<tr>
+<td>CVE-2026-119264</td>
+<td>High</td>
+<td>Memory corruption in Dawn</td>
+</tr>
+<tr>
+<td>CVE-2026-119265</td>
+<td>High</td>
+<td>Memory corruption in Quota</td>
+</tr>
+<tr>
+<td>CVE-2026-119266</td>
+<td>High</td>
+<td>Use after free in Quota</td>
+</tr>
+<tr>
+<td>CVE-2026-119267</td>
+<td>High</td>
+<td>Memory corruption in DOM</td>
+</tr>
+<tr>
+<td>CVE-2026-119268</td>
+<td>High</td>
+<td>Integer overflow in Editing</td>
+</tr>
+<tr>
+<td>CVE-2026-119269</td>
+<td>High</td>
+<td>Use after free in Blink</td>
+</tr>
+<tr>
+<td>CVE-2026-119270</td>
+<td>High</td>
+<td>Improper input validation in CacheStorage</td>
+</tr>
+<tr>
+<td>CVE-2026-119271</td>
+<td>High</td>
+<td>Use after free in Skia</td>
+</tr>
+<tr>
+<td>CVE-2026-119272</td>
+<td>Medium</td>
+<td>Out of bounds read in FileSystem</td>
+</tr>
+</tbody>
+</table>
+</details>
+
+<p>File System Access (<code>showOpenFilePicker()</code>
+などのファイルを扱う API)
+で、ホームの設定のディレクトリのような開いてはいけない場所を止める確認は、次の版
+(build5) で入れます。上の一覧の FileSystem の 4 件は、Chromium
+のこの確認の一覧に場所を足す修正で、BlinkGTK
+には次の版で同じ確認を入れることで届きます。</p>
 <h2 id="build3-セキュリティ更新">build3: セキュリティ更新</h2>
 <p>Chromium <strong>156.0.8078.73</strong>
 に更新し、上流のセキュリティ修正を取り込みました。<br />
-この build3 は Linux 向けパッケージです (例:
-<code>blinkgtk-1.2.5-build3-linux-x86_64.tar.gz</code>)。</p>
+この build3 は Linux 向けパッケージです。</p>
 <h2 id="gpu-モードの確認状況">GPU モードの確認状況</h2>
 <p>ヘッドレスの Sway 1.12 で software・swiftshader・egl
 の各モードを起動しました。3 モードとも FATAL・NOTREACHED・クラッシュは 0

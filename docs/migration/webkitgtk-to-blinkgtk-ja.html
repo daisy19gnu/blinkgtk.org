@@ -456,14 +456,17 @@ API</a></p>
 <tr>
 <td><code>WebKitDownload</code> (<code>decide-policy</code> 等)</td>
 <td><code>blink_web_view_set_download_handler()</code></td>
-<td><strong>未配線</strong> — 登録できるが呼ばれない (<a
-href="../api-reference/ui-handlers-api-ja.html">現状</a>。対応予定)</td>
+<td>1.2.3-build2 から動作。進み具合と完了は
+<code>download-started</code> シグナルの <code>BlinkDownload</code>
+で受け取る (<a
+href="../api-reference/ui-handlers-api-ja.html#ダウンロード">詳細</a>)</td>
 </tr>
 <tr>
 <td><code>authenticate</code> シグナル</td>
 <td><code>blink_web_view_set_auth_handler()</code></td>
-<td><strong>未配線</strong> — 登録できるが呼ばれない (<a
-href="../api-reference/ui-handlers-api-ja.html">現状</a>。対応予定)</td>
+<td>1.2.3-build2 から動作。応答は
+<code>blink_web_view_auth_response()</code> (<a
+href="../api-reference/ui-handlers-api-ja.html#http-認証">詳細</a>)</td>
 </tr>
 <tr>
 <td>TLS エラーポリシー</td>

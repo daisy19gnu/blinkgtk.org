@@ -467,16 +467,17 @@ integration API</a></p>
 <tr>
 <td><code>WebKitDownload</code> (<code>decide-policy</code> etc.)</td>
 <td><code>blink_web_view_set_download_handler()</code></td>
-<td><strong>Not wired</strong> — can be registered but is never called
-(<a href="../api-reference/ui-handlers-api-en.html">status</a>;
-planned)</td>
+<td>Works since 1.2.3-build2. Progress and completion come through the
+<code>BlinkDownload</code> of the <code>download-started</code> signal
+(<a
+href="../api-reference/ui-handlers-api-en.html#downloads">details</a>)</td>
 </tr>
 <tr>
 <td><code>authenticate</code> signal</td>
 <td><code>blink_web_view_set_auth_handler()</code></td>
-<td><strong>Not wired</strong> — can be registered but is never called
-(<a href="../api-reference/ui-handlers-api-en.html">status</a>;
-planned)</td>
+<td>Works since 1.2.3-build2. Respond with
+<code>blink_web_view_auth_response()</code> (<a
+href="../api-reference/ui-handlers-api-en.html#http-authentication">details</a>)</td>
 </tr>
 <tr>
 <td>TLS error policy</td>
