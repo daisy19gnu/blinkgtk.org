@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.5-build4 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.5-build5 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -91,7 +91,7 @@
 <meta name="description" content="リリース日: 2026-11-01 / Chromium: 156.0.8078.79 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.5-build4 リリースノート — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.5-build5 リリースノート — BlinkGTK">
 <meta property="og:description" content="リリース日: 2026-11-01 / Chromium: 156.0.8078.79 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -108,7 +108,7 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="RELEASE_NOTES-1.2.5-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-125-build4-リリースノート">BlinkGTK 1.2.5-build4
+<h1 id="blinkgtk-125-build5-リリースノート">BlinkGTK 1.2.5-build5
 リリースノート</h1>
 <p><strong>リリース日</strong>: 2026-11-01 / <strong>Chromium</strong>:
 156.0.8078.79 / 言語: 日本語 | <a
@@ -116,18 +116,80 @@ href="RELEASE_NOTES-1.2.5-en.html">English</a></p>
 <p>レンダリングエンジンを <strong>Chromium 156</strong>
 に更新しました。あわせて、<strong>Python (PyGObject) から BlinkGTK
 を使えるようになりました</strong>。</p>
+<h2 id="build5-ファイルを扱う-api-の修正">build5: ファイルを扱う API
+の修正</h2>
+<p>この build5 は Linux 向けパッケージです (例:
+<code>blinkgtk-1.2.5-build5-linux-x86_64.tar.gz</code>)。Chromium は
+build4 と同じ 156.0.8078.79 です。</p>
+<ul>
+<li><strong>ページがファイルを選ぶ API
+を呼ぶと、アプリが異常終了する問題を修正しました。</strong>
+build2〜build4 で、ページが <code>showOpenFilePicker()</code> や
+<code>showDirectoryPicker()</code> を呼ぶと、BlinkGTK
+を使うアプリ全体が異常終了していました。build1 以前では起きません</li>
+<li><strong>File System Access
+で、開いてはいけない場所を止めるようにしました。</strong>
+ページがファイルを選ぶ画面やドラッグ・アンド・ドロップで受け取った場所が、ホームの設定のディレクトリ
+(<code>~/.ssh</code>・<code>~/.config</code>
+など)、<code>/etc</code>・<code>/dev</code>
+などのシステムの場所、BlinkGTK 自身とその profile
+の中であれば、ページには渡しません
+(ページには選ぶのを取りやめたときと同じ結果が返ります)。ホーム・デスクトップ・文書・ダウンロードのディレクトリそのものも渡しませんが、その中のファイルやディレクトリは今までどおり使えます。build4
+の一覧の FileSystem の 4 件
+(CVE-2026-76025・CVE-2026-76028・CVE-2026-76030・CVE-2026-119272)
+は、この版から BlinkGTK でも有効です</li>
+<li><strong>build2 で入れた起動の短縮のうち 1 つを外しました。</strong>
+共有ライブラリの読み込みでシンボルの検索を減らす指定が、上の異常終了の原因だったためです。起動はその分だけ遅くなります
+(下の表)。次の版以降で、原因を取り除いた形で入れ直します。ほかの 3 つ
+(子プロセスの準備を待たない・使わない GPU の装置の確認を省く・Vulkan
+のドライバを在る GPU のものに絞る) はそのままです</li>
+</ul>
+<p>起動の時間 (Intel Core i5-10310U・Fedora 45 の機械 1 台、WebView 1
+つの最小の試験プログラム、交互に 8 回ずつの中央値、2026-11-01 測定):</p>
+<table>
+<thead>
+<tr>
+<th>区切り</th>
+<th>build4</th>
+<th>build5</th>
+<th>差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>初期化 (<code>blink_gtk_init()</code>) が終わるまで</td>
+<td>278 ms</td>
+<td>552 ms</td>
+<td>+274 ms</td>
+</tr>
+<tr>
+<td>窓の最初の描画</td>
+<td>557 ms</td>
+<td>836 ms</td>
+<td>+279 ms</td>
+</tr>
+<tr>
+<td>頁の読み込みの完了</td>
+<td>713 ms</td>
+<td>1,346 ms</td>
+<td>+633 ms</td>
+</tr>
+</tbody>
+</table>
+<p>測ったのは 1 台・1
+つの頁です。機械や頁によって差の大きさは変わります。</p>
 <h2 id="build4-セキュリティ更新">build4: セキュリティ更新</h2>
 <p>Chromium <strong>156.0.8078.79</strong> に更新し、Chromium
 のセキュリティ修正 <strong>21 件</strong> (Critical 1 件・High 19
 件・Medium 1 件)
-を取り込みました。使い方の変更はありません。1.2.5-build3
-以前を使っている方は、この版へ上げてください。<br />
+を取り込みました。使い方の変更はありません。今から上げる方は、このセキュリティ修正も含む
+build5 へ上げてください (<a
+href="#build5-ファイルを扱う-api-の修正">build5 の説明</a>)。<br />
 このうち FileSystem の 4 件
 (CVE-2026-76025・CVE-2026-76028・CVE-2026-76030・CVE-2026-119272)
-は、BlinkGTK では次の版 (build5) から有効になります
-(下の一覧の後の説明を見てください)。<br />
-この build4 は Linux 向けパッケージです (例:
-<code>blinkgtk-1.2.5-build4-linux-x86_64.tar.gz</code>)。</p>
+は、build4 では BlinkGTK に届いておらず、build5 から有効です (<a
+href="#build5-ファイルを扱う-api-の修正">build5 の説明</a>)。<br />
+この build4 は Linux 向けパッケージです。</p>
 <p>修正の一覧は Chromium の公式の発表 (<a
 href="https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02107719452.html">Stable
 Channel Update for Desktop、2026-10-29</a>) のとおりです。Chromium
@@ -256,10 +318,11 @@ Channel Update for Desktop、2026-10-29</a>) のとおりです。Chromium
 
 <p>File System Access (<code>showOpenFilePicker()</code>
 などのファイルを扱う API)
-で、ホームの設定のディレクトリのような開いてはいけない場所を止める確認は、次の版
-(build5) で入れます。上の一覧の FileSystem の 4 件は、Chromium
-のこの確認の一覧に場所を足す修正で、BlinkGTK
-には次の版で同じ確認を入れることで届きます。</p>
+で、ホームの設定のディレクトリのような開いてはいけない場所を止める確認は、build5
+で入れました (<a href="#build5-ファイルを扱う-api-の修正">build5
+の説明</a>)。上の一覧の FileSystem の 4 件は、Chromium
+のこの確認の一覧に場所を足す修正で、BlinkGTK には build5
+で同じ確認を入れたことで届きました。</p>
 <h2 id="build3-セキュリティ更新">build3: セキュリティ更新</h2>
 <p>Chromium <strong>156.0.8078.73</strong>
 に更新し、上流のセキュリティ修正を取り込みました。<br />
@@ -273,9 +336,11 @@ Channel Update for Desktop、2026-10-29</a>) のとおりです。Chromium
 <hr />
 <h2 id="以前の版から上げる方へ">以前の版から上げる方へ</h2>
 <p>使い方に当たる行を確かめてください。詳しい説明は各行のリンク先にあります。</p>
-<p>1.2.5-build1 から上げる方は、表の「GTK のテーマを dark
-にしているアプリ」の行を確かめてください (build2
-で変わった点)。それ以外の行は 1.2.4 から上げる方向けです。</p>
+<p>1.2.5-build2〜build4 から上げる方は、表の最初の 2 行 (build5
+で変わった点) を確かめてください。1.2.5-build1 から上げる方は、その 2
+行に加えて「GTK のテーマを dark にしているアプリ」の行 (build2
+で変わった点) も確かめてください。それ以外の行は 1.2.4
+から上げる方向けです。</p>
 <p>この表は Linux 版のものです。BlinkGTK for Windows の方は <a
 href="https://blinkgtk.org/docs/windows-getting-started-ja.html#前の版から上げる方">Windows
 版の「前の版から上げる方」</a> を確かめてください。</p>
@@ -288,6 +353,24 @@ href="https://blinkgtk.org/docs/windows-getting-started-ja.html#前の版から�
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>起動の速さを気にするアプリ (build2〜build4 から上げる場合)</td>
+<td>起動が少し遅くなる (この版の測定で、窓の最初の描画まで約 0.3
+秒、頁の読み込みの完了まで約 0.6 秒)</td>
+<td>不要。次の版以降で起動の短縮を入れ直す予定 (<a
+href="#build5-ファイルを扱う-api-の修正">詳細</a>)</td>
+</tr>
+<tr>
+<td>ページの File System Access
+(<code>showOpenFilePicker()</code>・<code>showDirectoryPicker()</code>・ドラッグ・アンド・ドロップ)
+を使う</td>
+<td>ホームの設定のディレクトリ・システムの場所・BlinkGTK の profile
+などを選ぶと、ページには選ぶのを取りやめたときと同じ結果が返る。build2〜build4
+では、これらの API を呼ぶとアプリが異常終了していた</td>
+<td>ふつうの場所 (ホームの下の文書など)
+を扱うページは不要。上の場所を扱う必要があるなら、ページからではなくアプリの側で扱う
+(<a href="#build5-ファイルを扱う-api-の修正">詳細</a>)</td>
+</tr>
 <tr>
 <td>Python (PyGObject) から使う</td>
 <td>起動できるようになる (1.2.4 までは起動できなかった)</td>

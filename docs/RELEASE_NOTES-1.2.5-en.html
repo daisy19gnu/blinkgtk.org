@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.5-build4 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.5-build5 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -91,7 +91,7 @@
 <meta name="description" content="Release date: 2026-11-01 / Chromium: 156.0.8078.79 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.5-build4 Release Notes — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.5-build5 Release Notes — BlinkGTK">
 <meta property="og:description" content="Release date: 2026-11-01 / Chromium: 156.0.8078.79 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.5-en.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -108,23 +108,90 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="RELEASE_NOTES-1.2.5-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-125-build4-release-notes">BlinkGTK 1.2.5-build4 Release
+<h1 id="blinkgtk-125-build5-release-notes">BlinkGTK 1.2.5-build5 Release
 Notes</h1>
 <p><strong>Release date</strong>: 2026-11-01 /
 <strong>Chromium</strong>: 156.0.8078.79 / Language: <a
 href="RELEASE_NOTES-1.2.5-ja.html">日本語</a> | English</p>
 <p>The rendering engine is updated to <strong>Chromium 156</strong>.
 <strong>BlinkGTK can now be used from Python (PyGObject).</strong></p>
+<h2 id="build5-fixes-in-the-file-apis">build5: Fixes in the file
+APIs</h2>
+<p>This build5 provides Linux packages (for example,
+<code>blinkgtk-1.2.5-build5-linux-x86_64.tar.gz</code>). Chromium is the
+same as build4, 156.0.8078.79.</p>
+<ul>
+<li><strong>Fixed a crash of the whole application when a page calls the
+file picker APIs.</strong> In build2 through build4, an application
+using BlinkGTK crashed when a page called
+<code>showOpenFilePicker()</code> or <code>showDirectoryPicker()</code>.
+Builds up to build1 are not affected</li>
+<li><strong>File System Access now stops sensitive locations.</strong>
+If a location a page receives from the file picker or by drag and drop
+is a configuration directory in your home directory (such as
+<code>~/.ssh</code> or <code>~/.config</code>), a system location such
+as <code>/etc</code> or <code>/dev</code>, or inside BlinkGTK itself or
+its profile, it is not passed to the page (the page gets the same result
+as when picking is cancelled). The home, desktop, documents and
+downloads directories themselves are not passed either, but files and
+directories inside them work as before. The four FileSystem fixes in
+build4's list (CVE-2026-76025, CVE-2026-76028, CVE-2026-76030 and
+CVE-2026-119272) take effect in BlinkGTK from this build</li>
+<li><strong>Removed one of the startup improvements added in
+build2.</strong> The option that reduces symbol lookups when loading
+shared libraries was the cause of the crash above. Startup is slower by
+that amount (table below). It will be added back, with the cause
+removed, in a later build. The other three (not waiting for child
+processes to get ready, skipping checks of unused GPU devices, and
+loading only the Vulkan driver for the GPU that is present) remain</li>
+</ul>
+<p>Startup time (one machine with an Intel Core i5-10310U and Fedora 45,
+a minimal test program with one WebView, median of 8 alternating runs
+each, measured on 2026-11-01):</p>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>build4</th>
+<th>build5</th>
+<th>Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>blink_gtk_init()</code> returns</td>
+<td>278 ms</td>
+<td>552 ms</td>
+<td>+274 ms</td>
+</tr>
+<tr>
+<td>First paint of the window</td>
+<td>557 ms</td>
+<td>836 ms</td>
+<td>+279 ms</td>
+</tr>
+<tr>
+<td>Page load finished</td>
+<td>713 ms</td>
+<td>1,346 ms</td>
+<td>+633 ms</td>
+</tr>
+</tbody>
+</table>
+<p>This was measured on one machine with one page. The size of the
+difference depends on the machine and the page.</p>
 <h2 id="build4-security-update">build4: Security update</h2>
 <p>Updated to Chromium <strong>156.0.8078.79</strong> and incorporated
 <strong>21 Chromium security fixes</strong> (1 Critical, 19 High, 1
-Medium). There are no changes in how you use BlinkGTK. If you use
-1.2.5-build3 and earlier builds, please update to this build.<br />
+Medium). There are no changes in how you use BlinkGTK. If you are
+upgrading now, please upgrade to build5, which also includes these
+security fixes (<a href="#build5-fixes-in-the-file-apis">build5
+notes</a>).<br />
 Of these, the four FileSystem fixes (CVE-2026-76025, CVE-2026-76028,
-CVE-2026-76030 and CVE-2026-119272) take effect in BlinkGTK from the
-next build (build5); see the paragraph after the list below.<br />
-This build4 provides Linux packages (for example,
-<code>blinkgtk-1.2.5-build4-linux-x86_64.tar.gz</code>).</p>
+CVE-2026-76030 and CVE-2026-119272) did not reach BlinkGTK in build4 and
+take effect from build5 (<a href="#build5-fixes-in-the-file-apis">build5
+notes</a>).<br />
+This build4 provides Linux packages.</p>
 <p>The list of fixes is as published in Chromium's official announcement
 (<a
 href="https://chromereleases.googleblog.com/2026/10/stable-channel-update-for-desktop_02107719452.html">Stable
@@ -255,10 +322,11 @@ individually.</p>
 
 <p>The check that stops File System Access (the file APIs such as
 <code>showOpenFilePicker()</code>) from opening sensitive locations,
-such as configuration directories in your home directory, will be added
-in the next build (build5). The four FileSystem fixes in the list above
-add locations to Chromium's list for that check; they reach BlinkGTK
-when the same check is added in the next build.</p>
+such as configuration directories in your home directory, was added in
+build5 (<a href="#build5-fixes-in-the-file-apis">build5 notes</a>). The
+four FileSystem fixes in the list above add locations to Chromium's list
+for that check; they reached BlinkGTK when the same check was added in
+build5.</p>
 <h2 id="build3-security-update">build3: Security update</h2>
 <p>Updated to Chromium <strong>156.0.8078.73</strong> and incorporated
 the upstream security fixes.<br />
@@ -274,9 +342,11 @@ this headless environment.</p>
 version</h2>
 <p>Check the rows that match how you use BlinkGTK. Each row links to the
 details.</p>
-<p>If you upgrade from 1.2.5-build1, check the "Apps that use a dark GTK
-theme" row (the change in build2). The other rows are for upgrades from
-1.2.4.</p>
+<p>If you are upgrading to build5 from any of 1.2.5-build2 through
+build4, check the first two rows (the changes in build5). If you upgrade
+from 1.2.5-build1, check those two rows and also the "Apps that use a
+dark GTK theme" row (the change in build2). The other rows are for
+upgrades from 1.2.4.</p>
 <p>This table is for Linux. For BlinkGTK for Windows, see <a
 href="https://blinkgtk.org/docs/windows-getting-started-en.html#upgrading-from-an-earlier-version">Upgrading
 from an earlier version</a> in the Windows guide.</p>
@@ -289,6 +359,27 @@ from an earlier version</a> in the Windows guide.</p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>Apps that care about startup time (upgrading from any of build2
+through build4)</td>
+<td>Startup is slightly slower (in this build's measurement, about 0.3 s
+to the window's first paint and about 0.6 s to page load finished)</td>
+<td>Nothing. The startup improvement is planned to be added back in a
+later build (<a href="#build5-fixes-in-the-file-apis">details</a>)</td>
+</tr>
+<tr>
+<td>Pages that use File System Access
+(<code>showOpenFilePicker()</code>, <code>showDirectoryPicker()</code>,
+drag and drop)</td>
+<td>If the user picks a configuration directory in the home directory, a
+system location, BlinkGTK's profile and similar, the page gets the same
+result as when picking is cancelled. In build2 through build4, calling
+these APIs crashed the application</td>
+<td>Nothing for pages that handle ordinary locations (such as documents
+under the home directory). If you need to handle the locations above, do
+it in the application, not from the page (<a
+href="#build5-fixes-in-the-file-apis">details</a>)</td>
+</tr>
 <tr>
 <td>From Python (PyGObject)</td>
 <td>It starts (up to 1.2.4 it could not start)</td>
