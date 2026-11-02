@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-11-01T00:00:00Z</updated>
+  <updated>2026-11-02T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>BlinkGTK for Windows v1.2.5-build5 released (Chromium 156.0.8078.79 security fixes, File System Access protection)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build5-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-11-02-windows-125-build5:en</id>
+    <updated>2026-11-02T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Updated BlinkGTK for Windows to Chromium 156.0.8078.79 with 21 upstream security fixes. When a location a page picks with the file picker APIs is inside C:\Windows, Program Files, AppData, configuration folders in your home folder and similar places, it is no longer passed to the page. The portable and devel ZIPs are available.</summary>
+  </entry>
   <entry>
     <title>v1.2.5-build5 released (crash fix in the file picker APIs, sensitive locations are stopped)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build5"/>

@@ -52,9 +52,9 @@ works at once (no administrator rights needed).<br />
 The API is nearly the same as the Linux version, so you can use the same
 code on both operating systems (the differences are collected in
 "Differences from the Linux version" below).</p>
-<p>This page describes <strong>v1.2.5-build3</strong> (Chromium
-156.0.8078.73). On Windows 11 Pro (build 26300), we built it and checked
-the API, rendering and display paths on 2026-10-30. The final package
+<p>This page describes <strong>v1.2.5-build5</strong> (Chromium
+156.0.8078.79). On Windows 11 Pro (build 26300), we built it and checked
+the API, rendering and display paths on 2026-11-02. The final package
 check also verified unpacking and running the ZIP.</p>
 <p><strong>Contents</strong>: <a href="#who-it-is-for">Who it is for</a>
 / <a href="#run-it">Run it</a> / <a href="#check-that-it-works">Check
@@ -169,7 +169,7 @@ it takes a long time and a lot of disk)</td>
 <h2 id="run-it">Run it</h2>
 <h3 id="1-download-and-unpack">1. Download and unpack</h3>
 <p>Get the ZIP files from the <a
-href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build3-windows"><code>v1.2.5-build3-windows</code>
+href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build5-windows"><code>v1.2.5-build5-windows</code>
 release of blinkgtk-dist</a>.</p>
 <table>
 <thead>
@@ -180,11 +180,11 @@ release of blinkgtk-dist</a>.</p>
 </thead>
 <tbody>
 <tr>
-<td><code>blinkgtk-1.2.5-build3-windows-x64.zip</code></td>
+<td><code>blinkgtk-1.2.5-build5-windows-x64.zip</code></td>
 <td><strong>To run it</strong> (portable). Start with this one</td>
 </tr>
 <tr>
-<td><code>blinkgtk-devel-1.2.5-build3-windows-x64.zip</code></td>
+<td><code>blinkgtk-devel-1.2.5-build5-windows-x64.zip</code></td>
 <td><strong>To embed it</strong> (headers and libraries; see <a
 href="#embedding-it-in-your-app">Embedding it in your app</a>)</td>
 </tr>
@@ -235,7 +235,7 @@ folder and <strong>double-click
 <p>To open a page of your choice, use a Command Prompt (search for "cmd"
 in the Start menu), move to the <code>bin</code> folder of the unpacked
 folder, and run:</p>
-<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.5-build3-windows-x64\bin&quot;
+<pre><code>cd /d &quot;C:\BlinkGTK\blinkgtk-1.2.5-build5-windows-x64\bin&quot;
 blinkgtk_browser.exe https://example.com/</code></pre>
 <p>The <code>C:\BlinkGTK\...</code> on the first line is an example.
 <strong>Replace it with the actual path where you unpacked it</strong>
@@ -255,7 +255,7 @@ alt="blinkgtk_browser showing the Google home page" /></p></li>
 than the numbers on the site or in the documents.</p></li>
 </ul>
 <pre><code>&gt; blinkgtk_browser.exe --version
-BlinkGTK 1.2.5-build3 (Chromium 156.0.8078.73)</code></pre>
+BlinkGTK 1.2.5-build5 (Chromium 156.0.8078.79)</code></pre>
 <ul>
 <li>If nothing appears, the window stays white, or it exits at once, see
 <a href="#if-something-goes-wrong">If something goes wrong</a>.</li>
@@ -296,7 +296,7 @@ count in units of 1,000,000 bytes show 397 MB.</p>
 <hr />
 <h2 id="embedding-it-in-your-app">Embedding it in your app</h2>
 <p>The devel ZIP
-(<code>blinkgtk-devel-1.2.5-build3-windows-x64.zip</code>) contains the
+(<code>blinkgtk-devel-1.2.5-build5-windows-x64.zip</code>) contains the
 public API headers, the import libraries and the GTK4 development
 files.</p>
 <ul>
@@ -375,6 +375,30 @@ with the headers and libraries from the new devel ZIP (compatibility
 with the previous <code>blinkgtk.dll</code> was not checked).</li>
 </ol>
 <p>Notes for each version:</p>
+<p><strong>From 1.2.5-build3 to 1.2.5-build5</strong> (the Windows build
+did not publish build4 separately, so build4's content is included
+here):</p>
+<ul>
+<li><strong>Chromium is updated from 156.0.8078.73 to 156.0.8078.79,
+incorporating 21 security fixes.</strong> Users of earlier Windows
+releases should update using the common steps above. The list of fixes
+is on the release page.</li>
+<li><strong>File System Access now stops sensitive locations.</strong>
+If a location picked with <code>showOpenFilePicker()</code> or
+<code>showDirectoryPicker()</code> is inside <code>C:\Windows</code>,
+the <code>C:\Program Files</code> folders, <code>%APPDATA%</code>,
+<code>%LOCALAPPDATA%</code>, <code>C:\ProgramData</code>,
+<code>.ssh</code>, <code>.gnupg</code>, <code>.config</code> or the
+shell startup files in your home folder, the folder of the BlinkGTK
+executable or its profile, or is a UNC path that points to the local
+machine, it is not passed to the page and is rejected with
+<code>AbortError</code>. The home, Desktop, Documents and Downloads
+folders themselves are not passed either, but files and folders inside
+them can be picked. Checked: we opened the real picker and confirmed
+that protected locations are rejected and ordinary locations can be
+picked (Windows 11 Pro, 2026-11-02). Locations received by drag and drop
+have not been checked yet.</li>
+</ul>
 <p><strong>From 1.2.5-build2 to 1.2.5-build3:</strong></p>
 <ul>
 <li><strong>Chromium is updated from 156.0.8078.47 to 156.0.8078.73,
@@ -693,6 +717,11 @@ shutdown, the child-process executable)</td>
 <td>2026-10-30</td>
 <td>Updated for 1.2.5-build3: Chromium 156.0.8078.73 security update,
 upgrade steps, and license-file information</td>
+</tr>
+<tr>
+<td>2026-11-02</td>
+<td>Updated for 1.2.5-build5: Chromium 156.0.8078.79 security update,
+File System Access protection, and upgrade steps from build3</td>
 </tr>
 </tbody>
 </table>
