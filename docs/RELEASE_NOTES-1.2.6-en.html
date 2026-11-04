@@ -339,6 +339,27 @@ permanently on, with their flags cleaned up. For example, we confirmed
 that dividing units in <code>calc()</code> and
 <code>overscroll-behavior: chain</code> work in both 1.2.5 and
 1.2.6.</p>
+<h2 id="security">Security</h2>
+<p>This release uses Chromium <strong>157.0.8103.38</strong>, which
+includes <strong>213</strong> Chromium security fixes (7 Critical, 77
+High, 75 Medium, 54 Low). If you use the previous release (1.2.5-build5,
+Chromium 156), please upgrade to 1.2.6. The list of fixes is in the
+official Chromium announcement (<a
+href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop.html">Stable
+Channel Update for Desktop, 2026-11-03</a>).</p>
+<ul>
+<li>The most common kinds are use-after-free bugs (45) and incorrect or
+missing authorization checks (51)</li>
+<li>The 7 Critical fixes are in GPU rendering components (Dawn, ANGLE,
+WebGL), prerendering (Prerender) and page layout (Core, Geometry)</li>
+<li>These are Chromium fixes, so they include components BlinkGTK does
+not use (such as extensions and mobile-only components). We have not
+checked one by one which of them apply to BlinkGTK</li>
+</ul>
+<p>When a Chromium stable update contains security fixes, BlinkGTK
+releases a build that includes them (1.2.5 build3 and build4 are
+examples). Fixes are not backported to older releases, so please use the
+latest release.</p>
 <hr />
 <h2 id="upgrading-from-an-earlier-version">Upgrading from an earlier
 version</h2>

@@ -321,6 +321,28 @@ id="部分的な描き直しの既定を変えました">部分的な描き直�
 <code>calc()</code> で単位どうしを割る計算と
 <code>overscroll-behavior: chain</code> は、1.2.5 と 1.2.6
 の両方で使えることを確かめました。</p>
+<h2 id="セキュリティ">セキュリティ</h2>
+<p>この版は Chromium <strong>157.0.8103.38</strong>
+を使っており、Chromium のセキュリティ修正 <strong>213 件</strong>
+(Critical 7 件・High 77 件・Medium 75 件・Low 54 件) を含みます。前の版
+(1.2.5-build5、Chromium 156) を使っている方は、1.2.6
+へ上げてください。修正の一覧は Chromium の公式の発表 (<a
+href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop.html">Stable
+Channel Update for Desktop、2026-11-03</a>) のとおりです。</p>
+<ul>
+<li>種類で多いのは、解放したメモリを使ってしまう不具合 (use after free)
+の 45 件と、権限の確かめ方の誤り (incorrect / missing authorization) の
+51 件です</li>
+<li>Critical の 7 件は、GPU の描画の部品 (Dawn・ANGLE・WebGL)、先読み
+(Prerender)、頁の組み立て (Core・Geometry) のものです</li>
+<li>Chromium の修正なので、BlinkGTK で使っていない部品のもの
+(拡張機能、スマートフォン向けの部品など) も含みます。1 件ずつ BlinkGTK
+に当てはまるかは確かめていません</li>
+</ul>
+<p>BlinkGTK は、Chromium の stable
+の更新にセキュリティの修正が含まれるときは、それを取り込んだ版を出します
+(1.2.5 の build3・build4
+がその例です)。古い版にさかのぼって修正を当てることはしないので、最新の版を使ってください。</p>
 <hr />
 <h2 id="以前の版から上げる方へ">以前の版から上げる方へ</h2>
 <p>使い方に当たる行を確かめてください。詳しい説明は各行のリンク先にあります。</p>
