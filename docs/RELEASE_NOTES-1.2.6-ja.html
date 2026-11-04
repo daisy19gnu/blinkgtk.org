@@ -1,0 +1,380 @@
+<!DOCTYPE html>
+<html lang="ja">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.6-build1 リリースノート — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="リリース日: 2026-11-04 / Chromium: 157.0.8103.38 / 言語: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-ja.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.6-build1 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-11-04 / Chromium: 157.0.8103.38 / 言語: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-ja.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-en.html">
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-ja.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-ja.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a> ·
+  <span class="langsw"><strong>日本語</strong> / <a href="RELEASE_NOTES-1.2.6-en.html" hreflang="en" lang="en">English</a></span>
+</div><div class="card doc">
+<h1 id="blinkgtk-126-build1-リリースノート">BlinkGTK 1.2.6-build1
+リリースノート</h1>
+<p><strong>リリース日</strong>: 2026-11-04 / <strong>Chromium</strong>:
+157.0.8103.38 / 言語: 日本語 | <a
+href="RELEASE_NOTES-1.2.6-en.html">English</a></p>
+<p>レンダリングエンジンを <strong>Chromium 157</strong>
+に更新しました。日本語の縦書きを扱う方へのポイントは次の 4 点です。</p>
+<ul>
+<li>ルビの付いた字に下線・傍線を引いても、線とルビが重ならなくなりました</li>
+<li>家族などのつないだ形の絵文字が、縦書きでも 1
+つの絵文字として表示されます</li>
+<li>下線・傍線の両端を詰める <code>text-decoration-inset</code>
+が使えます (縦書きでも線が短くなります)</li>
+<li>横書きでは、要素の境目でも波線の模様が続くようになりました。縦書きは変わりません</li>
+</ul>
+<p>起動も速くなりました (この版の測定で、頁の読み込みの完了が約 0.3
+秒早い)。</p>
+<ul>
+<li>前の版から上げる方は、<a
+href="#以前の版から上げる方へ">以前の版から上げる方へ</a>
+の表で、使い方に当たる行を確かめてください</li>
+<li>初めて使う方は <a
+href="https://blinkgtk.org/docs/installation/INSTALLATION-ja.html">インストール</a>
+から始めてください</li>
+<li>WebKitGTK・CEF・Electron から乗り換える方は、<a
+href="https://blinkgtk.org/docs/migration/webkitgtk-to-blinkgtk-ja.html">WebKitGTK
+からの移行</a>・<a
+href="https://blinkgtk.org/docs/migration/cef-electron-to-blinkgtk-ja.html">CEF・Electron
+からの移行</a> を見てください</li>
+</ul>
+<h2 id="build1-chromium-157-の最初の版">build1: Chromium 157
+の最初の版</h2>
+<p>この build1 は Linux 向けパッケージです (例:
+<code>blinkgtk-1.2.6-build1-linux-x86_64.tar.gz</code>)。Chromium は
+157.0.8103.38 です。この版で変わったことは、以下の各節に書きました。</p>
+<h2
+id="縦書きでできるようになったこと-chromium-157">縦書きでできるようになったこと
+(Chromium 157)</h2>
+<p><img src="assets/fig-tategaki-157-ja.png"
+alt="左が 1.2.5、右が 1.2.6。それぞれ左から、ルビのみ・ルビに傍線・家族の絵文字" /></p>
+<p><em><strong>図 1: 同じ頁を 1.2.5 と 1.2.6 で開いたところ</strong>
+左から、ルビだけの行、ルビの付いた字に傍線を引いた行、家族の絵文字を入れた行。</em></p>
+<h3
+id="ルビの付いた字に傍線を引いても線とルビが重ならない">ルビの付いた字に傍線を引いても、線とルビが重ならない</h3>
+<p>日本語の縦書きでは、下線 (<code>text-decoration: underline</code>)
+は字の右側、つまりルビと同じ側に引かれます。1.2.5
+までは線とルビが同じ位置に描かれ、ルビの上を線が通っていました (図 1
+の左から 2 列目)。</p>
+<p>1.2.6
+では、線を引いた字のルビが線の外側へ移り、重なりません。ルビだけの行の配置は変わりません。</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">p</span><span class="ot"> style</span><span class="op">=</span><span class="st">&quot;writing-mode: vertical-rl&quot;</span><span class="ot"> lang</span><span class="op">=</span><span class="st">&quot;ja&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">&quot;text-decoration: underline&quot;</span><span class="dt">&gt;&lt;</span><span class="kw">ruby</span><span class="dt">&gt;</span>漢字<span class="dt">&lt;</span><span class="kw">rt</span><span class="dt">&gt;</span>かんじ<span class="dt">&lt;/</span><span class="kw">rt</span><span class="dt">&gt;&lt;/</span><span class="kw">ruby</span><span class="dt">&gt;&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span>の読み</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">p</span><span class="dt">&gt;</span></span></code></pre></div>
+<ul>
+<li>確かめたこと: 上の形の頁で、ルビの位置を 1.2.5 と 1.2.6
+で測りました。傍線を引いた行だけ、1.2.6 でルビが線の外側へ 3px 移ります
+(文字の大きさ 28px のとき)。傍線のない行は両方の版で同じ位置です。</li>
+<li>ルビが線の分だけ外へ出るので、ルビの外側に余白の少ない組版では、隣の行との間が詰まって見えることがあります。</li>
+</ul>
+<h3
+id="家族などの絵文字が縦書きでも-1-つの絵文字として表示される">家族などの絵文字が、縦書きでも
+1 つの絵文字として表示される</h3>
+<p>👨‍👩‍👧 のように、いくつかの絵文字を見えない結合の文字 (ZWJ)
+でつないだものは、1 つの絵文字として表示されます。1.2.5
+までは縦書きにすると部品ごとに分かれ、3 人が縦に並んでいました (図 1
+の左から 3 列目)。1.2.6 では横書きと同じく 1 つの絵文字になります。</p>
+<ul>
+<li>確かめたこと:
+縦書きの行で、この絵文字の範囲の高さを測りました。1.2.5 では 102.6px (3
+字分)、1.2.6 では 34.2px (1 字分) です。</li>
+<li>書体に、つないだ形の絵文字が入っている必要があります (この確認では
+Noto Color Emoji を使いました)。</li>
+</ul>
+<h3
+id="下線傍線の両端を詰められる-text-decoration-inset">下線・傍線の両端を詰められる
+(<code>text-decoration-inset</code>)</h3>
+<p>下線や傍線の始まりと終わりを、字の端から内側へ詰める指定です。1.2.3〜1.2.5
+では使えず、指定しても無視されていました。1.2.6
+から使えます。縦書きでは、線の上端と下端が詰まります。</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* 線の両端を 2px ずつ内側へ */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.underlined</span> { <span class="kw">text-decoration</span><span class="ch">:</span> <span class="dv">underline</span><span class="op">;</span> text-decoration-inset<span class="ch">:</span> <span class="dv">2</span><span class="dt">px</span><span class="op">;</span> }</span></code></pre></div>
+<ul>
+<li>確かめたこと: 文字の大きさ 40px の 5
+字に縦書きで下線を引き、<code>text-decoration-inset: 10px</code>
+を指定して線の長さを画素で測りました。1.2.6 では 200px が 180px
+になり、上下 10px ずつ詰まります。1.2.5 では指定が無視され 200px
+のままです。</li>
+</ul>
+<h3 id="縦書きでは変わらないこと-波線の途切れ">縦書きでは変わらないこと:
+波線の途切れ</h3>
+<p>Chromium 157 では、波線の下線
+(<code>text-decoration: underline wavy</code>) が、途中の
+<code>&lt;em&gt;</code>
+などの要素の境目で模様をやり直さず、続けて描かれるようになりました。<strong>これは横書きの場合だけです。</strong></p>
+<p>縦書きでは、1.2.6 でも要素の境目で波の模様がやり直されます (1.2.5
+と同じ)。縦書きの波線の途中に強調などを入れると、境目で波がずれて見えます。</p>
+<ul>
+<li>確かめたこと: 同じ文を、途中を <code>&lt;em&gt;</code>
+で囲んだものと囲まないもので並べ、波線の画素の位置を比べました。横書きでは
+1.2.6 で差がなくなり、縦書きでは 1.2.5 と 1.2.6
+で同じだけ差が残ります。</li>
+</ul>
+<h2
+id="縦書きの行を最後まで埋める-chromium-157-で起きる問題を防ぐ">縦書きの行を最後まで埋める
+(Chromium 157 で起きる問題を防ぐ)</h2>
+<p>Chromium 157
+では、縦組みの行末に閉じ括弧などがあるとき、行の長さを使い切る前に改行してしまうことがあります。行が途中までしか埋まらず、半分ほどの長さで折り返します。Chromium
+157 で、この問題を防いでいた処理が既定で止められたためです
+(別の頁で異常終了が見つかったための措置)。</p>
+<p>1.2.6
+では、異常終了を直したうえでこの処理を元に戻す上流の修正を取り込みました。上流では
+Chromium 158 から入る見込みの修正です。</p>
+<ul>
+<li>確かめたこと: 縦書きの 1 行目に 35
+字すべてが入り、字が欠けないこと。行の長さを 544〜564px の間で 1px
+ずつ変えたときと、句読点・ルビ・書体などを変えた 13 の条件で、1
+行の字数が 1.2.5
+と同じになること。上流で異常終了が見つかった頁を開いても、頁の表示が止まらないこと。</li>
+</ul>
+<h2 id="起動が速くなりました">起動が速くなりました</h2>
+<p>ファイルを選ぶ API を使えるまま、起動を速くしました。1.2.5-build5
+で外した起動の短縮
+(共有ライブラリを読み込むときのシンボルの検索を減らす指定)
+を、build2〜build4
+でアプリが異常終了する原因になった部分を除いて入れ直したものです。1.2.6
+で、ページからファイルを選ぶ API
+を呼んでもアプリが異常終了しないことを確かめています。</p>
+<p>起動の時間 (Intel Core i5-10310U・Fedora 45 の機械 1
+台、試験用の頁、描画の経路ごとに 5 回ずつの中央値、2026-11-04 測定):</p>
+<table>
+<thead>
+<tr>
+<th>区切り</th>
+<th>描画の経路</th>
+<th>1.2.5-build5</th>
+<th>1.2.6</th>
+<th>差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>初期化 (<code>blink_gtk_init()</code>) が終わるまで</td>
+<td>software</td>
+<td>493 ms</td>
+<td>334 ms</td>
+<td>−159 ms</td>
+</tr>
+<tr>
+<td>最初の描画が届くまで</td>
+<td>software</td>
+<td>1,259 ms</td>
+<td>917 ms</td>
+<td>−342 ms</td>
+</tr>
+<tr>
+<td>頁の読み込みの完了</td>
+<td>software</td>
+<td>1,237 ms</td>
+<td>895 ms</td>
+<td>−342 ms</td>
+</tr>
+<tr>
+<td>頁の読み込みの完了</td>
+<td>EGL</td>
+<td>1,387 ms</td>
+<td>1,054 ms</td>
+<td>−333 ms</td>
+</tr>
+</tbody>
+</table>
+<p>Chromium
+の版も変わっているので、速くなった分のうち、どれだけが起動の短縮によるものかは分けて測っていません。測ったのは
+1 台・1 つの頁です。</p>
+<h2
+id="部分的な描き直しの既定を変えました">部分的な描き直しの既定を変えました</h2>
+<p>頁の一部だけが変わる場面 (動く頁など)
+で、内容が切り替わるたびに画面全体を描き直していた処理を、既定で止めました。白いページが出るのを防ぐために入れていたものですが、今の版の確認では、止めても白いページは出ませんでした。別の仕組み
+(描き直しの指示が抜けたときに全面を描き直す処理) は残しています。</p>
+<ul>
+<li>1.2.5 でこの処理を止めて測ると、部分的に変わる頁を 16
+秒表示する間に、画面を合成するスレッドの CPU 時間が約 2 秒減りました (2
+台の機械で同じ大きさ)。1.2.6 では測っていません。</li>
+<li>1.2.6
+では、この変更の後に、白いページ・描画・アニメーションなど描画に関わる確認を行い、問題が無いことを確かめました。</li>
+<li>前と同じ動きに戻すには、環境変数
+<code>BLINKGTK_120_ACT_REDRAW=1</code>
+を設定してアプリを起動します。1.2.6
+で白いページを見たときは、この設定で消えるかを確かめて知らせてください。</li>
+</ul>
+<h2 id="chromium-157-で使えるようになったもの-主なもの">Chromium 157
+で使えるようになったもの (主なもの)</h2>
+<ul>
+<li><code>text-overflow</code>
+に文字列を指定できます。はみ出した部分を「…」の代わりに指定した文字列で示します
+(例: <code>text-overflow: "…続く"</code>)。1.2.5
+では指定が無視されていました</li>
+<li>可変フォントで <code>font-style: italic</code> や
+<code>oblique</code> を指定すると、書体の斜体の軸が使われます</li>
+<li>Canvas に頁の要素 (HTML) を描けます (<code>drawElement</code>)</li>
+<li>Canvas の色空間に、線形の色空間
+(<code>srgb-linear</code>・<code>display-p3-linear</code>)
+を指定できます</li>
+<li>WebTransport
+で、接続のときに送るヘッダを指定し、サーバーが返したヘッダを読めます</li>
+</ul>
+<p>Chromium 157 では、設定の項目 (機能を切り替えるフラグ) が 27
+個無くなりました。そのうち 1.2.5
+で既定で有効だったものは、機能が常に有効になってフラグが片付けられたものです。たとえば
+<code>calc()</code> で単位どうしを割る計算と
+<code>overscroll-behavior: chain</code> は、1.2.5 と 1.2.6
+の両方で使えることを確かめました。</p>
+<hr />
+<h2 id="以前の版から上げる方へ">以前の版から上げる方へ</h2>
+<p>使い方に当たる行を確かめてください。詳しい説明は各行のリンク先にあります。</p>
+<p>この表は Linux 版のものです。BlinkGTK for Windows の方は <a
+href="https://blinkgtk.org/docs/windows-getting-started-ja.html#前の版から上げる方">Windows
+版の「前の版から上げる方」</a> を確かめてください。</p>
+<table>
+<thead>
+<tr>
+<th>対象の使い方</th>
+<th>変わること</th>
+<th>必要な対応</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>縦書きでルビの付いた字に下線・傍線を引いている</td>
+<td>ルビが線の外側へ移る (重ならなくなる)</td>
+<td>ルビの外側の余白が少ない組版では、行の間の見え方を確かめる。それ以外は不要
+(<a
+href="#ルビの付いた字に傍線を引いても線とルビが重ならない">詳細</a>)</td>
+</tr>
+<tr>
+<td>縦書きで絵文字を使う</td>
+<td>つないだ形の絵文字が 1 字分の高さになる</td>
+<td>不要 (<a
+href="#家族などの絵文字が縦書きでも-1-つの絵文字として表示される">詳細</a>)</td>
+</tr>
+<tr>
+<td><code>text-decoration-inset</code> を指定している頁</td>
+<td>指定どおり線の両端が詰まる (1.2.5 までは無視されていた)</td>
+<td>指定した値で意図どおりの見た目かを確かめる (<a
+href="#下線傍線の両端を詰められる-text-decoration-inset">詳細</a>)</td>
+</tr>
+<tr>
+<td>縦書きで波線の下線を使う</td>
+<td>変わらない (要素の境目で模様がやり直される)</td>
+<td>不要 (<a
+href="#縦書きでは変わらないこと-波線の途切れ">詳細</a>)</td>
+</tr>
+<tr>
+<td>動く頁や、頁の一部だけが変わる頁を表示する</td>
+<td>内容が切り替わるたびの全面の描き直しを、既定で行わない</td>
+<td>不要。白いページを見たら <code>BLINKGTK_120_ACT_REDRAW=1</code>
+で確かめる (<a href="#部分的な描き直しの既定を変えました">詳細</a>)</td>
+</tr>
+<tr>
+<td>起動の速さを気にするアプリ</td>
+<td>起動が速くなる (この版の測定で、頁の読み込みの完了が約 0.3
+秒早い)</td>
+<td>不要 (<a href="#起動が速くなりました">詳細</a>)</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>

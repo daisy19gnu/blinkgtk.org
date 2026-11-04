@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-11-02T00:00:00Z</updated>
+  <updated>2026-11-04T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.6-build1 を公開しました (Chromium 157、縦書きでルビと傍線が重ならず、絵文字が 1 字に)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build1"/>
+    <id>tag:blinkgtk.org,2026:2026-11-04-build1-126:ja</id>
+    <updated>2026-11-04T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Chromium 157.0.8103.38 に更新しました。縦書きで、ルビの付いた字の下線・傍線がルビと重ならなくなり、つないだ形の絵文字が 1 つの絵文字として表示され、text-decoration-inset が使えます。起動の短縮を入れ直し、頁の読み込みの完了が約 0.3 秒早くなりました。</summary>
+  </entry>
   <entry>
     <title>BlinkGTK for Windows v1.2.5-build5 を公開しました (Chromium 156.0.8078.79 のセキュリティ修正、ファイルを選ぶ API の保護)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.5-build5-windows"/>

@@ -45,7 +45,7 @@
 </div><div class="card doc">
 <h1 id="chromium-147--154--what-blinkgtk-gained">Chromium 147 → 154 —
 What BlinkGTK Gained</h1>
-<p>Version: 1.2.5-build5 / Language: English | <a
+<p>Version: 1.2.6-build1 / Language: English | <a
 href="chromium-feature-history-ja.html">日本語</a></p>
 <p>BlinkGTK embeds Chromium's rendering engine, Blink, as-is. When
 Chromium gains a new<br />
@@ -1030,6 +1030,167 @@ not confirm are not listed here</strong>. Of the 6 features promoted to
 on by default, 5 are<br />
 covered above.</p>
 <hr />
+<h2
+id="155--156--decorations-on-leading-and-trailing-spaces-return-and-vertical-hyphens-get-the-right-orientation">155
+→ 156 — Decorations on leading and trailing spaces return, and vertical
+hyphens get the right orientation</h2>
+<p><strong>For Japanese typesetting,
+<code>text-decoration-skip-spaces</code>, which became enabled by
+default in 155, went back to<br />
+experimental upstream.</strong> Underlines and other decorations are
+drawn on leading and trailing spaces (including<br />
+full-width spaces) again, as in 1.2.3 (154) and earlier.</p>
+<p>Scale of the change: 38 Blink features became enabled by default (14
+promoted from experimental and similar,<br />
+24 newly added already enabled), 26 were removed (16 of them flags that
+were already enabled and became permanent),<br />
+2 were taken out of the defaults
+(<code>CSSTextDecorationSkipSpaces</code> and one for date and time
+input fields), and 14 were newly<br />
+added as experimental or similar. One CSS property
+(<code>link-parameters</code>) was added.</p>
+<h3
+id="text-decoration-skip-spaces-went-back-to-experimental"><code>text-decoration-skip-spaces</code>
+went back to experimental</h3>
+<p>In 155 the default value was <code>start end</code>, so decorations
+were not drawn on leading and trailing spaces even<br />
+without specifying it. In 156 the line is drawn on those spaces too, and
+<code>text-decoration-skip-spaces</code> has no effect<br />
+(based on reading the code; we did not measure the rendering).</p>
+<h3
+id="hyphen-orientation-in-vertical-text-hyphenverticalorientationfix">Hyphen
+orientation in vertical text
+(<code>HyphenVerticalOrientationFix</code>)</h3>
+<p>In vertical text with <code>text-orientation: mixed</code>, Latin
+characters given in <code>hyphenate-character</code> (for example
+<code>"+="</code>)<br />
+were drawn upright instead of sideways. From 156 they are drawn
+sideways, like other Latin text (upstream commit 508e970d1e1c1).</p>
+<h3
+id="decoration-position-on-lines-with-text-box-trim-textboxtrimoninlineboxtextdecoration">Decoration
+position on lines with <code>text-box-trim</code>
+(<code>TextBoxTrimOnInlineBoxTextDecoration</code>)</h3>
+<p>When <code>text-box-trim</code> trimmed the box, underlines and other
+decorations were shifted by the trimmed amount. They are now<br />
+positioned as if the box were not trimmed.</p>
+<h3 id="other-features-now-on-by-default-highlights">Other features now
+on by default (highlights)</h3>
+<ul>
+<li>The <code>random()</code> function
+(<code>CSSRandomFunction</code>)</li>
+<li>An element that clips in one direction (<code>overflow: clip</code>)
+and scrolls in the other does not scroll in the clipped direction
+(<code>SingleAxisScrollContainers</code>)</li>
+<li>Value pairs for <code>scroll-snap-type</code>
+(<code>CSSScrollSnapTypePair</code>)</li>
+</ul>
+<h3 id="not-measured-1">Not measured</h3>
+<p>This chapter is based on the upstream commit descriptions and the
+source; we did not run and measure anything<br />
+(this chapter was added on 2026-11-04 together with the 157
+chapter).</p>
+<h2
+id="156--157--underlines-no-longer-overlap-ruby-and-joined-emoji-stand-as-one-character-in-vertical-text">156
+→ 157 — Underlines no longer overlap ruby, and joined emoji stand as one
+character in vertical text</h2>
+<p><strong>For Japanese vertical text, three visible changes are on by
+default.</strong> An underline on ruby-annotated text no longer<br />
+overlaps the ruby, emoji joined with ZWJ stand as a single character,
+and <code>text-decoration-inset</code> works.<br />
+The change that keeps the wave pattern continuous across element
+boundaries applies to horizontal text only.</p>
+<p>Scale of the change: 39 Blink features became enabled by default (10
+promoted from experimental and similar,<br />
+29 newly added already enabled), 27 were removed (18 of them flags that
+were already enabled and became permanent),<br />
+2 were taken out of the defaults (Protected Audience:
+<code>AdInterestGroupAPI</code> and <code>Fledge</code>), and 22 were
+newly added as<br />
+experimental or similar. No user-writable CSS property was added or
+removed (1 internal one was removed).</p>
+<p>We measured the four items below by opening the same pages in
+BlinkGTK 1.2.5-build5 (Chromium 156.0.8078.79) and<br />
+1.2.6-build1 (157.0.8103.38) (2026-11-04, weston headless, software
+rendering, font Noto Serif CJK JP).</p>
+<h3
+id="an-underline-on-ruby-annotated-text-no-longer-overlaps-the-ruby-rubytextdecorationspacing">An
+underline on ruby-annotated text no longer overlaps the ruby
+(<code>RubyTextDecorationSpacing</code>)</h3>
+<p>In vertical text with <code>lang="ja"</code>, the underline is drawn
+on the right, the same side as the ruby. Up to 156,<br />
+the line and the ruby were drawn in the same place. In 157, the ruby of
+underlined text moves outside the line<br />
+(upstream commit 613212218f862).<br />
+Measured: at a 28px font size, only the underlined line moves its ruby
+3px outward; the line without an underline is<br />
+in the same place in both versions.</p>
+<h3
+id="emoji-joined-with-zwj-stand-as-one-character-in-vertical-text-emojizwjverticalorientation">Emoji
+joined with ZWJ stand as one character in vertical text
+(<code>EmojiZWJVerticalOrientation</code>)</h3>
+<p>Up to 156, vertical text split the orientation run at each ZWJ, so
+the component emoji stood separately<br />
+(upstream commit 26839c8e7c1cf).<br />
+Measured: the family emoji (U+1F468 U+200D U+1F469 U+200D U+1F467) goes
+from 102.6px to 34.2px tall.</p>
+<h3
+id="text-decoration-inset-works-on-by-default"><code>text-decoration-inset</code>
+works (on by default)</h3>
+<p>This moves both ends of an underline inward. In 154 to 156 it was
+experimental and the value was ignored.<br />
+Measured: with <code>text-decoration-inset: 10px</code> on the underline
+of five characters at a 40px font size in vertical text,<br />
+the line goes from 200px to 180px in 157 (10px at each end). It stays
+200px in 156.</p>
+<h3
+id="continuous-wave-pattern-wavydecorationcontinuousphase--not-in-vertical-text">Continuous
+wave pattern (<code>WavyDecorationContinuousPhase</code>) — not in
+vertical text</h3>
+<p>This draws the wave pattern from the start of the decoration instead
+of restarting it for each fragment<br />
+(upstream commit 75026b2fecb56).<br />
+Measured: comparing a sentence with part of it wrapped in
+<code>&lt;em&gt;</code> against the same sentence without it, the
+difference in<br />
+the wave position disappears in 157 for horizontal text, but the same
+difference remains in both 156 and 157 for<br />
+vertical text. <strong>In vertical text, the wave still restarts at
+boundaries such as <code>&lt;em&gt;</code> in 157.</strong></p>
+<h3
+id="upstream-took-line-end-kerning-in-vertical-text-linebreakerhankerningend-out-of-the-defaults-in-157">Upstream
+took line-end kerning in vertical text
+(<code>LineBreakerHanKerningEnd</code>) out of the defaults in 157</h3>
+<p>Because a crash was found on another page, upstream turned this flag
+off by default on the 157 branch<br />
+(upstream commit a50f44a906b90). On its own, that brings back the
+problem described in the 152 → 153 chapter:<br />
+vertical lines that are only filled halfway. Upstream has landed a fix
+on main that resolves the crash and turns the<br />
+flag back on (CL 8607127), expected in 158.<br />
+<strong>BlinkGTK 1.2.6 includes this fix and keeps the flag on by
+default.</strong></p>
+<h3 id="other-features-now-on-by-default-highlights-1">Other features
+now on by default (highlights)</h3>
+<ul>
+<li><code>text-overflow</code> accepts a string
+(<code>TextOverflowString</code>)</li>
+<li>Variable fonts use the font's italic axes for
+<code>font-style: italic</code> / <code>oblique</code>
+(<code>FontVariableItalicAxis</code>)</li>
+<li><code>drawElement</code> draws page elements into a canvas
+(<code>CanvasDrawElement</code>)</li>
+<li>Canvas color spaces accept <code>srgb-linear</code> and
+<code>display-p3-linear</code>
+(<code>ColorSpacePredefinedLinearSpaces</code>)</li>
+<li>WebTransport connection headers and the headers returned by the
+server (<code>WebTransportHeaders</code>)</li>
+</ul>
+<h3 id="not-measured-2">Not measured</h3>
+<p>Apart from the four items above, this chapter is based on the
+upstream commit descriptions and the source; we did not<br />
+run and measure them. We did not measure
+<code>text-decoration-inset</code> or the ruby and underline placement
+in horizontal text.</p>
 <h2
 id="where-japanese-typography-stands--the-eight-versions-at-a-glance">Where
 Japanese typography stands — the eight versions at a glance</h2>

@@ -47,7 +47,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.5-build5 / Language: English | <a
+<p>Version: 1.2.6-build1 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -70,9 +70,19 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
-<td><strong>v1.2.5-build5</strong> ← current</td>
+<td><strong>v1.2.6-build1</strong> ← current</td>
+<td>2026-11-04</td>
+<td><strong>157.0.8103.38</strong></td>
+<td>Updated to Chromium 157. In vertical text, underlines on
+ruby-annotated text no longer overlap the ruby, joined emoji render as
+one emoji, and text-decoration-inset works. Includes the upstream fix
+that keeps vertical lines filled. Restored the startup optimization
+(pages finish loading about 0.3 s sooner)</td>
+</tr>
+<tr>
+<td>v1.2.5-build5</td>
 <td>2026-11-01</td>
-<td><strong>156.0.8078.79</strong></td>
+<td>156.0.8078.79</td>
 <td>Fixed a crash of the application when a page calls the file picker
 APIs (build2 to build4). File System Access now stops sensitive
 locations (the four FileSystem CVE fixes take effect from this build).

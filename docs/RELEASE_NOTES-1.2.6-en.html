@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.6-build1 Release Notes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Release date: 2026-11-04 / Chromium: 157.0.8103.38 / Language: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.6-build1 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-11-04 / Chromium: 157.0.8103.38 / Language: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.6-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a> ·
+  <span class="langsw"><a href="RELEASE_NOTES-1.2.6-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
+</div><div class="card doc">
+<h1 id="blinkgtk-126-build1-release-notes">BlinkGTK 1.2.6-build1 Release
+Notes</h1>
+<p><strong>Release date</strong>: 2026-11-04 /
+<strong>Chromium</strong>: 157.0.8103.38 / Language: <a
+href="RELEASE_NOTES-1.2.6-ja.html">日本語</a> | English</p>
+<p>The rendering engine is now <strong>Chromium 157</strong>. Four
+points for developers working with Japanese vertical text:</p>
+<ul>
+<li>An underline on ruby-annotated text no longer overlaps the ruby</li>
+<li>Family and other joined emoji now render as a single emoji in
+vertical text</li>
+<li><code>text-decoration-inset</code>, which shortens both ends of an
+underline, now works (including in vertical text)</li>
+<li>In horizontal text, wavy underlines now keep a continuous wave
+pattern across element boundaries. Vertical text is unchanged</li>
+</ul>
+<p>Startup is also faster (the page finishes loading about 0.3 seconds
+sooner in our measurement).</p>
+<ul>
+<li>If you are upgrading, check the rows that match your use in <a
+href="#upgrading-from-an-earlier-version">Upgrading from an earlier
+version</a></li>
+<li>If you are new to BlinkGTK, start with <a
+href="https://blinkgtk.org/docs/installation/INSTALLATION-en.html">Installation</a></li>
+<li>If you are moving from WebKitGTK, CEF or Electron, see <a
+href="https://blinkgtk.org/docs/migration/webkitgtk-to-blinkgtk-en.html">Migrating
+from WebKitGTK</a> and <a
+href="https://blinkgtk.org/docs/migration/cef-electron-to-blinkgtk-en.html">Migrating
+from CEF and Electron</a></li>
+</ul>
+<h2 id="build1-the-first-build-on-chromium-157">build1: the first build
+on Chromium 157</h2>
+<p>This build1 is the Linux package (for example
+<code>blinkgtk-1.2.6-build1-linux-x86_64.tar.gz</code>). Chromium is
+157.0.8103.38. The changes in this version are described in the sections
+below.</p>
+<h2 id="what-you-can-now-do-in-vertical-text-chromium-157">What you can
+now do in vertical text (Chromium 157)</h2>
+<p><img src="assets/fig-tategaki-157-en.png"
+alt="Left: 1.2.5, right: 1.2.6. In each, from left: ruby only, ruby with an underline, a family emoji" /></p>
+<p><em><strong>Figure 1: The same page opened in 1.2.5 and
+1.2.6</strong> From left: a line with ruby only, a line where the
+ruby-annotated text is underlined, and a line with a family
+emoji.</em></p>
+<h3
+id="an-underline-on-ruby-annotated-text-no-longer-overlaps-the-ruby">An
+underline on ruby-annotated text no longer overlaps the ruby</h3>
+<p>In Japanese vertical text, an underline
+(<code>text-decoration: underline</code>) is drawn on the right side of
+the characters, which is the same side as the ruby. Up to 1.2.5, the
+line and the ruby were drawn in the same place, so the line ran through
+the ruby (second column from the left in Figure 1).</p>
+<p>In 1.2.6, the ruby of underlined text moves outside the line, so they
+no longer overlap. Lines with ruby only are laid out as before.</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode html"><code class="sourceCode html"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;</span><span class="kw">p</span><span class="ot"> style</span><span class="op">=</span><span class="st">&quot;writing-mode: vertical-rl&quot;</span><span class="ot"> lang</span><span class="op">=</span><span class="st">&quot;ja&quot;</span><span class="dt">&gt;</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>  <span class="dt">&lt;</span><span class="kw">span</span><span class="ot"> style</span><span class="op">=</span><span class="st">&quot;text-decoration: underline&quot;</span><span class="dt">&gt;&lt;</span><span class="kw">ruby</span><span class="dt">&gt;</span>漢字<span class="dt">&lt;</span><span class="kw">rt</span><span class="dt">&gt;</span>かんじ<span class="dt">&lt;/</span><span class="kw">rt</span><span class="dt">&gt;&lt;/</span><span class="kw">ruby</span><span class="dt">&gt;&lt;/</span><span class="kw">span</span><span class="dt">&gt;</span>の読み</span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a><span class="dt">&lt;/</span><span class="kw">p</span><span class="dt">&gt;</span></span></code></pre></div>
+<ul>
+<li>What we checked: on a page like the one above, we measured the ruby
+position in 1.2.5 and 1.2.6. Only on the underlined line does the ruby
+move 3px outward in 1.2.6 (at a 28px font size). The line without an
+underline is in the same place in both versions.</li>
+<li>Because the ruby moves out by the width of the line, layouts with
+little space outside the ruby may look tighter between lines.</li>
+</ul>
+<h3
+id="joined-emoji-now-render-as-a-single-emoji-in-vertical-text">Joined
+emoji now render as a single emoji in vertical text</h3>
+<p>Emoji such as 👨‍👩‍👧 are several emoji joined by an invisible joining
+character (ZWJ) and are shown as a single emoji. Up to 1.2.5, vertical
+text split them into their parts, so the three people were stacked
+vertically (third column from the left in Figure 1). In 1.2.6 they are
+shown as one emoji, as in horizontal text.</p>
+<ul>
+<li>What we checked: we measured the height of this emoji in a vertical
+line. It is 102.6px in 1.2.5 (three characters) and 34.2px in 1.2.6 (one
+character).</li>
+<li>The font must contain the joined emoji (we used Noto Color Emoji for
+this check).</li>
+</ul>
+<h3 id="shorten-both-ends-of-an-underline-text-decoration-inset">Shorten
+both ends of an underline (<code>text-decoration-inset</code>)</h3>
+<p>This property moves the start and end of an underline inward from the
+edges of the text. In 1.2.3 to 1.2.5 it was not available and was
+ignored. It works from 1.2.6. In vertical text, the top and bottom ends
+of the line move inward.</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode css"><code class="sourceCode css"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="co">/* move both ends of the line 2px inward */</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="fu">.underlined</span> { <span class="kw">text-decoration</span><span class="ch">:</span> <span class="dv">underline</span><span class="op">;</span> text-decoration-inset<span class="ch">:</span> <span class="dv">2</span><span class="dt">px</span><span class="op">;</span> }</span></code></pre></div>
+<ul>
+<li>What we checked: we underlined five characters at a font size of
+40px in vertical text, set <code>text-decoration-inset: 10px</code>, and
+measured the length of the line in pixels. In 1.2.6 it goes from 200px
+to 180px, 10px shorter at each end. In 1.2.5 the value is ignored and
+the line stays 200px.</li>
+</ul>
+<h3
+id="not-changed-in-vertical-text-wavy-underlines-across-elements">Not
+changed in vertical text: wavy underlines across elements</h3>
+<p>In Chromium 157, a wavy underline
+(<code>text-decoration: underline wavy</code>) no longer restarts its
+wave pattern at the boundary of an inner element such as
+<code>&lt;em&gt;</code>; it continues across it. <strong>This applies to
+horizontal text only.</strong></p>
+<p>In vertical text, the wave pattern still restarts at element
+boundaries in 1.2.6 (the same as 1.2.5). If you put emphasis or other
+elements inside a wavy underline in vertical text, the wave shifts at
+the boundary.</p>
+<ul>
+<li>What we checked: we placed the same sentence with and without
+<code>&lt;em&gt;</code> around part of it, and compared the pixel
+positions of the wavy line. In horizontal text the difference disappears
+in 1.2.6. In vertical text the same difference remains in both 1.2.5 and
+1.2.6.</li>
+</ul>
+<h2
+id="vertical-text-still-fills-the-full-line-preventing-a-chromium-157-problem">Vertical
+text still fills the full line (preventing a Chromium 157 problem)</h2>
+<p>In Chromium 157, when a vertical line ends with a closing bracket or
+similar, the line can break before using its full length. The line is
+only partly filled and wraps at about half its length. This happens
+because Chromium 157 turned off by default the processing that prevented
+it (a crash had been found on another page).</p>
+<p>1.2.6 includes the upstream fix that resolves the crash and turns
+this processing back on. Upstream, this fix is expected to arrive in
+Chromium 158.</p>
+<ul>
+<li>What we checked: the first vertical line holds all 35 characters
+with none missing. When we changed the line length from 544 to 564px in
+1px steps, and under 13 conditions that vary punctuation, ruby, fonts
+and more, each line holds the same number of characters as in 1.2.5.
+Opening the page on which the crash was found upstream does not stop the
+page from displaying.</li>
+</ul>
+<h2 id="faster-startup">Faster startup</h2>
+<p>Startup is faster, and the file picker APIs keep working. We restored
+the startup optimization removed in 1.2.5-build5 (an option that reduces
+symbol lookups when loading shared libraries), except for the part that
+caused applications to exit abnormally in build2 to build4. In 1.2.6 we
+confirmed that calling the file picker APIs from a page does not make
+the application exit.</p>
+<p>Startup time (one machine, Intel Core i5-10310U with Fedora 45; a
+test page; median of 5 runs per rendering path; measured
+2026-11-04):</p>
+<table>
+<thead>
+<tr>
+<th>Point</th>
+<th>Rendering path</th>
+<th>1.2.5-build5</th>
+<th>1.2.6</th>
+<th>Difference</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Initialization (<code>blink_gtk_init()</code>) completes</td>
+<td>software</td>
+<td>493 ms</td>
+<td>334 ms</td>
+<td>−159 ms</td>
+</tr>
+<tr>
+<td>First frame delivered</td>
+<td>software</td>
+<td>1,259 ms</td>
+<td>917 ms</td>
+<td>−342 ms</td>
+</tr>
+<tr>
+<td>Page finished loading</td>
+<td>software</td>
+<td>1,237 ms</td>
+<td>895 ms</td>
+<td>−342 ms</td>
+</tr>
+<tr>
+<td>Page finished loading</td>
+<td>EGL</td>
+<td>1,387 ms</td>
+<td>1,054 ms</td>
+<td>−333 ms</td>
+</tr>
+</tbody>
+</table>
+<p>The Chromium version also changed, so we did not measure how much of
+the improvement comes from the startup optimization alone. We measured
+on one machine with one page.</p>
+<h2 id="default-change-for-partial-redraws">Default change for partial
+redraws</h2>
+<p>When only part of a page changes (for example, an animated page),
+BlinkGTK redrew the whole view every time new content became active.
+This is now off by default. It had been added to prevent blank pages,
+but in our checks of the current version no blank pages appeared without
+it. A separate mechanism (redrawing the whole view when a redraw request
+is missed) remains.</p>
+<ul>
+<li>When we turned this off in 1.2.5 and measured, the CPU time of the
+thread that composites the screen went down by about 2 seconds while a
+partially changing page was shown for 16 seconds (the same on two
+machines). We did not measure this in 1.2.6.</li>
+<li>In 1.2.6, after this change, we checked for blank pages, rendering
+and animation, and found no problems.</li>
+<li>To restore the previous behavior, start the application with the
+environment variable <code>BLINKGTK_120_ACT_REDRAW=1</code>. If you see
+a blank page in 1.2.6, please check whether this setting makes it go
+away and let us know.</li>
+</ul>
+<h2 id="new-in-chromium-157-highlights">New in Chromium 157
+(highlights)</h2>
+<ul>
+<li><code>text-overflow</code> accepts a string. Overflowing text is
+marked with the string you specify instead of "…" (for example,
+<code>text-overflow: "… more"</code>). In 1.2.5 the value was
+ignored</li>
+<li>With variable fonts, <code>font-style: italic</code> and
+<code>oblique</code> use the font's italic axes</li>
+<li>You can draw page elements (HTML) into a canvas
+(<code>drawElement</code>)</li>
+<li>Canvas color spaces accept the linear spaces
+<code>srgb-linear</code> and <code>display-p3-linear</code></li>
+<li>WebTransport can send headers when connecting and read the headers
+returned by the server</li>
+</ul>
+<p>Chromium 157 removed 27 settings (flags that switch features on and
+off). The ones that were on by default in 1.2.5 are features that became
+permanently on, with their flags cleaned up. For example, we confirmed
+that dividing units in <code>calc()</code> and
+<code>overscroll-behavior: chain</code> work in both 1.2.5 and
+1.2.6.</p>
+<hr />
+<h2 id="upgrading-from-an-earlier-version">Upgrading from an earlier
+version</h2>
+<p>Check the rows that match how you use BlinkGTK. Each row links to the
+details.</p>
+<p>This table is for the Linux version. If you use BlinkGTK for Windows,
+see <a
+href="https://blinkgtk.org/docs/windows-getting-started-en.html#upgrading-from-an-earlier-version">Upgrading
+from an earlier version in the Windows guide</a>.</p>
+<table>
+<thead>
+<tr>
+<th>How you use it</th>
+<th>What changes</th>
+<th>What you need to do</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Underlining ruby-annotated text in vertical text</td>
+<td>The ruby moves outside the line (no overlap)</td>
+<td>If your layout has little space outside the ruby, check how the
+space between lines looks. Otherwise nothing (<a
+href="#an-underline-on-ruby-annotated-text-no-longer-overlaps-the-ruby">details</a>)</td>
+</tr>
+<tr>
+<td>Using emoji in vertical text</td>
+<td>Joined emoji take the height of one character</td>
+<td>Nothing (<a
+href="#joined-emoji-now-render-as-a-single-emoji-in-vertical-text">details</a>)</td>
+</tr>
+<tr>
+<td>Pages that specify <code>text-decoration-inset</code></td>
+<td>Both ends of the line are shortened as specified (ignored up to
+1.2.5)</td>
+<td>Check that the result looks as intended with your values (<a
+href="#shorten-both-ends-of-an-underline-text-decoration-inset">details</a>)</td>
+</tr>
+<tr>
+<td>Using wavy underlines in vertical text</td>
+<td>No change (the wave restarts at element boundaries)</td>
+<td>Nothing (<a
+href="#not-changed-in-vertical-text-wavy-underlines-across-elements">details</a>)</td>
+</tr>
+<tr>
+<td>Showing animated pages or pages where only part changes</td>
+<td>The whole view is no longer redrawn each time new content becomes
+active</td>
+<td>Nothing. If you see a blank page, try
+<code>BLINKGTK_120_ACT_REDRAW=1</code> (<a
+href="#default-change-for-partial-redraws">details</a>)</td>
+</tr>
+<tr>
+<td>Applications that care about startup speed</td>
+<td>Startup is faster (the page finishes loading about 0.3 seconds
+sooner in our measurement)</td>
+<td>Nothing (<a href="#faster-startup">details</a>)</td>
+</tr>
+</tbody>
+</table>
+</body>
+</html>
+</div></div>

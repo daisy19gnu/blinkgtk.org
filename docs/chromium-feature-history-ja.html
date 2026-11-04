@@ -45,7 +45,7 @@
 </div><div class="card doc">
 <h1 id="chromium-147--154--blinkgtk-に何が増えたか">Chromium 147 → 154 —
 BlinkGTK に何が増えたか</h1>
-<p>バージョン: 1.2.5-build5 / 言語: 日本語 | <a
+<p>バージョン: 1.2.6-build1 / 言語: 日本語 | <a
 href="chromium-feature-history-en.html">English</a></p>
 <p>BlinkGTK は Chromium のレンダリングエンジン Blink
 をそのまま載せています。つまり<br />
@@ -985,6 +985,158 @@ id="ぶら下げはこの版でもまだ使えません-1">ぶら下げは、こ
 本文に載せていません</strong>。既定で有効へ昇格した 6
 件のうち本文で触れたのは 5 件です。</p>
 <hr />
+<h2
+id="155--156--行頭行末の空白の装飾が元に戻り縦組みのハイフンの向きが直った版">155
+→ 156 —
+行頭・行末の空白の装飾が元に戻り、縦組みのハイフンの向きが直った版</h2>
+<p><strong>日本語組版では、155 で既定で有効になった
+<code>text-decoration-skip-spaces</code>
+が、上流で試験段階に戻りました。</strong><br />
+行頭・行末の空白 (全角スペースを含む) にも、1.2.3 (154)
+までと同じく下線などの装飾が引かれます。</p>
+<p>差分の規模は次のとおりです。Blink
+の機能のうち既定で有効になったものが 38 件 (うち試験段階などからの昇格
+14 件、<br />
+新しく足されて最初から有効のもの 24 件)。削除が 26 件 (うち 16
+件は既定で有効だったフラグを外した恒久化)。<br />
+既定から外れたものが 2 件 (<code>CSSTextDecorationSkipSpaces</code>
+と、日時の入力欄に関する 1 件)、試験段階などで新しく足されたものが 14
+件。<br />
+CSS プロパティは 1 件 (<code>link-parameters</code>) 増えました。</p>
+<h3
+id="text-decoration-skip-spaces-が試験段階に戻りました"><code>text-decoration-skip-spaces</code>
+が試験段階に戻りました</h3>
+<p>155 では既定の値が <code>start end</code>
+で、指定しなくても行頭・行末の空白に装飾が引かれませんでした。156
+では<br />
+空白の部分にも線が引かれ、<code>text-decoration-skip-spaces</code>
+の指定は反映されません
+(コードを読んでの判断で、描画は測っていません)。</p>
+<h3
+id="縦組みのハイフンの向き-hyphenverticalorientationfix">縦組みのハイフンの向き
+(<code>HyphenVerticalOrientationFix</code>)</h3>
+<p><code>text-orientation: mixed</code>
+の縦組みで、<code>hyphenate-character</code> に指定した欧文の文字 (例:
+<code>"+="</code>) が、<br />
+横倒しにならず正立していました。156 から、欧文と同じく横倒しで描かれます
+(上流のコミット 508e970d1e1c1)。</p>
+<h3
+id="text-box-trim-を掛けた行の装飾の位置-textboxtrimoninlineboxtextdecoration"><code>text-box-trim</code>
+を掛けた行の装飾の位置
+(<code>TextBoxTrimOnInlineBoxTextDecoration</code>)</h3>
+<p><code>text-box-trim</code>
+で箱を詰めたとき、下線などの位置が詰めた分だけずれていました。詰める前の位置で計算するように直りました。</p>
+<h3
+id="そのほか既定で有効になったもの-主なもの">そのほか既定で有効になったもの
+(主なもの)</h3>
+<ul>
+<li><code>random()</code> 関数 (<code>CSSRandomFunction</code>)</li>
+<li>一方の向きを
+<code>overflow: clip</code>、他方をスクロールにした要素は、<code>clip</code>
+の向きにスクロールしない (<code>SingleAxisScrollContainers</code>)</li>
+<li><code>scroll-snap-type</code> の値の組
+(<code>CSSScrollSnapTypePair</code>)</li>
+</ul>
+<h3 id="測っていないこと-1">測っていないこと</h3>
+<p>この章は、上流のコミットの説明とソースに基づいて書きました。動かして測ってはいません<br />
+(この章は 2026-11-04 に、157 の章と合わせて足しました)。</p>
+<h2
+id="156--157--ルビと傍線が重ならなくなり縦組みの絵文字が-1-字にまとまった版">156
+→ 157 — ルビと傍線が重ならなくなり、縦組みの絵文字が 1
+字にまとまった版</h2>
+<p><strong>日本語の縦組みでは、目に見える変化が 3
+つ、既定で入りました。</strong>
+ルビの付いた字の下線・傍線がルビと重ならなくなり、<br />
+ZWJ でつないだ絵文字が 1
+字として立ち、<code>text-decoration-inset</code>
+が使えるようになりました。<br />
+波線の模様が要素の境目で続くようになった変更は、横組みだけに当てはまります。</p>
+<p>差分の規模は次のとおりです。Blink
+の機能のうち既定で有効になったものが 39 件 (うち試験段階などからの昇格
+10 件、<br />
+新しく足されて最初から有効のもの 29 件)。削除が 27 件 (うち 18
+件は既定で有効だったフラグを外した恒久化)。<br />
+既定から外れたものが 2 件 (Protected Audience の
+<code>AdInterestGroupAPI</code>・<code>Fledge</code>)、試験段階などで新しく足されたものが
+22 件。<br />
+利用者が書ける CSS プロパティの増減はありません (削除は内部用の 1
+件)。</p>
+<p>以下の 4 項目は、同じ頁を BlinkGTK 1.2.5-build5 (Chromium
+156.0.8078.79) と 1.2.6-build1 (157.0.8103.38) で開いて測りました<br />
+(2026-11-04、weston headless、software、書体 Noto Serif CJK JP)。</p>
+<h3
+id="ルビの付いた字の下線傍線がルビと重ならなくなりました-rubytextdecorationspacing">ルビの付いた字の下線・傍線が、ルビと重ならなくなりました
+(<code>RubyTextDecorationSpacing</code>)</h3>
+<p>縦組みで <code>lang="ja"</code>
+のとき、下線はルビと同じ右側に引かれます。156
+までは線とルビが同じ位置に描かれていました。<br />
+157 では、線を引いた字のルビが線の外側へ移ります (上流のコミット
+613212218f862)。<br />
+測定: 文字の大きさ 28px で、下線のある行だけルビが 3px
+外へ移り、下線のない行は両版で同じ位置。</p>
+<h3
+id="zwj-でつないだ絵文字が縦組みで-1-字として立ちます-emojizwjverticalorientation">ZWJ
+でつないだ絵文字が、縦組みで 1 字として立ちます
+(<code>EmojiZWJVerticalOrientation</code>)</h3>
+<p>156 までは、縦組みで ZWJ
+のつなぎ目ごとに組みの向きの区切りが入り、部品の絵文字が別々に立っていました
+(上流のコミット 26839c8e7c1cf)。<br />
+測定: 家族の絵文字 (U+1F468 U+200D U+1F469 U+200D U+1F467)
+の範囲の高さが 102.6px → 34.2px。</p>
+<h3
+id="text-decoration-inset-が使えます-既定で有効"><code>text-decoration-inset</code>
+が使えます (既定で有効)</h3>
+<p>下線・傍線の両端を内側へ詰める指定です。154〜156
+は試験段階で、指定は無視されていました。<br />
+測定: 文字の大きさ 40px の 5 字の縦組みの下線に
+<code>text-decoration-inset: 10px</code> を指定すると、157 では線が
+200px → 180px (上下 10px ずつ)。156 は 200px のまま。</p>
+<h3
+id="波線の模様の連続-wavydecorationcontinuousphase--縦組みには当てはまらない">波線の模様の連続
+(<code>WavyDecorationContinuousPhase</code>) —
+縦組みには当てはまらない</h3>
+<p>波線の模様を、要素の断片ごとではなく装飾の始まりから続けて描く変更です
+(上流のコミット 75026b2fecb56)。<br />
+測定: 途中を <code>&lt;em&gt;</code>
+で囲んだ文と囲まない文の波線の位置の差が、横組みでは 157
+で無くなり、縦組みでは 156 と 157 で同じだけ残ります。<br />
+<strong>縦組みの波線は、157 でも <code>&lt;em&gt;</code>
+などの境目で模様がやり直されます。</strong></p>
+<h3
+id="縦組みの行末の詰め-linebreakerhankerningend-を上流は-157-で既定から外しました">縦組みの行末の詰め
+(<code>LineBreakerHanKerningEnd</code>) を、上流は 157
+で既定から外しました</h3>
+<p>別の頁で異常終了が見つかったため、上流は 157
+の枝でこのフラグを既定で無効にしました (上流のコミット
+a50f44a906b90)。<br />
+そのままでは、152 → 153
+の章で書いた「縦組みの行が途中までしか埋まらない」問題が戻ります。<br />
+上流は異常終了を直して再び有効にする修正 (CL 8607127) を main
+に入れており、158 から入る見込みです。<br />
+<strong>BlinkGTK 1.2.6
+はこの修正を取り込み、既定で有効のままにしています。</strong></p>
+<h3
+id="そのほか既定で有効になったもの-主なもの-1">そのほか既定で有効になったもの
+(主なもの)</h3>
+<ul>
+<li><code>text-overflow</code> に文字列を指定できる
+(<code>TextOverflowString</code>)</li>
+<li>可変フォントの <code>font-style: italic</code> /
+<code>oblique</code> が、書体の斜体の軸を使う
+(<code>FontVariableItalicAxis</code>)</li>
+<li>Canvas に頁の要素を描く <code>drawElement</code>
+(<code>CanvasDrawElement</code>)</li>
+<li>Canvas の色空間に
+<code>srgb-linear</code>・<code>display-p3-linear</code>
+(<code>ColorSpacePredefinedLinearSpaces</code>)</li>
+<li>WebTransport の接続のヘッダとサーバーの返したヘッダ
+(<code>WebTransportHeaders</code>)</li>
+</ul>
+<h3 id="測っていないこと-2">測っていないこと</h3>
+<p>上の 4
+項目以外は、上流のコミットの説明とソースに基づき、動かして測ってはいません。<br />
+<code>text-decoration-inset</code>
+の横組みでの描画、ルビと傍線の配置の横組みでの変化も測っていません。</p>
 <h2 id="日本語組版の現在地--8-版を通した俯瞰">日本語組版の現在地 — 8
 版を通した俯瞰</h2>
 <p>BlinkGTK
