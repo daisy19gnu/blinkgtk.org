@@ -277,11 +277,11 @@ Releases に<br />
 <p>リポジトリを登録せず、ダウンロードした RPM を直接入れる場合。</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime のみ（アプリ実行）</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.6-build1.fc45.x86_64.rpm</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.6-build2.fc45.x86_64.rpm</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 開発する場合は devel + gir も</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.6-build1.fc45.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.6-build1.fc45.x86_64.rpm</span></code></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.6-build2.fc45.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.6-build2.fc45.x86_64.rpm</span></code></pre></div>
 <h3 id="debian--ubuntudeb">Debian / Ubuntu（DEB）</h3>
 <p><strong>先に APT を更新してください (2026-11-05 追記)。</strong>
 Debian・Ubuntu の APT に、HTTP
@@ -304,16 +304,16 @@ OS
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 update</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install apt</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">apt</span> <span class="at">--version</span>                                                              <span class="co"># 修正版になったか確かめる</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.6-build1-1_amd64.deb        <span class="co"># runtime</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.6-build1-1_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.6-build2-1_amd64.deb        <span class="co"># runtime</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.6-build2-1_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
 <p><strong>Ubuntu: 2026-11-05 の時点で、APT
 の修正版は出ていません。</strong>
 修正版が出るまでは、依存するパッケージを取得するコマンドのたびに、自動の再試行を無効にしてください
 (<code>-o</code> の指定は、そのコマンド 1 回にだけ当たります)。</p>
 <div class="sourceCode" id="cb8"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 update</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install ./libblinkgtk-0.1-0_1.2.6-build1-1_amd64.deb     <span class="co"># runtime</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install ./libblinkgtk-0.1-dev_1.2.6-build1-1_amd64.deb   <span class="co"># devel</span></span></code></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install ./libblinkgtk-0.1-0_1.2.6-build2-1_amd64.deb     <span class="co"># runtime</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install ./libblinkgtk-0.1-dev_1.2.6-build2-1_amd64.deb   <span class="co"># devel</span></span></code></pre></div>
 <p>Ubuntu の修正版が出たら、上の Debian と同じく、再試行を無効にしたまま
 APT を修正版に更新し、<code>apt --version</code>
 で確かめてから、通常のコマンドに戻してください。修正版の版数は <a
@@ -326,11 +326,11 @@ href="https://security-tracker.debian.org/tracker/CVE-2026-109518">Debian
 レイアウト（<code>usr/lib64/...</code>）です。root（<code>/</code>）に展開します。</p>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.6-build1-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.6-build2-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                                    <span class="co"># ld.so.conf.d を反映</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel（BlinkGTK を組み込むアプリを開発するときのみ）</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-1.2.6-build1-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-1.2.6-build2-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
 <p><code>ldconfig</code> は runtime に含まれる
 <code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code><br />
 （private ディレクトリを検索パスに追加）を反映するために実行します。</p>

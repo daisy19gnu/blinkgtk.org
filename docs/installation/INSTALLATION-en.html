@@ -288,11 +288,11 @@ RPMs<br />
 directly.</p>
 <div class="sourceCode" id="cb6"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime only (run apps)</span></span>
-<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.6-build1.fc45.x86_64.rpm</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-release-<span class="pp">*</span>.noarch.rpm ./blinkgtk-bin-1.2.6-build2.fc45.x86_64.rpm</span>
 <span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a><span class="co"># for development, add devel + gir</span></span>
-<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.6-build1.fc45.x86_64.rpm <span class="dt">\</span></span>
-<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.6-build1.fc45.x86_64.rpm</span></code></pre></div>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install ./blinkgtk-bin-devel-1.2.6-build2.fc45.x86_64.rpm <span class="dt">\</span></span>
+<span id="cb6-6"><a href="#cb6-6" aria-hidden="true" tabindex="-1"></a>                 ./blinkgtk-bin-gir-1.2.6-build2.fc45.x86_64.rpm</span></code></pre></div>
 <h3 id="debian--ubuntu-deb">Debian / Ubuntu (DEB)</h3>
 <p><strong>Update APT first (added 2026-11-05).</strong> A vulnerability
 in APT on Debian and Ubuntu (CVE-2026-109518) has been published: an
@@ -315,16 +315,16 @@ Turn off retries for the APT update itself, too.</p>
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 update</span>
 <span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install apt</span>
 <span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a><span class="ex">apt</span> <span class="at">--version</span>                                                              <span class="co"># confirm the fixed version</span></span>
-<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.6-build1-1_amd64.deb        <span class="co"># runtime</span></span>
-<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.6-build1-1_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_1.2.6-build2-1_amd64.deb        <span class="co"># runtime</span></span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-dev_1.2.6-build2-1_amd64.deb      <span class="co"># devel</span></span></code></pre></div>
 <p><strong>Ubuntu: as of 2026-11-05, no fixed version of APT has been
 released.</strong> Until it is, turn off automatic retries on every
 command that downloads dependency packages (the <code>-o</code> option
 applies to that one command only).</p>
 <div class="sourceCode" id="cb8"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 update</span>
-<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install ./libblinkgtk-0.1-0_1.2.6-build1-1_amd64.deb     <span class="co"># runtime</span></span>
-<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install ./libblinkgtk-0.1-dev_1.2.6-build1-1_amd64.deb   <span class="co"># devel</span></span></code></pre></div>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install ./libblinkgtk-0.1-0_1.2.6-build2-1_amd64.deb     <span class="co"># runtime</span></span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt <span class="at">-o</span> Acquire::Retries=0 install ./libblinkgtk-0.1-dev_1.2.6-build2-1_amd64.deb   <span class="co"># devel</span></span></code></pre></div>
 <p>When Ubuntu releases a fixed version, update APT to it with retries
 still turned off (as in the Debian steps above), confirm it with
 <code>apt --version</code>, and then go back to the normal commands.
@@ -338,11 +338,11 @@ security tracker</a>.</p>
 (<code>usr/lib64/...</code>). Extract at root (<code>/</code>).</p>
 <div class="sourceCode" id="cb9"><pre
 class="sourceCode bash"><code class="sourceCode bash"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a><span class="co"># runtime</span></span>
-<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.6-build1-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-1.2.6-build2-linux-x86_64.tar.gz <span class="at">-C</span> /</span>
 <span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> ldconfig                                    <span class="co"># apply ld.so.conf.d</span></span>
 <span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a><span class="co"># devel (only when developing apps that embed BlinkGTK)</span></span>
-<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-1.2.6-build1-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> tar xzf blinkgtk-devel-1.2.6-build2-linux-x86_64.tar.gz <span class="at">-C</span> /</span></code></pre></div>
 <p><code>ldconfig</code> applies
 <code>/etc/ld.so.conf.d/blinkgtk-0.1.conf</code> (bundled in
 runtime),<br />
