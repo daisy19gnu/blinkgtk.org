@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-en.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-en.html"/>
   <id>https://blinkgtk.org/feed-en.xml</id>
-  <updated>2026-11-05T00:00:00Z</updated>
+  <updated>2026-11-06T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.6-build3 released (memory handling fixes)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build3"/>
+    <id>tag:blinkgtk.org,2026:2026-11-06-build3-126:en</id>
+    <updated>2026-11-06T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Fixed how memory is handled. Chromium is 157.0.8103.38, the same as build1 and build2, and nothing changes in how you use BlinkGTK. If you use build2 or earlier, please update to build3. The description of blink_web_view_set_presentation_policy() now also says that a capture taken while presentation is stopped (BLINK_PRESENT_WARM) can put a frame on screen.</summary>
+  </entry>
   <entry>
     <title>v1.2.6-build2 released (memory handling fixes)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build2"/>

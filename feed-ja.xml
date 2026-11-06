@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-11-05T00:00:00Z</updated>
+  <updated>2026-11-06T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.6-build3 を公開しました (メモリの取扱いの修正)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build3"/>
+    <id>tag:blinkgtk.org,2026:2026-11-06-build3-126:ja</id>
+    <updated>2026-11-06T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>メモリの取扱いの修正を行いました。Chromium は build1・build2 と同じ 157.0.8103.38 で、使い方の変更はありません。build2 までを使っている方も build3 へ上げてください。あわせて、blink_web_view_set_presentation_policy() の説明に、画面へ出す仕事を止めている間 (BLINK_PRESENT_WARM) の撮影で画面へフレームが出ることがある旨を書き足しました。</summary>
+  </entry>
   <entry>
     <title>v1.2.6-build2 を公開しました (メモリの取扱いの修正)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build2"/>
