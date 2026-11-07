@@ -7,6 +7,14 @@
   <updated>2026-11-07T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>BlinkGTK for Windows v1.2.6-build4 released (Chromium 157, CPU use on static pages fixed)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build4-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-11-07-windows-126-build4:en</id>
+    <updated>2026-11-07T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Updated BlinkGTK for Windows to Chromium 157.0.8103.38 with 213 upstream security fixes. A static page no longer keeps the CPU busy by reading the screen back over and over. The portable and devel ZIPs are available.</summary>
+  </entry>
+  <entry>
     <title>v1.2.6-build4 released (memory handling fixes)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build4"/>
     <id>tag:blinkgtk.org,2026:2026-11-07-build4-126:en</id>

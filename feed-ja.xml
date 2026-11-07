@@ -7,6 +7,14 @@
   <updated>2026-11-07T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>BlinkGTK for Windows v1.2.6-build4 を公開しました (Chromium 157、静止した頁の CPU 使用の修正)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build4-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-11-07-windows-126-build4:ja</id>
+    <updated>2026-11-07T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>BlinkGTK for Windows を Chromium 157.0.8103.38 に更新し、上流のセキュリティ修正 213 件を取り込みました。静止した頁でも画面を読み戻し続け、CPU を使い続けていた問題を修正しました。portable ZIP と devel ZIP を公開しました。</summary>
+  </entry>
+  <entry>
     <title>v1.2.6-build4 を公開しました (メモリの取扱いの修正)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.6-build4"/>
     <id>tag:blinkgtk.org,2026:2026-11-07-build4-126:ja</id>
