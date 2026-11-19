@@ -46,8 +46,8 @@
 <h1 id="blinkgtk-環境変数リファレンス">BlinkGTK
 環境変数リファレンス</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>最終更新</strong>: 2026-10-27 (BlinkGTK 1.2.6-build4 / Chromium
-157.0.8103.38)</p>
+<strong>最終更新</strong>: 2026-11-18 (BlinkGTK 1.2.7-build1 / Chromium
+158.0.8127.36)</p>
 <p>API リファレンスマニュアルの第 9 章 (環境変数)
 にあたる文書です。BlinkGTK
 が読む環境変数は、すべてこの一覧に載せています。ここに無い名前は
@@ -170,6 +170,15 @@ API。後方互換を維持し、変更時はリリースノートで告知し�
 <td>診断出力の量。<code>0</code> すべて / <code>1</code> 大幅に削減 /
 <code>2</code>
 ほぼ無音。<strong>ログが多いと感じたら上げてください</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CONSOLE_STDOUT</code></td>
+<td><code>0</code> / <code>false</code> / <code>no</code> /
+<code>off</code></td>
+<td>未設定 (出力する)</td>
+<td>Web ページの <code>console</code>
+出力を標準出力へ出さないようにします。BlinkGTK
+のメッセージブリッジには影響しません</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_DIAG_VERBOSE</code></td>
@@ -380,6 +389,12 @@ Mesa を読み込んで確かめる、Chromium の元の手順に戻す
 <td>1.2.4 の変更: 拡大率 1 の画面で T2 を既定にした</td>
 </tr>
 <tr>
+<td><code>BLINKGTK_T2_PARTIAL_COPY=0</code></td>
+<td>T2
+の部分コピー最適化を止め、毎回全体をコピーします。画像の更新漏れが疑われるときの切り分け用です</td>
+<td>T2 の部分コピー最適化</td>
+</tr>
+<tr>
 <td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
 <td>画面が変わっていないときに画面のコピー (キャプチャ) を省く仕組み
 (capture damage gate) を無効化</td>
@@ -508,11 +523,17 @@ renderer とブラウザのメモリが増え続けます</strong> (1.2.3
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
 <code>BLINKGTK_T2_DELIVER_EMPTY</code> (陰性対照: T2 で renderer
 の最初のフレームを待たずに、描画結果を画面へ渡す) /
-<code>BLINKGTK_T2_DAMAGE</code> (試作・既定オフ: T2 で Viz
-が描き直した範囲を GTK に伝え、変わった範囲だけテクスチャを更新する) /
+<code>BLINKGTK_T2_DAMAGE</code> (<code>0</code> で、T2 で Viz
+が描き直した範囲を GTK
+に伝えるのをやめ、毎回ウィンドウ全体を更新する。v1.2.7-build1
+から既定で有効。それ以前は試作で、<code>1</code> で有効) /
 <code>BLINKGTK_T2_DAMAGE_TEST_SHRINK</code> (陰性対照: 伝える範囲を 1 px
-狭める) / <code>BLINKGTK_T2_AUTO</code> (<code>0</code> で、拡大率 1
-の画面で T2 を自動で選ぶのをやめる。1.2.4 から既定で有効) /
+狭める) / <code>BLINKGTK_T2_COPY_VERIFY</code> (試験専用:
+部分コピー画像を元画像と照合して不一致を記録) /
+<code>BLINKGTK_T2_COPY_TEST_NOAGE</code> (試験専用の陰性対照:
+別回の更新を写さない条件を作り、写し漏れ検出を確認) /
+<code>BLINKGTK_T2_AUTO</code> (<code>0</code> で、拡大率 1 の画面で T2
+を自動で選ぶのをやめる。1.2.4 から既定で有効) /
 <code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (試験用:
 許可の保存の読み込みを遅らせる) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /

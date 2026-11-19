@@ -1,0 +1,75 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="utf-8" />
+  <meta name="generator" content="pandoc" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
+  <title>BlinkGTK 1.2.7-build1 Release Notes — BlinkGTK</title>
+  <style>
+    code{white-space: pre-wrap;}
+    span.smallcaps{font-variant: small-caps;}
+    div.columns{display: flex; gap: min(4vw, 1.5em);}
+    div.column{flex: auto; overflow-x: auto;}
+    div.hanging-indent{margin-left: 1.5em; text-indent: -1.5em;}
+    /* The extra [class] is a hack that increases specificity enough to
+       override a similar rule in reveal.js */
+    ul.task-list[class]{list-style: none;}
+    ul.task-list li input[type="checkbox"] {
+      font-size: inherit;
+      width: 0.8em;
+      margin: 0 0.8em 0.2em -1.6em;
+      vertical-align: middle;
+    }
+    .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+  </style>
+  <link rel="stylesheet" href="docs.css" />
+<meta name="description" content="Release date: 2026-11-19 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
+<link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
+<meta property="og:type" content="article">
+<meta property="og:title" content="BlinkGTK 1.2.7-build1 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-11-19 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
+<meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
+<meta property="og:site_name" content="BlinkGTK">
+<meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
+<meta name="twitter:card" content="summary_large_image">
+<script src="/privacy-consent.js" defer></script>
+<link rel="alternate" hreflang="ja" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-ja.html">
+<link rel="alternate" hreflang="en" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
+<link rel="alternate" hreflang="x-default" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
+</head>
+<body>
+<div class="wrap"><div class="navbar">
+  <a href="index.html">Documentation</a> ·
+  <a href="../index.html">BlinkGTK</a> ·
+  <span class="langsw"><a href="RELEASE_NOTES-1.2.7-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
+</div><div class="card doc">
+<h1 id="blinkgtk-127-build1-release-notes">BlinkGTK 1.2.7-build1 Release
+Notes</h1>
+<p><strong>Release date</strong>: 2026-11-19 /
+<strong>Chromium</strong>: 158.0.8127.36 / Language: <a
+href="RELEASE_NOTES-1.2.7-ja.html">日本語</a> | English</p>
+<h2 id="build1-updated-to-chromium-158">build1: Updated to Chromium
+158</h2>
+<p>BlinkGTK's rendering engine is now Chromium
+<strong>158.0.8127.36</strong>.</p>
+<h2 id="security-chromium-158">Security (Chromium 158)</h2>
+<p>The Chromium 158 desktop stable release includes 204 upstream
+security fixes. See the <a
+href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01744469280.html">official
+Chromium announcement</a> for details.</p>
+<p>This release is for Linux. If you use an earlier version, update to
+this release to receive these security fixes.</p>
+<h2 id="rendering-and-console-output">Rendering and console output</h2>
+<p>On the default software path, the changed area is passed to GTK and
+Wayland as the update region. Set <code>BLINKGTK_T2_DAMAGE=0</code> to
+restore full-window updates. This reduces the area passed to the
+compositor for pages with small changes; a reduction in application CPU
+time has not been demonstrated.</p>
+<p>Set <code>BLINKGTK_CONSOLE_STDOUT=0</code> to suppress page console
+messages on standard output. Output remains enabled by default, and the
+BlinkGTK message bridge is unaffected.</p>
+<p>Normal Linux startup is Wayland-only. The public API is
+unchanged.</p>
+</body>
+</html>
+</div></div>

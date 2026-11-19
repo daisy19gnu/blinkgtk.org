@@ -46,8 +46,8 @@
 <h1 id="blinkgtk-environment-variables-reference">BlinkGTK Environment
 Variables Reference</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Last updated</strong>: 2026-10-27 (BlinkGTK 1.2.6-build4 /
-Chromium 157.0.8103.38)</p>
+<strong>Last updated</strong>: 2026-11-18 (BlinkGTK 1.2.7-build1 /
+Chromium 158.0.8127.36)</p>
 <p>This document is Chapter 9 (Environment Variables) of the API
 Reference Manual. Every environment variable BlinkGTK reads is listed
 here; a name that is not here is not used by BlinkGTK.</p>
@@ -185,6 +185,14 @@ being updated, during such a capture</td>
 <td>Diagnostic output volume: <code>0</code> everything, <code>1</code>
 much reduced, <code>2</code> nearly silent. <strong>Raise it if the logs
 feel noisy</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CONSOLE_STDOUT</code></td>
+<td><code>0</code> / <code>false</code> / <code>no</code> /
+<code>off</code></td>
+<td>unset (enabled)</td>
+<td>Suppresses web page <code>console</code> output on standard output.
+Does not affect the BlinkGTK message bridge</td>
 </tr>
 <tr>
 <td><code>BLINKGTK_DIAG_VERBOSE</code></td>
@@ -403,6 +411,12 @@ the same</td>
 <td>Change in 1.2.4: T2 became the default on scale-1 displays</td>
 </tr>
 <tr>
+<td><code>BLINKGTK_T2_PARTIAL_COPY=0</code></td>
+<td>Disables T2 partial-copy optimization and restores a full copy on
+every frame. Use to isolate suspected missed image updates</td>
+<td>T2 partial-copy optimization</td>
+</tr>
+<tr>
 <td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
 <td>Disables the mechanism that skips copying the screen (capture) when
 nothing has changed (capture damage gate)</td>
@@ -536,14 +550,19 @@ EGL recipient surface, regardless of the active render path)</td>
 <code>BLINKGTK_USE_EGL_WIDGET</code> /
 <code>BLINKGTK_T2_DELIVER_EMPTY</code> (negative control: on T2, deliver
 frames without waiting for the renderer's first frame) /
-<code>BLINKGTK_T2_DAMAGE</code> (prototype, off by default: passes the
-area Viz redrew on T2 to GTK, so only the changed area of the texture is
-updated) / <code>BLINKGTK_T2_DAMAGE_TEST_SHRINK</code> (negative
-control: shrinks the passed area by 1 px) /
-<code>BLINKGTK_T2_AUTO</code> (<code>0</code> stops automatically
-selecting T2 on a scale-1 display; on by default since 1.2.4) /
-<code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (testing only: delay
-loading the stored permissions) /
+<code>BLINKGTK_T2_DAMAGE</code> (<code>0</code> stops passing the area
+Viz redrew on T2 to GTK, so the whole window is updated every time; on
+by default since 1.2.7-build1. Before this release it was a prototype
+enabled with <code>1</code>) /
+<code>BLINKGTK_T2_DAMAGE_TEST_SHRINK</code> (negative control: shrinks
+the passed area by 1 px) / <code>BLINKGTK_T2_COPY_VERIFY</code> (testing
+only: compares a partially copied image with the source and logs
+mismatches) / <code>BLINKGTK_T2_COPY_TEST_NOAGE</code> (testing-only
+negative control: suppresses other updates to verify that missed-copy
+detection works) / <code>BLINKGTK_T2_AUTO</code> (<code>0</code> stops
+automatically selecting T2 on a scale-1 display; on by default since
+1.2.4) / <code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (testing
+only: delay loading the stored permissions) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
 <code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
 <code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
