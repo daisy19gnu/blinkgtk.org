@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-11-19T00:00:00Z</updated>
+  <updated>2026-11-20T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>BlinkGTK for Windows v1.2.7-build1 を公開しました (Chromium 158.0.8127.36)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build1-windows"/>
+    <id>tag:blinkgtk.org,2026:2026-11-20-windows-127-build1:ja</id>
+    <updated>2026-11-20T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>BlinkGTK for Windows を Chromium 158.0.8127.36 に更新しました。portable ZIP と devel ZIP を公開しました。確認環境は Windows 11 build 26300 のみです。試験段階の GPU 経路は Intel Iris Xe の 1 機種でのみ確認しており、Windows 10 と他の GPU は未確認です。</summary>
+  </entry>
   <entry>
     <title>v1.2.7-build1 を公開しました (Chromium 158、上流のセキュリティ修正 204 件)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build1"/>
