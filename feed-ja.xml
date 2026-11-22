@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-11-22T00:00:00Z</updated>
+  <updated>2026-11-23T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.7-build3 を公開しました (一部の Web API でページが止まる問題の修正ほか)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build3"/>
+    <id>tag:blinkgtk.org,2026:2026-11-23-build3-127:ja</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>バッジ・端末内の音声認識・Web アプリのインストールの API を呼ぶページが、異常終了したり止まったりしなくなりました。ページを離れる前の確認が JavaScript ダイアログのハンドラに届き、サーバーへ送る言語が環境の言語に合い、クライアント証明書を任意で求めるサイトが開けるようになりました。公開 API は変わらないので作り直さずに更新できますが、種類を見ずに TRUE を返すダイアログのハンドラは対応が必要です。</summary>
+  </entry>
   <entry>
     <title>v1.2.7-build2 を公開しました (古い画面を出さないための修正)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build2"/>

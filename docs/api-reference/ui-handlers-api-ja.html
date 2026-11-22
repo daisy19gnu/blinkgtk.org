@@ -113,7 +113,7 @@
 id="blinkgtk-ui-ハンドラ-api-リファレンス--ダイアログファイル選択証明書エラー">BlinkGTK
 UI ハンドラ API リファレンス —
 ダイアログ・ファイル選択・証明書エラー</h1>
-<p><strong>バージョン</strong>: 1.2.7-build2<br />
+<p><strong>バージョン</strong>: 1.2.7-build3<br />
 <strong>最終更新</strong>: 2026-07-30<br />
 <strong>言語</strong>: 日本語 |</p>
 <p><a href="./ui-handlers-api-en.html">English</a></p>
@@ -139,7 +139,7 @@ JavaScript の
 <tr>
 <td>JavaScript ダイアログ</td>
 <td>動作します (制約: <strong>同時に扱えるダイアログは 1
-つ</strong>、beforeunload は届かない)</td>
+つ</strong>。beforeunload は 1.2.7-build2 までは届かない)</td>
 </tr>
 <tr>
 <td>ファイル選択</td>
@@ -229,8 +229,9 @@ UI<br />
 </tr>
 <tr>
 <td><code>beforeunload</code></td>
-<td>常に離脱を許可
-(<strong>ハンドラを設定しても変わらない</strong>)</td>
+<td>常に離脱を許可 (1.2.7-build2
+までは<strong>ハンドラを設定しても変わらなかった</strong>。その後の版では、ハンドラが無い・<code>FALSE</code>
+を返すときだけこの動作)</td>
 </tr>
 <tr>
 <td>ファイル選択 (<code>&lt;input type="file"&gt;</code>)</td>
@@ -309,13 +310,14 @@ UI<br />
 <h3
 id="blink_web_view_set_javascript_dialog_handler">blink_web_view_set_javascript_dialog_handler()</h3>
 <p><code>alert()</code> / <code>confirm()</code> / <code>prompt()</code>
+と、頁を離れる前の確認 (<code>beforeunload</code>)
 の要求を受け取ります。</p>
 <p><strong>シグネチャ</strong>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_ALERT <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_CONFIRM <span class="op">=</span> <span class="dv">1</span><span class="op">,</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_PROMPT <span class="op">=</span> <span class="dv">2</span><span class="op">,</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_BEFORE_UNLOAD <span class="op">=</span> <span class="dv">3</span><span class="op">,</span>   <span class="co">/* 予約 — 現在は届かない (下記) */</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_BEFORE_UNLOAD <span class="op">=</span> <span class="dv">3</span><span class="op">,</span>   <span class="co">/* 頁を離れる前の確認 (1.2.7-build2 までは届かない。下記) */</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkJSDialogType<span class="op">;</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkJSDialogResponseCallback<span class="op">)(</span>gboolean success<span class="op">,</span></span>
@@ -387,8 +389,15 @@ WebView も入力を受け付けなくなる</strong></td>
 </tr>
 <tr>
 <td>beforeunload</td>
-<td>ハンドラには<strong>届かない</strong>。エンジンが常に「離脱許可」で即応答するため、「このページを離れますか」の確認は現在実装できない
-(<code>BLINK_JS_DIALOG_BEFORE_UNLOAD</code> は将来のための予約値)</td>
+<td><code>dialog_type</code> が
+<code>BLINK_JS_DIALOG_BEFORE_UNLOAD</code> で届く。<code>success</code>
+は <code>TRUE</code> = 頁を離れる、<code>FALSE</code> =
+とどまる。<code>message</code> は決まった英語の文言
+(頁は文言を決められない)、<code>default_prompt</code>
+は空。頁が確認を求めるのは、利用者がその頁を操作した後だけ。ハンドラが
+<code>FALSE</code> を返すと、すぐに頁を離れる
+(ハンドラ未設定と同じ)。<strong>1.2.7-build2
+まではハンドラに届かず、常に離脱を許可していた</strong></td>
 </tr>
 <tr>
 <td>ダイアログの取り下げ</td>
@@ -1054,7 +1063,8 @@ class="sourceCode sh"><code class="sourceCode bash"><span id="cb18-1"><a href="#
 </tr>
 <tr>
 <td>beforeunload</td>
-<td>ハンドラに届かず、常に離脱許可</td>
+<td>1.2.7-build2
+まではハンドラに届かず、常に離脱許可。その後の版ではハンドラに届く</td>
 </tr>
 <tr>
 <td>JS ダイアログの同時数</td>
@@ -1113,6 +1123,11 @@ API</a></li>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2026-11-22</td>
+<td>beforeunload がハンドラに届くようにした (1.2.7-build2
+の後の版)。既定動作表・動作の詳細・制限事項を更新</td>
+</tr>
 <tr>
 <td>v1.1.0 (2026-07-30 追補)</td>
 <td>全画面 (Fullscreen API) ハンドラの節を新設 (従来どの doc

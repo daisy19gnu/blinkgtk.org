@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>News</h1>
 <p>Updates to BlinkGTK and related work. <a href="https://blinkgtk.org/feed-en.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build3">v1.2.7-build3 released (pages no longer stop on some Web APIs, and more)</a></h2>
+<p><small>2026-11-23 · Release</small></p>
+<p>Pages that call the badge, on-device speech recognition or web app installation APIs no longer crash or stop. The leave-page confirmation now reaches the JavaScript dialog handler, the language sent to servers follows the environment, and sites that optionally ask for a client certificate open. The public API is unchanged, so you can update without rebuilding, but dialog handlers that return TRUE without checking the type need a change.</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build2">v1.2.7-build2 released (old screens are no longer shown)</a></h2>
 <p><small>2026-11-22 · Release</small></p>
 <p>On scale-1 displays with software rendering, frames without the current page&#x27;s drawing and old screens kept while presentation was stopped are no longer shown. Unused X11 code has also been removed. The public API is unchanged, so you can update without rebuilding your application. An installer has been added to BlinkGTK for Windows 1.2.7-build1.</p>

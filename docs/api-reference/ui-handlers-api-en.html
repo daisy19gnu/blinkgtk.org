@@ -113,7 +113,7 @@ Certificate Errors — BlinkGTK</title>
 id="blinkgtk-ui-handlers-api-reference--dialogs-file-chooser-certificate-errors">BlinkGTK
 UI Handlers API Reference — Dialogs, File Chooser, Certificate
 Errors</h1>
-<p><strong>Version</strong>: 1.2.7-build2<br />
+<p><strong>Version</strong>: 1.2.7-build3<br />
 <strong>Last updated</strong>: 2026-07-30<br />
 <strong>Language</strong>: English |</p>
 <p><a href="./ui-handlers-api-ja.html">日本語</a></p>
@@ -140,8 +140,8 @@ status:</p>
 <tbody>
 <tr>
 <td>JavaScript dialogs</td>
-<td>Works (limits: <strong>only one dialog at a time</strong>,
-beforeunload never delivered)</td>
+<td>Works (limits: <strong>only one dialog at a time</strong>;
+beforeunload is not delivered up to 1.2.7-build2)</td>
 </tr>
 <tr>
 <td>File chooser</td>
@@ -237,8 +237,9 @@ handler is set (measured)</h3>
 </tr>
 <tr>
 <td><code>beforeunload</code></td>
-<td>Navigation always allowed (<strong>setting a handler does not change
-this</strong>)</td>
+<td>Navigation always allowed (up to 1.2.7-build2 <strong>setting a
+handler did not change this</strong>; in later builds this happens only
+when no handler is set or the handler returns <code>FALSE</code>)</td>
 </tr>
 <tr>
 <td>File chooser (<code>&lt;input type="file"&gt;</code>)</td>
@@ -320,13 +321,14 @@ signal</td>
 <h3
 id="blink_web_view_set_javascript_dialog_handler">blink_web_view_set_javascript_dialog_handler()</h3>
 <p>Receives <code>alert()</code> / <code>confirm()</code> /
-<code>prompt()</code> requests.</p>
+<code>prompt()</code> requests and the leave-page confirmation
+(<code>beforeunload</code>).</p>
 <p><strong>Signature</strong>:</p>
 <div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="kw">enum</span> <span class="op">{</span></span>
 <span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_ALERT <span class="op">=</span> <span class="dv">0</span><span class="op">,</span></span>
 <span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_CONFIRM <span class="op">=</span> <span class="dv">1</span><span class="op">,</span></span>
 <span id="cb2-4"><a href="#cb2-4" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_PROMPT <span class="op">=</span> <span class="dv">2</span><span class="op">,</span></span>
-<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_BEFORE_UNLOAD <span class="op">=</span> <span class="dv">3</span><span class="op">,</span>   <span class="co">/* reserved — never delivered (see below) */</span></span>
+<span id="cb2-5"><a href="#cb2-5" aria-hidden="true" tabindex="-1"></a>  BLINK_JS_DIALOG_BEFORE_UNLOAD <span class="op">=</span> <span class="dv">3</span><span class="op">,</span>   <span class="co">/* leave-page confirmation (not delivered up to 1.2.7-build2; see below) */</span></span>
 <span id="cb2-6"><a href="#cb2-6" aria-hidden="true" tabindex="-1"></a><span class="op">}</span> BlinkJSDialogType<span class="op">;</span></span>
 <span id="cb2-7"><a href="#cb2-7" aria-hidden="true" tabindex="-1"></a></span>
 <span id="cb2-8"><a href="#cb2-8" aria-hidden="true" tabindex="-1"></a><span class="kw">typedef</span> <span class="dt">void</span> <span class="op">(*</span>BlinkJSDialogResponseCallback<span class="op">)(</span>gboolean success<span class="op">,</span></span>
@@ -399,10 +401,15 @@ custom UI that doesn't show a site name can be abused for spoofing</td>
 </tr>
 <tr>
 <td>beforeunload</td>
-<td><strong>Never reaches the handler.</strong> The engine always
-answers "leave" immediately, so a "Leave this page?" confirmation cannot
-currently be implemented (<code>BLINK_JS_DIALOG_BEFORE_UNLOAD</code> is
-reserved for the future)</td>
+<td>Delivered with <code>dialog_type</code> =
+<code>BLINK_JS_DIALOG_BEFORE_UNLOAD</code>. <code>success</code> is
+<code>TRUE</code> = leave the page, <code>FALSE</code> = stay.
+<code>message</code> is a fixed English text (pages cannot set it) and
+<code>default_prompt</code> is empty. A page asks for this only after
+the user has interacted with it. If the handler returns
+<code>FALSE</code>, the page is left immediately (same as no handler).
+<strong>Up to 1.2.7-build2 it never reached the handler and leaving was
+always allowed</strong></td>
 </tr>
 <tr>
 <td>Dialog dismissal</td>
@@ -1088,7 +1095,8 @@ Works since 1.2.3-build2</td>
 </tr>
 <tr>
 <td>beforeunload</td>
-<td>Never reaches the handler; leaving is always allowed</td>
+<td>Up to 1.2.7-build2 it never reached the handler and leaving was
+always allowed. Later builds deliver it to the handler</td>
 </tr>
 <tr>
 <td>Concurrent JS dialogs</td>
@@ -1149,6 +1157,11 @@ API</a></li>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>2026-11-22</td>
+<td>beforeunload now reaches the handler (builds after 1.2.7-build2).
+Updated the defaults table, behavior details and limitations</td>
+</tr>
 <tr>
 <td>v1.1.0 (2026-07-30 addendum)</td>
 <td>Added the Fullscreen API handler section (previously undocumented
