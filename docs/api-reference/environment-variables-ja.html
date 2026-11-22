@@ -46,7 +46,7 @@
 <h1 id="blinkgtk-環境変数リファレンス">BlinkGTK
 環境変数リファレンス</h1>
 <p><strong>作成者</strong>: BlinkGTK Project<br />
-<strong>最終更新</strong>: 2026-11-18 (BlinkGTK 1.2.7-build1 / Chromium
+<strong>最終更新</strong>: 2026-11-18 (BlinkGTK 1.2.7-build2 / Chromium
 158.0.8127.36)</p>
 <p>API リファレンスマニュアルの第 9 章 (環境変数)
 にあたる文書です。BlinkGTK
@@ -378,6 +378,17 @@ Mesa を読み込んで確かめる、Chromium の元の手順に戻す
 <td>1.2.4 の変更: 静止した頁を 16ms ごとに描き直さない</td>
 </tr>
 <tr>
+<td><code>BLINKGTK_SIZE_TICK=1</code></td>
+<td>1.2.7-build1 から。<code>blink_web_view_new()</code> などで作った
+WebView でも、窓の大きさの変化を毎フレーム調べる以前の仕組み (GTK の
+tick callback) を登録する (静止した頁でも 1 秒に約 60
+回動くので、待機中の CPU
+の使用率が増えます)。既定では登録せず、大きさの変化は WebView
+に大きさが割り当てられたときに受け取ります</td>
+<td>1.2.7-build1 の修正: 静止した頁でも描画の時計が止まらず CPU
+を使っていた問題</td>
+</tr>
+<tr>
 <td><code>BLINKGTK_T2_AUTO=0</code></td>
 <td>1.2.4 から。拡大率 1 の画面で、ソフトウェアの描画の受け取りを T2
 (撮影を使わず、合成の結果を共有メモリで受け取る経路)
@@ -532,8 +543,16 @@ renderer とブラウザのメモリが増え続けます</strong> (1.2.3
 部分コピー画像を元画像と照合して不一致を記録) /
 <code>BLINKGTK_T2_COPY_TEST_NOAGE</code> (試験専用の陰性対照:
 別回の更新を写さない条件を作り、写し漏れ検出を確認) /
-<code>BLINKGTK_T2_AUTO</code> (<code>0</code> で、拡大率 1 の画面で T2
-を自動で選ぶのをやめる。1.2.4 から既定で有効) /
+<code>BLINKGTK_T2_TEST_STALE_SURFACE</code> (試験専用の陰性対照:
+<code>1</code> で、T2 の最初の描画の照合で、待っている面と同じ
+FrameSinkId で世代だけ違う LocalSurfaceId
+と比べ、古い面のフレームを受け取らないことを確認する。v1.2.7-build2
+から) / <code>BLINKGTK_T2_TEST_STALE_FRAME_TOKEN</code>
+(試験専用の陰性対照: <code>1</code> で、同じ SurfaceId のまま 1
+つ前のフレームトークンを 1
+回だけ渡し、古いフレームを受け取らず、次の正しいフレームで回復することを確認する。v1.2.7-build2
+から) / <code>BLINKGTK_T2_AUTO</code> (<code>0</code> で、拡大率 1
+の画面で T2 を自動で選ぶのをやめる。1.2.4 から既定で有効) /
 <code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (試験用:
 許可の保存の読み込みを遅らせる) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /

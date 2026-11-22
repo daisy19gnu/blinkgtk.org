@@ -46,7 +46,7 @@
 <h1 id="blinkgtk-environment-variables-reference">BlinkGTK Environment
 Variables Reference</h1>
 <p><strong>Author</strong>: BlinkGTK Project<br />
-<strong>Last updated</strong>: 2026-11-18 (BlinkGTK 1.2.7-build1 /
+<strong>Last updated</strong>: 2026-11-18 (BlinkGTK 1.2.7-build2 /
 Chromium 158.0.8127.36)</p>
 <p>This document is Chapter 9 (Environment Variables) of the API
 Reference Manual. Every environment variable BlinkGTK reads is listed
@@ -399,6 +399,17 @@ static page is not redrawn over and over (lower CPU usage while idle).
 <td>Change in 1.2.4: a static page is no longer redrawn every 16 ms</td>
 </tr>
 <tr>
+<td><code>BLINKGTK_SIZE_TICK=1</code></td>
+<td>Since 1.2.7-build1. Registers the earlier mechanism that checks the
+window size on every frame (a GTK tick callback) even for WebViews
+created with <code>blink_web_view_new()</code> and similar functions. It
+runs about 60 times a second even on a still page, so CPU usage while
+idle increases. By default it is not registered, and size changes are
+received when the WebView is allocated its size</td>
+<td>1.2.7-build1 fix: the frame clock kept running on still pages and
+used CPU</td>
+</tr>
+<tr>
 <td><code>BLINKGTK_T2_AUTO=0</code></td>
 <td>Since 1.2.4. Stops automatically switching software rendering to T2
 (a path that receives the composited result through shared memory
@@ -559,10 +570,19 @@ the passed area by 1 px) / <code>BLINKGTK_T2_COPY_VERIFY</code> (testing
 only: compares a partially copied image with the source and logs
 mismatches) / <code>BLINKGTK_T2_COPY_TEST_NOAGE</code> (testing-only
 negative control: suppresses other updates to verify that missed-copy
-detection works) / <code>BLINKGTK_T2_AUTO</code> (<code>0</code> stops
-automatically selecting T2 on a scale-1 display; on by default since
-1.2.4) / <code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (testing
-only: delay loading the stored permissions) /
+detection works) / <code>BLINKGTK_T2_TEST_STALE_SURFACE</code>
+(testing-only negative control: with <code>1</code>, the first T2 draw
+is matched against a LocalSurfaceId with the same FrameSinkId but a
+different generation, to confirm that a frame from a stale surface is
+not accepted. Since v1.2.7-build2) /
+<code>BLINKGTK_T2_TEST_STALE_FRAME_TOKEN</code> (testing-only negative
+control: with <code>1</code>, the preceding frame token is passed once
+for the same SurfaceId, to confirm that the stale frame is not accepted
+and that the next correct frame recovers. Since v1.2.7-build2) /
+<code>BLINKGTK_T2_AUTO</code> (<code>0</code> stops automatically
+selecting T2 on a scale-1 display; on by default since 1.2.4) /
+<code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (testing only: delay
+loading the stored permissions) /
 <code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
 <code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
 <code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /

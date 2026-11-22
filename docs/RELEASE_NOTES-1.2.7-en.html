@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.7-build1 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.7-build2 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-11-19 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
+<meta name="description" content="Release date: 2026-11-20 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.7-build1 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-11-19 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
+<meta property="og:title" content="BlinkGTK 1.2.7-build2 Release Notes — BlinkGTK">
+<meta property="og:description" content="Release date: 2026-11-20 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,11 +43,30 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="RELEASE_NOTES-1.2.7-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-127-build1-release-notes">BlinkGTK 1.2.7-build1 Release
+<h1 id="blinkgtk-127-build2-release-notes">BlinkGTK 1.2.7-build2 Release
 Notes</h1>
-<p><strong>Release date</strong>: 2026-11-19 /
+<p><strong>Release date</strong>: 2026-11-20 /
 <strong>Chromium</strong>: 158.0.8127.36 / Language: <a
 href="RELEASE_NOTES-1.2.7-ja.html">日本語</a> | English</p>
+<h2
+id="build2-old-screens-are-no-longer-shown-and-x11-code-is-removed">build2:
+Old screens are no longer shown, and X11 code is removed</h2>
+<p>If you use build1, please update to build2. The public API is
+unchanged, so you do not need to rebuild your application.</p>
+<p><strong>Old screens are no longer shown</strong> — On the default
+path for software rendering on a scale-1 display, a frame that does not
+contain the current page's drawing is now discarded instead of being
+shown. The screen kept while presentation is stopped (with
+<code>BLINK_PRESENT_WARM</code> set through
+<code>blink_web_view_set_presentation_policy()</code>, or while the
+window is hidden with <code>BLINKGTK_PRESENT_POLICY=warm</code>) is also
+discarded when presentation resumes if the page has been redrawn since
+then. This keeps an earlier screen, or a screen without the page in it,
+from being shown. Displays with a scale other than 1, and GPU rendering,
+are not affected.</p>
+<p><strong>X11 code removed</strong> — BlinkGTK on Linux runs on Wayland
+only. The X11 code it never used has been removed from the library.
+Usage and appearance are unchanged.</p>
 <h2 id="build1-updated-to-chromium-158">build1: Updated to Chromium
 158</h2>
 <p>BlinkGTK's rendering engine is now Chromium

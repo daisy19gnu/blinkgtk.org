@@ -4,8 +4,16 @@
   <link href="https://blinkgtk.org/feed-ja.xml" rel="self"/>
   <link href="https://blinkgtk.org/news-ja.html"/>
   <id>https://blinkgtk.org/feed-ja.xml</id>
-  <updated>2026-11-20T00:00:00Z</updated>
+  <updated>2026-11-22T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
+  <entry>
+    <title>v1.2.7-build2 を公開しました (古い画面を出さないための修正)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build2"/>
+    <id>tag:blinkgtk.org,2026:2026-11-22-build2-127:ja</id>
+    <updated>2026-11-22T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>拡大率 1 の画面でソフトウェア描画を使うとき、いまのページの描画を含まない画面や、画面へ出すのを止めている間に取っておいた古い画面を出さないようにしました。使っていなかった X11 向けのコードも外しました。公開 API は変わらないので、アプリを作り直さずに更新できます。BlinkGTK for Windows 1.2.7-build1 には、インストーラを添えました。</summary>
+  </entry>
   <entry>
     <title>BlinkGTK for Windows v1.2.7-build1 を公開しました (Chromium 158.0.8127.36)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build1-windows"/>

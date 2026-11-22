@@ -46,7 +46,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.7-build1 / 言語: 日本語 | <a
+<p>バージョン: 1.2.7-build2 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -71,6 +71,16 @@ href="version-history-en.html">English</a></p>
 </tr>
 </thead>
 <tbody>
+<tr>
+<td>v1.2.7-build2</td>
+<td>2026-11-20</td>
+<td>158.0.8127.36</td>
+<td>拡大率 1
+の画面のソフトウェア描画で、いまのページの描画を含まない画面や、画面へ出すのを止めている間
+(BLINK_PRESENT_WARM など)
+に取っておいた古い画面を出さないようにした。使っていなかった X11
+向けのコードを外した (使い方と見た目は同じ)</td>
+</tr>
 <tr>
 <td><strong>v1.2.7-build1</strong> ← 公開中</td>
 <td>2026-11-19</td>
