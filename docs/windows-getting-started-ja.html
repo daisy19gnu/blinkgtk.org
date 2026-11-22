@@ -59,6 +59,7 @@ API・組版機能を確認しました。portable ZIP
 を読み込まないことも確かめています。</p>
 <p><strong>目次</strong>: <a href="#どんな方向けか">どんな方向けか</a> /
 <a href="#動かす">動かす</a> / <a
+href="#インストーラを使う場合">インストーラを使う場合</a> / <a
 href="#動いたか確かめる">動いたか確かめる</a> / <a
 href="#動作条件">動作条件</a> / <a href="#組み込む方">組み込む方</a> /
 <a href="#前の版から上げる方">前の版から上げる方</a> / <a
@@ -186,15 +187,23 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build1-win
 href="#組み込む方">組み込む方</a>)</td>
 </tr>
 <tr>
+<td><code>blinkgtk-1.2.7-build1-windows-x64-setup.exe</code></td>
+<td><strong>インストーラ</strong> (任意。ZIP のかわりに使えます)。<a
+href="#インストーラを使う場合">インストーラを使う場合</a></td>
+</tr>
+<tr>
 <td><code>SHA256SUMS</code></td>
-<td>ZIP の確認用。<code>certutil -hashfile &lt;ZIP&gt; SHA256</code>
+<td>ZIP
+とインストーラの確認用。<code>certutil -hashfile &lt;ファイル&gt; SHA256</code>
 の出力と見比べられます</td>
 </tr>
 </tbody>
 </table>
 <p>portable ZIP を、任意の場所に展開します。GTK4 と VC++ ランタイムの
-DLL も入っているので、別に入れるものはありません。インストーラ (MSI)
-はまだありません。</p>
+DLL も入っているので、別に入れるものはありません。MSI
+のインストーラはありません (インストーラが要る方は、下の <a
+href="#インストーラを使う場合">インストーラを使う場合</a>
+を参照してください)。</p>
 <p><img src="figs/extracted-folder.png"
 alt="展開したフォルダ。bin、docs、share の 3 つのフォルダができている" /></p>
 <p><em>展開すると、<code>bin</code> (実行ファイルと
@@ -243,6 +252,90 @@ blinkgtk_browser.exe https://example.com/</code></pre>
 <p>引数に URL を渡すと、そのページを開きます。<br />
 <code>blinkgtk_browser</code> は、BlinkGTK
 を組み込むのに必要なものだけを示す、最小のサンプルです。</p>
+<h3 id="インストーラを使う場合">インストーラを使う場合</h3>
+<p>ZIP のかわりに、インストーラ
+<code>blinkgtk-1.2.7-build1-windows-x64-setup.exe</code> (342,516,356
+バイト) でも入れられます。中身は portable ZIP
+と同じものです。<strong>ユーザー単位で入るので、管理者権限は要りません。</strong>
+インストール先の既定は
+<code>%LOCALAPPDATA%\Programs\BlinkGTK for Windows</code>
+で、必要な空き領域は最低 1.06 GB
+と表示されます。<strong>このインストーラにもコード署名はありません。</strong></p>
+<p>次の画面は、Windows 11 (build 26300) の Edge
+で取得して実行したときのもので、2026-11-22
+に撮りました。他のブラウザでは確かめていません。</p>
+<p><strong>1. ブラウザで取得する (Edge)。</strong>
+ダウンロード欄に「一般的にダウンロードされていません」という警告が出ます。</p>
+<p><img src="figs/installer-edge-warning.png"
+alt="Edge のダウンロード欄。「blinkgtk-1.2.7-build1-windows-x64-setup.exe は一般的にダウンロードされていません。開く前に、信頼できることを確認してください。」と表示されている" /></p>
+<p>そのファイルの「…」を選ぶと、メニューに「削除」と「保存」が出ます。<strong>「保存」を選びます。</strong></p>
+<p><img src="figs/installer-edge-menu.png"
+alt="「…」のメニュー。「削除」「保存」「このファイルは安全であることを報告する」「詳細情報」「ダウンロード リンクのコピー」が並ぶ" /></p>
+<p>次の確認の画面では、「このファイルは一般的にダウンロードされていないため、Microsoft
+Defender SmartScreen
+はこのファイルが安全かどうかを確認できませんでした」と表示され、発行元は「不明」です。<strong>信頼できる入手先から取得したことを確かめてから、「削除」の右の「v」を選びます。</strong></p>
+<p><img src="figs/installer-edge-confirm.png"
+alt="「開く前に、信頼できることを確認してください」の画面。ボタンは「キャンセル」と「削除」" /></p>
+<p>「保持する」が出るので、これを選ぶと、ファイルが残ります。</p>
+<p><img src="figs/installer-edge-keep.png"
+alt="「削除」の下に「保持する」が出ている" /></p>
+<p>取得したファイルは、<code>SHA256SUMS</code> と見比べてください
+(<code>certutil -hashfile &lt;ファイル&gt; SHA256</code>)。</p>
+<p><strong>2. 実行する。</strong>
+当方の確認では、「保持する」を選んだあとに実行すると、追加の警告は出ず、すぐにセットアップの画面になりました。Windows
+の「Windows によって PC
+が保護されました」という画面は、確認した範囲では出ていません。ただし、確認は
+1 回で、<code>cmd</code> の <code>start</code>
+から起動したものです。エクスプローラーのダブルクリックでは確かめていません。<strong>この画面が出た場合は、「詳細情報」を選ぶと「実行」が選べるのが一般的ですが、当方はこの画面を見ていません。</strong></p>
+<p>セットアップの画面は、次の順に進みます。</p>
+<p><img src="figs/installer-language.png"
+alt="セットアップに使用する言語の選択。「日本語」と、「OK」「キャンセル」のボタン" /></p>
+<p><em>言語の選択。インストール中に使う言語で、日本語と English
+から選びます。</em></p>
+<p><img src="figs/installer-destination.png"
+alt="インストール先の指定。既定は C:\Users&lt;ユーザー名&gt;\AppData\Local\Programs\BlinkGTK for Windows" /></p>
+<p><em>インストール先の指定。そのままで良ければ「次へ」を選びます。変える場合は「参照」を選びます。</em></p>
+<p><img src="figs/installer-ready.png"
+alt="インストール準備完了。インストール先が表示され、「戻る」「インストール」「キャンセル」のボタンがある" /></p>
+<p><em>インストール準備完了。「インストール」を選びます。</em></p>
+<p><img src="figs/installer-progress.png"
+alt="インストール状況。ファイルを展開している進行の表示" /></p>
+<p><em>インストール状況。展開が終わるまで待ちます (1 GB
+余りのファイルを書き込みます)。</em></p>
+<p><img src="figs/installer-finish.png"
+alt="セットアップウィザードの完了。「BlinkGTK for Windows を起動」のチェックがあり、「完了」のボタンがある" /></p>
+<p><em>完了。「BlinkGTK for Windows
+を起動」のチェックは、はじめから入っています。そのまま「完了」を選ぶと、<code>blinkgtk_browser.exe</code>
+が起動します。</em>
+このとき、ブラウザの窓の裏に、デバッグ出力のコンソールの窓が開くことがあります
+(当方の確認では開きました)。</p>
+<p>インストールすると、スタートメニューに「BlinkGTK for
+Windows」のショートカットができます。</p>
+<p><strong>3. アンインストールする。</strong> インストール先の
+<code>unins000.exe</code> を実行します。「BlinkGTK for Windows
+とその関連コンポーネントをすべて削除します。よろしいですか？」と聞かれるので、「はい」を選びます。</p>
+<p><img src="figs/installer-uninstall-confirm.png"
+alt="アンインストールの確認。「はい」と「いいえ」のボタンがある" /></p>
+<p><img src="figs/installer-uninstall-done.png"
+alt="アンインストールの完了。「BlinkGTK for Windows はご使用のコンピューターから正常に削除されました。」" /></p>
+<p>当方の確認では、アンインストールのあと、インストール先のフォルダ、スタートメニューのショートカット、アンインストール用の登録
+(<code>HKCU</code> の登録) が消えていました。Windows
+の「設定」のアプリの一覧からの削除は、画面では確かめていません。</p>
+<p><strong>設定とプロファイルは消えません。</strong>
+<code>blinkgtk_browser</code> が使う
+<code>%USERPROFILE%\.blink_gtk</code>
+は、インストーラが作る場所ではないため、アンインストールでは消しません。もう一度インストールすると、前の設定が残っていることがあります。当方の確認でも、アンインストールのあとに残っていました
+(この確認では、アンインストールの前から在ったものかは調べていません)。</p>
+<p><strong>確かめていないこと:</strong></p>
+<ul>
+<li>上書きインストール
+(前の版のインストーラで入れた上から、新しい版を入れる)。このインストーラが最初のものなので、確かめられるのは次の版からです。</li>
+<li>クリーンな Windows (開発機ではない素の環境) での動作。</li>
+<li>Windows 10。</li>
+<li>「Windows によって PC が保護されました」の画面 (上の 2
+を参照)。</li>
+<li>ZIP を Edge で取得したときの画面。</li>
+</ul>
 <hr />
 <h2 id="動いたか確かめる">動いたか確かめる</h2>
 <ul>
@@ -738,6 +831,11 @@ href="https://github.com/daisy19gnu/blinkgtk-dist/issues">blinkgtk-dist
 <td>2026-11-20</td>
 <td>1.2.7-build1 / Chromium 158.0.8127.36 に更新し、現行
 ZIP・API・描画・表示・窓操作の確認結果を反映</td>
+</tr>
+<tr>
+<td>2026-11-22</td>
+<td>インストーラ (Inno Setup、署名なし) の説明と画面を追加した。Edge
+での取得からアンインストールまでの流れと、確かめていないことを書いた</td>
 </tr>
 </tbody>
 </table>

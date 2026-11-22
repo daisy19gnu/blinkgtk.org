@@ -59,8 +59,9 @@ operations, sandbox API and typesetting features on 2026-11-20. The
 portable ZIP was also unpacked and run on its own, with no DLLs loaded
 from the build tree.</p>
 <p><strong>Contents</strong>: <a href="#who-it-is-for">Who it is for</a>
-/ <a href="#run-it">Run it</a> / <a href="#check-that-it-works">Check
-that it works</a> / <a href="#requirements">Requirements</a> / <a
+/ <a href="#run-it">Run it</a> / <a href="#using-the-installer">Using
+the installer</a> / <a href="#check-that-it-works">Check that it
+works</a> / <a href="#requirements">Requirements</a> / <a
 href="#embedding-it-in-your-app">Embedding it in your app</a> / <a
 href="#upgrading-from-an-earlier-version">Upgrading from an earlier
 version</a> / <a href="#differences-from-the-linux-version">Differences
@@ -191,15 +192,21 @@ release of blinkgtk-dist</a>.</p>
 href="#embedding-it-in-your-app">Embedding it in your app</a>)</td>
 </tr>
 <tr>
+<td><code>blinkgtk-1.2.7-build1-windows-x64-setup.exe</code></td>
+<td><strong>Installer</strong> (optional; use it instead of the ZIP).
+See <a href="#using-the-installer">Using the installer</a></td>
+</tr>
+<tr>
 <td><code>SHA256SUMS</code></td>
-<td>To check the ZIPs. Compare it with the output of
-<code>certutil -hashfile &lt;ZIP&gt; SHA256</code></td>
+<td>To check the ZIPs and the installer. Compare it with the output of
+<code>certutil -hashfile &lt;file&gt; SHA256</code></td>
 </tr>
 </tbody>
 </table>
 <p>Unpack the portable ZIP anywhere. It includes the GTK4 and VC++
-runtime DLLs, so there is nothing else to install. There is no installer
-(MSI) yet.</p>
+runtime DLLs, so there is nothing else to install. There is no MSI
+installer (if you want an installer, see <a
+href="#using-the-installer">Using the installer</a> below).</p>
 <p><img src="figs/extracted-folder.png"
 alt="The unpacked folder: three folders, bin, docs and share" /></p>
 <p><em>Unpacking gives three folders: <code>bin</code> (the executables
@@ -247,6 +254,100 @@ treats them as symbols and fails.</p>
 <p>With a URL argument it opens that page.<br />
 <code>blinkgtk_browser</code> is a minimal sample that shows only what
 you need to embed BlinkGTK.</p>
+<h3 id="using-the-installer">Using the installer</h3>
+<p>Instead of the ZIP, you can install with
+<code>blinkgtk-1.2.7-build1-windows-x64-setup.exe</code> (342,516,356
+bytes). It contains the same files as the portable ZIP. <strong>It
+installs for the current user, so no administrator rights are
+needed.</strong> The default location is
+<code>%LOCALAPPDATA%\Programs\BlinkGTK for Windows</code>, and the
+installer shows that at least 1.06 GB of free space is required.
+<strong>This installer is not code-signed either.</strong></p>
+<p>The screens below were captured on 2026-11-22 by downloading and
+running the file with Edge on Windows 11 (build 26300). We have not
+checked other browsers. The screens are in Japanese because the check
+was done on a Japanese-language Windows.</p>
+<p><strong>1. Download with the browser (Edge).</strong> The download
+list shows a warning that the file is not commonly downloaded.</p>
+<p><img src="figs/installer-edge-warning.png"
+alt="Edge&#39;s download list: &quot;blinkgtk-1.2.7-build1-windows-x64-setup.exe is not commonly downloaded. Make sure you trust it before opening.&quot; (in Japanese)" /></p>
+<p>Choose "..." for that file. The menu offers "Delete" and "Save".
+<strong>Choose "Save".</strong></p>
+<p><img src="figs/installer-edge-menu.png"
+alt="The &quot;...&quot; menu: Delete, Save, Report this file as safe, Details, Copy download link (in Japanese)" /></p>
+<p>The next screen says that Microsoft Defender SmartScreen could not
+verify whether the file is safe because it is not commonly downloaded,
+and the publisher is shown as unknown. <strong>Make sure you got the
+file from a source you trust, then open the "v" next to
+"Delete".</strong></p>
+<p><img src="figs/installer-edge-confirm.png"
+alt="The &quot;Make sure you trust the file before opening&quot; screen, with the buttons Cancel and Delete (in Japanese)" /></p>
+<p>"Keep" appears. Choose it to keep the file.</p>
+<p><img src="figs/installer-edge-keep.png"
+alt="The &quot;Keep&quot; item shown under &quot;Delete&quot; (in Japanese)" /></p>
+<p>Compare the file with <code>SHA256SUMS</code>
+(<code>certutil -hashfile &lt;file&gt; SHA256</code>).</p>
+<p><strong>2. Run it.</strong> In our check, running the file after
+choosing "Keep" showed no further warning and went straight to the setup
+screen. The "Windows protected your PC" screen did not appear in what we
+checked. However, we checked once, and started it with
+<code>start</code> from <code>cmd</code>; we did not check a
+double-click in File Explorer. <strong>If that screen does appear,
+choosing "More info" usually offers "Run anyway", but we have not seen
+this screen.</strong></p>
+<p>The setup screens go in this order.</p>
+<p><img src="figs/installer-language.png"
+alt="Setup language selection: Japanese, with OK and Cancel (in Japanese)" /></p>
+<p><em>Language selection. Choose the language used during installation
+(Japanese or English).</em></p>
+<p><img src="figs/installer-destination.png"
+alt="Select destination: the default is C:\Users&lt;user&gt;\AppData\Local\Programs\BlinkGTK for Windows (in Japanese)" /></p>
+<p><em>Select destination. Choose "Next" to keep it, or "Browse" to
+change it.</em></p>
+<p><img src="figs/installer-ready.png"
+alt="Ready to install: the destination is shown, with Back, Install and Cancel (in Japanese)" /></p>
+<p><em>Ready to install. Choose "Install".</em></p>
+<p><img src="figs/installer-progress.png"
+alt="Installing: a progress bar while files are extracted (in Japanese)" /></p>
+<p><em>Installing. Wait until extraction finishes (a little over 1 GB of
+files is written).</em></p>
+<p><img src="figs/installer-finish.png"
+alt="Completing the setup wizard: the &quot;Launch BlinkGTK for Windows&quot; check box is on, with a Finish button (in Japanese)" /></p>
+<p><em>Finish. The "Launch BlinkGTK for Windows" check box is on by
+default. If you choose "Finish" as it is,
+<code>blinkgtk_browser.exe</code> starts.</em> A console window with
+debug output may open behind the browser window (it did in our
+check).</p>
+<p>After installation, a "BlinkGTK for Windows" shortcut is in the Start
+menu.</p>
+<p><strong>3. Uninstall.</strong> Run <code>unins000.exe</code> in the
+install folder. It asks whether to remove BlinkGTK for Windows and all
+of its components; choose "Yes".</p>
+<p><img src="figs/installer-uninstall-confirm.png"
+alt="Uninstall confirmation with Yes and No buttons (in Japanese)" /></p>
+<p><img src="figs/installer-uninstall-done.png"
+alt="Uninstall finished: &quot;BlinkGTK for Windows was successfully removed from your computer.&quot; (in Japanese)" /></p>
+<p>In our check, after uninstalling, the install folder, the Start menu
+shortcut and the uninstall registration (under <code>HKCU</code>) were
+gone. We have not checked removal from the Settings app list on
+screen.</p>
+<p><strong>Your settings and profile are not removed.</strong>
+<code>%USERPROFILE%\.blink_gtk</code>, used by
+<code>blinkgtk_browser</code>, is not created by the installer, so
+uninstalling does not remove it. When you install again, the earlier
+settings may still be there. It was still there after uninstalling in
+our check (we did not check whether it existed before the
+uninstall).</p>
+<p><strong>What we have not checked:</strong></p>
+<ul>
+<li>Installing over an earlier version made with an earlier installer.
+This is the first installer, so this can be checked from the next
+version.</li>
+<li>A clean Windows (not a development machine).</li>
+<li>Windows 10.</li>
+<li>The "Windows protected your PC" screen (see 2 above).</li>
+<li>The screens when the ZIP is downloaded with Edge.</li>
+</ul>
 <hr />
 <h2 id="check-that-it-works">Check that it works</h2>
 <ul>
@@ -762,6 +863,11 @@ use on a static page, and upgrade steps from build5</td>
 <td>2026-11-20</td>
 <td>Updated for 1.2.7-build1 / Chromium 158.0.8127.36 and the current
 package/API/rendering/display/window-operation checks</td>
+</tr>
+<tr>
+<td>2026-11-22</td>
+<td>Added the installer (Inno Setup, not code-signed): the flow from
+downloading with Edge to uninstalling, and what we have not checked</td>
 </tr>
 </tbody>
 </table>
