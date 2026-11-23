@@ -10,6 +10,9 @@
 <div class="card doc">
 <h1>お知らせ</h1>
 <p>BlinkGTK の更新と、関連する取り組みのお知らせです。 <a href="https://blinkgtk.org/feed-ja.xml">Atom</a></p>
+<h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build4">v1.2.7-build4 を公開しました (リモートデバッグを開くとアプリが異常終了する問題の修正)</a></h2>
+<p><small>2026-11-23 · リリース</small></p>
+<p>blink_web_view_open_devtools() を呼ぶとアプリが異常終了していたのを直しました。指定したポートでリモートデバッグの口が開き、ブラウザの開発者ツールから表示中のページに接続できます。口はこの機械の中からの接続だけを受け付けます。公開 API は変わらないので、作り直さずに更新できます。</p>
 <h2><a href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build3">v1.2.7-build3 を公開しました (一部の Web API でページが止まる問題の修正ほか)</a></h2>
 <p><small>2026-11-23 · リリース</small></p>
 <p>バッジ・端末内の音声認識・Web アプリのインストールの API を呼ぶページが、異常終了したり止まったりしなくなりました。ページを離れる前の確認が JavaScript ダイアログのハンドラに届き、サーバーへ送る言語が環境の言語に合い、クライアント証明書を任意で求めるサイトが開けるようになりました。公開 API は変わらないので作り直さずに更新できますが、種類を見ずに TRUE を返すダイアログのハンドラは対応が必要です。</p>

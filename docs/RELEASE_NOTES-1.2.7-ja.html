@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.7-build3 リリースノート — BlinkGTK</title>
+  <title>BlinkGTK 1.2.7-build4 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -26,7 +26,7 @@
 <meta name="description" content="リリース日: 2026-11-23 / Chromium: 158.0.8127.36 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.7-build3 リリースノート — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.7-build4 リリースノート — BlinkGTK">
 <meta property="og:description" content="リリース日: 2026-11-23 / Chromium: 158.0.8127.36 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -43,11 +43,46 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="RELEASE_NOTES-1.2.7-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-127-build3-リリースノート">BlinkGTK 1.2.7-build3
+<h1 id="blinkgtk-127-build4-リリースノート">BlinkGTK 1.2.7-build4
 リリースノート</h1>
 <p><strong>リリース日</strong>: 2026-11-23 / <strong>Chromium</strong>:
 158.0.8127.36 / 言語: 日本語 | <a
 href="RELEASE_NOTES-1.2.7-en.html">English</a></p>
+<h2
+id="build4-リモートデバッグを開くとアプリが異常終了する問題の修正">build4:
+リモートデバッグを開くとアプリが異常終了する問題の修正</h2>
+<p>build3 までをお使いで、<code>blink_web_view_open_devtools()</code>
+を使うアプリは、build4 へ更新してください。公開 API
+に変更はないので、アプリを作り直す必要はありません。この関数を呼ばないアプリの動きは
+build3 と同じです。</p>
+<p><strong>リモートデバッグの口が開くようになった</strong> — build3
+までは、<code>blink_web_view_open_devtools()</code>
+を呼ぶと、その場でアプリが異常終了していました。build4
+では、指定したポートでリモートデバッグの口が開き、戻り値にそのポート番号が返ります。</p>
+<ul>
+<li>Chrome
+などのブラウザの開発者ツールから、<code>http://localhost:&lt;ポート&gt;</code>
+(例: <code>http://localhost:9222/json/list</code>)
+で表示中のページを見つけて接続できます。</li>
+<li>口は、この機械の中 (<code>127.0.0.1</code>)
+からの接続だけを受け付けます。開いている間は、同じ機械のほかのプログラムからも接続できるので、必要なときだけ開いてください。閉じるには
+<code>blink_web_view_close_devtools()</code> を呼びます。</li>
+<li><code>blink_web_view_set_content_policy()</code> で
+<code>BLINK_CONTENT_POLICY_NO_DEVTOOLS</code>
+を設定している場合は、今までどおり開かずに 0 を返します。</li>
+</ul>
+<p><strong><code>/json/version</code> の <code>Browser</code>
+に版が出る</strong> — build3 までは、リモートデバッグの
+<code>/json/version</code> の <code>Browser</code> (と DevTools
+プロトコルの <code>Browser.getVersion</code> の <code>product</code>)
+が空でした。build4 では <code>Chrome/&lt;Chromium の版&gt;</code>
+(この版では <code>Chrome/158.0.8127.36</code>) を返します。ページに送る
+User-Agent は変わりません。</p>
+<p>1.2.5・1.2.6
+にも同じ処理があり、同じく異常終了すると見ていますが、試していません。この確認は、試験用のプログラムからこの関数を呼び、<code>/json/version</code>
+と <code>/json/list</code>
+を読んで行いました。<code>Browser.getVersion</code>
+は試していません。</p>
 <h2
 id="build3-一部の-web-api-でページが止まる問題の修正と離脱の確認言語クライアント証明書ドラッグの修正">build3:
 一部の Web API

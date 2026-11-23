@@ -46,7 +46,7 @@ BlinkGTK</title>
 </div><div class="card doc">
 <h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
 改版履歴 — BlinkGTK の版と Chromium の版</h1>
-<p>バージョン: 1.2.7-build3 / 言語: 日本語 | <a
+<p>バージョン: 1.2.7-build4 / 言語: 日本語 | <a
 href="version-history-en.html">English</a></p>
 <p>BlinkGTK のどの版が、Chromium
 のどの版を土台にしているかの一覧です。<br />
@@ -72,6 +72,24 @@ href="version-history-en.html">English</a></p>
 </thead>
 <tbody>
 <tr>
+<td><strong>v1.2.7-build4</strong> ← 公開中</td>
+<td>2026-11-23</td>
+<td><strong>158.0.8127.36</strong></td>
+<td>blink_web_view_open_devtools()
+を呼ぶとアプリが異常終了していたのを直し、リモートデバッグの口が開くようにした。/json/version
+の Browser に版を返す (公開 API は同じ)</td>
+</tr>
+<tr>
+<td>v1.2.7-build3</td>
+<td>2026-11-23</td>
+<td>158.0.8127.36</td>
+<td>バッジ・端末内の音声認識・Web アプリのインストールの API
+を呼ぶページが異常終了・停止しないようにした。ページを離れる前の確認が
+JavaScript
+ダイアログのハンドラに届き、サーバーへ送る言語が環境の言語に合い、クライアント証明書を任意で求めるサイトが開け、ページの中のドラッグの後もクリックが届く
+(公開 API は同じ)</td>
+</tr>
+<tr>
 <td>v1.2.7-build2</td>
 <td>2026-11-22</td>
 <td>158.0.8127.36</td>
@@ -82,9 +100,9 @@ href="version-history-en.html">English</a></p>
 向けのコードを外した (使い方と見た目は同じ)</td>
 </tr>
 <tr>
-<td><strong>v1.2.7-build1</strong> ← 公開中</td>
+<td>v1.2.7-build1</td>
 <td>2026-11-19</td>
-<td><strong>158.0.8127.36</strong></td>
+<td>158.0.8127.36</td>
 <td>Chromium 158 に更新し上流のセキュリティ修正 204
 件を取り込み。software の既定経路で画面の更新範囲を GTK / Wayland
 に渡す。CPU 時間の低下は確認されていない</td>

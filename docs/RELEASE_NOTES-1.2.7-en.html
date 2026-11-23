@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.7-build3 Release Notes — BlinkGTK</title>
+  <title>BlinkGTK 1.2.7-build4 Release Notes — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -26,7 +26,7 @@
 <meta name="description" content="Release date: 2026-11-23 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.7-build3 Release Notes — BlinkGTK">
+<meta property="og:title" content="BlinkGTK 1.2.7-build4 Release Notes — BlinkGTK">
 <meta property="og:description" content="Release date: 2026-11-23 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
 <meta property="og:site_name" content="BlinkGTK">
@@ -43,11 +43,49 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="RELEASE_NOTES-1.2.7-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-127-build3-release-notes">BlinkGTK 1.2.7-build3 Release
+<h1 id="blinkgtk-127-build4-release-notes">BlinkGTK 1.2.7-build4 Release
 Notes</h1>
 <p><strong>Release date</strong>: 2026-11-23 /
 <strong>Chromium</strong>: 158.0.8127.36 / Language: <a
 href="RELEASE_NOTES-1.2.7-ja.html">日本語</a> | English</p>
+<h2
+id="build4-fix-for-the-application-crashing-when-remote-debugging-is-opened">build4:
+Fix for the application crashing when remote debugging is opened</h2>
+<p>If you use build3 or earlier and your application calls
+<code>blink_web_view_open_devtools()</code>, please update to build4.
+The public API is unchanged, so you do not need to rebuild your
+application. Applications that do not call this function behave the same
+as in build3.</p>
+<p><strong>The remote debugging port now opens</strong> — Up to build3,
+calling <code>blink_web_view_open_devtools()</code> made the application
+crash on the spot. In build4 the remote debugging port opens on the
+requested port, and the function returns that port number.</p>
+<ul>
+<li>From the developer tools of a browser such as Chrome, you can find
+and connect to the displayed page at
+<code>http://localhost:&lt;port&gt;</code> (for example
+<code>http://localhost:9222/json/list</code>).</li>
+<li>The port accepts connections only from this machine
+(<code>127.0.0.1</code>). While it is open, other programs on the same
+machine can also connect, so open it only when you need it. To close it,
+call <code>blink_web_view_close_devtools()</code>.</li>
+<li>If <code>BLINK_CONTENT_POLICY_NO_DEVTOOLS</code> is set with
+<code>blink_web_view_set_content_policy()</code>, the port is not opened
+and the function returns 0, as before.</li>
+</ul>
+<p><strong>The <code>Browser</code> field of <code>/json/version</code>
+shows the version</strong> — Up to build3, the <code>Browser</code>
+field of the remote debugging <code>/json/version</code> (and the
+<code>product</code> of <code>Browser.getVersion</code> in the DevTools
+protocol) was empty. In build4 it returns
+<code>Chrome/&lt;Chromium version&gt;</code>
+(<code>Chrome/158.0.8127.36</code> in this release). The User-Agent sent
+to pages is unchanged.</p>
+<p>1.2.5 and 1.2.6 contain the same code and are expected to crash in
+the same way, but this has not been tested. This was checked by calling
+the function from a test program and reading <code>/json/version</code>
+and <code>/json/list</code>. <code>Browser.getVersion</code> has not
+been tested.</p>
 <h2
 id="build3-pages-no-longer-stop-on-some-web-apis-and-fixes-for-the-leave-page-confirmation-language-client-certificates-and-dragging">build3:
 Pages no longer stop on some Web APIs, and fixes for the leave-page

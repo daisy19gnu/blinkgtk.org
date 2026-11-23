@@ -7,6 +7,14 @@
   <updated>2026-11-23T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.7-build4 released (fix for the application crashing when remote debugging is opened)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build4"/>
+    <id>tag:blinkgtk.org,2026:2026-11-23-build4-127:en</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>Calling blink_web_view_open_devtools() no longer crashes the application. The remote debugging port opens on the requested port, and you can connect to the displayed page from the developer tools of a browser. The port accepts connections only from this machine. The public API is unchanged, so you can update without rebuilding.</summary>
+  </entry>
+  <entry>
     <title>v1.2.7-build3 released (pages no longer stop on some Web APIs, and more)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build3"/>
     <id>tag:blinkgtk.org,2026:2026-11-23-build3-127:en</id>

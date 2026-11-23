@@ -47,7 +47,7 @@ BlinkGTK</title>
 <h1
 id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
 Version History — BlinkGTK and Chromium Versions</h1>
-<p>Version: 1.2.7-build3 / Language: English | <a
+<p>Version: 1.2.7-build4 / Language: English | <a
 href="version-history-ja.html">日本語</a></p>
 <p>Which BlinkGTK release is built on which Chromium. To find out when a
 feature became<br />
@@ -70,6 +70,25 @@ BlinkGTK release here.</p>
 </thead>
 <tbody>
 <tr>
+<td><strong>v1.2.7-build4</strong> ← current</td>
+<td>2026-11-23</td>
+<td><strong>158.0.8127.36</strong></td>
+<td>Calling blink_web_view_open_devtools() no longer crashes the
+application, and the remote debugging port opens. /json/version now
+reports the version in Browser (the public API is unchanged)</td>
+</tr>
+<tr>
+<td>v1.2.7-build3</td>
+<td>2026-11-23</td>
+<td>158.0.8127.36</td>
+<td>Pages that call the badge, on-device speech recognition or web app
+installation APIs no longer crash or stop. The leave-page confirmation
+reaches the JavaScript dialog handler, the language sent to servers
+follows the environment, sites that optionally ask for a client
+certificate open, and clicks reach the page after dragging inside it
+(the public API is unchanged)</td>
+</tr>
+<tr>
 <td>v1.2.7-build2</td>
 <td>2026-11-22</td>
 <td>158.0.8127.36</td>
@@ -79,9 +98,9 @@ stopped (BLINK_PRESENT_WARM and similar) are no longer shown. Unused X11
 code removed (usage and appearance are unchanged)</td>
 </tr>
 <tr>
-<td><strong>v1.2.7-build1</strong> ← current</td>
+<td>v1.2.7-build1</td>
 <td>2026-11-19</td>
-<td><strong>158.0.8127.36</strong></td>
+<td>158.0.8127.36</td>
 <td>Updated to Chromium 158 with 204 upstream security fixes. The
 default software path passes screen update regions to GTK / Wayland. An
 application CPU-time reduction has not been demonstrated</td>

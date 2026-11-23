@@ -7,6 +7,14 @@
   <updated>2026-11-23T00:00:00Z</updated>
   <author><name>BlinkGTK Project</name></author>
   <entry>
+    <title>v1.2.7-build4 を公開しました (リモートデバッグを開くとアプリが異常終了する問題の修正)</title>
+    <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build4"/>
+    <id>tag:blinkgtk.org,2026:2026-11-23-build4-127:ja</id>
+    <updated>2026-11-23T00:00:00Z</updated>
+    <category term="release"/>
+    <summary>blink_web_view_open_devtools() を呼ぶとアプリが異常終了していたのを直しました。指定したポートでリモートデバッグの口が開き、ブラウザの開発者ツールから表示中のページに接続できます。口はこの機械の中からの接続だけを受け付けます。公開 API は変わらないので、作り直さずに更新できます。</summary>
+  </entry>
+  <entry>
     <title>v1.2.7-build3 を公開しました (一部の Web API でページが止まる問題の修正ほか)</title>
     <link href="https://github.com/daisy19gnu/blinkgtk-dist/releases/tag/v1.2.7-build3"/>
     <id>tag:blinkgtk.org,2026:2026-11-23-build3-127:ja</id>
