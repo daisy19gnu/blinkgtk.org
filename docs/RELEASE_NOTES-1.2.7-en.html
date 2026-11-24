@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>BlinkGTK 1.2.7-build4 Release Notes — BlinkGTK</title>
+  <title>RELEASE_NOTES-1.2.7-en — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="Release date: 2026-11-24 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
+<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="BlinkGTK 1.2.7-build4 Release Notes — BlinkGTK">
-<meta property="og:description" content="Release date: 2026-11-24 / Chromium: 158.0.8127.36 / Language: 日本語 | English">
+<meta property="og:title" content="RELEASE_NOTES-1.2.7-en — BlinkGTK">
+<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,182 +43,7 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="RELEASE_NOTES-1.2.7-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
-<h1 id="blinkgtk-127-build4-release-notes">BlinkGTK 1.2.7-build4 Release
-Notes</h1>
-<p><strong>Release date</strong>: 2026-11-24 /
-<strong>Chromium</strong>: 158.0.8127.36 / Language: <a
-href="RELEASE_NOTES-1.2.7-ja.html">日本語</a> | English</p>
-<h2
-id="build4-fix-for-the-application-crashing-when-remote-debugging-is-opened">build4:
-Fix for the application crashing when remote debugging is opened</h2>
-<p>If you use build3 or earlier and your application calls
-<code>blink_web_view_open_devtools()</code>, please update to build4.
-The public API is unchanged, so you do not need to rebuild your
-application. Applications that do not call this function behave the same
-as in build3.</p>
-<p><strong>The remote debugging port now opens</strong> — Up to build3,
-calling <code>blink_web_view_open_devtools()</code> made the application
-crash on the spot. In build4 the remote debugging port opens on the
-requested port, and the function returns that port number.</p>
-<ul>
-<li>From the developer tools of a browser such as Chrome, you can find
-and connect to the displayed page at
-<code>http://localhost:&lt;port&gt;</code> (for example
-<code>http://localhost:9222/json/list</code>).</li>
-<li>The port accepts connections only from this machine
-(<code>127.0.0.1</code>). While it is open, other programs on the same
-machine can also connect, so open it only when you need it. To close it,
-call <code>blink_web_view_close_devtools()</code>.</li>
-<li>If <code>BLINK_CONTENT_POLICY_NO_DEVTOOLS</code> is set with
-<code>blink_web_view_set_content_policy()</code>, the port is not opened
-and the function returns 0, as before.</li>
-</ul>
-<p><strong>The <code>Browser</code> field of <code>/json/version</code>
-shows the version</strong> — Up to build3, the <code>Browser</code>
-field of the remote debugging <code>/json/version</code> (and the
-<code>product</code> of <code>Browser.getVersion</code> in the DevTools
-protocol) was empty. In build4 it returns
-<code>Chrome/&lt;Chromium version&gt;</code>
-(<code>Chrome/158.0.8127.36</code> in this release). The User-Agent sent
-to pages is unchanged.</p>
-<p>1.2.5 and 1.2.6 contain the same code and are expected to crash in
-the same way, but this has not been tested. This was checked by calling
-the function from a test program and reading <code>/json/version</code>
-and <code>/json/list</code>. <code>Browser.getVersion</code> has not
-been tested.</p>
-<h2
-id="build3-pages-no-longer-stop-on-some-web-apis-and-fixes-for-the-leave-page-confirmation-language-client-certificates-and-dragging">build3:
-Pages no longer stop on some Web APIs, and fixes for the leave-page
-confirmation, language, client certificates and dragging</h2>
-<p>If you use build2 or earlier, please update to build3. The public API
-is unchanged (only the descriptive comments in the public header
-changed), so you do not need to rebuild your application.</p>
-<p>However, if your application sets a handler with
-<code>blink_web_view_set_javascript_dialog_handler()</code>, please read
-"The leave-page confirmation reaches the handler" below. If your handler
-returns <code>TRUE</code> without checking the dialog type, a change is
-needed.</p>
-<p><strong>Web APIs that no longer make the page crash or stop</strong>
-— Up to build2, pages that call the following APIs stopped working. In
-build3 each of them reports that it is unavailable, and the page keeps
-running. Any site can call them, so this concerns applications that show
-general web pages.</p>
-<ul>
-<li>Badges (<code>navigator.setAppBadge()</code> /
-<code>navigator.clearAppBadge()</code>): calling them from a secure page
-such as an HTTPS page made the page crash. In build3 the call finishes
-without doing anything (the application does not show a badge). Calls
-from a Service Worker have not been tested.</li>
-<li>On-device speech recognition queries
-(<code>SpeechRecognition.available()</code> with
-<code>processLocally: true</code>, and
-<code>SpeechRecognition.install()</code>): the page crashed. In build3
-<code>available()</code> returns <code>"unavailable"</code> and
-<code>install()</code> returns <code>false</code>. BlinkGTK has no
-on-device speech recognition.</li>
-<li>Web app installation (<code>navigator.install()</code>): it never
-returned a result. In build3 it fails right away with
-<code>AbortError</code>. The <code>&lt;install&gt;</code> element has
-not been tested.</li>
-</ul>
-<p><strong>The leave-page confirmation reaches the handler</strong> —
-When a page asked for a <code>beforeunload</code> confirmation (such as
-"changes you made may not be saved"), up to build2 the JavaScript dialog
-handler was not called and the page was always left. In build3 the
-request reaches the handler with <code>dialog_type</code> =
-<code>BLINK_JS_DIALOG_BEFORE_UNLOAD</code>. In the response,
-<code>success</code> = <code>TRUE</code> leaves the page and
-<code>FALSE</code> stays on it. <code>message</code> is a fixed English
-text; pages cannot change it. A page asks for this confirmation only
-after the user has interacted with it.</p>
-<ul>
-<li>With no handler set, or when the handler returns <code>FALSE</code>
-for this type, the page is left right away as before (the no-handler
-case has not been tested; in the code it behaves as before).</li>
-<li>If the handler returns <code>TRUE</code> but never responds, the
-navigation does not proceed. If your handler returns <code>TRUE</code>
-without checking the type, make it handle
-<code>BLINK_JS_DIALOG_BEFORE_UNLOAD</code>, or return <code>FALSE</code>
-for this type.</li>
-</ul>
-<p><strong>The language sent to servers follows the environment</strong>
-— Up to build2, in any language environment, the language sent to
-servers (the HTTP <code>Accept-Language</code> header) was
-<code>en-us,en</code> and <code>navigator.languages</code> was
-<code>en-US</code>. Sites that change their content by language
-therefore returned the English version even in a Japanese environment.
-In build3 the language comes from <code>--lang</code> if it is passed at
-startup; otherwise it comes from the first of the environment variables
-<code>LC_ALL</code>, <code>LC_MESSAGES</code> and <code>LANG</code> that
-has a value.</p>
-<ul>
-<li>Example: with <code>LANG=ja_JP.UTF-8</code>,
-<code>Accept-Language</code> is
-<code>ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7</code> and
-<code>navigator.languages</code> is <code>ja-JP,ja,en-US,en</code>.</li>
-<li>With <code>LANG=C</code>, <code>Accept-Language</code> stays
-<code>en-us,en</code> as before. <code>navigator.languages</code>
-changes from <code>en-US</code> to <code>en-US,en</code>.</li>
-<li>If your application expects English pages, what a site returns may
-now depend on the language environment. To keep English, start the
-application with <code>LANG=C</code>.</li>
-</ul>
-<p><strong>Sites that optionally ask for a client certificate now
-open</strong> — Up to build2, sites that "optionally" ask for a client
-certificate during the TLS connection failed to load. In build3 the
-connection continues without sending a certificate, and the page is
-shown. There is no screen or API for choosing a certificate, and no
-certificate is sent. Sites that require a certificate have not been
-tested.</p>
-<p><strong>Clicks reach the page after dragging inside it</strong> — Up
-to build2, dragging text, an image or a link inside a page left the page
-in the middle of a drag, and later clicks did not reach the page. In
-build3 the drag ends right away as cancelled (the page is told that
-nothing was dropped), and later clicks reach the page as usual. Drag and
-drop itself is not supported: you cannot drop inside the page, and files
-dropped from a file manager are not accepted. This was checked with
-mouse input sent by a test program.</p>
-<h2
-id="build2-old-screens-are-no-longer-shown-and-x11-code-is-removed">build2:
-Old screens are no longer shown, and X11 code is removed</h2>
-<p>If you use build1, please update to build2. The public API is
-unchanged, so you do not need to rebuild your application.</p>
-<p><strong>Old screens are no longer shown</strong> — On the default
-path for software rendering on a scale-1 display, a frame that does not
-contain the current page's drawing is now discarded instead of being
-shown. The screen kept while presentation is stopped (with
-<code>BLINK_PRESENT_WARM</code> set through
-<code>blink_web_view_set_presentation_policy()</code>, or while the
-window is hidden with <code>BLINKGTK_PRESENT_POLICY=warm</code>) is also
-discarded when presentation resumes if the page has been redrawn since
-then. This keeps an earlier screen, or a screen without the page in it,
-from being shown. Displays with a scale other than 1, and GPU rendering,
-are not affected.</p>
-<p><strong>X11 code removed</strong> — BlinkGTK on Linux runs on Wayland
-only. The X11 code it never used has been removed from the library.
-Usage and appearance are unchanged.</p>
-<h2 id="build1-updated-to-chromium-158">build1: Updated to Chromium
-158</h2>
-<p>BlinkGTK's rendering engine is now Chromium
-<strong>158.0.8127.36</strong>.</p>
-<h2 id="security-chromium-158">Security (Chromium 158)</h2>
-<p>The Chromium 158 desktop stable release includes 204 upstream
-security fixes. See the <a
-href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01744469280.html">official
-Chromium announcement</a> for details.</p>
-<p>This release is for Linux. If you use an earlier version, update to
-this release to receive these security fixes.</p>
-<h2 id="rendering-and-console-output">Rendering and console output</h2>
-<p>On the default software path, the changed area is passed to GTK and
-Wayland as the update region. Set <code>BLINKGTK_T2_DAMAGE=0</code> to
-restore full-window updates. This reduces the area passed to the
-compositor for pages with small changes; a reduction in application CPU
-time has not been demonstrated.</p>
-<p>Set <code>BLINKGTK_CONSOLE_STDOUT=0</code> to suppress page console
-messages on standard output. Output remains enabled by default, and the
-BlinkGTK message bridge is unaffected.</p>
-<p>Normal Linux startup is Wayland-only. The public API is
-unchanged.</p>
+
 </body>
 </html>
 </div></div>
