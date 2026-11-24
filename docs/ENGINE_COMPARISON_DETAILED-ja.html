@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>ENGINE_COMPARISON_DETAILED-ja — BlinkGTK</title>
+  <title>CEF / WebKitGTK / BlinkGTK — どれを選ぶか — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -21,13 +21,78 @@
       vertical-align: middle;
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="GTK4 のアプリに Web エンジンを組み込むとき、選択肢はおおむね 3 つです。 この文書は、その 3 つが構造としてどう違うかを整理したものです。">
 <link rel="canonical" href="https://blinkgtk.org/docs/ENGINE_COMPARISON_DETAILED-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ENGINE_COMPARISON_DETAILED-ja — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="CEF / WebKitGTK / BlinkGTK — どれを選ぶか — BlinkGTK">
+<meta property="og:description" content="GTK4 のアプリに Web エンジンを組み込むとき、選択肢はおおむね 3 つです。 この文書は、その 3 つが構造としてどう違うかを整理したものです。">
 <meta property="og:url" content="https://blinkgtk.org/docs/ENGINE_COMPARISON_DETAILED-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +108,320 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="ENGINE_COMPARISON_DETAILED-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-
+<h1 id="cef--webkitgtk--blinkgtk--どれを選ぶか">CEF / WebKitGTK /
+BlinkGTK — どれを選ぶか</h1>
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>バージョン</strong>: 1.2.7-build5</p>
+<p>GTK4 のアプリに Web エンジンを組み込むとき、選択肢はおおむね 3
+つです。<br />
+この文書は、その 3
+つが<strong>構造としてどう違うか</strong>を整理したものです。</p>
+<p>はじめにお断りしておきます。<strong>他エンジンの性能数値は載せていません。</strong>
+公平に<br />
+測るには同じ条件で同じ内容を描かせる必要があり、それを継続的に維持できて<br />
+いないためです。推定値を並べるより、載せないほうが誠実だと考えました。<br />
+BlinkGTK
+自身の数値は、測ったものだけを測った条件とともに書いています。</p>
+<h2 id="いちばん大きな違い">いちばん大きな違い</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CEF</th>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>エンジン</strong></td>
+<td>Blink (Chromium)</td>
+<td>WebKit</td>
+<td>Blink (Chromium)</td>
+</tr>
+<tr>
+<td><strong>JavaScript</strong></td>
+<td>V8</td>
+<td>JavaScriptCore</td>
+<td>V8</td>
+</tr>
+<tr>
+<td><strong>GTK との関係</strong></td>
+<td>独自のウィンドウ管理。GTK とは別世界</td>
+<td>GTK ネイティブのウィジェット</td>
+<td>GTK4 ネイティブのウィジェット</td>
+</tr>
+<tr>
+<td><strong>ライセンス</strong></td>
+<td>BSD-3-Clause</td>
+<td>LGPL-2.1 / BSD-2-Clause</td>
+<td>BSD-3-Clause</td>
+</tr>
+<tr>
+<td><strong>対応 OS</strong></td>
+<td>Linux / Windows / macOS</td>
+<td>Linux ほか</td>
+<td>Linux (Wayland)</td>
+</tr>
+</tbody>
+</table>
+<p>読み方はこうです。</p>
+<ul>
+<li><strong>Chrome と同じ描画がほしい</strong> → CEF か BlinkGTK
+(どちらも Blink)</li>
+<li><strong>GTK のウィジェットとして自然に扱いたい</strong> → WebKitGTK
+か BlinkGTK</li>
+<li><strong>その両方</strong> → BlinkGTK</li>
+</ul>
+<p>BlinkGTK は「Chromium の描画」と「GTK
+ネイティブの扱いやすさ」を同時に取りに<br />
+いった、という位置にあります。逆に言えば、<strong>Linux/Wayland
+に絞る</strong>ことでそれを<br />
+成立させています。複数 OS に配りたいなら CEF、WebKit
+の描画で構わないなら<br />
+WebKitGTK のほうが素直です。</p>
+<h2 id="組み込み方の違い">組み込み方の違い</h2>
+<p>同じ「ウィンドウに Web を出す」でも、書き方の重さが違います。</p>
+<p><strong>BlinkGTK</strong> — GTK
+ウィジェットなので、ウィンドウに入れるだけです。</p>
+<div class="sourceCode" id="cb1"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> blink_web_view_new<span class="op">();</span></span>
+<span id="cb1-2"><a href="#cb1-2" aria-hidden="true" tabindex="-1"></a>gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb1-3"><a href="#cb1-3" aria-hidden="true" tabindex="-1"></a>blink_web_view_load_uri<span class="op">(</span>BLINK_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>WebKitGTK</strong> —
+ほぼ同じ形です。関数名と型が違うだけです。</p>
+<div class="sourceCode" id="cb2"><pre class="sourceCode c"><code class="sourceCode c"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a>GtkWidget <span class="op">*</span>view <span class="op">=</span> webkit_web_view_new<span class="op">();</span></span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a>gtk_window_set_child<span class="op">(</span>GTK_WINDOW<span class="op">(</span>window<span class="op">),</span> view<span class="op">);</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a>webkit_web_view_load_uri<span class="op">(</span>WEBKIT_WEB_VIEW<span class="op">(</span>view<span class="op">),</span> <span class="st">&quot;https://example.com/&quot;</span><span class="op">);</span></span></code></pre></div>
+<p><strong>CEF</strong> — アプリ側にハンドラのクラス群を用意し、CEF
+のメッセージループに<br />
+制御を渡す形になります。C++ で数十行から始まり、GTK
+のウィジェット階層とは<br />
+別系統でウィンドウを扱います。</p>
+<p>移行を検討されている場合、<strong>WebKitGTK
+からの移行はほぼ機械的</strong>です。<br />
+対応表は <a href="./migration/webkitgtk-to-blinkgtk-ja.html">WebKitGTK
+からの移行</a><br />
+にあります。</p>
+<h2 id="wayland-と-gobject-introspection">Wayland と GObject
+Introspection</h2>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>CEF</th>
+<th>WebKitGTK</th>
+<th>BlinkGTK</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Wayland</strong></td>
+<td>対応 (X11 も)</td>
+<td>対応 (X11 も)</td>
+<td><strong>Wayland 専用</strong></td>
+</tr>
+<tr>
+<td><strong>GObject Introspection</strong></td>
+<td>なし</td>
+<td>あり</td>
+<td>あり</td>
+</tr>
+<tr>
+<td><strong>Python / Rust から</strong></td>
+<td>別途バインディングが要る</td>
+<td>GI 経由で直接</td>
+<td>GI 経由で直接</td>
+</tr>
+</tbody>
+</table>
+<p>BlinkGTK が X11
+を切っているのは割り切りです。現在の主要デスクトップは<br />
+既定で Wayland なので実害は小さい一方、経路を 1
+本に絞れる利点が大きいと<br />
+判断しました。X11 環境が要件なら BlinkGTK は選べません。</p>
+<p>GObject Introspection に対応しているので、Python
+からはこう書けます。</p>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&#39;BlinkGTK&#39;</span>, <span class="st">&#39;0.1&#39;</span>)</span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a>view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a>view.load_uri(<span class="st">&#39;https://example.com/&#39;</span>)</span></code></pre></div>
+<h2 id="配布物の大きさ">配布物の大きさ</h2>
+<p>Chromium
+を抱える以上、<strong>小さくはありません</strong>。2026-10-14 に
+BlinkGTK 1.2.4-build4 の<br />
+tarball で実測した値です (1 MB = 1,000,000 バイト)。</p>
+<table>
+<thead>
+<tr>
+<th></th>
+<th>実測</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>tarball (tar.gz)</td>
+<td>約 229 MB</td>
+</tr>
+<tr>
+<td>展開後</td>
+<td>約 755 MB</td>
+</tr>
+<tr>
+<td>共有ライブラリ</td>
+<td>516 本 (シンボリックリンクを除く) / 合計 約 722 MB</td>
+</tr>
+<tr>
+<td><code>libblinkgtk-0.1.so</code> 単体</td>
+<td>約 11 MB</td>
+</tr>
+</tbody>
+</table>
+<p><strong>組み込み機器を検討されている場合は、この数字を先にご確認ください。</strong><br />
+容量が厳しいなら、WebKit 系のほうが現実的です。Chromium
+ベースである以上、<br />
+CEF も同じ桁になります。</p>
+<p>メモリも同様で、Chromium がプロセスを分けて動くため <strong>WebView 1
+つあたり<br />
+数百 MB</strong> を見込む必要があります。</p>
+<p>配布形態は RPM (Fedora) / DEB (Debian・Ubuntu) / tarball
+を用意しています。<br />
+tarball は展開したその場で動きます。</p>
+<h2 id="api-でできること">API でできること</h2>
+<p>主要な機能はおおむね揃っています。BlinkGTK
+側の詳細は各リファレンスへ。</p>
+<table>
+<thead>
+<tr>
+<th>できること</th>
+<th>BlinkGTK での入口</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ページを開く・戻る・進む</td>
+<td><a href="./api-reference/navigation-api-ja.html">ナビゲーション
+API</a></td>
+</tr>
+<tr>
+<td>JavaScript の実行とメッセージ交換</td>
+<td><a href="./api-reference/app-integration-api-ja.html">アプリ連携
+API</a></td>
+</tr>
+<tr>
+<td>独自 URL スキームでアプリ内配信</td>
+<td>同上</td>
+</tr>
+<tr>
+<td>Cookie の読み書き</td>
+<td><a href="./api-reference/c-api-reference-ja.html">C API
+リファレンス</a></td>
+</tr>
+<tr>
+<td>DevTools を繋ぐ</td>
+<td><a href="./api-reference/devtools-api-ja.html">DevTools API</a></td>
+</tr>
+<tr>
+<td>PDF 出力・スクリーンショット</td>
+<td><a href="./api-reference/c-api-reference-ja.html">C API
+リファレンス</a></td>
+</tr>
+<tr>
+<td>コピー・保存・印刷の禁止</td>
+<td><a href="./api-reference/settings-api-ja.html">設定 API</a></td>
+</tr>
+</tbody>
+</table>
+<p>デバッグ手段はエンジンの系統で分かれます。BlinkGTK と CEF は
+<strong>Chrome<br />
+DevTools</strong> がそのまま使えます。WebKitGTK は Web Inspector
+です。</p>
+<h2 id="日本語組版">日本語組版</h2>
+<p>ここは BlinkGTK が意識的に力を入れている領域です。</p>
+<p>縦書き・ルビ・圏点・縦中横・禁則処理に対応し、JLReq
+(日本語組版処理の要件)<br />
+に沿った組版を目指しています。見つけた問題は Chromium
+本体にも修正を<br />
+提案しており、その成果は Blink を使う他のエンジンにも及びます。</p>
+<p>電子書籍リーダーのように日本語組版の質が製品価値に直結する用途では、<br />
+ここが選定理由になり得ます。</p>
+<h2 id="選び方のまとめ">選び方のまとめ</h2>
+<table>
+<thead>
+<tr>
+<th>こういう場合</th>
+<th>向いているもの</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Windows / macOS にも配る</td>
+<td>CEF</td>
+</tr>
+<tr>
+<td>容量・メモリを切り詰めたい</td>
+<td>WebKitGTK</td>
+</tr>
+<tr>
+<td>X11 環境が要件</td>
+<td>CEF / WebKitGTK</td>
+</tr>
+<tr>
+<td>Chrome と同じ描画がほしい</td>
+<td>CEF / BlinkGTK</td>
+</tr>
+<tr>
+<td>GTK ウィジェットとして自然に扱いたい</td>
+<td>WebKitGTK / BlinkGTK</td>
+</tr>
+<tr>
+<td>Chrome DevTools でデバッグしたい</td>
+<td>CEF / BlinkGTK</td>
+</tr>
+<tr>
+<td>日本語縦組みの質が要件</td>
+<td>BlinkGTK</td>
+</tr>
+<tr>
+<td>WebKitGTK から移りたい</td>
+<td>BlinkGTK (移行はほぼ機械的)</td>
+</tr>
+</tbody>
+</table>
+<p>「どれが優れているか」ではなく、<strong>何を諦められるか</strong>で決まります。<br />
+BlinkGTK は容量と対応 OS を諦めるかわりに、Chromium の描画と GTK
+の<br />
+扱いやすさを取りました。</p>
+<h2 id="参考">参考</h2>
+<ul>
+<li>CEF: <a
+href="https://bitbucket.org/chromiumembedded/cef">https://bitbucket.org/chromiumembedded/cef</a></li>
+<li>WebKitGTK: <a
+href="https://webkitgtk.org/">https://webkitgtk.org/</a></li>
+<li>BlinkGTK: <a
+href="https://blinkgtk.org/">https://blinkgtk.org/</a></li>
+<li>Chromium: <a
+href="https://www.chromium.org/">https://www.chromium.org/</a></li>
+</ul>
+<h2 id="変更履歴">変更履歴</h2>
+<table>
+<thead>
+<tr>
+<th>版</th>
+<th>変更</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>1.2.0-build2</td>
+<td>全面的に書き直し。比較対象を現行版 (BlinkGTK Chromium 151 / CEF /
+WebKitGTK) に更新し、配布サイズを実測値 (tarball 220MB / 展開後 749MB)
+に差し替えた。他エンジンの性能推定値は、公平に測り続けられないため削除</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>
 </div></div>

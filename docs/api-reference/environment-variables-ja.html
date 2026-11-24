@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>environment-variables-ja — BlinkGTK</title>
+  <title>BlinkGTK 環境変数リファレンス — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="API リファレンスマニュアルの第 9 章 (環境変数) にあたる文書です。BlinkGTK が読む環境変数は、すべてこの一覧に載せています。ここに無い名前は BlinkGTK では使われません。">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/environment-variables-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="environment-variables-ja — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK 環境変数リファレンス — BlinkGTK">
+<meta property="og:description" content="API リファレンスマニュアルの第 9 章 (環境変数) にあたる文書です。BlinkGTK が読む環境変数は、すべてこの一覧に載せています。ここに無い名前は BlinkGTK では使われません。">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/environment-variables-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +43,667 @@
   <a href="../../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="environment-variables-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-
+<h1 id="blinkgtk-環境変数リファレンス">BlinkGTK
+環境変数リファレンス</h1>
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>最終更新</strong>: 2026-11-18 (BlinkGTK 1.2.7-build5 / Chromium
+158.0.8127.88)</p>
+<p>API リファレンスマニュアルの第 9 章 (環境変数)
+にあたる文書です。BlinkGTK
+が読む環境変数は、すべてこの一覧に載せています。ここに無い名前は
+BlinkGTK では使われません。</p>
+<p>環境変数は次の 3 つに分けています。<strong>BlinkGTK
+を組み込むアプリが頼ってよいのは、1
+つ目の「公開サポート」だけ</strong>です。</p>
+<ul>
+<li><strong>公開サポート</strong> — 安定
+API。後方互換を維持し、変更時はリリースノートで告知します。</li>
+<li><strong>エスケープハッチ (切り分け用のスイッチ)</strong> —
+既定で有効になっている修正や仕組みを止めて、以前の動作に戻すためのスイッチ。通常は<strong>設定しないでください</strong>。不具合の原因がその修正にあるかを確かめるときだけ使い、常用しないでください
+(将来の版で、予告のうえ削除することがあります)。</li>
+<li><strong>内部診断</strong> —
+開発・調査用。<strong>無保証・サポート対象外</strong>で、予告なく変更・削除されます。アプリから頼らないでください。</li>
+</ul>
+<hr />
+<h2 id="1-公開サポート環境変数">1. 公開サポート環境変数</h2>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>値</th>
+<th>既定</th>
+<th>説明</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_GPU_MODE</code></td>
+<td><code>software</code> / <code>egl</code> /
+<code>swiftshader</code></td>
+<td><code>software</code></td>
+<td>描画モードの選択。<code>software</code>
+が推奨・既定。<code>egl</code> は GPU
+経路(実験的)、<code>swiftshader</code> は software 相当</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_HEADLESS</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td>headless 動作(実ディスプレイなし・CI 向け)。<code>--headless</code>
+付与を制御</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NO_SANDBOX</code></td>
+<td><code>1</code> / <code>0</code></td>
+<td>未設定</td>
+<td><code>1</code> = 無条件で無効化。<code>0</code> =
+無条件で有効のまま。<strong>未設定 = 自動判定</strong> —
+<code>/proc/sys/user/max_user_namespaces</code> を読み、<code>0</code>
+か読めなければ<strong>無効化されます</strong>。有効になったかは
+<code>blink_gtk_is_sandboxed()</code> で問い合わせられます</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EXTRA_SCHEMES</code></td>
+<td>カンマ区切り scheme 名</td>
+<td>未設定</td>
+<td>独自の URL スキーム (例: <code>ebook</code>) を、<code>https</code>
+などと同じ扱いの標準スキームとして登録します。独自スキームの読み込み処理
+(custom scheme loader) と組み合わせて使います</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SCROLL_SPEED</code></td>
+<td>—</td>
+<td>—</td>
+<td><strong>廃止</strong>。設定しても何も変わりません。スクロール量は固定の係数で決まります
+(2026-09-15
+実測)。該当コードは残っていますが、どの出荷物にも入っていません</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DMABUF_PATH</code></td>
+<td>パス</td>
+<td>未設定</td>
+<td>egl モードの dmabuf デバイスパス指定</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_PNG_DIR</code></td>
+<td>ディレクトリパス</td>
+<td>未設定</td>
+<td>フレーム PNG の保存先(検証用途。設定時のみ保存)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_PNG_MAX</code></td>
+<td>整数</td>
+<td><code>0</code></td>
+<td>診断用フレーム PNG の保存枚数。<strong>既定 0 =
+保存しない</strong>。診断が要るときだけ枚数を指定する</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DISABLE_SITE_ISOLATION</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td><strong>サイトごとのプロセス分離を無効化します。保護を弱めます。</strong>
+分離は、あるサイトのページが乗っ取られたときに別のサイトのデータを読ませないための境界です。無効にすると複数サイトの文書が同じプロセスに同居します。v1.2.0-build8
+から既定で有効で、これは不具合が出たときの逃げ道です</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PRESENT_POLICY</code></td>
+<td><code>warm</code> / <code>warm-force</code></td>
+<td>未設定</td>
+<td>見る人がいないウィンドウに対して、画面へ出す仕事
+(合成・キャプチャ・転送)
+を止めます。<strong>組版とラスタは止めないので先読みは保たれます</strong>。<code>warm</code>
+はウィンドウが隠れている間だけ、<code>warm-force</code>
+は<strong>試験専用</strong>で常に止めます。復帰時は damage を待たず 1
+回無条件でキャプチャするため、古いフレームは残りません。止めている間も、<code>blink_web_view_capture_screenshot_async()</code>
+などの撮影は成功し、その後も止めたままです (1.2.3-build2
+以降。それより前は 2 秒で失敗していました)。1.2.4-build3
+からは、software
+の撮影はほとんどの場合、要求した時点の画面を返し、画面へは出さずに終わることがあります。止めている間の撮影で、画面へフレームが出ることもあります
+(撮影を待つ間に用意できたフレームは画面へ出し、撮影の画像がそろったらまた止めます)。拡大率
+1 の画面の既定の経路では、当方の試験で 1 枚でした。それ以外の拡大率と
+<code>BLINKGTK_T2_AUTO=0</code> の経路では 0 枚か 1
+枚で、どちらになるかは、撮影のための取り込みと画面向けのフレームのどちらが先に届くかで決まります。撮影の間に画面が変わらないこと・変わることのどちらも、前提にしないでください</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_LOG_LEVEL</code></td>
+<td><code>0</code> / <code>1</code> / <code>2</code></td>
+<td><code>0</code></td>
+<td>診断出力の量。<code>0</code> すべて / <code>1</code> 大幅に削減 /
+<code>2</code>
+ほぼ無音。<strong>ログが多いと感じたら上げてください</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CONSOLE_STDOUT</code></td>
+<td><code>0</code> / <code>false</code> / <code>no</code> /
+<code>off</code></td>
+<td>未設定 (出力する)</td>
+<td>Web ページの <code>console</code>
+出力を標準出力へ出さないようにします。BlinkGTK
+のメッセージブリッジには影響しません</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DIAG_VERBOSE</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td>毎フレームの診断も出します (既定は抑止)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_IM_MODULE</code></td>
+<td><code>gtk</code> / GTK の入力モジュール id</td>
+<td>未設定</td>
+<td><strong>v1.2.3 から。</strong> 入力メソッドの選び方。未設定 (または
+<code>gtk</code>) なら BlinkGTK は何も名指しせず、GTK に決めさせます
+(Wayland では text-input 経路)。その他の値 (<code>ibus</code> など)
+はその id を BlinkGTK のビューに名指しします。<strong>1.2.2
+と同じ動作にするには <code>ibus</code> を指定します。</strong>
+設定した値は <code>blink_gtk_get_im_module()</code>
+で問い合わせられます</td>
+</tr>
+<tr>
+<td><code>GTK_IM_MODULE</code></td>
+<td>GTK の入力モジュール id</td>
+<td>—</td>
+<td>v1.2.3 以降、<code>BLINKGTK_IM_MODULE</code> が未設定なら
+<strong>BlinkGTK の WebView にも適用されます</strong> (GTK
+の通常の選び方に従うため)。<code>BLINKGTK_IM_MODULE</code> で id
+を名指しした場合は、GTK4 の
+<code>gtk_im_multicontext_set_context_id()</code>
+がこの変数より優先されるので、WebView
+にはこの変数が適用されません。1.2.2 までは BlinkGTK が常に
+<code>ibus</code> を名指しし、<code>XMODIFIERS</code>
+から判別して<strong>プロセス全体の</strong>この変数を書き換えていました。1.2.3
+からは書き換えません</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_A11Y</code></td>
+<td><code>1</code></td>
+<td>未設定</td>
+<td><strong>アクセシビリティを有効にします。</strong> 支援技術 (Orca 等)
+が Web ページの中身を読めるよう、ページの構造を AT-SPI
+に出します。既定では Chromium
+がページのアクセシビリティ情報を作らないため、出すものがありません。常時有効にすると全ページでその構築費用がかかるので、必要なときに開く形にしています。指定しなくても、支援技術
+(Orca 等) が接続すると自動で開きます (1.2.2-build4
+から。アプリの後から支援技術を起動した場合も含む)。1.2.4 からは
+at-spi2-core 2.61 以降 (Fedora 45 等)
+でも自動で開き、<code>BLINKGTK_A11Y=1</code>
+で起動した後に支援技術を起動した場合も届きます。自動で開かない環境では
+<code>1</code> を指定してください。コマンドライン引数
+<code>--force-renderer-accessibility</code>
+でも同じことができますが、起動経路に依存しない環境変数のほうが確実です</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_UPDATE_CHECK</code></td>
+<td><code>1</code></td>
+<td>未設定 (オフ)</td>
+<td><strong>1.2.4 から。</strong>
+新しい版が出ていたら、ログに英語と日本語の 2 行
+(<code>[BlinkGTK update] A newer version is available: ...</code> /
+<code>[BlinkGTK update] 新しい版があります: ...</code>)
+で知らせます。アプリ側から <code>blink_gtk_set_update_check(TRUE)</code>
+(<code>blink_gtk_init()</code> の前に呼ぶ)
+でもオンにできます。その場合も利用者が
+<code>BLINKGTK_UPDATE_CHECK=0</code> を指定すれば止まります
+(利用者の指定が優先)。<strong>既定はオフ</strong> — BlinkGTK
+は他の製品に組み込まれるので、製品の利用者が知らないうちに外へ通信しないためです。<code>1</code>
+のときだけ、起動の 5 秒後に 1 回、配布のリポジトリの版の一覧 (GitHub の
+API、<code>api.github.com</code>)
+を読みます。添付ファイルは取得しません。確かめるのは 1 日 1
+回までで、結果は <code>$XDG_CACHE_HOME/blinkgtk/update-check</code>
+に置きます。Windows
+の版とは取り違えません。通信できないときは何も案内しません
+(起動は待たせません)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SUBPROCESS_PATH</code></td>
+<td>実行ファイルのパス、または <code>0</code></td>
+<td>未設定 (自動)</td>
+<td><strong>1.2.5 から。</strong> Python (PyGObject)・GJS など、BlinkGTK
+を直接リンクしていないプログラムから使うと、BlinkGTK は子プロセス
+(zygote ほか) を、BlinkGTK と一緒にインストールされる
+<code>blinkgtk-subprocess</code> で起動します (RPM・DEB では
+<code>/usr/libexec/blinkgtk-0.1/blinkgtk-subprocess</code>)。サンドボックスは有効のままです。1.2.4
+までは子プロセスに python3 などが起動され、Python
+からは起動できませんでした。場所を変えて配った場合はこの変数でパスを指定します。<code>0</code>
+を指定すると子プロセスの実行ファイルを替えません (1.2.4 までの動き)。C
+のアプリは自分の実行ファイルが子プロセスを兼ねるので、指定は要りません</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_WIN_GPU_PATH</code></td>
+<td><code>vulkan</code></td>
+<td>未設定</td>
+<td><strong>Windows 専用・試験段階 (BlinkGTK for Windows 1.2.4-build4
+から)。</strong> 値 <code>vulkan</code> のとき、Chromium の GPU
+合成の結果を CPU に読み戻さずに GTK の Vulkan
+のレンダラーへ渡します。サイトや Windows 版のお知らせで「GPU の経路
+P4」と呼んでいるものです (指定する値は <code>vulkan</code>
+だけです)。既定は無効。<strong>Intel Iris Xe の 1
+機種でのみ確認。</strong> Linux では使われない</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NO_AUTO_SHUTDOWN</code></td>
+<td><code>1</code></td>
+<td>未設定 (自動で片づける)</td>
+<td><strong>Windows 専用 (BlinkGTK for Windows の 1.2.5-build1
+の次の版から (未出荷))。</strong> Windows
+では、<code>blink_gtk_run_main_loop()</code> が戻るときに BlinkGTK が
+<code>blink_gtk_shutdown()</code>
+を自動で呼び、ウィンドウを閉じたあと速やかにプロセスが終わります。<code>1</code>
+を指定すると、この自動の片づけをしません。メインループが戻ったあとも
+BlinkGTK
+を使い続けるアプリ向けです。その場合は、アプリが終わる前に自分で
+<code>blink_gtk_shutdown()</code> を呼んでください。アプリが
+<code>blink_gtk_shutdown()</code> を自分で呼んでも、2
+回目は何もしないので害はありません。Linux では使われない</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FOLLOW_GTK_THEME</code></td>
+<td><code>0</code></td>
+<td>未設定 (GTK のテーマに合わせる)</td>
+<td><strong>1.2.5-build2 から。</strong> 頁の配色
+(<code>prefers-color-scheme</code>・フォームの部品・スクロールバー) を
+GTK
+のテーマの明暗に合わせるのが既定です。アプリの実行中にテーマを切り替えると、頁も読み込み直さずに切り替わります。<code>0</code>
+を指定すると合わせず、頁は 1.2.5-build1 までと同じく常に light
+になります。頁の HTML が dark
+に対応していないアプリで使います。なお、<code>color-scheme</code>
+を指定していない頁は、<code>0</code>
+を指定しなくても地の色が白のままです</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NETWORK_IN_PROCESS</code></td>
+<td><code>1</code></td>
+<td>未設定 (別のプロセス)</td>
+<td><strong>1.2.5-build2 から。</strong>
+ネットワークの処理を、別のプロセスではなくアプリのプロセスの中で動かします。頁を開くたびにプロセスを
+1
+つ起動しなくなるので、頁の読み込みが早くなります。代わりに、ネットワークの処理が異常終了すると、アプリも一緒に終わります。既定では別のプロセスで動かし、異常終了はそのプロセスだけで済みます</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-エスケープハッチ既定のまま推奨">2.
+エスケープハッチ(既定のまま推奨)</h2>
+<p>不具合が出て、下の修正が関係していそうなときに、その修正だけを止めて確かめるためのものです。止めて症状が消えた場合は、使っている版と症状を添えてお知らせください。</p>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>効果(=0 等を設定した場合)</th>
+<th>関連する修正</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_PUMP_LEGACY=1</code></td>
+<td>メインループの回し方を、Wayland の接続を監視する方式 (fd-watcher
+pump) から以前の方式 (g_idle pump) に戻す(待機中の CPU
+の使用率が増えます)</td>
+<td>1.1.0 の修正: 何も操作していない間も CPU を 1
+コア近く使い続けていた問題</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEFER_ZYGOTE=0</code></td>
+<td>起動のときに、子プロセスを作るための補助のプロセス (zygote)
+の準備ができるのを最初に待つ、以前の順序に戻す (起動が遅くなります)</td>
+<td>1.2.5-build2 から。起動の短縮
+(ウィンドウの表示と頁の読み込み完了が早くなる)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FAST_RENDER_NODE=0</code></td>
+<td>起動のときに、GPU の装置 (/dev/dri のレンダーノード) が使えるかを
+Mesa を読み込んで確かめる、Chromium の元の手順に戻す
+(起動が遅くなります)。software の経路 (既定) のときだけ関係します</td>
+<td>1.2.5-build2 から。起動の短縮 (頁の読み込み完了が早くなる)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_VK_DRIVER_SELECT=0</code></td>
+<td>起動のときに、読み込む Vulkan のドライバを、このコンピュータに在る
+GPU のものに絞らないようにする (起動が遅くなります)。Vulkan
+のローダの環境変数 (<code>VK_LOADER_DRIVERS_SELECT</code> など)
+を自分で設定している場合は、BlinkGTK はそれを変えません</td>
+<td>1.2.5-build2 から。起動の短縮 (ウィンドウが出るまでが早くなる)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PUMP_RESCUE=0</code></td>
+<td>メインループを 100ms ごとに必ず起こす仕組み (起床の保証)
+を無効化</td>
+<td>1.1.0
+で、下の「白紙のまま固定される問題」の修正と一緒に入ったもの</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_QUEUE_DRAW_TIMER=1</code></td>
+<td>1.2.4 から。16ms
+ごとの定期の描き直しを、それより前の版と同じく常に動かす。1.2.4
+の既定では、静止した頁を描き直し続けないよう、BlinkWebView
+ではこの描き直しを動かさない (待機中の CPU
+の使用率が下がる)。<code>=0</code> で常に止める</td>
+<td>1.2.4 の変更: 静止した頁を 16ms ごとに描き直さない</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SIZE_TICK=1</code></td>
+<td>1.2.7-build1 から。<code>blink_web_view_new()</code> などで作った
+WebView でも、ウィンドウの大きさの変化を毎フレーム調べる以前の仕組み
+(GTK の tick callback) を登録する (静止した頁でも 1 秒に約 60
+回動くので、待機中の CPU
+の使用率が増えます)。既定では登録せず、大きさの変化は WebView
+に大きさが割り当てられたときに受け取ります</td>
+<td>1.2.7-build1 の修正: 静止した頁でも描画の時計が止まらず CPU
+を使っていた問題</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_T2_AUTO=0</code></td>
+<td>1.2.4 から。拡大率 1 の画面で、ソフトウェアの描画の受け取りを T2
+(撮影を使わず、合成の結果を共有メモリで受け取る経路)
+に自動で切り替えるのをやめ、それより前の版と同じ経路を使う。1.2.4
+の既定では拡大率 1 のとき T2 を選び、小さな範囲だけが変わる頁で CPU
+の使用率が下がる。拡大率 1 以外の画面では T2
+を使わず、移ったときも元の経路に戻す。<code>BLINKGTK_USE_MOJO_IPC=0</code>
+でも同じ</td>
+<td>1.2.4 の変更: 拡大率 1 の画面で T2 を既定にした</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_T2_PARTIAL_COPY=0</code></td>
+<td>T2
+の部分コピー最適化を止め、毎回全体をコピーします。画像の更新漏れが疑われるときの切り分け用です</td>
+<td>T2 の部分コピー最適化</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
+<td>画面が変わっていないときに画面のコピー (キャプチャ) を省く仕組み
+(capture damage gate) を無効化</td>
+<td>1.1.0 の修正: 待機中に CPU を使い続けていた問題</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FORCE_SINGLE_THREADED=1</code></td>
+<td>renderer を単一スレッド compositing に戻す(描画停止リスクあり)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_INVAL_FALLBACK=0</code></td>
+<td>描き直す範囲が空と計算されたときに補う仕組み (invalidation
+フォールバック) を無効化</td>
+<td>1.1.0 の修正:
+文字サイズを大きく変えた直後に、頁が白紙のまま固定される問題</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK=0</code></td>
+<td>GPU 経路が使えないときの software
+自動退避を無効化(画面が白いままになります)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK_MS=&lt;ms&gt;</code></td>
+<td>上記の待ち時間(既定 5000)。短くすると GPU
+初期化の遅い機械で誤退避します</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
+<td>新しい描画結果を有効にしたとき、もう一度描き直させる仕組み
+(activation 再 damage) を無効化</td>
+<td>1.1.0 の修正:
+文字サイズを大きく変えた直後に、頁が白紙のまま固定される問題</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_CKB_REDRAW=0</code></td>
+<td>まだ描かれていない部分 (checkerboard)
+が残ったときに描き直させる仕組みを無効化</td>
+<td>1.1.0 の修正
+(文字サイズを大きく変えた直後に、頁が白紙のまま固定される問題)
+に対する予備の対策</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
+<td>egl モードの分数スケーリングを opt-in(実験的)。1.2.4 から、拡大率
+1.25・1.5 の画面で頁が分数の拡大率 (<code>devicePixelRatio</code>
+1.25・1.5) で描かれる。それより前の版 (1.2.0-build3〜1.2.3)
+では、エンジンが自動で付ける拡大率に整数へ切り上げられ、2
+で描かれていた</td>
+<td>1.1.0 から指定したときだけ有効。1.2.4
+の修正で分数のまま描かれる</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_RESIZE_BRIDGE=0</code></td>
+<td>egl resize ブリッジを無効化</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RUBY_RESERVE_EM=0.5</code></td>
+<td>段組みの列の切断幅から、ルビの張り出しぶん (0.5em)
+を差し引く、v1.2.0
+までの動作に戻す。差し引くと列に入る量が減り、行がちょうど 1
+本入らなくなることがある</td>
+<td>v1.2.1 の変更: 既定を 0 (差し引かない) にした</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_COPY=1</code></td>
+<td><strong>1.2.3-build4 から。</strong> software の描画で、画面へ渡す 1
+枚ごとに画素をコピーする従来の動作に戻す
+(既定はコピーせずに渡す)。表示がおかしいときの切り分け用</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_FAKE_PRESENTATION=0</code></td>
+<td><strong>1.2.4 から。</strong> egl
+モードで「画面に出た」の通知を送らない、以前の動作に戻す。<strong>戻すと、動く頁を表示し続けたときに
+renderer とブラウザのメモリが増え続けます</strong> (1.2.3
+までの動作)。比べるとき用</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-内部診断サポート対象外">3. 内部診断(サポート対象外)</h2>
+<p>以下は開発・調査用の内部変数です。<strong>一覧のみ掲載し、詳細仕様は公開しません</strong>。無保証・予告なく削除されます。</p>
+<table>
+<thead>
+<tr>
+<th>分野</th>
+<th>変数</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>更新の案内の試験</td>
+<td><code>BLINKGTK_UPDATE_CHECK_URL</code>
+(確かめ先の差し替え。<code>check-update-notice.sh</code>
+の手元のサーバ用)</td>
+</tr>
+<tr>
+<td>白紙のまま固定される問題の調査</td>
+<td><code>BLINKGTK_120_CC_DIAG</code> /
+<code>BLINKGTK_120_DISP_DIAG</code> /
+<code>BLINKGTK_120_CLIP_DIAG</code> / <code>BLINKGTK_120_DIAG</code> /
+<code>BLINKGTK_120_PAINT_KICK</code> / <code>BLINKGTK_120_FI_ROW1</code>
+(fault injection・検証専用) / <code>BLINKGTK_120_TYPEB_FIX</code></td>
+</tr>
+<tr>
+<td>組版</td>
+<td><code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
+<code>BLINKGTK_LAYOUT_DEBUG</code></td>
+</tr>
+<tr>
+<td>EGL 経路</td>
+<td><code>BLINKGTK_EGL_DIAG</code> /
+<code>BLINKGTK_EGL_MANUAL_VIEWPORT</code> /
+<code>BLINKGTK_EGL_BRIDGE_SETTLE_MS</code> /
+<code>BLINKGTK_EGL_GTK4_NATIVE</code> /
+<code>BLINKGTK_EGL_RECIPIENT_ALWAYS</code> (EGL
+の受け面を経路によらず常に作る試作)</td>
+</tr>
+<tr>
+<td>出力層・合成</td>
+<td><code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
+<code>BLINKGTK_USE_EGL_WIDGET</code> /
+<code>BLINKGTK_T2_DELIVER_EMPTY</code> (陰性対照: T2 で renderer
+の最初のフレームを待たずに、描画結果を画面へ渡す) /
+<code>BLINKGTK_T2_DAMAGE</code> (<code>0</code> で、T2 で Viz
+が描き直した範囲を GTK
+に伝えるのをやめ、毎回ウィンドウ全体を更新する。v1.2.7-build1
+から既定で有効。それ以前は試作で、<code>1</code> で有効) /
+<code>BLINKGTK_T2_DAMAGE_TEST_SHRINK</code> (陰性対照: 伝える範囲を 1 px
+狭める) / <code>BLINKGTK_T2_COPY_VERIFY</code> (試験専用:
+部分コピー画像を元画像と照合して不一致を記録) /
+<code>BLINKGTK_T2_COPY_TEST_NOAGE</code> (試験専用の陰性対照:
+別回の更新を写さない条件を作り、写し漏れ検出を確認) /
+<code>BLINKGTK_T2_TEST_STALE_SURFACE</code> (試験専用の陰性対照:
+<code>1</code> で、T2 の最初の描画の照合で、待っている面と同じ
+FrameSinkId で世代だけ違う LocalSurfaceId
+と比べ、古い面のフレームを受け取らないことを確認する。v1.2.7-build2
+から) / <code>BLINKGTK_T2_TEST_STALE_FRAME_TOKEN</code>
+(試験専用の陰性対照: <code>1</code> で、同じ SurfaceId のまま 1
+つ前のフレームトークンを 1
+回だけ渡し、古いフレームを受け取らず、次の正しいフレームで回復することを確認する。v1.2.7-build2
+から) / <code>BLINKGTK_T2_AUTO</code> (<code>0</code> で、拡大率 1
+の画面で T2 を自動で選ぶのをやめる。1.2.4 から既定で有効) /
+<code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (試験用:
+許可の保存の読み込みを遅らせる) /
+<code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
+<code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
+<code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
+<code>BLINKGTK_AURA_SHOW_IMMEDIATE</code></td>
+</tr>
+<tr>
+<td>経路のライブ切替</td>
+<td><code>BLINKGTK_BLINKSHIFT_AUTOSWAP</code> /
+<code>BLINKGTK_BLINKSHIFT_EGL_RECREATE</code> /
+<code>BLINKGTK_BLINKSHIFT_NO_KICK</code></td>
+</tr>
+<tr>
+<td>追跡・計測</td>
+<td><code>BLINKGTK_GX_LOG</code> (EGL の描画結果を画面へ渡す処理を、1 行
+1
+事象で出す診断ログ。<code>BJGX &lt;事象&gt; t=&lt;ms&gt; buf=&lt;wl_buffer の wire id&gt; submit=&lt;通番&gt;</code>
+形式) / <code>BLINKGTK_CAPTURE_TRACE</code> /
+<code>BLINKGTK_MOJO_TRACE</code> /
+<code>BLINKGTK_TRACE_PIXEL_SUPPLIER</code> /
+<code>BLINKGTK_HARNESS_AUDIT</code> / <code>BLINKGTK_MINORI</code> /
+<code>BLINKGTK_PROFILE_DIR</code> /
+<code>BLINKGTK_RESIZE_FIT</code></td>
+</tr>
+<tr>
+<td>検証専用</td>
+<td><code>BLINKGTK_DELIVER_LOG_MAX</code> (EGL
+の描画結果を画面へ渡す処理のログの行数上限。既定
+5。画面が出ないときに、どの操作が呼ばれたか・どの wl_buffer
+だったかを定常状態まで追える) / <code>BLINKGTK_CONTENT_PROBE_MAX</code>
+(定常状態の中身を <strong>計測だけ</strong> 延長する。表示の判定は先頭 8
+枚のまま変わらない) / <code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
+<code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
+<code>BLINKGTK_TEST_ALLOC_LOG</code> /
+<code>BLINKGTK_TEST_GATE_FAKE_PRE</code>
+(判定の基準を差し替える陰性対照) / <code>BLINKGTK_TEST_FOCUS_LOG</code>
+/ <code>BLINKGTK_TEST_SWITCH_PATH</code>
+(<code>&lt;経路 id&gt;:&lt;ms&gt;</code>) /
+<code>BLINKGTK_TEST_COMPOSITOR_RECREATE</code> /
+<code>BLINKGTK_TEST_DISPOSE_QUIT_MS</code> /
+<code>BLINKGTK_TEST_EXECV_RESTART</code> /
+<code>BLINKGTK_TEST_OUTPUT_SWAP</code> /
+<code>BLINKGTK_TEST_OUTPUT_SWAP_SKIP</code></td>
+</tr>
+</tbody>
+</table>
+<h2
+id="3b-開発用デモ-simple_browser-だけのもの--配布物では使われません">3b.
+開発用デモ (<code>simple_browser</code>) だけのもの —
+配布物では使われません</h2>
+<p><strong>ライブラリも、配布物のサンプル <code>blinkgtk_browser</code>
+も、この変数を読みません。</strong> BlinkGTK の開発に使っているデモ
+<code>simple_browser</code>
+だけが読む変数です。<code>simple_browser</code>
+は配布物に含めていません。</p>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>効果</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_RESTART_ACTIVATION=0</code></td>
+<td>再起動時に activation token
+を引き継ぐのをやめます(引き継ぐと新しいウィンドウが前面に出ます)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RESTART_LINGER_MS=&lt;ms&gt;</code></td>
+<td>再起動を fork +
+親の残存で行い、その残存時間を指定します。<strong>既定は
+0(無効)</strong> で、従来どおり execv します</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEMO_SELECT_PATH=&lt;id&gt;@&lt;ms&gt;,...</code></td>
+<td>試験専用。起動から指定したミリ秒の時点で、描画経路の一覧の項目
+<code>&lt;id&gt;</code> を選びます (例
+<code>egl@6000,software@12000</code>)。人が一覧を選んだときと同じ処理を通ります</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PERMISSION_ALLOW</code></td>
+<td>デモが権限要求を自動で許可します。<strong>ライブラリ本体は既定で拒否します</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_INSPECTOR_DASH</code></td>
+<td>インスペクタのダッシュボードを開きます</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_TEST_SUITE</code> /
+<code>BLINKGTK_TEST_CAPTURE</code></td>
+<td>デモの検証モード</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEMO_NO_EBOOK</code> /
+<code>BLINKGTK_DEMO_NO_JLREQ</code></td>
+<td>デモ起動時の EBOOK 設定 / JLReq 組版の適用を止めます</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_MUTTER_REACTIVATE</code> /
+<code>BLINKGTK_DEBUG_ISSUE_84</code></td>
+<td>ウィンドウの前面化まわりの切り分け用</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CHROMIUM_VERSION</code></td>
+<td><strong>廃止</strong>。同梱しない内部デモ専用の変数でした。配布物では使われません</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_AUTO_RESIZE=&lt;回数&gt;</code></td>
+<td>デモがウィンドウを指定回数だけ自分でリサイズします
+(リサイズまわりの検証用)。<strong>止める指定ではありません</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_AUTO_FULLSCREEN=&lt;回数&gt;</code></td>
+<td>デモが 2.5
+秒ごとに全画面を指定回数だけ往復します。大きな一段のサイズ変化を作る検証用</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-廃止">4. 廃止</h2>
+<table>
+<thead>
+<tr>
+<th>変数</th>
+<th>状態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_KEEP_GPU_COMPOSITING=1</code></td>
+<td><code>software</code> 起動でも GPU
+合成を無効にしません。描画経路を実行中に切り替えるための前提です。<strong>CPU
+が増えます</strong>(手元の測定でアニメーションするページを 20 秒、約 12%
+増。測った PC とページでの比で、上限でも代表値でもありません)。EGL
+経路の切替が公開 API になるまでは無保証です</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_ENABLE_THREADED_COMPOSITING</code></td>
+<td>廃止(threaded compositing は既定 ON 化済み。旧名は無効)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="関連">関連</h2>
+<ul>
+<li><a href="../gpu-modes-ja.html">GPU モード解説</a> —
+<code>BLINKGTK_GPU_MODE</code> で選べる描画モードと選び方</li>
+<li>版ごとの変更は、同梱のリリースノートと改版履歴を参照してください</li>
+</ul>
 </body>
 </html>
 </div></div>

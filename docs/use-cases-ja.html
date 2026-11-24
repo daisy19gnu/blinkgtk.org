@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>use-cases-ja — BlinkGTK</title>
+  <title>BlinkGTK は何に使えるか — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="BlinkGTK は「画面を Web 技術で作る」ための部品です。HTML・CSS・JavaScript で 書いた画面を、Linux アプリケーションの中に埋め込んで動かします。">
 <link rel="canonical" href="https://blinkgtk.org/docs/use-cases-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="use-cases-ja — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK は何に使えるか — BlinkGTK">
+<meta property="og:description" content="BlinkGTK は「画面を Web 技術で作る」ための部品です。HTML・CSS・JavaScript で 書いた画面を、Linux アプリケーションの中に埋め込んで動かします。">
 <meta property="og:url" content="https://blinkgtk.org/docs/use-cases-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +43,341 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="use-cases-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-
+<h1 id="blinkgtk-は何に使えるか">BlinkGTK は何に使えるか</h1>
+<p>バージョン: 1.2.7-build5 / 言語: 日本語 | <a
+href="use-cases-en.html">English</a></p>
+<p>BlinkGTK は「<strong>画面を Web
+技術で作る</strong>」ための部品です。HTML・CSS・JavaScript で<br />
+書いた画面を、Linux アプリケーションの中に埋め込んで動かします。</p>
+<p>公開しているスクリーンショットが電子書籍リーダーなので日本語の本を読むための<br />
+ライブラリに見えるかもしれませんが、それは用途のひとつです。この文書では、<br />
+<strong>どんな用途に向くのか</strong>を先に見て、最後に<strong>どの用途にも共通して役立つ性質</strong>を<br />
+実際にある機能からまとめます。</p>
+<hr />
+<h2 id="用途別に見る">用途別に見る</h2>
+<h3 id="オンデバイス-aiweb-推論">オンデバイス AI・Web 推論</h3>
+<p>AI
+はもう研究室の話ではありません。文書の要約と翻訳、会議の書き起こし、<br />
+スキャン書類の文字起こし (OCR)、検査画像の判定、窓口の対話案内 —<br />
+<strong>すでに多くの現場でソフトウェアの標準装備になりつつあります</strong>。そして<br />
+その多くは、ブラウザの中で動く形 (WebAssembly・WebGPU の上の Web 推論)
+でも<br />
+公開されています。Transformers.js や ONNX Runtime Web
+のような、ブラウザで<br />
+モデルを動かすランタイムの生態系が育っているからです。</p>
+<p>BlinkGTK は、その<strong>同じ基盤を 1 つの GTK
+ウィジェットとして</strong>デスクトップ<br />
+アプリに持ち込みます。つまりこういうことです — <strong>AI
+機能への参入に、専用の<br />
+機械学習スタックをゼロから組む必要はありません。Web
+で動いているものを、<br />
+自分のアプリの中で動かすところから始められます。</strong></p>
+<p>どんな画面が作れるか、想像してみてください。</p>
+<ul>
+<li><strong>読み物アプリに、要約と翻訳と意味検索を</strong>:
+開いている文書をその場で<br />
+要約する。外国語の資料を読みながら訳す。「あの話はどこに書いてあったか」を<br />
+言葉の意味で探す。文書はすべて手元にあり、<strong>1
+行も外部へ送らずに</strong></li>
+<li><strong>議事録が自分で書き上がる会議端末</strong>:
+音声認識で書き起こし、要点を抽出し、<br />
+読み上げ (音声合成) で確認まで — 録音データを端末の外に出さずに</li>
+<li><strong>紙をかざすと台帳になる受付</strong>:
+スキャンや撮影した帳票を OCR で読み取り、<br />
+項目に振り分ける。個人情報を含む紙だからこそ、端末内で完結する価値があります</li>
+<li><strong>検査画像をその場で判定する計測機器</strong>:
+医療・計測の項に書いた<br />
+「外部ネットワークに出さない」要件と、画像判定モデルは同じ画面に同居できます</li>
+<li><strong>話しかけられる案内端末</strong>:
+サイネージ・券売機の項の構成に、対話モデルを<br />
+重ねる。閉じた端末の中で、決まった業務知識だけを答える案内係</li>
+</ul>
+<p>共通する強みは一つです。<strong>モデルを独自スキームで端末内から配信すれば、<br />
+推論の入力データは機器の外に出ません。</strong>
+プライバシーや守秘が参入障壁に<br />
+なっていた現場ほど、オンデバイス AI の価値は大きくなります。</p>
+<p>はじめの一歩も具体的です。</p>
+<ol type="1">
+<li>ブラウザで動いている推論デモやライブラリを、まず BlinkGTK
+で開いてみる<br />
+(Web で動くものは、そのまま動かすところから)</li>
+<li>動いたら、モデルの取得元を独自スキームの端末内配信に置き換える</li>
+<li>画面と推論は JavaScript
+のまま、ハードウェアや業務システムとの接続だけを<br />
+C 側 (シグナルとスクリプト注入) で書く</li>
+</ol>
+<p>なお GPU を使う推論 (WebGPU)
+の動作はハードウェアとドライバの組み合わせに<br />
+依存します。車載の項と同じく、<strong>実機での確認を前提</strong>にしてください。<br />
+このプロジェクト自身も、日本語組版のページ計算を WebGPU
+で速くできないか<br />
+という研究を進めています —
+同じ好奇心をお持ちの方の実験報告を歓迎します。</p>
+<h3 id="案内表示サイネージ券売機">案内表示・サイネージ・券売機</h3>
+<p>不特定多数が触る端末では、<strong>画面が意図した状態から動かない</strong>ことが要件になります。<br />
+<code>BLINK_CONTENT_POLICY_KIOSK</code>
+で操作を閉じ、全画面で占有し、<br />
+独自スキームで端末内のコンテンツを出す —
+という組み合わせがそのまま当てはまります。</p>
+<p>表示物を HTML
+で作れることは、更新のしやすさにもつながります。掲示内容の差し替えが<br />
+アプリの作り直しではなく、コンテンツの入れ替えで済みます。</p>
+<h3
+id="ゲーム機器プリクラエンターテイメント端末">ゲーム機器・プリクラ・エンターテイメント端末</h3>
+<p>派手に動き続ける画面を組み込みで出す —
+エンターテイメント端末の要件は、<br />
+実は BlinkGTK がいちばん得意とする形のひとつです。</p>
+<ul>
+<li><strong>演出を Web 技術で作れる</strong>: Canvas・WebGL・CSS
+アニメーション・動画再生 —<br />
+リッチな演出の道具立てが最初から揃っています。ゲームのメニュー・ストア・<br />
+ランキング・イベント告知の画面、筐体のアトラクト画面 (客待ちデモ)
+の<br />
+ような「動きで惹きつける層」を、ゲーム本体のエンジンとは分けて<br />
+Web 技術で回す構成が取れます</li>
+<li><strong>動き続けることを検査で守っている</strong>: 動くページ
+(Canvas アニメーション・<br />
+動画)
+の画面転送が続くことは、毎リリースの検査項目です。「静かな画面に<br />
+最適化した結果、動く画面が止まる」型の退行を仕組みで止めています —<br />
+エンターテイメントでは静止がそのまま故障に見えるからです</li>
+<li><strong>季節イベントはコンテンツの差し替えで</strong>:
+演出の更新がアプリの作り直し<br />
+ではなく HTML
+の入れ替えで済みます。期間限定の飾り付けやイベント画面を、<br />
+筐体のソフトを触らずに回せます</li>
+<li><strong>プリクラのような「その場で作る」端末に</strong>:
+落書き・スタンプ・フレーム<br />
+合成のような編集 UI は Canvas
+がそのまま得意とする領域です。カメラや<br />
+プリンタといった機器の制御は C 側に置き、画面と演出は Web 側 —
+という<br />
+分担が JS↔︎C ブリッジで成立します</li>
+<li><strong>描画のない部分まで、ひとつながりで作れる</strong>: 画面を
+Web 技術にすると、<br />
+その周りの「描画ではない開発」 —
+会員や課金のしくみ、キャンペーンの配信、<br />
+遠隔の管理サーバ、たまったデータの分析 —
+と、技術も人材も資産も地続きに<br />
+なります。サービスを運んでいる Web
+の開発チームが、そのまま筐体の画面まで<br />
+持てる。端末のためだけに別のスタックを育てる必要がありません</li>
+<li><strong>閉じた筐体で完結する</strong>:
+独自スキームで端末内からコンテンツを配信すれば、<br />
+ネットワークの無い設置場所でも演出は成立します。全画面の占有と操作の<br />
+制限 (コンテンツポリシー)
+も揃っており、業務用の筐体として閉じられます</li>
+</ul>
+<p>GPU 描画 (EGL) とソフトウェア描画の両方を持つので、筐体の GPU
+構成に<br />
+合わせて選べます。ここでも<strong>実機での確認を前提</strong>にしてください
+— 描画性能は<br />
+ハードウェアと画面構成に依存します。</p>
+<h3 id="車載-インフォテインメントカーナビ">車載
+(インフォテインメント・カーナビ)</h3>
+<p>車載の画面は<strong>通信が切れても動き続ける</strong>必要があります。独自スキームで端末内から<br />
+配信する形なら、圏外でも表示は成立します。表示倍率の制御は、走行中の視認性<br />
+(遠い距離から読む) と停車中の操作 (近い距離で触る)
+の切り替えに使えます。</p>
+<p>GPU 描画とソフトウェア描画の両方を持っているので、GPU
+の構成が限られる車載向け<br />
+SoC
+でも動かす余地があります。ただし<strong>実機での確認は必須</strong>です
+— 描画経路は<br />
+ハードウェアと compositor の組み合わせに依存します。</p>
+<h3 id="iot--wot-の操作画面">IoT / WoT の操作画面</h3>
+<p>機器の操作パネルを HTML
+で作れると、<strong>同じ画面を機器上と手元のブラウザの両方で<br />
+使える</strong>ようになります。BlinkGTK は機器側の表示を担当します。</p>
+<p>JavaScript から C 側の関数を呼ぶ経路
+(<code>blink_web_view_execute_javascript()</code> と<br />
+スクリプト注入) があるので、Web
+の画面とハードウェア制御をつなげられます。</p>
+<h3 id="医療計測機器">医療・計測機器</h3>
+<p>はじめにお断りしておくと、<strong>医療機器としての適合性を BlinkGTK
+が保証することは<br />
+できません</strong>。規制対応は機器を作る側の責任範囲です。ここでは、そうした機器でよく<br />
+求められる要件に対して<strong>どの機能が応えられるか</strong>だけを書きます。</p>
+<table>
+<thead>
+<tr>
+<th>よくある要件</th>
+<th>対応する機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>外部ネットワークに出さない</td>
+<td>独自スキームで端末内配信</td>
+</tr>
+<tr>
+<td>操作を限定する (誤操作防止)</td>
+<td>コンテンツポリシーで個別に禁止</td>
+</tr>
+<tr>
+<td>表示内容を記録する</td>
+<td><code>blink_web_view_capture_screenshot()</code></td>
+</tr>
+<tr>
+<td>表示の再現性</td>
+<td>版数を実行時に取得して記録できる</td>
+</tr>
+</tbody>
+</table>
+<p>計測データの可視化や研究機器の GUI
+のように、規制の対象外で「グラフや表を<br />
+きれいに出したい」という用途であれば、素直に使える領域です。</p>
+<h3 id="電子出版日本語組版">電子出版・日本語組版</h3>
+<p>現在いちばん実績のある領域です。縦組み、ルビ、圏点、縦中横、禁則処理といった<br />
+日本語組版の要素を Chromium
+のレンダリングエンジンがそのまま扱います。</p>
+<p>どこまでできて何がまだかは、<a
+href="chromium-feature-history-ja.html">Chromium 147 → 152
+の新機能</a><br />
+に版ごとの実測付きでまとめています。たとえば Chromium 151 では、<br />
+<strong>圏点を付けても行送りが太らなくなりました</strong>(行間に余裕がある場合)。<br />
+Chromium 153
+からは、<strong>ルビの注記を行の高さを膨らませずに置く仕組み</strong>が<br />
+既定になり、ルビの配置計算そのものが作り直されています(縦書きの段組みでは<br />
+適用されない場面があります。詳細は上のリンク先)。</p>
+<hr />
+<h2 id="用途を問わず役立つ-6-つの性質">用途を問わず役立つ 6
+つの性質</h2>
+<p>ここまでの用途に共通して役立っている部分をまとめます。挙げていない用途でも、<br />
+この 6 つに照らせば「自分の用途に合うか」を判断できるはずです。</p>
+<h3 id="1-ネットワークにつながっていなくても動く">1.
+ネットワークにつながっていなくても動く</h3>
+<p><code>blink_web_view_register_custom_scheme()</code> で<strong>独自の
+URL スキームを登録</strong>できます。<br />
+<code>myapp://screen/main</code> のような URL
+を受け取ったら、アプリ側の関数が本文を返す —<br />
+という形で、<strong>端末の中にあるコンテンツをそのまま配信</strong>できます。</p>
+<p>Web
+サーバーを立てる必要も、外部に出ていく必要もありません。閉じたネットワークの<br />
+端末、電波の届かない場所で動く機器、通信を許されない環境で役立ちます。</p>
+<h3 id="2-利用者にできることを絞れる">2. 利用者にできることを絞れる</h3>
+<p><code>blink_web_view_set_content_policy()</code>
+で、画面に対する操作を個別に禁止できます。</p>
+<table>
+<thead>
+<tr>
+<th>定数</th>
+<th>禁止する操作</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_COPY</code></td>
+<td>クリップボードへのコピー</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_SAVE</code></td>
+<td>ページの保存</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_PRINT</code></td>
+<td>印刷</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_CONTEXT_MENU</code></td>
+<td>右クリックメニュー</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_DEVTOOLS</code></td>
+<td>開発者ツール</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_SELECTION</code></td>
+<td>文字の選択</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_SCREENSHOT</code></td>
+<td>画面の取得</td>
+</tr>
+<tr>
+<td><code>BLINK_CONTENT_POLICY_NO_DRAG</code></td>
+<td>ドラッグによる持ち出し</td>
+</tr>
+</tbody>
+</table>
+<p>まとめて指定する
+<strong><code>BLINK_CONTENT_POLICY_KIOSK</code></strong>
+も用意しています。<br />
+不特定多数が触る端末で「Web
+ブラウザとしての機能」が露出してしまう問題への答えです。</p>
+<p><code>blink_web_view_set_javascript_dialog_handler()</code>
+を使えば、ページが出す<br />
+<code>alert()</code> や <code>confirm()</code>
+を<strong>アプリ側で受け取って差し替える</strong>こともできます。<br />
+無人運用の端末で、消せないダイアログが出て止まる事態を避けられます。</p>
+<h3 id="3-画面を占有できる--見る距離に合わせられる">3. 画面を占有できる
+/ 見る距離に合わせられる</h3>
+<p><code>blink_web_view_set_fullscreen_handler()</code> と
+<code>blink_web_view_is_fullscreen()</code> で<br />
+全画面表示を制御できます。<code>blink_web_view_set_zoom_level()</code>
+は表示倍率を変えるので、<br />
+<strong>離れて見る画面と、手元で操作する画面で同じコンテンツを使い回す</strong>ことができます。</p>
+<h3 id="4-好きな言語から使える">4. 好きな言語から使える</h3>
+<p>C の API を GObject として公開しており、GObject Introspection
+の型情報<br />
+(<code>.gir</code> / <code>.typelib</code>)
+を配布物に同梱しています。<strong>Python (PyGObject)、Rust、<br />
+C++、JavaScript (GJS)、Vala、Go</strong>
+などから、追加のバインディングを書かずに<br />
+同じ API を呼べます。既存のチームが使っている言語に合わせられます。</p>
+<h3 id="5-外部の機器とつながる">5. 外部の機器とつながる</h3>
+<p>画面 (JavaScript) とアプリ本体 (C など)
+の間には、双方向の橋があります。</p>
+<ul>
+<li><strong>JavaScript から C へ</strong>: メッセージ (<a
+href="./api-reference/app-integration-api-ja.html">アプリ連携
+API</a>)</li>
+<li><strong>C から JavaScript へ</strong>: スクリプトの実行と注入</li>
+</ul>
+<p>つまり <strong>C から繋がる機器は、<br />
+そのまま画面から使えます</strong>。プリンタ、カメラ、センサー、IC
+カードリーダー、<br />
+決済端末、シリアル機器 —
+端末の周辺に何を繋ぐかは、アプリ側の自由です。</p>
+<h3 id="6-web-の進化がそのまま流れ込む">6. Web
+の進化がそのまま流れ込む</h3>
+<p>BlinkGTK は上流の Chromium に追従し続けています (現行
+158.0.8127.88)。<br />
+新しい CSS、WebAssembly、WebGPU といった Web
+プラットフォームの進化は、<br />
+エンジンを積み替えることなく、版の更新とともに手元へ届きます。<br />
+どの版で何ができるようになったかは<br />
+<a href="./chromium-feature-history-ja.html">Chromium 新機能史</a>
+に実測付きでまとめています。</p>
+<hr />
+<h2 id="はじめて世に出したとき">はじめて世に出したとき</h2>
+<p>BlinkGTK が最初に公開されたのは <strong>Interop Tokyo 2026
+(幕張メッセ)</strong> です。</p>
+<hr />
+<h2 id="あなたの用途を教えてください">あなたの用途を教えてください</h2>
+<p>上に書いたのは「こういう機能があるから、こういう用途に向くはず」という説明であって、<br />
+<strong>実際の採用事例ではありません</strong>。BlinkGTK
+で何か作られた方がいらっしゃれば、<br />
+<a
+href="https://github.com/daisy19gnu/blinkgtk-dist/issues/2">掲載募集の窓口</a><br />
+までスクリーンショットをお寄せください。ここに載せるべきは、私たちの想像ではなく<br />
+実際に動いているものだと考えています。</p>
+<p>また、<strong>特定の環境に向けた拡張の実装</strong> —
+特殊なハードウェアへの対応、<br />
+専用機能の組み込み、概念実証 (PoC) の伴走など — は、<br />
+<a href="https://blinkgtk.com/">blinkgtk.com</a>
+でカスタマイズ開発として承っています。<br />
+標準の配布物で届かない要件があれば、まずご相談ください。</p>
+<hr />
+<h2 id="関連する文書">関連する文書</h2>
+<ul>
+<li><a href="building-with-blinkgtk-ja.html">BlinkGTK
+でアプリを作る</a></li>
+<li><a
+href="consumer-integration-guide-ja.html">組み込み・統合ガイド</a></li>
+<li><a href="ENGINE_COMPARISON_DETAILED-ja.html">エンジン比較 —
+WebKitGTK・CEF との違い</a></li>
+</ul>
 </body>
 </html>
 </div></div>

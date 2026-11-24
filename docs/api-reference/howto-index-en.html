@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>howto-index-en — BlinkGTK</title>
+  <title>How do I…? — find the function by goal — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="An index for finding the function name from what you want to do. See the page in the &quot;Details&quot; column for usage, arguments and complete code examples. Every fun">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/howto-index-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="howto-index-en — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="How do I…? — find the function by goal — BlinkGTK">
+<meta property="og:description" content="An index for finding the function name from what you want to do. See the page in the &quot;Details&quot; column for usage, arguments and complete code examples. Every fun">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/howto-index-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +43,488 @@
   <a href="../../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="howto-index-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
-
+<h1 id="how-do-i--find-the-function-by-goal">How do I…? — find the
+function by goal</h1>
+<p><strong>Author</strong>: BlinkGTK Project</p>
+<p><a href="./howto-index-ja.html">日本語</a> | <a
+href="./00-index-en.html">API index</a></p>
+<p>An index for finding the function name from what you want to do. See
+the page<br />
+in the "Details" column for usage, arguments and complete code examples.
+Every<br />
+function listed here is mechanically verified to exist in the bundled
+header<br />
+and shared library.</p>
+<h2 id="start-up-and-shut-down">Start up and shut down</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Functions</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Tell BlinkGTK where the Chromium resources (icudtl.dat etc.)
+are</td>
+<td><code>blink_gtk_set_resources_path()</code> /
+<code>blink_gtk_set_icu_data_path()</code></td>
+<td><a href="./c-api-reference-en.html">C API</a></td>
+</tr>
+<tr>
+<td>Initialize the engine (before GTK)</td>
+<td><code>blink_gtk_init()</code></td>
+<td><a href="./c-api-reference-en.html#blink_gtk_initargc-argv">C
+API</a></td>
+</tr>
+<tr>
+<td>Run / quit the main loop</td>
+<td><code>blink_gtk_run_main_loop()</code> /
+<code>blink_gtk_quit_main_loop()</code></td>
+<td><a href="./c-api-reference-en.html#blink_gtk_run_main_loop">C
+API</a></td>
+</tr>
+<tr>
+<td>Shut down cleanly</td>
+<td><code>blink_gtk_shutdown()</code></td>
+<td><a href="./c-api-reference-en.html#blink_gtk_shutdown">C API</a></td>
+</tr>
+<tr>
+<td>Query the BlinkGTK / Chromium version</td>
+<td><code>blink_gtk_get_version()</code> /
+<code>blink_gtk_get_chromium_version()</code></td>
+<td><a href="./c-api-reference-en.html">C API</a></td>
+</tr>
+<tr>
+<td>Get the version string to quote in a bug report (build number
+included)</td>
+<td><code>blink_gtk_get_version_full()</code></td>
+<td><a href="./c-api-reference-en.html">C API</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="display-pages">Display pages</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Functions</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Create a WebView</td>
+<td><code>blink_web_view_new()</code></td>
+<td><a href="./c-api-reference-en.html#blink_web_view_new">C API</a></td>
+</tr>
+<tr>
+<td>Choose the rendering path / query it</td>
+<td><code>blink_gtk_set_gpu_mode()</code> (<strong>before init</strong>)
+/ <code>blink_web_view_get_gpu_mode()</code></td>
+<td><a href="./settings-api-en.html">Settings API</a></td>
+</tr>
+<tr>
+<td>Open a URL</td>
+<td><code>blink_web_view_load_uri()</code></td>
+<td><a href="./c-api-reference-en.html#blink_web_view_load_uri">C
+API</a></td>
+</tr>
+<tr>
+<td>Show an HTML string directly</td>
+<td><code>blink_web_view_load_html()</code></td>
+<td><a href="./c-api-reference-en.html#blink_web_view_load_html">C
+API</a></td>
+</tr>
+<tr>
+<td>Go back / forward (and check availability)</td>
+<td><code>blink_web_view_go_back()</code> /
+<code>blink_web_view_go_forward()</code> /
+<code>blink_web_view_can_go_back()</code> /
+<code>blink_web_view_can_go_forward()</code></td>
+<td><a href="./navigation-api-en.html#blink_web_view_go_back">Navigation
+API</a></td>
+</tr>
+<tr>
+<td>Reload / stop loading</td>
+<td><code>blink_web_view_reload()</code> /
+<code>blink_web_view_stop()</code></td>
+<td><a href="./navigation-api-en.html#blink_web_view_reload">Navigation
+API</a></td>
+</tr>
+<tr>
+<td>Get the current URL / title</td>
+<td><code>blink_web_view_get_uri()</code> /
+<code>blink_web_view_get_title()</code></td>
+<td><a href="./c-api-reference-en.html#blink_web_view_get_uri">C
+API</a></td>
+</tr>
+<tr>
+<td>Know whether it is loading, and the progress</td>
+<td><code>blink_web_view_is_loading()</code> /
+<code>blink_web_view_get_estimated_load_progress()</code></td>
+<td><a href="./c-api-reference-en.html#blink_web_view_is_loading">C
+API</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="talk-to-the-page">Talk to the page</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Functions</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Run JavaScript from C</td>
+<td><code>blink_web_view_execute_javascript()</code></td>
+<td><a
+href="./app-integration-api-en.html#blink_web_view_execute_javascript">App
+integration API</a></td>
+</tr>
+<tr>
+<td>Receive messages from page JavaScript in C</td>
+<td><code>blink_web_view_register_message_handler()</code> /
+<code>blink_web_view_unregister_message_handler()</code></td>
+<td><a
+href="./app-integration-api-en.html#blink_web_view_register_message_handler">App
+integration API</a></td>
+</tr>
+<tr>
+<td>Send messages from C to page JavaScript</td>
+<td><code>blink_web_view_send_message_to_page()</code></td>
+<td><a
+href="./app-integration-api-en.html#blink_web_view_send_message_to_page">App
+integration API</a></td>
+</tr>
+<tr>
+<td>Inject scripts / CSS into every page</td>
+<td><code>blink_web_view_inject_user_script()</code> /
+<code>blink_web_view_inject_user_stylesheet()</code> /
+<code>blink_web_view_remove_all_user_scripts()</code></td>
+<td><a
+href="./app-integration-api-en.html#blink_web_view_inject_user_script">App
+integration API</a></td>
+</tr>
+<tr>
+<td>Create a custom URL scheme (<code>myapp://</code> etc.)</td>
+<td><code>blink_web_view_register_custom_scheme()</code></td>
+<td><a
+href="./app-integration-api-en.html#blink_web_view_register_custom_scheme">App
+integration API</a></td>
+</tr>
+<tr>
+<td>Serve binary data (images etc.) with a MIME type over a custom
+scheme</td>
+<td><code>blink_web_view_register_custom_scheme_full()</code></td>
+<td><a
+href="./app-integration-api-en.html#blink_web_view_register_custom_scheme_full">App
+integration API</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="appearance-and-interaction">Appearance and interaction</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Functions</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Zoom in / out</td>
+<td><code>blink_web_view_set_zoom_level()</code> /
+<code>blink_web_view_get_zoom_level()</code></td>
+<td><a
+href="./page-search-zoom-en.html#blink_web_view_set_zoom_level">In-page
+search and zoom</a></td>
+</tr>
+<tr>
+<td>Search within the page</td>
+<td><code>blink_web_view_find_in_page()</code> /
+<code>blink_web_view_stop_finding()</code></td>
+<td><a
+href="./page-search-zoom-en.html#blink_web_view_find_in_page">In-page
+search and zoom</a></td>
+</tr>
+<tr>
+<td>Change the serif / sans-serif / monospace typeface, or set a minimum
+font size</td>
+<td><code>blink_web_view_set_font_family()</code> /
+<code>blink_web_view_set_minimum_font_size()</code> (1.2.3-build2 and
+later)</td>
+<td><a href="./settings-api-en.html#fonts">Settings API</a></td>
+</tr>
+<tr>
+<td>Change the default font size / encoding</td>
+<td><code>blink_web_view_set_default_font_size()</code> (1.2.3 and
+later) / <code>blink_web_view_set_default_encoding()</code> (1.2.3 and
+later; only for pages with no declared or detected encoding)</td>
+<td><a
+href="./settings-api-en.html#limitation-up-to-122-and-what-123-changes">Settings
+API</a></td>
+</tr>
+<tr>
+<td>Respond to Fullscreen API requests</td>
+<td><code>blink_web_view_set_fullscreen_handler()</code> /
+<code>blink_web_view_exit_fullscreen()</code> /
+<code>blink_web_view_is_fullscreen()</code></td>
+<td><a
+href="./ui-handlers-api-en.html#blink_web_view_set_fullscreen_handler">UI
+handlers API</a></td>
+</tr>
+<tr>
+<td>Set the rendering canvas size</td>
+<td><code>blink_web_view_set_canvas_size()</code></td>
+<td><a href="./c-api-reference-en.html">C API</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="change-settings">Change settings</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Functions</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Disable / enable JavaScript</td>
+<td><code>blink_web_view_set_javascript_enabled()</code> /
+<code>blink_web_view_get_javascript_enabled()</code> (applied from
+1.2.3)</td>
+<td><a
+href="./settings-api-en.html#blink_web_view_set_javascript_enabled">Settings
+API</a></td>
+</tr>
+<tr>
+<td>Stop / resume loading images</td>
+<td><code>blink_web_view_set_images_enabled()</code> /
+<code>blink_web_view_get_images_enabled()</code> (applied from
+1.2.3)</td>
+<td><a
+href="./settings-api-en.html#blink_web_view_set_images_enabled">Settings
+API</a></td>
+</tr>
+<tr>
+<td>Disable / enable localStorage</td>
+<td><code>blink_web_view_set_local_storage_enabled()</code> /
+<code>blink_web_view_get_local_storage_enabled()</code> (applied from
+1.2.3)</td>
+<td><a
+href="./settings-api-en.html#blink_web_view_set_local_storage_enabled">Settings
+API</a></td>
+</tr>
+<tr>
+<td>Change / query the User-Agent</td>
+<td><code>blink_web_view_set_user_agent()</code> /
+<code>blink_web_view_get_user_agent()</code></td>
+<td><a
+href="./settings-api-en.html#blink_web_view_set_user_agent">Settings
+API</a></td>
+</tr>
+<tr>
+<td>Read / write / clear cookies</td>
+<td><code>blink_web_view_get_cookies()</code> /
+<code>blink_web_view_set_cookie()</code> /
+<code>blink_web_view_delete_all_cookies()</code></td>
+<td><a href="./c-api-reference-en.html#blink_web_view_get_cookies">C
+API</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="provide-your-own-ui">Provide your own UI</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Functions</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Show my own dialogs for alert / confirm / prompt</td>
+<td><code>blink_web_view_set_javascript_dialog_handler()</code></td>
+<td><a
+href="./ui-handlers-api-en.html#blink_web_view_set_javascript_dialog_handler">UI
+handlers API</a></td>
+</tr>
+<tr>
+<td>Provide my own file chooser
+(<code>&lt;input type="file"&gt;</code>)</td>
+<td><code>blink_web_view_set_file_chooser_handler()</code> /
+<code>blink_web_view_file_chooser_response()</code></td>
+<td><a
+href="./ui-handlers-api-en.html#blink_web_view_set_file_chooser_handler">UI
+handlers API</a></td>
+</tr>
+<tr>
+<td>Download / save files, show progress, cancel</td>
+<td><code>blink_web_view_set_download_handler()</code> with the
+<code>BlinkDownload</code> from <code>download-started</code>
+(<code>blink_download_cancel()</code> etc., 1.2.3-build2 and later)</td>
+<td><a href="./ui-handlers-api-en.html#downloads">UI handlers API —
+Downloads</a></td>
+</tr>
+<tr>
+<td>Respond to HTTP authentication (Basic etc.)</td>
+<td><code>blink_web_view_set_auth_handler()</code> +
+<code>blink_web_view_auth_response()</code> (1.2.3-build2 and
+later)</td>
+<td><a href="./ui-handlers-api-en.html#http-authentication">UI handlers
+API — HTTP authentication</a></td>
+</tr>
+<tr>
+<td>Decide how certificate errors are handled</td>
+<td><code>blink_web_view_set_certificate_error_handler()</code></td>
+<td><a
+href="./ui-handlers-api-en.html#blink_web_view_set_certificate_error_handler">UI
+handlers API</a></td>
+</tr>
+<tr>
+<td>Respond to permission requests (geolocation, notifications, …)</td>
+<td><code>blink_permission_request_get_type_name()</code> /
+<code>blink_permission_request_allow()</code> /
+<code>blink_permission_request_deny()</code></td>
+<td><a href="./signals-api-en.html">Signals API</a></td>
+</tr>
+<tr>
+<td>Answer a permission request later / see who is asking / remember the
+answer</td>
+<td><code>blink_permission_request_ref()</code> /
+<code>_get_origin()</code> / <code>_set_remember()</code> /
+<code>blink_web_view_get_permission_state()</code> (1.2.3-build2 and
+later)</td>
+<td><a
+href="./signals-api-en.html#permission-requests-permission-request">Signals
+API</a></td>
+</tr>
+<tr>
+<td>Open links in the system browser / stop a navigation / open a new
+window in another view</td>
+<td><code>decide-navigation</code> signal with
+<code>blink_navigation_decision_open_external()</code> /
+<code>blink_navigation_decision_ignore()</code> /
+<code>blink_navigation_decision_create_view()</code> (1.2.3-build2 and
+later)</td>
+<td><a
+href="./signals-api-en.html#decide-navigation-v123-build2-and-later">Signals
+API</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="save-and-export">Save and export</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Functions</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Print the page to PDF</td>
+<td><code>blink_web_view_print_to_pdf_with_options()</code> (paper,
+margins, ranges) / <code>blink_web_view_print_to_pdf()</code>
+(1.2.3-build2 and later)</td>
+<td><a href="./c-api-reference-en.html">C API</a></td>
+</tr>
+<tr>
+<td>Save the rendered content as PNG</td>
+<td><code>blink_web_view_capture_screenshot()</code> /
+<code>blink_web_view_capture_screenshot_async()</code></td>
+<td><a
+href="./c-api-reference-en.html#blink_web_view_capture_screenshot">C
+API</a></td>
+</tr>
+<tr>
+<td>Forbid copy / save / print (e-book readers, kiosks)</td>
+<td><code>blink_web_view_set_content_policy()</code> /
+<code>blink_web_view_get_content_policy()</code></td>
+<td><a href="./settings-api-en.html">Settings API</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="develop-and-debug">Develop and debug</h2>
+<table>
+<thead>
+<tr>
+<th>I want to…</th>
+<th>Functions</th>
+<th>Details</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Open / close Chrome DevTools</td>
+<td><code>blink_web_view_open_devtools()</code> /
+<code>blink_web_view_close_devtools()</code></td>
+<td><a href="./devtools-api-en.html#blink_web_view_open_devtools">DevTools
+API</a></td>
+</tr>
+<tr>
+<td>Get the DevTools URL and inspect from another browser</td>
+<td><code>blink_web_view_get_devtools_url()</code></td>
+<td><a
+href="./devtools-api-en.html#blink_web_view_get_devtools_url">DevTools
+API</a></td>
+</tr>
+<tr>
+<td>Change the DevTools UI language</td>
+<td><code>blink_gtk_set_devtools_locale()</code> /
+<code>blink_gtk_get_devtools_locale()</code></td>
+<td><a
+href="./devtools-api-en.html#blink_gtk_set_devtools_locale--blink_gtk_get_devtools_locale">DevTools
+API</a></td>
+</tr>
+<tr>
+<td>Inject mouse input for testing</td>
+<td><code>blink_web_view_inject_test_input()</code></td>
+<td><a href="./c-api-reference-en.html#blink_web_view_inject_test_input">C
+API</a></td>
+</tr>
+<tr>
+<td>Put trace markers at both ends of the part to measure</td>
+<td><code>blink_gtk_trace_mark()</code> (since v1.2.3)</td>
+<td><a href="./c-api-reference-en.html#blink_gtk_trace_mark">C
+API</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="functions-not-listed-here">Functions not listed here</h2>
+<p>The complete list of public functions (including deprecated and
+experimental<br />
+ones) is in the<br />
+<a href="./c-api-reference-en.html">complete function index of the C API
+reference</a>.<br />
+For signals (load-changed / title-changed / permission-request etc.) see
+the<br />
+<a href="./signals-api-en.html">Signals API</a>.</p>
+<h2 id="history">History</h2>
+<table>
+<thead>
+<tr>
+<th>Date</th>
+<th>Changes</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>2026-07-30</td>
+<td>First edition</td>
+</tr>
+</tbody>
+</table>
 </body>
 </html>
 </div></div>

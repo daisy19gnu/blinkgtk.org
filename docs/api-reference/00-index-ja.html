@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>00-index-ja — BlinkGTK</title>
+  <title>BlinkGTK API リファレンスマニュアル(目次) — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="BlinkGTK を GTK4 アプリケーションに組み込むための API リファレンスです。 日本語版を正とし、英語版がこれに追随します。">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/00-index-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="00-index-ja — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK API リファレンスマニュアル(目次) — BlinkGTK">
+<meta property="og:description" content="BlinkGTK を GTK4 アプリケーションに組み込むための API リファレンスです。 日本語版を正とし、英語版がこれに追随します。">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/00-index-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +43,230 @@
   <a href="../../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="00-index-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-
+<h1 id="blinkgtk-api-リファレンスマニュアル目次">BlinkGTK API
+リファレンスマニュアル(目次)</h1>
+<p><strong>作成者</strong>: BlinkGTK Project<br />
+<strong>対象</strong>: BlinkGTK API バージョン 0.1(製品バージョン v1.2
+系)/ Chromium 154 baseline</p>
+<p><a href="./00-index-en.html">English</a></p>
+<p>BlinkGTK を GTK4 アプリケーションに組み込むための API
+リファレンスです。<br />
+日本語版を正とし、英語版がこれに追随します。</p>
+<blockquote>
+<p>パス・パッケージ名中の <code>0.1</code> は <strong>API
+バージョン</strong>です(GTK4 の <code>gtk-4.0</code> と<br />
+同じ規約)。製品バージョン(v1.1.0 等)とは独立で、互換性のない API
+変更時に<br />
+のみ変わります。</p>
+</blockquote>
+<h2 id="したいことから探す">したいことから探す</h2>
+<table>
+<thead>
+<tr>
+<th>したいこと</th>
+<th>ページ</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>やりたいことから関数名を引く (逆引き)</strong></td>
+<td><a href="./howto-index-ja.html">逆引きリファレンス</a></td>
+</tr>
+<tr>
+<td>ページを読み込む・戻る・進む</td>
+<td><a href="./navigation-api-ja.html">Navigation API</a></td>
+</tr>
+<tr>
+<td>読み込み完了・タイトル変更などを受け取る</td>
+<td><a href="./signals-api-ja.html">Signals API</a></td>
+</tr>
+<tr>
+<td>再起動せずに描画経路を切り替える</td>
+<td><a
+href="./render-path-handoff-ja.html">描画経路のライブ切替と引き継ぎメタ</a></td>
+</tr>
+<tr>
+<td>縦書きの版面 (列境界・行送り・行数) を読む</td>
+<td><a href="./vertical-flow-metrics-ja.html">縦書き multicol
+の版面メトリクス (verticalFlowMetrics)</a></td>
+</tr>
+<tr>
+<td>JavaScript・画像・User-Agent・Cookie を設定する</td>
+<td><a href="./settings-api-ja.html">Settings API</a></td>
+</tr>
+<tr>
+<td>GPU モード・コンテンツ保護 (コピー禁止など)</td>
+<td><a href="./settings-api-ja.html">Settings API —
+モードとポリシー</a></td>
+</tr>
+<tr>
+<td>ページ内を検索する・表示を拡大する</td>
+<td><a href="./page-search-zoom-ja.html">ページ内検索とズーム</a></td>
+</tr>
+<tr>
+<td>独自 URL スキーム (<code>ebook://</code> 等) を作る</td>
+<td><a href="./app-integration-api-ja.html">アプリ連携 API</a></td>
+</tr>
+<tr>
+<td>ページの JavaScript と C でメッセージをやり取りする</td>
+<td><a href="./app-integration-api-ja.html">アプリ連携 API</a></td>
+</tr>
+<tr>
+<td>全ページにスクリプト・CSS を注入する</td>
+<td><a href="./app-integration-api-ja.html">アプリ連携 API</a></td>
+</tr>
+<tr>
+<td>ダイアログ・ファイル選択・ダウンロード・認証を自前 UI にする</td>
+<td><a href="./ui-handlers-api-ja.html">UI ハンドラ API</a></td>
+</tr>
+<tr>
+<td>位置情報・通知などの権限要求に応答する</td>
+<td><a href="./signals-api-ja.html">Signals API —
+permission-request</a></td>
+</tr>
+<tr>
+<td>Chrome DevTools でデバッグする</td>
+<td><a href="./devtools-api-ja.html">DevTools API</a></td>
+</tr>
+<tr>
+<td>環境変数で挙動を切り替える</td>
+<td><a
+href="./environment-variables-ja.html">環境変数リファレンス</a></td>
+</tr>
+<tr>
+<td>ウィジェットとしての <code>BlinkWebView</code></td>
+<td><a href="./blink-web-view-ja.html">BlinkWebView</a></td>
+</tr>
+<tr>
+<td>全 API を一覧で見る</td>
+<td><a href="./c-api-reference-ja.html">C API リファレンス</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="ページ一覧">ページ一覧</h2>
+<table>
+<thead>
+<tr>
+<th>ページ</th>
+<th>内容</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="./howto-index-ja.html"><code>howto-index-ja.md</code></a></td>
+<td>逆引き — 目的から関数を探す</td>
+</tr>
+<tr>
+<td><a
+href="./navigation-api-ja.html"><code>navigation-api-ja.md</code></a></td>
+<td>URL / HTML の読み込み、履歴、リロード</td>
+</tr>
+<tr>
+<td><a
+href="./signals-api-ja.html"><code>signals-api-ja.md</code></a></td>
+<td>GObject シグナル (load-changed / title-changed / permission-request
+等)</td>
+</tr>
+<tr>
+<td><a
+href="./render-path-handoff-ja.html"><code>render-path-handoff-ja.md</code></a></td>
+<td>描画経路のライブ切替 (BlinkShift) と引き継ぎメタ</td>
+</tr>
+<tr>
+<td><a
+href="./vertical-flow-metrics-ja.html"><code>vertical-flow-metrics-ja.md</code></a></td>
+<td>縦書き multicol の版面メトリクス (verticalFlowMetrics)</td>
+</tr>
+<tr>
+<td><a
+href="./settings-api-ja.html"><code>settings-api-ja.md</code></a></td>
+<td>実行時設定・GPU モード・コンテンツポリシー</td>
+</tr>
+<tr>
+<td><a
+href="./page-search-zoom-ja.html"><code>page-search-zoom-ja.md</code></a></td>
+<td>ページ内検索・ズーム</td>
+</tr>
+<tr>
+<td><a
+href="./app-integration-api-ja.html"><code>app-integration-api-ja.md</code></a></td>
+<td>カスタムスキーム・JS↔︎C メッセージング・スクリプト注入</td>
+</tr>
+<tr>
+<td><a
+href="./ui-handlers-api-ja.html"><code>ui-handlers-api-ja.md</code></a></td>
+<td>JS ダイアログ・ファイル選択・ダウンロード・HTTP 認証・証明書</td>
+</tr>
+<tr>
+<td><a
+href="./devtools-api-ja.html"><code>devtools-api-ja.md</code></a></td>
+<td>Chrome DevTools 連携</td>
+</tr>
+<tr>
+<td><a
+href="./environment-variables-ja.html"><code>environment-variables-ja.md</code></a></td>
+<td>公開サポート環境変数の正リスト</td>
+</tr>
+<tr>
+<td><a
+href="./blink-web-view-ja.html"><code>blink-web-view-ja.md</code></a></td>
+<td><code>BlinkWebView</code> ウィジェット</td>
+</tr>
+<tr>
+<td><a
+href="./c-api-reference-ja.html"><code>c-api-reference-ja.md</code></a></td>
+<td>全 C API の一覧</td>
+</tr>
+</tbody>
+</table>
+<p>各ページは日本語 (<code>-ja.md</code>) と英語 (<code>-en.md</code>)
+の対で提供されます。</p>
+<h2 id="起草予定">起草予定</h2>
+<table>
+<thead>
+<tr>
+<th>章</th>
+<th>状態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>概観とライフサイクル</td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>GObject Introspection / 言語バインディング (PyGObject / GJS /
+Vala)</td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>バージョニングと互換性 (SONAME / API 版数 / 安定性)</td>
+<td>起草予定</td>
+</tr>
+<tr>
+<td>アクセシビリティ</td>
+<td><strong>機能未実装のため退避</strong>。実装後に起草</td>
+</tr>
+</tbody>
+</table>
+<h2 id="記載の正確性について">記載の正確性について</h2>
+<p>このリファレンスは機械検証されています。</p>
+<ul>
+<li>記載されたすべての API
+が、配布物のヘッダと共有ライブラリに実在すること</li>
+<li>ヘッダのすべての公開 API
+が、いずれかのページに記載されていること<br />
+(実験的 API は理由付きで除外リストに登録)</li>
+<li>完全なコード例がコンパイルできること</li>
+</ul>
+<h2 id="関連">関連</h2>
+<ul>
+<li>インストール・依存: 配布物同梱の <code>INSTALL.md</code>、および
+blinkgtk-dist リポジトリ</li>
+<li>環境変数は「公開サポート / エスケープハッチ / 内部診断」の 3
+区分。内部診断 env は無保証・サポート対象外です。</li>
+</ul>
 </body>
 </html>
 </div></div>

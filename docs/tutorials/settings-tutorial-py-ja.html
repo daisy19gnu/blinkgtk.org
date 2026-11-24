@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>settings-tutorial-py-ja — BlinkGTK</title>
+  <title>BlinkGTK Settings API チュートリアル (Python/PyGObject) —
+BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -21,13 +22,78 @@
       vertical-align: middle;
     }
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
+    /* CSS for syntax highlighting */
+    html { -webkit-text-size-adjust: 100%; }
+    pre > code.sourceCode { white-space: pre; position: relative; }
+    pre > code.sourceCode > span { display: inline-block; line-height: 1.25; }
+    pre > code.sourceCode > span:empty { height: 1.2em; }
+    .sourceCode { overflow: visible; }
+    code.sourceCode > span { color: inherit; text-decoration: inherit; }
+    div.sourceCode { margin: 1em 0; }
+    pre.sourceCode { margin: 0; }
+    @media screen {
+    div.sourceCode { overflow: auto; }
+    }
+    @media print {
+    pre > code.sourceCode { white-space: pre-wrap; }
+    pre > code.sourceCode > span { text-indent: -5em; padding-left: 5em; }
+    }
+    pre.numberSource code
+      { counter-reset: source-line 0; }
+    pre.numberSource code > span
+      { position: relative; left: -4em; counter-increment: source-line; }
+    pre.numberSource code > span > a:first-child::before
+      { content: counter(source-line);
+        position: relative; left: -1em; text-align: right; vertical-align: baseline;
+        border: none; display: inline-block;
+        -webkit-touch-callout: none; -webkit-user-select: none;
+        -khtml-user-select: none; -moz-user-select: none;
+        -ms-user-select: none; user-select: none;
+        padding: 0 4px; width: 4em;
+        color: #aaaaaa;
+      }
+    pre.numberSource { margin-left: 3em; border-left: 1px solid #aaaaaa;  padding-left: 4px; }
+    div.sourceCode
+      {   }
+    @media screen {
+    pre > code.sourceCode > span > a:first-child::before { text-decoration: underline; }
+    }
+    code span.al { color: #ff0000; font-weight: bold; } /* Alert */
+    code span.an { color: #60a0b0; font-weight: bold; font-style: italic; } /* Annotation */
+    code span.at { color: #7d9029; } /* Attribute */
+    code span.bn { color: #40a070; } /* BaseN */
+    code span.bu { color: #008000; } /* BuiltIn */
+    code span.cf { color: #007020; font-weight: bold; } /* ControlFlow */
+    code span.ch { color: #4070a0; } /* Char */
+    code span.cn { color: #880000; } /* Constant */
+    code span.co { color: #60a0b0; font-style: italic; } /* Comment */
+    code span.cv { color: #60a0b0; font-weight: bold; font-style: italic; } /* CommentVar */
+    code span.do { color: #ba2121; font-style: italic; } /* Documentation */
+    code span.dt { color: #902000; } /* DataType */
+    code span.dv { color: #40a070; } /* DecVal */
+    code span.er { color: #ff0000; font-weight: bold; } /* Error */
+    code span.ex { } /* Extension */
+    code span.fl { color: #40a070; } /* Float */
+    code span.fu { color: #06287e; } /* Function */
+    code span.im { color: #008000; font-weight: bold; } /* Import */
+    code span.in { color: #60a0b0; font-weight: bold; font-style: italic; } /* Information */
+    code span.kw { color: #007020; font-weight: bold; } /* Keyword */
+    code span.op { color: #666666; } /* Operator */
+    code span.ot { color: #007020; } /* Other */
+    code span.pp { color: #bc7a00; } /* Preprocessor */
+    code span.sc { color: #4070a0; } /* SpecialChar */
+    code span.ss { color: #bb6688; } /* SpecialString */
+    code span.st { color: #4070a0; } /* String */
+    code span.va { color: #19177c; } /* Variable */
+    code span.vs { color: #4070a0; } /* VerbatimString */
+    code span.wa { color: #60a0b0; font-weight: bold; font-style: italic; } /* Warning */
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="このチュートリアルでは、Python と PyGObject から BlinkGTK の設定 (JavaScript、画像、ローカルストレージ、User-Agent、文字サイズ) を使う方法を学びます。 完全なプログラムは、どれも BlinkGTK 1.2.5 (Chromium 156) で実行して確かめています。">
 <link rel="canonical" href="https://blinkgtk.org/docs/tutorials/settings-tutorial-py-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="settings-tutorial-py-ja — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK Settings API チュートリアル (Python/PyGObject) — BlinkGTK">
+<meta property="og:description" content="このチュートリアルでは、Python と PyGObject から BlinkGTK の設定 (JavaScript、画像、ローカルストレージ、User-Agent、文字サイズ) を使う方法を学びます。 完全なプログラムは、どれも BlinkGTK 1.2.5 (Chromium 156) で実行して確かめています。">
 <meta property="og:url" content="https://blinkgtk.org/docs/tutorials/settings-tutorial-py-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +109,683 @@
   <a href="../../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="settings-tutorial-py-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-
+<h1 id="blinkgtk-settings-api-チュートリアル-pythonpygobject">BlinkGTK
+Settings API チュートリアル (Python/PyGObject)</h1>
+<p><strong>最終更新</strong>: 2026-10-21<br />
+<strong>対象バージョン</strong>: BlinkGTK 1.2.5 以降<br />
+<strong>レベル</strong>: 初級〜中級<br />
+<strong>言語</strong>: 日本語 | <a
+href="./settings-tutorial-py-en.html">English</a></p>
+<hr />
+<h2 id="目次">目次</h2>
+<ol type="1">
+<li><a href="#はじめに">はじめに</a></li>
+<li><a href="#pygobjectのセットアップ">PyGObjectのセットアップ</a></li>
+<li><a href="#基本的な使い方">基本的な使い方</a></li>
+<li><a href="#settings-apiの詳細">Settings APIの詳細</a></li>
+<li><a href="#pythonicなパターン">Pythonicなパターン</a></li>
+<li><a href="#実用例">実用例</a></li>
+<li><a href="#webkitgtkからの移行">WebKitGTKからの移行</a></li>
+</ol>
+<hr />
+<h2 id="はじめに">はじめに</h2>
+<p>このチュートリアルでは、Python と PyGObject から BlinkGTK の設定
+(JavaScript、画像、ローカルストレージ、User-Agent、文字サイズ)
+を使う方法を学びます。<br />
+完全なプログラムは、どれも BlinkGTK 1.2.5 (Chromium 156)
+で実行して確かめています。</p>
+<h3 id="学習内容">学習内容</h3>
+<ul>
+<li><code>BlinkGTK.WebView</code> の設定用メソッドの使い方</li>
+<li>設定を変えるタイミング
+(読み込みの前、または変えた後に再読み込み)</li>
+<li>設定をまとめて扱う Python の書き方</li>
+<li>WebKitGTK からの移行方法</li>
+</ul>
+<h3
+id="以前のチュートリアルのコードを使っていた方へ">以前のチュートリアルのコードを使っていた方へ</h3>
+<p>以前このページに載っていたコードは、存在しない名前を使っていたため動きませんでした。次のように置き換えてください。</p>
+<table>
+<thead>
+<tr>
+<th>以前の書き方 (存在しない)</th>
+<th>正しい書き方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>import blink_gtk</code> / <code>blink_gtk.init()</code></td>
+<td><code>from gi.repository import BlinkGTK</code> /
+<code>BlinkGTK.gtk_init(sys.argv[:1])</code></td>
+</tr>
+<tr>
+<td><code>app.run()</code></td>
+<td><code>BlinkGTK.gtk_application_run(app)</code></td>
+</tr>
+<tr>
+<td><code>blink_gtk.shutdown()</code></td>
+<td><code>BlinkGTK.gtk_shutdown()</code></td>
+</tr>
+<tr>
+<td><code>set_enable_javascript()</code> /
+<code>get_enable_javascript()</code></td>
+<td><code>set_javascript_enabled()</code> /
+<code>get_javascript_enabled()</code></td>
+</tr>
+<tr>
+<td><code>set_auto_load_images()</code> /
+<code>get_auto_load_images()</code></td>
+<td><code>set_images_enabled()</code> /
+<code>get_images_enabled()</code></td>
+</tr>
+<tr>
+<td><code>set_enable_local_storage()</code> /
+<code>get_enable_local_storage()</code></td>
+<td><code>set_local_storage_enabled()</code> /
+<code>get_local_storage_enabled()</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="前提知識">前提知識</h3>
+<ul>
+<li>Python の基本構文</li>
+<li>オブジェクト指向プログラミングの基礎</li>
+<li>GTK 4 の基本的な知識 (あると望ましい)</li>
+</ul>
+<hr />
+<h2 id="pygobjectのセットアップ">PyGObjectのセットアップ</h2>
+<h3 id="インストール">インストール</h3>
+<p>BlinkGTK 1.2.5 以降と、Wayland のデスクトップが必要です (1.2.4 までは
+Python から起動できません。X11 では動きません)。</p>
+<p><strong>Fedora</strong>:</p>
+<div class="sourceCode" id="cb1"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb1-1"><a href="#cb1-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> dnf install python3-gobject gtk4 blinkgtk-bin blinkgtk-bin-gir</span></code></pre></div>
+<p><strong>Debian / Ubuntu</strong>:</p>
+<div class="sourceCode" id="cb2"><pre
+class="sourceCode bash"><code class="sourceCode bash"><span id="cb2-1"><a href="#cb2-1" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install python3-gi gir1.2-gtk-4.0</span>
+<span id="cb2-2"><a href="#cb2-2" aria-hidden="true" tabindex="-1"></a><span class="co"># BlinkGTK 本体と型情報は、ダウンロードした DEB をファイルで指定します (APT のリポジトリはありません)</span></span>
+<span id="cb2-3"><a href="#cb2-3" aria-hidden="true" tabindex="-1"></a><span class="fu">sudo</span> apt install ./libblinkgtk-0.1-0_<span class="op">&lt;</span>版<span class="op">&gt;</span>-1_amd64.deb ./gir1.2-blinkgtk-0.1_<span class="op">&lt;</span>版<span class="op">&gt;</span>-1_amd64.deb</span></code></pre></div>
+<h3 id="最初のプログラム">最初のプログラム</h3>
+<p>初期化からウィンドウの表示までの最小のプログラムと、その解説は <a
+href="./python-tutorial-ja.html#最小限のブラウザ">Python
+チュートリアル</a> にあります。<br />
+このページのプログラムも、同じ手順 (<code>BlinkGTK.gtk_init()</code> →
+<code>BlinkGTK.gtk_application_run()</code> →
+<code>BlinkGTK.gtk_shutdown()</code>) で動かします。</p>
+<p><strong>実行は必ず <code>blinkgtk-run</code>
+を通してください</strong> (例: <code>settings.py</code>
+として保存し、<code>blinkgtk-run python3 settings.py</code>)。通さないと
+HTTPS の頁を開いたときに異常終了します (<a
+href="./python-tutorial-ja.html#基本的な使い方">理由</a>)。</p>
+<hr />
+<h2 id="基本的な使い方">基本的な使い方</h2>
+<h3 id="javascript制御">JavaScript制御</h3>
+<div class="sourceCode" id="cb3"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb3-1"><a href="#cb3-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb3-2"><a href="#cb3-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;JavaScript を無効にしてページを開く&quot;&quot;&quot;</span></span>
+<span id="cb3-3"><a href="#cb3-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb3-4"><a href="#cb3-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-5"><a href="#cb3-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb3-6"><a href="#cb3-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-7"><a href="#cb3-7" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;Gtk&quot;</span>, <span class="st">&quot;4.0&quot;</span>)</span>
+<span id="cb3-8"><a href="#cb3-8" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;BlinkGTK&quot;</span>, <span class="st">&quot;0.1&quot;</span>)</span>
+<span id="cb3-9"><a href="#cb3-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK, Gtk  <span class="co"># noqa: E402</span></span>
+<span id="cb3-10"><a href="#cb3-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-11"><a href="#cb3-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-12"><a href="#cb3-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app, url):</span>
+<span id="cb3-13"><a href="#cb3-13" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app, title<span class="op">=</span><span class="st">&quot;JavaScript Control&quot;</span>)</span>
+<span id="cb3-14"><a href="#cb3-14" aria-hidden="true" tabindex="-1"></a>    window.set_default_size(<span class="dv">800</span>, <span class="dv">600</span>)</span>
+<span id="cb3-15"><a href="#cb3-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-16"><a href="#cb3-16" aria-hidden="true" tabindex="-1"></a>    web_view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb3-17"><a href="#cb3-17" aria-hidden="true" tabindex="-1"></a>    window.set_child(web_view)</span>
+<span id="cb3-18"><a href="#cb3-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-19"><a href="#cb3-19" aria-hidden="true" tabindex="-1"></a>    <span class="co"># 設定はページを読み込む前に行う</span></span>
+<span id="cb3-20"><a href="#cb3-20" aria-hidden="true" tabindex="-1"></a>    web_view.set_javascript_enabled(<span class="va">False</span>)</span>
+<span id="cb3-21"><a href="#cb3-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;JavaScript: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> web_view<span class="sc">.</span>get_javascript_enabled() <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>, flush<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb3-22"><a href="#cb3-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-23"><a href="#cb3-23" aria-hidden="true" tabindex="-1"></a>    <span class="co"># ページのタイトルをウィンドウに出す (スクリプトでタイトルを変えるページで違いが分かる)</span></span>
+<span id="cb3-24"><a href="#cb3-24" aria-hidden="true" tabindex="-1"></a>    web_view.<span class="ex">connect</span>(<span class="st">&quot;title-changed&quot;</span>, <span class="kw">lambda</span> v: window.set_title(v.get_title() <span class="kw">or</span> <span class="st">&quot;&quot;</span>))</span>
+<span id="cb3-25"><a href="#cb3-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-26"><a href="#cb3-26" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb3-27"><a href="#cb3-27" aria-hidden="true" tabindex="-1"></a>    web_view.load_uri(url)</span>
+<span id="cb3-28"><a href="#cb3-28" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-29"><a href="#cb3-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-30"><a href="#cb3-30" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
+<span id="cb3-31"><a href="#cb3-31" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> sys.argv[<span class="dv">1</span>] <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">&quot;https://example.com/&quot;</span></span>
+<span id="cb3-32"><a href="#cb3-32" aria-hidden="true" tabindex="-1"></a>    ok, _argv <span class="op">=</span> BlinkGTK.gtk_init(sys.argv[:<span class="dv">1</span>])</span>
+<span id="cb3-33"><a href="#cb3-33" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> ok:</span>
+<span id="cb3-34"><a href="#cb3-34" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;BlinkGTK を初期化できませんでした&quot;</span>, <span class="bu">file</span><span class="op">=</span>sys.stderr)</span>
+<span id="cb3-35"><a href="#cb3-35" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb3-36"><a href="#cb3-36" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&quot;org.example.JavaScriptControl&quot;</span>)</span>
+<span id="cb3-37"><a href="#cb3-37" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&quot;activate&quot;</span>, on_activate, url)</span>
+<span id="cb3-38"><a href="#cb3-38" aria-hidden="true" tabindex="-1"></a>    rc <span class="op">=</span> BlinkGTK.gtk_application_run(app)</span>
+<span id="cb3-39"><a href="#cb3-39" aria-hidden="true" tabindex="-1"></a>    BlinkGTK.gtk_shutdown()</span>
+<span id="cb3-40"><a href="#cb3-40" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rc</span>
+<span id="cb3-41"><a href="#cb3-41" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-42"><a href="#cb3-42" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb3-43"><a href="#cb3-43" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb3-44"><a href="#cb3-44" aria-hidden="true" tabindex="-1"></a>    sys.exit(main())</span></code></pre></div>
+<p>スクリプトでタイトルを書き換えるページを開くと、タイトルが書き換わらないこと
+(スクリプトが実行されないこと) を確かめられます。</p>
+<h3 id="user-agent変更">User-Agent変更</h3>
+<div class="sourceCode" id="cb4"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb4-1"><a href="#cb4-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb4-2"><a href="#cb4-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;User-Agent を変えてページを開く&quot;&quot;&quot;</span></span>
+<span id="cb4-3"><a href="#cb4-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb4-4"><a href="#cb4-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-5"><a href="#cb4-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb4-6"><a href="#cb4-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-7"><a href="#cb4-7" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;Gtk&quot;</span>, <span class="st">&quot;4.0&quot;</span>)</span>
+<span id="cb4-8"><a href="#cb4-8" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;BlinkGTK&quot;</span>, <span class="st">&quot;0.1&quot;</span>)</span>
+<span id="cb4-9"><a href="#cb4-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK, Gtk  <span class="co"># noqa: E402</span></span>
+<span id="cb4-10"><a href="#cb4-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-11"><a href="#cb4-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-12"><a href="#cb4-12" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app, url):</span>
+<span id="cb4-13"><a href="#cb4-13" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> Gtk.ApplicationWindow(application<span class="op">=</span>app, title<span class="op">=</span><span class="st">&quot;User-Agent&quot;</span>)</span>
+<span id="cb4-14"><a href="#cb4-14" aria-hidden="true" tabindex="-1"></a>    window.set_default_size(<span class="dv">800</span>, <span class="dv">600</span>)</span>
+<span id="cb4-15"><a href="#cb4-15" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-16"><a href="#cb4-16" aria-hidden="true" tabindex="-1"></a>    web_view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb4-17"><a href="#cb4-17" aria-hidden="true" tabindex="-1"></a>    window.set_child(web_view)</span>
+<span id="cb4-18"><a href="#cb4-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-19"><a href="#cb4-19" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;変更前: </span><span class="sc">{</span>web_view<span class="sc">.</span>get_user_agent()<span class="sc">}</span><span class="ss">&quot;</span>, flush<span class="op">=</span><span class="va">True</span>)  <span class="co"># 変えていなければ None</span></span>
+<span id="cb4-20"><a href="#cb4-20" aria-hidden="true" tabindex="-1"></a>    web_view.set_user_agent(<span class="st">&quot;MyPythonApp/1.0 (BlinkGTK)&quot;</span>)</span>
+<span id="cb4-21"><a href="#cb4-21" aria-hidden="true" tabindex="-1"></a>    <span class="bu">print</span>(<span class="ss">f&quot;変更後: </span><span class="sc">{</span>web_view<span class="sc">.</span>get_user_agent()<span class="sc">}</span><span class="ss">&quot;</span>, flush<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb4-22"><a href="#cb4-22" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-23"><a href="#cb4-23" aria-hidden="true" tabindex="-1"></a>    web_view.<span class="ex">connect</span>(<span class="st">&quot;title-changed&quot;</span>, <span class="kw">lambda</span> v: window.set_title(v.get_title() <span class="kw">or</span> <span class="st">&quot;&quot;</span>))</span>
+<span id="cb4-24"><a href="#cb4-24" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb4-25"><a href="#cb4-25" aria-hidden="true" tabindex="-1"></a>    web_view.load_uri(url)</span>
+<span id="cb4-26"><a href="#cb4-26" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-27"><a href="#cb4-27" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-28"><a href="#cb4-28" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
+<span id="cb4-29"><a href="#cb4-29" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> sys.argv[<span class="dv">1</span>] <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">&quot;https://example.com/&quot;</span></span>
+<span id="cb4-30"><a href="#cb4-30" aria-hidden="true" tabindex="-1"></a>    ok, _argv <span class="op">=</span> BlinkGTK.gtk_init(sys.argv[:<span class="dv">1</span>])</span>
+<span id="cb4-31"><a href="#cb4-31" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> ok:</span>
+<span id="cb4-32"><a href="#cb4-32" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;BlinkGTK を初期化できませんでした&quot;</span>, <span class="bu">file</span><span class="op">=</span>sys.stderr)</span>
+<span id="cb4-33"><a href="#cb4-33" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb4-34"><a href="#cb4-34" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&quot;org.example.UserAgent&quot;</span>)</span>
+<span id="cb4-35"><a href="#cb4-35" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&quot;activate&quot;</span>, on_activate, url)</span>
+<span id="cb4-36"><a href="#cb4-36" aria-hidden="true" tabindex="-1"></a>    rc <span class="op">=</span> BlinkGTK.gtk_application_run(app)</span>
+<span id="cb4-37"><a href="#cb4-37" aria-hidden="true" tabindex="-1"></a>    BlinkGTK.gtk_shutdown()</span>
+<span id="cb4-38"><a href="#cb4-38" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rc</span>
+<span id="cb4-39"><a href="#cb4-39" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-40"><a href="#cb4-40" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb4-41"><a href="#cb4-41" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb4-42"><a href="#cb4-42" aria-hidden="true" tabindex="-1"></a>    sys.exit(main())</span></code></pre></div>
+<p><strong>注意</strong>: 設定した User-Agent
+は、このあと読み込む頁と、<code>reload()</code>
+で読み込み直した頁に送られます (HTTP のヘッダと
+<code>navigator.userAgent</code>)。1.2.4 までは、<code>load_uri()</code>
+で開いた頁には反映されませんでした。</p>
+<hr />
+<h2 id="settings-apiの詳細">Settings APIの詳細</h2>
+<h3 id="設定を変えるタイミング">設定を変えるタイミング</h3>
+<ul>
+<li>設定は <code>BlinkGTK.WebView</code> ごとに独立しています</li>
+<li>ページを読み込む前に設定してください</li>
+<li>表示中のページの設定を変えたときは、<code>reload()</code>
+で読み込み直すと反映されます。ただし書体
+(<code>set_font_family()</code>) と最小の文字サイズ
+(<code>set_minimum_font_size()</code>)
+は、読み込み直さなくても表示中のページにすぐ反映されます</li>
+</ul>
+<h3 id="一覧">一覧</h3>
+<table>
+<thead>
+<tr>
+<th>設定</th>
+<th>変更</th>
+<th>取得</th>
+<th>既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>JavaScript</td>
+<td><code>set_javascript_enabled(bool)</code></td>
+<td><code>get_javascript_enabled()</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>画像の読み込み</td>
+<td><code>set_images_enabled(bool)</code></td>
+<td><code>get_images_enabled()</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>ローカルストレージ</td>
+<td><code>set_local_storage_enabled(bool)</code></td>
+<td><code>get_local_storage_enabled()</code></td>
+<td><code>True</code></td>
+</tr>
+<tr>
+<td>User-Agent</td>
+<td><code>set_user_agent(str or None)</code></td>
+<td><code>get_user_agent()</code></td>
+<td><code>None</code> (Chromium の既定値を使用)</td>
+</tr>
+<tr>
+<td>既定の文字サイズ (CSS px)</td>
+<td><code>set_default_font_size(int)</code></td>
+<td><code>get_default_font_size()</code></td>
+<td><code>16</code></td>
+</tr>
+<tr>
+<td>最小の文字サイズ (CSS px)</td>
+<td><code>set_minimum_font_size(int)</code></td>
+<td><code>get_minimum_font_size()</code></td>
+<td><code>0</code> (下限なし)</td>
+</tr>
+<tr>
+<td>書体</td>
+<td><code>set_font_family(generic, script, family)</code></td>
+<td><code>get_font_family(generic, script)</code></td>
+<td>未設定なら <code>None</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="1-javascript制御">1. JavaScript制御</h3>
+<div class="sourceCode" id="cb5"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb5-1"><a href="#cb5-1" aria-hidden="true" tabindex="-1"></a>web_view.set_javascript_enabled(<span class="va">False</span>)   <span class="co"># 無効にする</span></span>
+<span id="cb5-2"><a href="#cb5-2" aria-hidden="true" tabindex="-1"></a>web_view.set_javascript_enabled(<span class="va">True</span>)    <span class="co"># 有効にする</span></span>
+<span id="cb5-3"><a href="#cb5-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb5-4"><a href="#cb5-4" aria-hidden="true" tabindex="-1"></a>js_enabled <span class="op">=</span> web_view.get_javascript_enabled()</span>
+<span id="cb5-5"><a href="#cb5-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;JavaScript: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> js_enabled <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="2-user-agent制御">2. User-Agent制御</h3>
+<div class="sourceCode" id="cb6"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb6-1"><a href="#cb6-1" aria-hidden="true" tabindex="-1"></a>web_view.set_user_agent(<span class="st">&quot;MyApp/1.0 (BlinkGTK)&quot;</span>)</span>
+<span id="cb6-2"><a href="#cb6-2" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(web_view.get_user_agent())   <span class="co"># &quot;MyApp/1.0 (BlinkGTK)&quot;</span></span>
+<span id="cb6-3"><a href="#cb6-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb6-4"><a href="#cb6-4" aria-hidden="true" tabindex="-1"></a>web_view.set_user_agent(<span class="va">None</span>)      <span class="co"># 設定を解除する</span></span>
+<span id="cb6-5"><a href="#cb6-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(web_view.get_user_agent())   <span class="co"># None</span></span></code></pre></div>
+<p><code>get_user_agent()</code> は、<code>set_user_agent()</code>
+で設定した文字列を返します。設定していなければ <code>None</code>
+です。<br />
+設定は、このあと読み込む頁と <code>reload()</code> した頁に反映されます
+(<a href="#user-agent変更">上の注意</a>)。</p>
+<h3 id="3-画像読み込み制御">3. 画像読み込み制御</h3>
+<div class="sourceCode" id="cb7"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb7-1"><a href="#cb7-1" aria-hidden="true" tabindex="-1"></a>web_view.set_images_enabled(<span class="va">False</span>)   <span class="co"># 画像を読み込まない</span></span>
+<span id="cb7-2"><a href="#cb7-2" aria-hidden="true" tabindex="-1"></a>web_view.set_images_enabled(<span class="va">True</span>)    <span class="co"># 画像を読み込む</span></span>
+<span id="cb7-3"><a href="#cb7-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb7-4"><a href="#cb7-4" aria-hidden="true" tabindex="-1"></a>images_enabled <span class="op">=</span> web_view.get_images_enabled()</span>
+<span id="cb7-5"><a href="#cb7-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;画像の読み込み: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> images_enabled <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="4-ローカルストレージ制御">4. ローカルストレージ制御</h3>
+<div class="sourceCode" id="cb8"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb8-1"><a href="#cb8-1" aria-hidden="true" tabindex="-1"></a>web_view.set_local_storage_enabled(<span class="va">False</span>)   <span class="co"># localStorage を使わせない</span></span>
+<span id="cb8-2"><a href="#cb8-2" aria-hidden="true" tabindex="-1"></a>web_view.set_local_storage_enabled(<span class="va">True</span>)</span>
+<span id="cb8-3"><a href="#cb8-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb8-4"><a href="#cb8-4" aria-hidden="true" tabindex="-1"></a>storage_enabled <span class="op">=</span> web_view.get_local_storage_enabled()</span>
+<span id="cb8-5"><a href="#cb8-5" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;ローカルストレージ: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> storage_enabled <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="5-文字サイズと書体">5. 文字サイズと書体</h3>
+<div class="sourceCode" id="cb9"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb9-1"><a href="#cb9-1" aria-hidden="true" tabindex="-1"></a>web_view.set_default_font_size(<span class="dv">24</span>)   <span class="co"># 文字サイズを指定していないページの本文が 24px になる</span></span>
+<span id="cb9-2"><a href="#cb9-2" aria-hidden="true" tabindex="-1"></a>web_view.set_minimum_font_size(<span class="dv">12</span>)   <span class="co"># 12px より小さい文字を 12px にする</span></span>
+<span id="cb9-3"><a href="#cb9-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb9-4"><a href="#cb9-4" aria-hidden="true" tabindex="-1"></a><span class="co"># 明朝 (serif) に使う書体を変える。script に None を渡すと、日本語と欧文の両方に設定する</span></span>
+<span id="cb9-5"><a href="#cb9-5" aria-hidden="true" tabindex="-1"></a>web_view.set_font_family(BlinkGTK.FontGeneric.SERIF, <span class="va">None</span>, <span class="st">&quot;Noto Serif CJK JP&quot;</span>)</span>
+<span id="cb9-6"><a href="#cb9-6" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(web_view.get_font_family(BlinkGTK.FontGeneric.SERIF, <span class="st">&quot;Jpan&quot;</span>))</span></code></pre></div>
+<ul>
+<li><code>BlinkGTK.FontGeneric</code> には
+<code>STANDARD</code>・<code>SERIF</code>・<code>SANS_SERIF</code>・<code>MONOSPACE</code>
+があります</li>
+<li>書体の名前は fontconfig が知っている名前です
+(<code>fc-list : family</code> で確かめられます)</li>
+<li>最小の文字サイズはルビにも適用されます。詳しくは <a
+href="../api-reference/settings-api-ja.html">Settings API リファレンス</a>
+を参照してください</li>
+</ul>
+<hr />
+<h2 id="pythonicなパターン">Pythonicなパターン</h2>
+<h3 id="1-設定をまとめて扱うクラス">1. 設定をまとめて扱うクラス</h3>
+<div class="sourceCode" id="cb10"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb10-1"><a href="#cb10-1" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> typing <span class="im">import</span> Any</span>
+<span id="cb10-2"><a href="#cb10-2" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-3"><a href="#cb10-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-4"><a href="#cb10-4" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserSettings:</span>
+<span id="cb10-5"><a href="#cb10-5" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;WebView の設定をまとめて扱うクラス&quot;&quot;&quot;</span></span>
+<span id="cb10-6"><a href="#cb10-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-7"><a href="#cb10-7" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, web_view: BlinkGTK.WebView):</span>
+<span id="cb10-8"><a href="#cb10-8" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> web_view</span>
+<span id="cb10-9"><a href="#cb10-9" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-10"><a href="#cb10-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> get_settings(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">dict</span>[<span class="bu">str</span>, Any]:</span>
+<span id="cb10-11"><a href="#cb10-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> {</span>
+<span id="cb10-12"><a href="#cb10-12" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;javascript&quot;</span>: <span class="va">self</span>.web_view.get_javascript_enabled(),</span>
+<span id="cb10-13"><a href="#cb10-13" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;images&quot;</span>: <span class="va">self</span>.web_view.get_images_enabled(),</span>
+<span id="cb10-14"><a href="#cb10-14" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;storage&quot;</span>: <span class="va">self</span>.web_view.get_local_storage_enabled(),</span>
+<span id="cb10-15"><a href="#cb10-15" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;font_size&quot;</span>: <span class="va">self</span>.web_view.get_default_font_size(),</span>
+<span id="cb10-16"><a href="#cb10-16" aria-hidden="true" tabindex="-1"></a>            <span class="st">&quot;user_agent&quot;</span>: <span class="va">self</span>.web_view.get_user_agent(),  <span class="co"># 変えていなければ None</span></span>
+<span id="cb10-17"><a href="#cb10-17" aria-hidden="true" tabindex="-1"></a>        }</span>
+<span id="cb10-18"><a href="#cb10-18" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-19"><a href="#cb10-19" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> apply_settings(<span class="va">self</span>, settings: <span class="bu">dict</span>[<span class="bu">str</span>, Any]) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb10-20"><a href="#cb10-20" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&quot;javascript&quot;</span> <span class="kw">in</span> settings:</span>
+<span id="cb10-21"><a href="#cb10-21" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_javascript_enabled(settings[<span class="st">&quot;javascript&quot;</span>])</span>
+<span id="cb10-22"><a href="#cb10-22" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&quot;images&quot;</span> <span class="kw">in</span> settings:</span>
+<span id="cb10-23"><a href="#cb10-23" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_images_enabled(settings[<span class="st">&quot;images&quot;</span>])</span>
+<span id="cb10-24"><a href="#cb10-24" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&quot;storage&quot;</span> <span class="kw">in</span> settings:</span>
+<span id="cb10-25"><a href="#cb10-25" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_local_storage_enabled(settings[<span class="st">&quot;storage&quot;</span>])</span>
+<span id="cb10-26"><a href="#cb10-26" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&quot;font_size&quot;</span> <span class="kw">in</span> settings:</span>
+<span id="cb10-27"><a href="#cb10-27" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_default_font_size(settings[<span class="st">&quot;font_size&quot;</span>])</span>
+<span id="cb10-28"><a href="#cb10-28" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="st">&quot;user_agent&quot;</span> <span class="kw">in</span> settings:</span>
+<span id="cb10-29"><a href="#cb10-29" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.set_user_agent(settings[<span class="st">&quot;user_agent&quot;</span>])</span>
+<span id="cb10-30"><a href="#cb10-30" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-31"><a href="#cb10-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb10-32"><a href="#cb10-32" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用例 (ページを読み込む前に)</span></span>
+<span id="cb10-33"><a href="#cb10-33" aria-hidden="true" tabindex="-1"></a>settings <span class="op">=</span> BrowserSettings(web_view)</span>
+<span id="cb10-34"><a href="#cb10-34" aria-hidden="true" tabindex="-1"></a>settings.apply_settings({<span class="st">&quot;images&quot;</span>: <span class="va">False</span>, <span class="st">&quot;font_size&quot;</span>: <span class="dv">20</span>})</span>
+<span id="cb10-35"><a href="#cb10-35" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(settings.get_settings())</span></code></pre></div>
+<h3 id="2-プロパティの使用">2. プロパティの使用</h3>
+<div class="sourceCode" id="cb11"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb11-1"><a href="#cb11-1" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserWindow(Gtk.ApplicationWindow):</span>
+<span id="cb11-2"><a href="#cb11-2" aria-hidden="true" tabindex="-1"></a>    <span class="co">&quot;&quot;&quot;設定を Python のプロパティとして読み書きするウィンドウ&quot;&quot;&quot;</span></span>
+<span id="cb11-3"><a href="#cb11-3" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-4"><a href="#cb11-4" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb11-5"><a href="#cb11-5" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb11-6"><a href="#cb11-6" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb11-7"><a href="#cb11-7" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(<span class="va">self</span>.web_view)</span>
+<span id="cb11-8"><a href="#cb11-8" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-9"><a href="#cb11-9" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb11-10"><a href="#cb11-10" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> javascript_enabled(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb11-11"><a href="#cb11-11" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.web_view.get_javascript_enabled()</span>
+<span id="cb11-12"><a href="#cb11-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-13"><a href="#cb11-13" aria-hidden="true" tabindex="-1"></a>    <span class="at">@javascript_enabled.setter</span></span>
+<span id="cb11-14"><a href="#cb11-14" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> javascript_enabled(<span class="va">self</span>, enabled: <span class="bu">bool</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb11-15"><a href="#cb11-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_javascript_enabled(enabled)</span>
+<span id="cb11-16"><a href="#cb11-16" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-17"><a href="#cb11-17" aria-hidden="true" tabindex="-1"></a>    <span class="at">@property</span></span>
+<span id="cb11-18"><a href="#cb11-18" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> images_enabled(<span class="va">self</span>) <span class="op">-&gt;</span> <span class="bu">bool</span>:</span>
+<span id="cb11-19"><a href="#cb11-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="va">self</span>.web_view.get_images_enabled()</span>
+<span id="cb11-20"><a href="#cb11-20" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-21"><a href="#cb11-21" aria-hidden="true" tabindex="-1"></a>    <span class="at">@images_enabled.setter</span></span>
+<span id="cb11-22"><a href="#cb11-22" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> images_enabled(<span class="va">self</span>, enabled: <span class="bu">bool</span>) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb11-23"><a href="#cb11-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_images_enabled(enabled)</span>
+<span id="cb11-24"><a href="#cb11-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-25"><a href="#cb11-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb11-26"><a href="#cb11-26" aria-hidden="true" tabindex="-1"></a><span class="co"># 使用例 (activate のハンドラの中で)</span></span>
+<span id="cb11-27"><a href="#cb11-27" aria-hidden="true" tabindex="-1"></a>window <span class="op">=</span> BrowserWindow(application<span class="op">=</span>app)</span>
+<span id="cb11-28"><a href="#cb11-28" aria-hidden="true" tabindex="-1"></a>window.javascript_enabled <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb11-29"><a href="#cb11-29" aria-hidden="true" tabindex="-1"></a>window.images_enabled <span class="op">=</span> <span class="va">False</span></span>
+<span id="cb11-30"><a href="#cb11-30" aria-hidden="true" tabindex="-1"></a><span class="bu">print</span>(<span class="ss">f&quot;JavaScript: </span><span class="sc">{</span>window<span class="sc">.</span>javascript_enabled<span class="sc">}</span><span class="ss">&quot;</span>)</span></code></pre></div>
+<h3 id="3-一時的に設定を変える書き方について">3.
+一時的に設定を変える書き方について</h3>
+<p><code>with</code> 文で設定を変え、ブロックを抜けたら元に戻す書き方
+(コンテキストマネージャ) は使わないでください。<br />
+<code>load_uri()</code>
+はすぐに戻り、読み込みはその後に進むため、ブロックを抜けた時点で設定を戻すと、どちらの設定で読み込まれるかが決まりません。<br />
+読み込みごとに設定を変えたいときは、設定してから <code>load_uri()</code>
+または <code>reload()</code> を呼びます。</p>
+<hr />
+<h2 id="実用例">実用例</h2>
+<h3 id="例1-データセーバーモード">例1: データセーバーモード</h3>
+<div class="sourceCode" id="cb12"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb12-1"><a href="#cb12-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb12-2"><a href="#cb12-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;データセーバーモード (JavaScript と画像を止める) を切り替えるブラウザ&quot;&quot;&quot;</span></span>
+<span id="cb12-3"><a href="#cb12-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb12-4"><a href="#cb12-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-5"><a href="#cb12-5" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb12-6"><a href="#cb12-6" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-7"><a href="#cb12-7" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;Gtk&quot;</span>, <span class="st">&quot;4.0&quot;</span>)</span>
+<span id="cb12-8"><a href="#cb12-8" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;BlinkGTK&quot;</span>, <span class="st">&quot;0.1&quot;</span>)</span>
+<span id="cb12-9"><a href="#cb12-9" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK, Gtk  <span class="co"># noqa: E402</span></span>
+<span id="cb12-10"><a href="#cb12-10" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-11"><a href="#cb12-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-12"><a href="#cb12-12" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> DataSaverBrowser(Gtk.ApplicationWindow):</span>
+<span id="cb12-13"><a href="#cb12-13" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb12-14"><a href="#cb12-14" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb12-15"><a href="#cb12-15" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_title(<span class="st">&quot;Data Saver Browser&quot;</span>)</span>
+<span id="cb12-16"><a href="#cb12-16" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_default_size(<span class="dv">800</span>, <span class="dv">600</span>)</span>
+<span id="cb12-17"><a href="#cb12-17" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-18"><a href="#cb12-18" aria-hidden="true" tabindex="-1"></a>        hbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.HORIZONTAL, spacing<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb12-19"><a href="#cb12-19" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> side <span class="kw">in</span> (<span class="st">&quot;start&quot;</span>, <span class="st">&quot;end&quot;</span>, <span class="st">&quot;top&quot;</span>, <span class="st">&quot;bottom&quot;</span>):</span>
+<span id="cb12-20"><a href="#cb12-20" aria-hidden="true" tabindex="-1"></a>            <span class="bu">getattr</span>(hbox, <span class="ss">f&quot;set_margin_</span><span class="sc">{</span>side<span class="sc">}</span><span class="ss">&quot;</span>)(<span class="dv">10</span>)</span>
+<span id="cb12-21"><a href="#cb12-21" aria-hidden="true" tabindex="-1"></a>        hbox.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;データセーバーモード:&quot;</span>))</span>
+<span id="cb12-22"><a href="#cb12-22" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.data_saver_switch <span class="op">=</span> Gtk.Switch()</span>
+<span id="cb12-23"><a href="#cb12-23" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.data_saver_switch.<span class="ex">connect</span>(<span class="st">&quot;notify::active&quot;</span>, <span class="va">self</span>.on_data_saver_toggled)</span>
+<span id="cb12-24"><a href="#cb12-24" aria-hidden="true" tabindex="-1"></a>        hbox.append(<span class="va">self</span>.data_saver_switch)</span>
+<span id="cb12-25"><a href="#cb12-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-26"><a href="#cb12-26" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb12-27"><a href="#cb12-27" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_vexpand(<span class="va">True</span>)</span>
+<span id="cb12-28"><a href="#cb12-28" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&quot;title-changed&quot;</span>, <span class="kw">lambda</span> v: <span class="va">self</span>.set_title(v.get_title() <span class="kw">or</span> <span class="st">&quot;&quot;</span>))</span>
+<span id="cb12-29"><a href="#cb12-29" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-30"><a href="#cb12-30" aria-hidden="true" tabindex="-1"></a>        vbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.VERTICAL)</span>
+<span id="cb12-31"><a href="#cb12-31" aria-hidden="true" tabindex="-1"></a>        vbox.append(hbox)</span>
+<span id="cb12-32"><a href="#cb12-32" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.web_view)</span>
+<span id="cb12-33"><a href="#cb12-33" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(vbox)</span>
+<span id="cb12-34"><a href="#cb12-34" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-35"><a href="#cb12-35" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_data_saver_toggled(<span class="va">self</span>, switch, _pspec):</span>
+<span id="cb12-36"><a href="#cb12-36" aria-hidden="true" tabindex="-1"></a>        enabled <span class="op">=</span> switch.get_active()</span>
+<span id="cb12-37"><a href="#cb12-37" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_javascript_enabled(<span class="kw">not</span> enabled)</span>
+<span id="cb12-38"><a href="#cb12-38" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_images_enabled(<span class="kw">not</span> enabled)</span>
+<span id="cb12-39"><a href="#cb12-39" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;データセーバーモード: </span><span class="sc">{</span><span class="st">&#39;有効&#39;</span> <span class="cf">if</span> enabled <span class="cf">else</span> <span class="st">&#39;無効&#39;</span><span class="sc">}</span><span class="ss">&quot;</span>, flush<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb12-40"><a href="#cb12-40" aria-hidden="true" tabindex="-1"></a>        <span class="co"># 表示中のページには、読み込み直したときに反映される</span></span>
+<span id="cb12-41"><a href="#cb12-41" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.web_view.get_uri():</span>
+<span id="cb12-42"><a href="#cb12-42" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.<span class="bu">reload</span>()</span>
+<span id="cb12-43"><a href="#cb12-43" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-44"><a href="#cb12-44" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-45"><a href="#cb12-45" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app, url):</span>
+<span id="cb12-46"><a href="#cb12-46" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> DataSaverBrowser(application<span class="op">=</span>app)</span>
+<span id="cb12-47"><a href="#cb12-47" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb12-48"><a href="#cb12-48" aria-hidden="true" tabindex="-1"></a>    window.web_view.load_uri(url)</span>
+<span id="cb12-49"><a href="#cb12-49" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-50"><a href="#cb12-50" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-51"><a href="#cb12-51" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
+<span id="cb12-52"><a href="#cb12-52" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> sys.argv[<span class="dv">1</span>] <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">&quot;https://example.com/&quot;</span></span>
+<span id="cb12-53"><a href="#cb12-53" aria-hidden="true" tabindex="-1"></a>    ok, _argv <span class="op">=</span> BlinkGTK.gtk_init(sys.argv[:<span class="dv">1</span>])</span>
+<span id="cb12-54"><a href="#cb12-54" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> ok:</span>
+<span id="cb12-55"><a href="#cb12-55" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;BlinkGTK を初期化できませんでした&quot;</span>, <span class="bu">file</span><span class="op">=</span>sys.stderr)</span>
+<span id="cb12-56"><a href="#cb12-56" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb12-57"><a href="#cb12-57" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&quot;org.example.DataSaver&quot;</span>)</span>
+<span id="cb12-58"><a href="#cb12-58" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&quot;activate&quot;</span>, on_activate, url)</span>
+<span id="cb12-59"><a href="#cb12-59" aria-hidden="true" tabindex="-1"></a>    rc <span class="op">=</span> BlinkGTK.gtk_application_run(app)</span>
+<span id="cb12-60"><a href="#cb12-60" aria-hidden="true" tabindex="-1"></a>    BlinkGTK.gtk_shutdown()</span>
+<span id="cb12-61"><a href="#cb12-61" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rc</span>
+<span id="cb12-62"><a href="#cb12-62" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-63"><a href="#cb12-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb12-64"><a href="#cb12-64" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb12-65"><a href="#cb12-65" aria-hidden="true" tabindex="-1"></a>    sys.exit(main())</span></code></pre></div>
+<p>スイッチを入れると JavaScript
+と画像を止めて、ページを読み込み直します。</p>
+<h3 id="例2-プロファイルシステム">例2: プロファイルシステム</h3>
+<p>設定の組み合わせをデータクラスで定義し、ドロップダウンで切り替えます。</p>
+<div class="sourceCode" id="cb13"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb13-1"><a href="#cb13-1" aria-hidden="true" tabindex="-1"></a><span class="co">#!/usr/bin/env python3</span></span>
+<span id="cb13-2"><a href="#cb13-2" aria-hidden="true" tabindex="-1"></a><span class="co">&quot;&quot;&quot;設定の組み合わせ (プロファイル) を切り替えるブラウザ&quot;&quot;&quot;</span></span>
+<span id="cb13-3"><a href="#cb13-3" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> sys</span>
+<span id="cb13-4"><a href="#cb13-4" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> dataclasses <span class="im">import</span> dataclass</span>
+<span id="cb13-5"><a href="#cb13-5" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-6"><a href="#cb13-6" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb13-7"><a href="#cb13-7" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-8"><a href="#cb13-8" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;Gtk&quot;</span>, <span class="st">&quot;4.0&quot;</span>)</span>
+<span id="cb13-9"><a href="#cb13-9" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;BlinkGTK&quot;</span>, <span class="st">&quot;0.1&quot;</span>)</span>
+<span id="cb13-10"><a href="#cb13-10" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK, Gtk  <span class="co"># noqa: E402</span></span>
+<span id="cb13-11"><a href="#cb13-11" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-12"><a href="#cb13-12" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-13"><a href="#cb13-13" aria-hidden="true" tabindex="-1"></a><span class="at">@dataclass</span></span>
+<span id="cb13-14"><a href="#cb13-14" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> BrowserProfile:</span>
+<span id="cb13-15"><a href="#cb13-15" aria-hidden="true" tabindex="-1"></a>    name: <span class="bu">str</span></span>
+<span id="cb13-16"><a href="#cb13-16" aria-hidden="true" tabindex="-1"></a>    javascript: <span class="bu">bool</span></span>
+<span id="cb13-17"><a href="#cb13-17" aria-hidden="true" tabindex="-1"></a>    images: <span class="bu">bool</span></span>
+<span id="cb13-18"><a href="#cb13-18" aria-hidden="true" tabindex="-1"></a>    storage: <span class="bu">bool</span></span>
+<span id="cb13-19"><a href="#cb13-19" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-20"><a href="#cb13-20" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> apply_to(<span class="va">self</span>, web_view: BlinkGTK.WebView) <span class="op">-&gt;</span> <span class="va">None</span>:</span>
+<span id="cb13-21"><a href="#cb13-21" aria-hidden="true" tabindex="-1"></a>        web_view.set_javascript_enabled(<span class="va">self</span>.javascript)</span>
+<span id="cb13-22"><a href="#cb13-22" aria-hidden="true" tabindex="-1"></a>        web_view.set_images_enabled(<span class="va">self</span>.images)</span>
+<span id="cb13-23"><a href="#cb13-23" aria-hidden="true" tabindex="-1"></a>        web_view.set_local_storage_enabled(<span class="va">self</span>.storage)</span>
+<span id="cb13-24"><a href="#cb13-24" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-25"><a href="#cb13-25" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-26"><a href="#cb13-26" aria-hidden="true" tabindex="-1"></a>PROFILES <span class="op">=</span> [</span>
+<span id="cb13-27"><a href="#cb13-27" aria-hidden="true" tabindex="-1"></a>    BrowserProfile(<span class="st">&quot;通常&quot;</span>, javascript<span class="op">=</span><span class="va">True</span>, images<span class="op">=</span><span class="va">True</span>, storage<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb13-28"><a href="#cb13-28" aria-hidden="true" tabindex="-1"></a>    BrowserProfile(<span class="st">&quot;データセーバー&quot;</span>, javascript<span class="op">=</span><span class="va">False</span>, images<span class="op">=</span><span class="va">False</span>, storage<span class="op">=</span><span class="va">True</span>),</span>
+<span id="cb13-29"><a href="#cb13-29" aria-hidden="true" tabindex="-1"></a>    BrowserProfile(<span class="st">&quot;プライバシー&quot;</span>, javascript<span class="op">=</span><span class="va">False</span>, images<span class="op">=</span><span class="va">False</span>, storage<span class="op">=</span><span class="va">False</span>),</span>
+<span id="cb13-30"><a href="#cb13-30" aria-hidden="true" tabindex="-1"></a>]</span>
+<span id="cb13-31"><a href="#cb13-31" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-32"><a href="#cb13-32" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-33"><a href="#cb13-33" aria-hidden="true" tabindex="-1"></a><span class="kw">class</span> ProfileBrowser(Gtk.ApplicationWindow):</span>
+<span id="cb13-34"><a href="#cb13-34" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> <span class="fu">__init__</span>(<span class="va">self</span>, <span class="op">**</span>kwargs):</span>
+<span id="cb13-35"><a href="#cb13-35" aria-hidden="true" tabindex="-1"></a>        <span class="bu">super</span>().<span class="fu">__init__</span>(<span class="op">**</span>kwargs)</span>
+<span id="cb13-36"><a href="#cb13-36" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_title(<span class="st">&quot;Profile Browser&quot;</span>)</span>
+<span id="cb13-37"><a href="#cb13-37" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_default_size(<span class="dv">1000</span>, <span class="dv">700</span>)</span>
+<span id="cb13-38"><a href="#cb13-38" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-39"><a href="#cb13-39" aria-hidden="true" tabindex="-1"></a>        hbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.HORIZONTAL, spacing<span class="op">=</span><span class="dv">10</span>)</span>
+<span id="cb13-40"><a href="#cb13-40" aria-hidden="true" tabindex="-1"></a>        <span class="cf">for</span> side <span class="kw">in</span> (<span class="st">&quot;start&quot;</span>, <span class="st">&quot;end&quot;</span>, <span class="st">&quot;top&quot;</span>, <span class="st">&quot;bottom&quot;</span>):</span>
+<span id="cb13-41"><a href="#cb13-41" aria-hidden="true" tabindex="-1"></a>            <span class="bu">getattr</span>(hbox, <span class="ss">f&quot;set_margin_</span><span class="sc">{</span>side<span class="sc">}</span><span class="ss">&quot;</span>)(<span class="dv">10</span>)</span>
+<span id="cb13-42"><a href="#cb13-42" aria-hidden="true" tabindex="-1"></a>        hbox.append(Gtk.Label(label<span class="op">=</span><span class="st">&quot;プロファイル:&quot;</span>))</span>
+<span id="cb13-43"><a href="#cb13-43" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.profile_dropdown <span class="op">=</span> Gtk.DropDown.new_from_strings([p.name <span class="cf">for</span> p <span class="kw">in</span> PROFILES])</span>
+<span id="cb13-44"><a href="#cb13-44" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.profile_dropdown.<span class="ex">connect</span>(<span class="st">&quot;notify::selected&quot;</span>, <span class="va">self</span>.on_profile_changed)</span>
+<span id="cb13-45"><a href="#cb13-45" aria-hidden="true" tabindex="-1"></a>        hbox.append(<span class="va">self</span>.profile_dropdown)</span>
+<span id="cb13-46"><a href="#cb13-46" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-47"><a href="#cb13-47" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb13-48"><a href="#cb13-48" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.set_vexpand(<span class="va">True</span>)</span>
+<span id="cb13-49"><a href="#cb13-49" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.web_view.<span class="ex">connect</span>(<span class="st">&quot;title-changed&quot;</span>, <span class="kw">lambda</span> v: <span class="va">self</span>.set_title(v.get_title() <span class="kw">or</span> <span class="st">&quot;&quot;</span>))</span>
+<span id="cb13-50"><a href="#cb13-50" aria-hidden="true" tabindex="-1"></a>        PROFILES[<span class="dv">0</span>].apply_to(<span class="va">self</span>.web_view)</span>
+<span id="cb13-51"><a href="#cb13-51" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-52"><a href="#cb13-52" aria-hidden="true" tabindex="-1"></a>        vbox <span class="op">=</span> Gtk.Box(orientation<span class="op">=</span>Gtk.Orientation.VERTICAL)</span>
+<span id="cb13-53"><a href="#cb13-53" aria-hidden="true" tabindex="-1"></a>        vbox.append(hbox)</span>
+<span id="cb13-54"><a href="#cb13-54" aria-hidden="true" tabindex="-1"></a>        vbox.append(<span class="va">self</span>.web_view)</span>
+<span id="cb13-55"><a href="#cb13-55" aria-hidden="true" tabindex="-1"></a>        <span class="va">self</span>.set_child(vbox)</span>
+<span id="cb13-56"><a href="#cb13-56" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-57"><a href="#cb13-57" aria-hidden="true" tabindex="-1"></a>    <span class="kw">def</span> on_profile_changed(<span class="va">self</span>, dropdown, _pspec):</span>
+<span id="cb13-58"><a href="#cb13-58" aria-hidden="true" tabindex="-1"></a>        profile <span class="op">=</span> PROFILES[dropdown.get_selected()]</span>
+<span id="cb13-59"><a href="#cb13-59" aria-hidden="true" tabindex="-1"></a>        profile.apply_to(<span class="va">self</span>.web_view)</span>
+<span id="cb13-60"><a href="#cb13-60" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="ss">f&quot;プロファイル: </span><span class="sc">{</span>profile<span class="sc">.</span>name<span class="sc">}</span><span class="ss">&quot;</span>, flush<span class="op">=</span><span class="va">True</span>)</span>
+<span id="cb13-61"><a href="#cb13-61" aria-hidden="true" tabindex="-1"></a>        <span class="cf">if</span> <span class="va">self</span>.web_view.get_uri():</span>
+<span id="cb13-62"><a href="#cb13-62" aria-hidden="true" tabindex="-1"></a>            <span class="va">self</span>.web_view.<span class="bu">reload</span>()</span>
+<span id="cb13-63"><a href="#cb13-63" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-64"><a href="#cb13-64" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-65"><a href="#cb13-65" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> on_activate(app, url):</span>
+<span id="cb13-66"><a href="#cb13-66" aria-hidden="true" tabindex="-1"></a>    window <span class="op">=</span> ProfileBrowser(application<span class="op">=</span>app)</span>
+<span id="cb13-67"><a href="#cb13-67" aria-hidden="true" tabindex="-1"></a>    window.present()</span>
+<span id="cb13-68"><a href="#cb13-68" aria-hidden="true" tabindex="-1"></a>    window.web_view.load_uri(url)</span>
+<span id="cb13-69"><a href="#cb13-69" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-70"><a href="#cb13-70" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-71"><a href="#cb13-71" aria-hidden="true" tabindex="-1"></a><span class="kw">def</span> main():</span>
+<span id="cb13-72"><a href="#cb13-72" aria-hidden="true" tabindex="-1"></a>    url <span class="op">=</span> sys.argv[<span class="dv">1</span>] <span class="cf">if</span> <span class="bu">len</span>(sys.argv) <span class="op">&gt;</span> <span class="dv">1</span> <span class="cf">else</span> <span class="st">&quot;https://example.com/&quot;</span></span>
+<span id="cb13-73"><a href="#cb13-73" aria-hidden="true" tabindex="-1"></a>    ok, _argv <span class="op">=</span> BlinkGTK.gtk_init(sys.argv[:<span class="dv">1</span>])</span>
+<span id="cb13-74"><a href="#cb13-74" aria-hidden="true" tabindex="-1"></a>    <span class="cf">if</span> <span class="kw">not</span> ok:</span>
+<span id="cb13-75"><a href="#cb13-75" aria-hidden="true" tabindex="-1"></a>        <span class="bu">print</span>(<span class="st">&quot;BlinkGTK を初期化できませんでした&quot;</span>, <span class="bu">file</span><span class="op">=</span>sys.stderr)</span>
+<span id="cb13-76"><a href="#cb13-76" aria-hidden="true" tabindex="-1"></a>        <span class="cf">return</span> <span class="dv">1</span></span>
+<span id="cb13-77"><a href="#cb13-77" aria-hidden="true" tabindex="-1"></a>    app <span class="op">=</span> Gtk.Application(application_id<span class="op">=</span><span class="st">&quot;org.example.Profiles&quot;</span>)</span>
+<span id="cb13-78"><a href="#cb13-78" aria-hidden="true" tabindex="-1"></a>    app.<span class="ex">connect</span>(<span class="st">&quot;activate&quot;</span>, on_activate, url)</span>
+<span id="cb13-79"><a href="#cb13-79" aria-hidden="true" tabindex="-1"></a>    rc <span class="op">=</span> BlinkGTK.gtk_application_run(app)</span>
+<span id="cb13-80"><a href="#cb13-80" aria-hidden="true" tabindex="-1"></a>    BlinkGTK.gtk_shutdown()</span>
+<span id="cb13-81"><a href="#cb13-81" aria-hidden="true" tabindex="-1"></a>    <span class="cf">return</span> rc</span>
+<span id="cb13-82"><a href="#cb13-82" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-83"><a href="#cb13-83" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb13-84"><a href="#cb13-84" aria-hidden="true" tabindex="-1"></a><span class="cf">if</span> <span class="va">__name__</span> <span class="op">==</span> <span class="st">&quot;__main__&quot;</span>:</span>
+<span id="cb13-85"><a href="#cb13-85" aria-hidden="true" tabindex="-1"></a>    sys.exit(main())</span></code></pre></div>
+<h3 id="例3-設定のスイッチ付きブラウザ">例3:
+設定のスイッチ付きブラウザ</h3>
+<p>JavaScript・画像・ローカルストレージをそれぞれのスイッチで切り替える例は、<a
+href="./events-tutorial-py-ja.html#完全なブラウザ実装">イベント処理チュートリアル</a>
+の完全なブラウザにあります。</p>
+<hr />
+<h2 id="webkitgtkからの移行">WebKitGTKからの移行</h2>
+<h3 id="api対応表">API対応表</h3>
+<p>WebKitGTK では <code>WebKit.Settings</code>
+オブジェクトを介して設定しますが、BlinkGTK は
+<code>BlinkGTK.WebView</code>
+に直接設定します。メソッドの名前も異なります。</p>
+<table>
+<thead>
+<tr>
+<th>WebKitGTK (Python)</th>
+<th>BlinkGTK (Python)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>settings.set_enable_javascript(enabled)</code></td>
+<td><code>web_view.set_javascript_enabled(enabled)</code></td>
+</tr>
+<tr>
+<td><code>settings.get_enable_javascript()</code></td>
+<td><code>web_view.get_javascript_enabled()</code></td>
+</tr>
+<tr>
+<td><code>settings.set_auto_load_images(enabled)</code></td>
+<td><code>web_view.set_images_enabled(enabled)</code></td>
+</tr>
+<tr>
+<td><code>settings.get_auto_load_images()</code></td>
+<td><code>web_view.get_images_enabled()</code></td>
+</tr>
+<tr>
+<td><code>settings.set_enable_html5_local_storage(enabled)</code></td>
+<td><code>web_view.set_local_storage_enabled(enabled)</code></td>
+</tr>
+<tr>
+<td><code>settings.get_enable_html5_local_storage()</code></td>
+<td><code>web_view.get_local_storage_enabled()</code></td>
+</tr>
+<tr>
+<td><code>settings.set_default_font_size(size)</code></td>
+<td><code>web_view.set_default_font_size(size)</code></td>
+</tr>
+<tr>
+<td><code>settings.set_user_agent(ua)</code></td>
+<td><code>web_view.set_user_agent(ua)</code></td>
+</tr>
+<tr>
+<td><code>settings.get_user_agent()</code></td>
+<td><code>web_view.get_user_agent()</code> (設定していなければ
+<code>None</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3 id="移行例">移行例</h3>
+<p><strong>移行前 (WebKitGTK 6.0)</strong>:</p>
+<div class="sourceCode" id="cb14"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb14-1"><a href="#cb14-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb14-2"><a href="#cb14-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;WebKit&quot;</span>, <span class="st">&quot;6.0&quot;</span>)</span>
+<span id="cb14-3"><a href="#cb14-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> WebKit</span>
+<span id="cb14-4"><a href="#cb14-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb14-5"><a href="#cb14-5" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> WebKit.WebView()</span>
+<span id="cb14-6"><a href="#cb14-6" aria-hidden="true" tabindex="-1"></a>settings <span class="op">=</span> web_view.get_settings()</span>
+<span id="cb14-7"><a href="#cb14-7" aria-hidden="true" tabindex="-1"></a>settings.set_enable_javascript(<span class="va">False</span>)</span>
+<span id="cb14-8"><a href="#cb14-8" aria-hidden="true" tabindex="-1"></a>settings.set_auto_load_images(<span class="va">False</span>)</span></code></pre></div>
+<p><strong>移行後 (BlinkGTK)</strong>:</p>
+<div class="sourceCode" id="cb15"><pre
+class="sourceCode python"><code class="sourceCode python"><span id="cb15-1"><a href="#cb15-1" aria-hidden="true" tabindex="-1"></a><span class="im">import</span> gi</span>
+<span id="cb15-2"><a href="#cb15-2" aria-hidden="true" tabindex="-1"></a>gi.require_version(<span class="st">&quot;BlinkGTK&quot;</span>, <span class="st">&quot;0.1&quot;</span>)</span>
+<span id="cb15-3"><a href="#cb15-3" aria-hidden="true" tabindex="-1"></a><span class="im">from</span> gi.repository <span class="im">import</span> BlinkGTK</span>
+<span id="cb15-4"><a href="#cb15-4" aria-hidden="true" tabindex="-1"></a></span>
+<span id="cb15-5"><a href="#cb15-5" aria-hidden="true" tabindex="-1"></a><span class="co"># BlinkGTK.gtk_init() を呼んだ後で作る</span></span>
+<span id="cb15-6"><a href="#cb15-6" aria-hidden="true" tabindex="-1"></a>web_view <span class="op">=</span> BlinkGTK.WebView.new()</span>
+<span id="cb15-7"><a href="#cb15-7" aria-hidden="true" tabindex="-1"></a>web_view.set_javascript_enabled(<span class="va">False</span>)</span>
+<span id="cb15-8"><a href="#cb15-8" aria-hidden="true" tabindex="-1"></a>web_view.set_images_enabled(<span class="va">False</span>)</span></code></pre></div>
+<p><strong>主な違い</strong>:</p>
+<ul>
+<li>設定用のオブジェクトを取得せず、<code>WebView</code>
+のメソッドで直接設定します</li>
+<li>メソッドの名前が異なります (上の対応表)</li>
+<li>ウィジェットを作る前に <code>BlinkGTK.gtk_init()</code>
+を呼び、<code>BlinkGTK.gtk_application_run()</code>
+で回す必要があります</li>
+</ul>
+<hr />
+<h2 id="まとめ">まとめ</h2>
+<p>このチュートリアルでは、Python/PyGObject で BlinkGTK
+の設定を使う方法を学びました。</p>
+<h3 id="学んだこと">学んだこと</h3>
+<ul>
+<li>設定用のメソッドと既定値</li>
+<li>設定は読み込みの前に行い、表示中のページには再読み込みで反映すること
+(書体と最小の文字サイズは、すぐ反映される)</li>
+<li>設定をまとめて扱う Python の書き方</li>
+<li>実用的な実装例 (データセーバー、プロファイル)</li>
+<li>WebKitGTK からの移行方法</li>
+</ul>
+<h3 id="次のステップ">次のステップ</h3>
+<ul>
+<li><a href="./events-tutorial-py-ja.html">イベント処理チュートリアル
+(Python)</a> - シグナルとイベント処理</li>
+<li><a href="../api-reference/settings-api-ja.html">Settings
+APIリファレンス</a> - 詳細な API 仕様</li>
+</ul>
+<hr />
+<p><strong>作成者</strong>: BlinkGTK開発チーム<br />
+<strong>ライセンス</strong>: BSD 3-Clause<br />
+<strong>フィードバック</strong>: <a
+href="mailto:daisy19@gmail.com">daisy19@gmail.com</a></p>
 </body>
 </html>
 </div></div>

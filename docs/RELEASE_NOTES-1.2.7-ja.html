@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>RELEASE_NOTES-1.2.7-ja — BlinkGTK</title>
+  <title>BlinkGTK 1.2.7-build5 リリースノート — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="リリース日: 2026-11-25 / Chromium: 158.0.8127.88 / 言語: 日本語 | English">
 <link rel="canonical" href="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="RELEASE_NOTES-1.2.7-ja — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK 1.2.7-build5 リリースノート — BlinkGTK">
+<meta property="og:description" content="リリース日: 2026-11-25 / Chromium: 158.0.8127.88 / 言語: 日本語 | English">
 <meta property="og:url" content="https://blinkgtk.org/docs/RELEASE_NOTES-1.2.7-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +43,192 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="RELEASE_NOTES-1.2.7-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-
+<h1 id="blinkgtk-127-build5-リリースノート">BlinkGTK 1.2.7-build5
+リリースノート</h1>
+<p><strong>リリース日</strong>: 2026-11-25 / <strong>Chromium</strong>:
+158.0.8127.88 / 言語: 日本語 | <a
+href="RELEASE_NOTES-1.2.7-en.html">English</a></p>
+<h2 id="build5-セキュリティ更新">build5: セキュリティ更新</h2>
+<p>Chromium <strong>158.0.8127.88</strong> に更新し、Chromium
+のセキュリティ修正 <strong>1 件</strong> (Critical)
+を取り込みました。使い方の変更はなく、公開 API
+も同じなので、アプリを作り直す必要はありません。build4 の修正
+(リモートデバッグ用のポート) もそのまま含みます。</p>
+<p>修正の内容は Chromium の公式の発表 (<a
+href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01734282054.html">Stable
+Channel Update for Desktop、2026-11-23</a>)
+のとおりです。修正はリリースに入っています。</p>
+<table>
+<thead>
+<tr>
+<th>CVE</th>
+<th>重大度</th>
+<th>内容 (公式の発表の文言)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>CVE-2026-134401</td>
+<td>Critical</td>
+<td>Improper input validation in Variations</td>
+</tr>
+</tbody>
+</table>
+<h2
+id="build4-リモートデバッグを開くとアプリが異常終了する問題の修正">build4:
+リモートデバッグを開くとアプリが異常終了する問題の修正</h2>
+<p>build3 までをお使いで、<code>blink_web_view_open_devtools()</code>
+を使うアプリは、build4 へ更新してください。公開 API
+に変更はないので、アプリを作り直す必要はありません。この関数を呼ばないアプリの動きは
+build3 と同じです。</p>
+<p><strong>リモートデバッグ用のポートが開くようになった</strong> —
+build3 までは、<code>blink_web_view_open_devtools()</code>
+を呼ぶと、その場でアプリが異常終了していました。build4
+では、指定したポートでリモートデバッグ用のポートが開き、戻り値にそのポート番号が返ります。</p>
+<ul>
+<li>Chrome
+などのブラウザの開発者ツールから、<code>http://localhost:&lt;ポート&gt;</code>
+(例: <code>http://localhost:9222/json/list</code>)
+で表示中のページを見つけて接続できます。</li>
+<li>このポートは、同じコンピュータの中 (<code>127.0.0.1</code>)
+からの接続だけを受け付けます。開いている間は、同じコンピュータのほかのプログラムからも接続できるので、必要なときだけ開いてください。閉じるには
+<code>blink_web_view_close_devtools()</code> を呼びます。</li>
+<li><code>blink_web_view_set_content_policy()</code> で
+<code>BLINK_CONTENT_POLICY_NO_DEVTOOLS</code>
+を設定している場合は、今までどおり開かずに 0 を返します。</li>
+</ul>
+<p><strong><code>/json/version</code> の <code>Browser</code>
+に版が出る</strong> — build3 までは、リモートデバッグの
+<code>/json/version</code> の <code>Browser</code> (と DevTools
+プロトコルの <code>Browser.getVersion</code> の <code>product</code>)
+が空でした。build4 では <code>Chrome/&lt;Chromium の版&gt;</code>
+(この版では <code>Chrome/158.0.8127.36</code>) を返します。ページに送る
+User-Agent は変わりません。</p>
+<p>1.2.5・1.2.6 にも同じ処理があります。この関数を使う場合は build4
+以降へ更新してください。確認は、試験用のプログラムからこの関数を呼び、<code>/json/version</code>
+と <code>/json/list</code> を読んで行いました
+(<code>Browser.getVersion</code> は確認の対象外です)。</p>
+<h2
+id="build3-一部の-web-api-でページが止まる問題の修正と離脱の確認言語クライアント証明書ドラッグの修正">build3:
+一部の Web API
+でページが止まる問題の修正と、離脱の確認・言語・クライアント証明書・ドラッグの修正</h2>
+<p>build2 までをお使いの方は、build3 へ更新してください。公開 API
+に変更はない (公開ヘッダは説明の文だけが変わった)
+ので、アプリを作り直す必要はありません。</p>
+<p>ただし、<code>blink_web_view_set_javascript_dialog_handler()</code>
+でハンドラを設定しているアプリは、下の「ページを離れる前の確認がハンドラに届く」を読んでください。ハンドラが種類を見ずに
+<code>TRUE</code> を返している場合は、対応が必要です。</p>
+<p><strong>ページが異常終了・停止しなくなった Web API</strong> — 次の
+API を呼ぶページは、build2 までは表示が止まっていました。build3
+では、それぞれ「使えない」という結果を返し、ページはそのまま動きます。どのサイトでも起こりうるので、一般の
+Web ページを表示するアプリに関係します。</p>
+<ul>
+<li>バッジ (<code>navigator.setAppBadge()</code> /
+<code>navigator.clearAppBadge()</code>): HTTPS
+などの安全なページから呼ぶと、ページが異常終了していました。build3
+では何もせずに終わります (アプリにバッジは表示されません)。Service
+Worker から呼ぶ場合は試していません。</li>
+<li>端末内の音声認識の問い合わせ
+(<code>SpeechRecognition.available()</code> に
+<code>processLocally: true</code>
+を付けたもの、<code>SpeechRecognition.install()</code>):
+ページが異常終了していました。build3 では <code>available()</code> は
+<code>"unavailable"</code>、<code>install()</code> は <code>false</code>
+を返します。BlinkGTK は端末内の音声認識を持っていません。</li>
+<li>Web アプリのインストール (<code>navigator.install()</code>):
+結果が返らないまま止まっていました。build3 ではすぐに
+<code>AbortError</code> で失敗します。<code>&lt;install&gt;</code>
+要素は試していません。</li>
+</ul>
+<p><strong>ページを離れる前の確認がハンドラに届く</strong> — ページが
+<code>beforeunload</code>
+で「変更が保存されていません」といった確認を求めたとき、build2 までは
+JavaScript
+ダイアログのハンドラは呼ばれず、常にそのままページを離れていました。build3
+では、ハンドラに <code>dialog_type</code> =
+<code>BLINK_JS_DIALOG_BEFORE_UNLOAD</code> で届きます。応答の
+<code>success</code> は <code>TRUE</code>
+でページを離れ、<code>FALSE</code>
+でページにとどまります。<code>message</code>
+は決まった英語の文で、ページは文言を変えられません。ページがこの確認を求めるのは、利用者がそのページを操作した後だけです。</p>
+<ul>
+<li>ハンドラを設定していない場合と、ハンドラがこの種類に
+<code>FALSE</code> を返した場合は、今までと同じくすぐにページを離れます
+(ハンドラを設定していない場合は試していません。コード上は今までと同じ動きです)。</li>
+<li>ハンドラが <code>TRUE</code>
+を返したのに応答を返さないと、ページの移動は進みません。種類を見ずに
+<code>TRUE</code>
+を返しているハンドラは、<code>BLINK_JS_DIALOG_BEFORE_UNLOAD</code>
+を扱うか、この種類には <code>FALSE</code>
+を返すように直してください。</li>
+</ul>
+<p><strong>サーバーへ伝える言語が環境に合う</strong> — build2
+までは、どの言語の環境でも、サーバーに送る言語 (HTTP の
+<code>Accept-Language</code>) は
+<code>en-us,en</code>、<code>navigator.languages</code> は
+<code>en-US</code>
+でした。そのため、言語で表示を変えるサイトは、日本語の環境でも英語の版を返していました。build3
+では、起動時に <code>--lang</code>
+を渡した場合はその言語、渡していない場合は環境変数
+<code>LC_ALL</code>・<code>LC_MESSAGES</code>・<code>LANG</code>
+の順に最初に値のあるものから決めます。</p>
+<ul>
+<li>例: <code>LANG=ja_JP.UTF-8</code> では、<code>Accept-Language</code>
+は
+<code>ja-JP,ja;q=0.9,en-US;q=0.8,en;q=0.7</code>、<code>navigator.languages</code>
+は <code>ja-JP,ja,en-US,en</code> になります。</li>
+<li><code>LANG=C</code> では、<code>Accept-Language</code>
+は今までと同じ <code>en-us,en</code>
+です。<code>navigator.languages</code> は <code>en-US</code> から
+<code>en-US,en</code> に変わります。</li>
+<li>英語のページを受け取る前提のアプリは、言語の環境によってサイトの返す内容が変わることがあります。英語のままにしたい場合は、<code>LANG=C</code>
+で起動してください。</li>
+</ul>
+<p><strong>クライアント証明書を任意で求めるサイトが開ける</strong> — TLS
+の接続でクライアント証明書を「任意で」求めるサイトは、build2
+までは読み込みに失敗していました。build3
+では、証明書を送らずに接続を続け、ページが表示されます。証明書を選ぶ画面や
+API
+はなく、証明書は送りません。証明書を必須とするサイトは試していません。</p>
+<p><strong>ページの中のドラッグの後にクリックが届く</strong> —
+ページの中で文字・画像・リンクをドラッグすると、build2
+まではページがドラッグの途中のまま残り、その後のクリックがページに届きませんでした。build3
+では、ドラッグはすぐに取り消しとして終わり
+(ページには何もドロップされなかったと伝わります)、その後のクリックは今までどおり届きます。ドラッグ・アンド・ドロップそのものには対応していません。ページの中でドロップすることはできず、ファイルマネージャーからファイルをドロップしても受け付けません。この確認は、試験用に送ったマウスの操作で行いました。</p>
+<h2
+id="build2-古い画面を出さないための修正とx11-向けコードの除去">build2:
+古い画面を出さないための修正と、X11 向けコードの除去</h2>
+<p>build1 をお使いの方は、build2 へ更新してください。公開 API
+に変更はないので、アプリを作り直す必要はありません。</p>
+<p><strong>古い画面を出さない</strong> — 拡大率 1
+の画面でソフトウェア描画を使うときの既定の経路で、いま表示しているページの描画を含まないフレームは、画面へ出さずに捨てるようにしました。また、画面へ出すのを止めている間
+(<code>blink_web_view_set_presentation_policy()</code> で
+<code>BLINK_PRESENT_WARM</code> を指定したとき、または
+<code>BLINKGTK_PRESENT_POLICY=warm</code> でウィンドウが隠れている間)
+に取っておいた画面は、その後にページが描き直されていれば、表示を再開したときに出さずに捨てます。前の画面や、ページがまだ入っていない画面が表示されないようにするための修正です。拡大率が
+1 以外の画面と、GPU を使う描画には関係しません。</p>
+<p><strong>X11 向けのコードを外しました</strong> — BlinkGTK の Linux
+版は Wayland だけで動きます。使っていなかった X11
+向けのコードをライブラリから外しました。使い方と見た目は変わりません。</p>
+<h2 id="build1-chromium-158-へ更新">build1: Chromium 158 へ更新</h2>
+<p>BlinkGTK のレンダリングエンジンを Chromium
+<strong>158.0.8127.36</strong> に更新しました。</p>
+<h2 id="セキュリティ-chromium-158">セキュリティ (Chromium 158)</h2>
+<p>Chromium 158 のデスクトップ安定版には、上流のセキュリティ修正 204
+件が含まれています。修正の詳細は<a
+href="https://chromereleases.googleblog.com/2026/11/stable-channel-update-for-desktop_01744469280.html">Chromium
+の公式発表</a>をご覧ください。</p>
+<p>このリリースは Linux
+向けです。以前の版をお使いの場合は、セキュリティ修正を含む本版へ更新してください。</p>
+<h2 id="描画と-console-出力">描画と console 出力</h2>
+<p>software の既定経路では、ページの変わった範囲を GTK と Wayland
+に更新範囲として渡します。<code>BLINKGTK_T2_DAMAGE=0</code>
+で従来の全体更新に戻せます。小さな範囲が変わるページでは、コンポジターへ渡す面積が減ります。</p>
+<p><code>BLINKGTK_CONSOLE_STDOUT=0</code> を指定すると、ページの console
+メッセージを標準出力へ出さないようにできます。既定では出力します。BlinkGTK
+のメッセージブリッジには影響しません。</p>
+<p>通常の Linux 起動は Wayland 専用です。公開 API
+に変更はありません。</p>
 </body>
 </html>
 </div></div>

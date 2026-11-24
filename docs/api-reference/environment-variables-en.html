@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>environment-variables-en — BlinkGTK</title>
+  <title>BlinkGTK Environment Variables Reference — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="This document is Chapter 9 (Environment Variables) of the API Reference Manual. Every environment variable BlinkGTK reads is listed here; a name that is not her">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/environment-variables-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="environment-variables-en — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK Environment Variables Reference — BlinkGTK">
+<meta property="og:description" content="This document is Chapter 9 (Environment Variables) of the API Reference Manual. Every environment variable BlinkGTK reads is listed here; a name that is not her">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/environment-variables-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +43,701 @@
   <a href="../../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="environment-variables-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
-
+<h1 id="blinkgtk-environment-variables-reference">BlinkGTK Environment
+Variables Reference</h1>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Last updated</strong>: 2026-11-18 (BlinkGTK 1.2.7-build5 /
+Chromium 158.0.8127.88)</p>
+<p>This document is Chapter 9 (Environment Variables) of the API
+Reference Manual. Every environment variable BlinkGTK reads is listed
+here; a name that is not here is not used by BlinkGTK.</p>
+<p>The variables are divided into three groups. <strong>Applications
+that embed BlinkGTK should rely only on the first group, "Publicly
+supported".</strong></p>
+<ul>
+<li><strong>Publicly supported</strong> — Stable API. Backward
+compatibility is maintained; changes are announced in release
+notes.</li>
+<li><strong>Escape hatches (switches for isolating problems)</strong> —
+Switches that turn off a fix or mechanism that is on by default and go
+back to the earlier behaviour. <strong>Do not set these in normal
+operation.</strong> Use them only to check whether a problem is caused
+by that fix, never as permanent configuration (they may be removed in a
+future release, with notice).</li>
+<li><strong>Internal diagnostics</strong> — For development and
+investigation. <strong>Unsupported and unwarranted</strong>; may change
+or disappear without notice. Applications should not rely on them.</li>
+</ul>
+<hr />
+<h2 id="1-publicly-supported-variables">1. Publicly Supported
+Variables</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Values</th>
+<th>Default</th>
+<th>Description</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_GPU_MODE</code></td>
+<td><code>software</code> / <code>egl</code> /
+<code>swiftshader</code></td>
+<td><code>software</code></td>
+<td>Rendering mode selection. <code>software</code> is recommended and
+default. <code>egl</code> is the GPU path (experimental);
+<code>swiftshader</code> is equivalent to software</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_HEADLESS</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td>Headless operation (no real display; for CI). Controls
+<code>--headless</code></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NO_SANDBOX</code></td>
+<td><code>1</code> / <code>0</code></td>
+<td>unset</td>
+<td><code>1</code> = always disable. <code>0</code> = always keep it
+enabled. <strong>Unset = decided automatically</strong> —
+<code>/proc/sys/user/max_user_namespaces</code> is read, and the sandbox
+is <strong>disabled</strong> if it is <code>0</code> or unreadable. Ask
+<code>blink_gtk_is_sandboxed()</code> for the result</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EXTRA_SCHEMES</code></td>
+<td>comma-separated scheme names</td>
+<td>unset</td>
+<td>Registers your own URL schemes (e.g. <code>ebook</code>) as standard
+schemes, treated like <code>https</code>. Used together with the handler
+that loads your scheme (custom scheme loader)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SCROLL_SPEED</code></td>
+<td>—</td>
+<td>—</td>
+<td><strong>Deprecated.</strong> Setting it has no effect. Scroll
+distance is decided by fixed coefficients (measured 2026-09-15). The
+code still exists but is not present in any shipped binary</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DMABUF_PATH</code></td>
+<td>path</td>
+<td>unset</td>
+<td>dmabuf device path for egl mode</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_PNG_DIR</code></td>
+<td>directory path</td>
+<td>unset</td>
+<td>Destination for frame PNG dumps (verification use; only saved when
+set)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_PNG_MAX</code></td>
+<td>integer</td>
+<td><code>0</code></td>
+<td>Number of diagnostic frame PNGs to save. <strong>Default 0 = save
+none.</strong> Set a count only when you need the diagnostics</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DISABLE_SITE_ISOLATION</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td><strong>Disables per-site process isolation. This weakens
+protection.</strong> Isolation is the boundary that stops a compromised
+page on one site from reading another site's data; without it, documents
+from several sites share one process. On by default since v1.2.0-build8
+— this variable exists as an escape hatch</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PRESENT_POLICY</code></td>
+<td><code>warm</code> / <code>warm-force</code></td>
+<td>unset</td>
+<td>Stops the work of putting frames on screen (compositing, capture,
+transfer) for a window nobody is watching. <strong>Layout and raster
+keep running, so look-ahead is preserved.</strong> <code>warm</code>
+applies only while the window is hidden; <code>warm-force</code> is
+<strong>for testing only</strong> and always applies. On resume the
+engine captures once unconditionally, so no stale frame is shown. While
+stopped, a screenshot request
+(<code>blink_web_view_capture_screenshot_async()</code> and similar)
+still succeeds, and presentation stays stopped (1.2.3-build2 and later;
+earlier versions failed after 2 seconds). Since 1.2.4-build3, the
+capture on the software path returns, in most cases, the screen at the
+time of the request and may finish without putting a frame on screen. A
+capture while presentation is stopped can also put a frame on screen:
+frames that become ready while the capture is pending are presented, and
+presentation stops again once the capture has its image. On the default
+path for a scale-1 display this was one frame in our tests; at other
+scales and with <code>BLINKGTK_T2_AUTO=0</code> it was zero or one,
+depending on whether the capture's own copy or a frame for the screen
+arrives first. Do not rely on the screen staying unchanged, or on it
+being updated, during such a capture</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_LOG_LEVEL</code></td>
+<td><code>0</code> / <code>1</code> / <code>2</code></td>
+<td><code>0</code></td>
+<td>Diagnostic output volume: <code>0</code> everything, <code>1</code>
+much reduced, <code>2</code> nearly silent. <strong>Raise it if the logs
+feel noisy</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CONSOLE_STDOUT</code></td>
+<td><code>0</code> / <code>false</code> / <code>no</code> /
+<code>off</code></td>
+<td>unset (enabled)</td>
+<td>Suppresses web page <code>console</code> output on standard output.
+Does not affect the BlinkGTK message bridge</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DIAG_VERBOSE</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td>Also emit per-frame diagnostics (suppressed by default)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_IM_MODULE</code></td>
+<td><code>gtk</code> or a GTK input-module id</td>
+<td>unset</td>
+<td><strong>From v1.2.3.</strong> Chooses the input method. Unset (or
+<code>gtk</code>) makes BlinkGTK pin nothing and leave the choice to GTK
+(the text-input path on Wayland). Any other value (such as
+<code>ibus</code>) is pinned on BlinkGTK's views. <strong>To get the
+1.2.2 behaviour, set <code>ibus</code>.</strong> Query the configured
+value with <code>blink_gtk_get_im_module()</code></td>
+</tr>
+<tr>
+<td><code>GTK_IM_MODULE</code></td>
+<td>a GTK input-module id</td>
+<td>—</td>
+<td>From v1.2.3, <strong>it also affects BlinkGTK WebViews</strong> when
+<code>BLINKGTK_IM_MODULE</code> is unset, because BlinkGTK follows GTK's
+normal selection. If <code>BLINKGTK_IM_MODULE</code> pins an id, GTK 4's
+<code>gtk_im_multicontext_set_context_id()</code> takes precedence over
+this variable and it has no effect on WebViews. Up to 1.2.2 BlinkGTK
+always pinned <code>ibus</code> and set this variable
+<strong>process-wide</strong> from <code>XMODIFIERS</code>; 1.2.3 no
+longer does</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_A11Y</code></td>
+<td><code>1</code></td>
+<td>unset</td>
+<td><strong>Enables accessibility.</strong> Exposes the page structure
+over AT-SPI so that assistive technologies (Orca and the like) can read
+the web content. By default Chromium does not build the accessibility
+information for the page, so there is nothing to expose. Building it for
+every page has a cost, so it is opened on request. Without it,
+accessibility opens automatically when an assistive technology (Orca and
+the like) connects (since 1.2.2-build4, including when the assistive
+technology is started after the application). From 1.2.4 this also works
+with at-spi2-core 2.61 or later (Fedora 45 and the like), and when an
+assistive technology is started after launching with
+<code>BLINKGTK_A11Y=1</code>. Set <code>1</code> where automatic
+activation does not happen. The command-line switch
+<code>--force-renderer-accessibility</code> does the same thing, but the
+environment variable does not depend on how the program is launched</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_UPDATE_CHECK</code></td>
+<td><code>1</code></td>
+<td>unset (off)</td>
+<td><strong>Since 1.2.4.</strong> Tells you in two log lines, English
+and Japanese
+(<code>[BlinkGTK update] A newer version is available: ...</code> /
+<code>[BlinkGTK update] 新しい版があります: ...</code>), when a newer
+version has been released. An application can also turn it on with
+<code>blink_gtk_set_update_check(TRUE)</code> (call it before
+<code>blink_gtk_init()</code>); even then the user can stop it with
+<code>BLINKGTK_UPDATE_CHECK=0</code> (the user setting wins).
+<strong>Off by default</strong> — BlinkGTK is embedded in other
+products, and it must not contact the network without the product user
+knowing. Only with <code>1</code>, it reads the release list of the
+distribution repository (GitHub API, <code>api.github.com</code>) once,
+5 seconds after startup. Attachments are not downloaded. It checks at
+most once a day and keeps the result in
+<code>$XDG_CACHE_HOME/blinkgtk/update-check</code>. Windows releases are
+not mistaken for Linux ones. When the network is unavailable it says
+nothing and does not delay startup</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SUBPROCESS_PATH</code></td>
+<td>Path to an executable, or <code>0</code></td>
+<td>Unset (automatic)</td>
+<td><strong>Since 1.2.5.</strong> When BlinkGTK is used from a program
+that does not link it directly, such as Python (PyGObject) or GJS,
+BlinkGTK starts its child processes (the zygote and others) with
+<code>blinkgtk-subprocess</code>, which is installed with BlinkGTK
+(<code>/usr/libexec/blinkgtk-0.1/blinkgtk-subprocess</code> in the RPM
+and DEB packages). The sandbox stays enabled. Up to 1.2.4, python3 or a
+similar interpreter was started as the child process, so BlinkGTK could
+not be started from Python. If you ship the file in a different place,
+set its path here. <code>0</code> keeps the child process executable
+unchanged (the 1.2.4 behavior). C applications do not need this: their
+own executable serves as the child process</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_WIN_GPU_PATH</code></td>
+<td><code>vulkan</code></td>
+<td>unset</td>
+<td><strong>Windows only, experimental (from BlinkGTK for Windows
+1.2.4-build4).</strong> With the value <code>vulkan</code>, the result
+of Chromium's GPU compositing is handed to GTK's Vulkan renderer without
+reading it back to the CPU. This is what the site and the Windows
+release announcements call "GPU path P4" (the only value you set is
+<code>vulkan</code>). Disabled by default. <strong>Confirmed on one
+Intel Iris Xe machine only.</strong> Not used on Linux</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NO_AUTO_SHUTDOWN</code></td>
+<td><code>1</code></td>
+<td>unset (clean up automatically)</td>
+<td><strong>Windows only (from the next BlinkGTK for Windows release;
+not in a released build).</strong> On Windows, BlinkGTK calls
+<code>blink_gtk_shutdown()</code> automatically when
+<code>blink_gtk_run_main_loop()</code> returns, so the process exits
+soon after the window is closed. With <code>1</code>, this automatic
+cleanup is skipped. This is for applications that keep using BlinkGTK
+after the main loop returns; such an application must call
+<code>blink_gtk_shutdown()</code> itself before it exits. Calling
+<code>blink_gtk_shutdown()</code> yourself is harmless: a second call
+does nothing. Not used on Linux</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FOLLOW_GTK_THEME</code></td>
+<td><code>0</code></td>
+<td>unset (follow the GTK theme)</td>
+<td><strong>From 1.2.5-build2.</strong> By default the page color scheme
+(<code>prefers-color-scheme</code>, form controls, scrollbars) follows
+whether the GTK theme is light or dark, and switching the theme while
+the app runs switches the page without reloading it. With
+<code>0</code>, pages are always light, as up to 1.2.5-build1. Use it in
+apps whose HTML is not ready for dark. Pages that do not set
+<code>color-scheme</code> keep a white background even without
+<code>0</code></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_NETWORK_IN_PROCESS</code></td>
+<td><code>1</code></td>
+<td>unset (separate process)</td>
+<td><strong>From 1.2.5-build2.</strong> Runs networking inside the
+application process instead of in a separate process. Pages load sooner
+because a process is no longer started each time a page is opened. In
+exchange, if networking crashes, the application ends with it. By
+default networking runs in a separate process, so a crash ends only that
+process</td>
+</tr>
+</tbody>
+</table>
+<h2 id="2-escape-hatches-leave-at-defaults">2. Escape Hatches (leave at
+defaults)</h2>
+<p>Use these when a problem appears and one of the fixes below may be
+involved: they turn off just that fix so you can check. If the symptom
+goes away, please report it with the version you use and the
+symptom.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Effect when set (e.g. =0)</th>
+<th>Related fix</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_PUMP_LEGACY=1</code></td>
+<td>Switches the main loop from the method that watches the Wayland
+connection (fd-watcher pump) back to the earlier method (g_idle pump)
+(CPU usage while idle increases)</td>
+<td>Fix in 1.1.0: CPU usage of nearly one core while nothing was
+happening</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEFER_ZYGOTE=0</code></td>
+<td>Restores the earlier order in which startup first waits until the
+helper process that creates child processes (the zygote) is ready
+(startup becomes slower)</td>
+<td>Improvement in 1.2.5-build2: faster startup (the window and the
+finished page load appear sooner)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FAST_RENDER_NODE=0</code></td>
+<td>Restores Chromium's original startup step that loads Mesa to check
+whether the GPU device (the render node under /dev/dri) is usable
+(startup becomes slower). Only matters on the software path (the
+default)</td>
+<td>Improvement in 1.2.5-build2: faster startup (the finished page load
+appears sooner)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_VK_DRIVER_SELECT=0</code></td>
+<td>Stops limiting the Vulkan drivers loaded at startup to the ones for
+the GPUs present on this machine (startup becomes slower). If you set
+the Vulkan loader's own variables (such as
+<code>VK_LOADER_DRIVERS_SELECT</code>), BlinkGTK leaves them
+unchanged</td>
+<td>Improvement in 1.2.5-build2: faster startup (the window appears
+sooner)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PUMP_RESCUE=0</code></td>
+<td>Disables the guarantee that wakes the main loop every 100 ms</td>
+<td>Added in 1.1.0 together with the fix for the page staying blank
+(below)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_QUEUE_DRAW_TIMER=1</code></td>
+<td>Since 1.2.4. Always runs the periodic redraw every 16 ms, as earlier
+versions did. By default 1.2.4 does not run it for BlinkWebView, so a
+static page is not redrawn over and over (lower CPU usage while idle).
+<code>=0</code> always stops it</td>
+<td>Change in 1.2.4: a static page is no longer redrawn every 16 ms</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_SIZE_TICK=1</code></td>
+<td>Since 1.2.7-build1. Registers the earlier mechanism that checks the
+window size on every frame (a GTK tick callback) even for WebViews
+created with <code>blink_web_view_new()</code> and similar functions. It
+runs about 60 times a second even on a still page, so CPU usage while
+idle increases. By default it is not registered, and size changes are
+received when the WebView is allocated its size</td>
+<td>1.2.7-build1 fix: the frame clock kept running on still pages and
+used CPU</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_T2_AUTO=0</code></td>
+<td>Since 1.2.4. Stops automatically switching software rendering to T2
+(a path that receives the composited result through shared memory
+instead of capturing it) on a scale-1 display, and uses the same path as
+earlier versions. By default 1.2.4 selects T2 at scale 1, which lowers
+CPU usage on pages where only a small area changes. T2 is not used on
+displays with a scale other than 1, and the original path is restored
+when the window moves to one. <code>BLINKGTK_USE_MOJO_IPC=0</code> does
+the same</td>
+<td>Change in 1.2.4: T2 became the default on scale-1 displays</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_T2_PARTIAL_COPY=0</code></td>
+<td>Disables T2 partial-copy optimization and restores a full copy on
+every frame. Use to isolate suspected missed image updates</td>
+<td>T2 partial-copy optimization</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CAPTURE_DAMAGE_GATE=0</code></td>
+<td>Disables the mechanism that skips copying the screen (capture) when
+nothing has changed (capture damage gate)</td>
+<td>Fix in 1.1.0: CPU usage while idle</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FORCE_SINGLE_THREADED=1</code></td>
+<td>Reverts the renderer to single-threaded compositing (risk of
+rendering stalls)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_INVAL_FALLBACK=0</code></td>
+<td>Disables the fallback used when the area to redraw is computed as
+empty (invalidation fallback)</td>
+<td>Fix in 1.1.0: right after a large font-size change, the page could
+stay blank</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK=0</code></td>
+<td>Disable the automatic fallback to software when the GPU path is
+unusable (the window then stays blank)</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_AUTO_FALLBACK_MS=&lt;ms&gt;</code></td>
+<td>Wait before falling back (default 5000). Shortening it causes false
+fallbacks on machines with slow GPU startup</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_ACT_REDRAW=0</code></td>
+<td>Disables the mechanism that asks for one more redraw when a new
+rendering result is activated (activation re-damage)</td>
+<td>Fix in 1.1.0: right after a large font-size change, the page could
+stay blank</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_120_CKB_REDRAW=0</code></td>
+<td>Disables the mechanism that asks for a redraw when parts not yet
+drawn (checkerboard) remain</td>
+<td>Backup measure for the fix in 1.1.0 (right after a large font-size
+change, the page could stay blank)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_FRACTIONAL=1</code></td>
+<td>Opts in to fractional scaling in egl mode (experimental). From
+1.2.4, pages on a 1.25 or 1.5 display are drawn at that fractional scale
+(<code>devicePixelRatio</code> 1.25 / 1.5). In 1.2.3 and earlier (since
+1.2.0-build3), the scale the engine adds automatically was rounded up to
+an integer, so pages were drawn at 2</td>
+<td>Opt-in since 1.1.0. Fixed in 1.2.4 to draw at the fractional
+scale</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_RESIZE_BRIDGE=0</code></td>
+<td>Disables the egl resize bridge</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RUBY_RESERVE_EM=0.5</code></td>
+<td>Restores the behaviour up to v1.2.0: subtract the ruby overhang
+(0.5em) from the column fragmentation width in multi-column layout. The
+subtraction reduces what fits in a column and can cost exactly one
+line</td>
+<td>v1.2.1 change: the default became 0 (no subtraction)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_FRAME_COPY=1</code></td>
+<td><strong>Since 1.2.3-build4.</strong> In software rendering, go back
+to copying the pixels of every frame before handing them to GTK (the
+default now hands them over without a copy). For isolating display
+problems</td>
+<td></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_EGL_FAKE_PRESENTATION=0</code></td>
+<td><strong>Since 1.2.4.</strong> In egl mode, do not send the
+"presented" notification, as before. <strong>With this, the renderer and
+browser memory keep growing while an animated page is shown</strong>
+(the behavior up to 1.2.3). For comparison only</td>
+<td></td>
+</tr>
+</tbody>
+</table>
+<h2 id="3-internal-diagnostics-unsupported">3. Internal Diagnostics
+(unsupported)</h2>
+<p>The following are internal variables for development and
+investigation. <strong>Listed for completeness only; their
+specifications are not published.</strong> Unwarranted and removable
+without notice.</p>
+<table>
+<thead>
+<tr>
+<th>Area</th>
+<th>Variables</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Update notice tests</td>
+<td><code>BLINKGTK_UPDATE_CHECK_URL</code> (replaces the URL checked;
+for the local server of <code>check-update-notice.sh</code>)</td>
+</tr>
+<tr>
+<td>Investigating the page-stays-blank problem</td>
+<td><code>BLINKGTK_120_CC_DIAG</code> /
+<code>BLINKGTK_120_DISP_DIAG</code> /
+<code>BLINKGTK_120_CLIP_DIAG</code> / <code>BLINKGTK_120_DIAG</code> /
+<code>BLINKGTK_120_PAINT_KICK</code> / <code>BLINKGTK_120_FI_ROW1</code>
+(fault injection; verification only) /
+<code>BLINKGTK_120_TYPEB_FIX</code></td>
+</tr>
+<tr>
+<td>Typesetting</td>
+<td><code>BLINKGTK_VBREAK_P0</code> / <code>BLINKGTK_TOC_P0</code> /
+<code>BLINKGTK_LAYOUT_DEBUG</code></td>
+</tr>
+<tr>
+<td>EGL path</td>
+<td><code>BLINKGTK_EGL_DIAG</code> /
+<code>BLINKGTK_EGL_MANUAL_VIEWPORT</code> /
+<code>BLINKGTK_EGL_BRIDGE_SETTLE_MS</code> /
+<code>BLINKGTK_EGL_GTK4_NATIVE</code> /
+<code>BLINKGTK_EGL_RECIPIENT_ALWAYS</code> (prototype: always create the
+EGL recipient surface, regardless of the active render path)</td>
+</tr>
+<tr>
+<td>Output layer and compositing</td>
+<td><code>BLINKGTK_USE_K2C</code> / <code>BLINKGTK_USE_MOJO_IPC</code> /
+<code>BLINKGTK_USE_EGL_WIDGET</code> /
+<code>BLINKGTK_T2_DELIVER_EMPTY</code> (negative control: on T2, deliver
+frames without waiting for the renderer's first frame) /
+<code>BLINKGTK_T2_DAMAGE</code> (<code>0</code> stops passing the area
+Viz redrew on T2 to GTK, so the whole window is updated every time; on
+by default since 1.2.7-build1. Before this release it was a prototype
+enabled with <code>1</code>) /
+<code>BLINKGTK_T2_DAMAGE_TEST_SHRINK</code> (negative control: shrinks
+the passed area by 1 px) / <code>BLINKGTK_T2_COPY_VERIFY</code> (testing
+only: compares a partially copied image with the source and logs
+mismatches) / <code>BLINKGTK_T2_COPY_TEST_NOAGE</code> (testing-only
+negative control: suppresses other updates to verify that missed-copy
+detection works) / <code>BLINKGTK_T2_TEST_STALE_SURFACE</code>
+(testing-only negative control: with <code>1</code>, the first T2 draw
+is matched against a LocalSurfaceId with the same FrameSinkId but a
+different generation, to confirm that a frame from a stale surface is
+not accepted. Since v1.2.7-build2) /
+<code>BLINKGTK_T2_TEST_STALE_FRAME_TOKEN</code> (testing-only negative
+control: with <code>1</code>, the preceding frame token is passed once
+for the same SurfaceId, to confirm that the stale frame is not accepted
+and that the next correct frame recovers. Since v1.2.7-build2) /
+<code>BLINKGTK_T2_AUTO</code> (<code>0</code> stops automatically
+selecting T2 on a scale-1 display; on by default since 1.2.4) /
+<code>BLINKGTK_TEST_PERMISSION_LOAD_DELAY_MS</code> (testing only: delay
+loading the stored permissions) /
+<code>BLINKGTK_USE_NEW_OUTPUT_DEVICE</code> /
+<code>BLINKGTK_USE_FSVC</code> / <code>BLINKGTK_SW_SUBSURFACE</code> /
+<code>BLINKGTK_REENABLE_ENDPAINT_HOOK</code> /
+<code>BLINKGTK_AURA_SHOW_IMMEDIATE</code></td>
+</tr>
+<tr>
+<td>Live render path switching</td>
+<td><code>BLINKGTK_BLINKSHIFT_AUTOSWAP</code> /
+<code>BLINKGTK_BLINKSHIFT_EGL_RECREATE</code> /
+<code>BLINKGTK_BLINKSHIFT_NO_KICK</code></td>
+</tr>
+<tr>
+<td>Tracing and measurement</td>
+<td><code>BLINKGTK_GX_LOG</code> (one line per event when the EGL
+rendering result is handed to the screen:
+<code>BJGX &lt;event&gt; t=&lt;ms&gt; buf=&lt;wl_buffer wire id&gt; submit=&lt;n&gt;</code>)
+/ <code>BLINKGTK_CAPTURE_TRACE</code> / <code>BLINKGTK_MOJO_TRACE</code>
+/ <code>BLINKGTK_TRACE_PIXEL_SUPPLIER</code> /
+<code>BLINKGTK_HARNESS_AUDIT</code> / <code>BLINKGTK_MINORI</code> /
+<code>BLINKGTK_PROFILE_DIR</code> /
+<code>BLINKGTK_RESIZE_FIT</code></td>
+</tr>
+<tr>
+<td>Verification only</td>
+<td><code>BLINKGTK_DELIVER_LOG_MAX</code> (maximum lines of the log for
+handing EGL rendering results to the screen; default 5. Lets you follow
+which operation ran and which wl_buffer it used into the steady state
+when nothing appears on screen) /
+<code>BLINKGTK_CONTENT_PROBE_MAX</code> (extends <strong>measurement
+only</strong> into steady state; the display decision still uses the
+first 8 frames) / <code>BLINKGTK_TEST_FORCE_FRACTIONAL</code> /
+<code>BLINKGTK_TEST_GPU_COPYFROMSURFACE</code> /
+<code>BLINKGTK_TEST_ALLOC_LOG</code> /
+<code>BLINKGTK_TEST_GATE_FAKE_PRE</code> (negative control: replaces the
+reference value the check compares against) /
+<code>BLINKGTK_TEST_FOCUS_LOG</code> /
+<code>BLINKGTK_TEST_SWITCH_PATH</code>
+(<code>&lt;path id&gt;:&lt;ms&gt;</code>) /
+<code>BLINKGTK_TEST_COMPOSITOR_RECREATE</code> /
+<code>BLINKGTK_TEST_DISPOSE_QUIT_MS</code> /
+<code>BLINKGTK_TEST_EXECV_RESTART</code> /
+<code>BLINKGTK_TEST_OUTPUT_SWAP</code> /
+<code>BLINKGTK_TEST_OUTPUT_SWAP_SKIP</code></td>
+</tr>
+</tbody>
+</table>
+<h2
+id="3b-development-demo-simple_browser-only--no-effect-in-the-distribution">3b.
+Development demo (<code>simple_browser</code>) only — no effect in the
+distribution</h2>
+<p><strong>These have no effect on the library or on the sample
+<code>blinkgtk_browser</code> that ships in the packages.</strong> Only
+<code>simple_browser</code>, the demo used to develop BlinkGTK, reads
+them, and <code>simple_browser</code> is not included in the
+packages.</p>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Effect</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_RESTART_ACTIVATION=0</code></td>
+<td>Stops carrying the activation token across a restart (carrying it
+brings the new window to the front)</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_RESTART_LINGER_MS=&lt;ms&gt;</code></td>
+<td>Restart by forking and letting the parent linger for this long.
+<strong>Defaults to 0 (disabled)</strong>, which restarts via execv as
+before</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEMO_SELECT_PATH=&lt;id&gt;@&lt;ms&gt;,...</code></td>
+<td>Testing only. Selects item <code>&lt;id&gt;</code> in the render
+path list at the given number of milliseconds after startup (for example
+<code>egl@6000,software@12000</code>). It goes through the same handling
+as when a person picks from the list</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_PERMISSION_ALLOW</code></td>
+<td>The demo auto-approves permission requests. <strong>The library
+itself denies by default</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_INSPECTOR_DASH</code></td>
+<td>Opens the inspector dashboard</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_TEST_SUITE</code> /
+<code>BLINKGTK_TEST_CAPTURE</code></td>
+<td>Demo verification modes</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_DEMO_NO_EBOOK</code> /
+<code>BLINKGTK_DEMO_NO_JLREQ</code></td>
+<td>Disable the demo's EBOOK setting / JLReq typesetting at startup</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_MUTTER_REACTIVATE</code> /
+<code>BLINKGTK_DEBUG_ISSUE_84</code></td>
+<td>For isolating window-raising behaviour</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_CHROMIUM_VERSION</code></td>
+<td><strong>Deprecated.</strong> It belonged to an internal demo that is
+not shipped. It has no effect in the distribution</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_AUTO_RESIZE=&lt;count&gt;</code></td>
+<td>The demo resizes its own window this many times (for verifying
+resize behaviour). <strong>It does not disable resizing</strong></td>
+</tr>
+<tr>
+<td><code>BLINKGTK_AUTO_FULLSCREEN=&lt;count&gt;</code></td>
+<td>The demo toggles fullscreen this many times, every 2.5 s, to produce
+a large single-step size change</td>
+</tr>
+</tbody>
+</table>
+<h2 id="4-deprecated">4. Deprecated</h2>
+<table>
+<thead>
+<tr>
+<th>Variable</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>BLINKGTK_KEEP_GPU_COMPOSITING=1</code></td>
+<td>Do not disable GPU compositing even when starting in
+<code>software</code>. Required if the rendering path is to be switched
+at runtime. <strong>CPU use goes up</strong> (in our measurement, an
+animating page over 20 seconds cost about 12% more; that is the ratio
+for that machine and page, neither an upper bound nor a representative
+value). Unsupported until switching the EGL path becomes public API</td>
+</tr>
+<tr>
+<td><code>BLINKGTK_ENABLE_THREADED_COMPOSITING</code></td>
+<td>Deprecated (threaded compositing is now ON by default; the old name
+has no effect)</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="see-also">See also</h2>
+<ul>
+<li><a href="../gpu-modes-en.html">GPU modes</a> — the rendering modes
+<code>BLINKGTK_GPU_MODE</code> selects and how to choose one</li>
+<li>For changes in each version, see the bundled release notes and the
+version history</li>
+</ul>
 </body>
 </html>
 </div></div>

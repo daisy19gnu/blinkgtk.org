@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>version-history-en — BlinkGTK</title>
+  <title>BlinkGTK Version History — BlinkGTK and Chromium Versions —
+BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +24,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="Which BlinkGTK release is built on which Chromium. To find out when a feature became available, first check which Chromium version introduced it in Chromium 147">
 <link rel="canonical" href="https://blinkgtk.org/docs/version-history-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="version-history-en — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK Version History — BlinkGTK and Chromium Versions — BlinkGTK">
+<meta property="og:description" content="Which BlinkGTK release is built on which Chromium. To find out when a feature became available, first check which Chromium version introduced it in Chromium 147">
 <meta property="og:url" content="https://blinkgtk.org/docs/version-history-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +44,599 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="version-history-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
+<h1
+id="blinkgtk-version-history--blinkgtk-and-chromium-versions">BlinkGTK
+Version History — BlinkGTK and Chromium Versions</h1>
+<p>Version: 1.2.7-build5 / Language: English | <a
+href="version-history-ja.html">日本語</a></p>
+<p>Which BlinkGTK release is built on which Chromium. To find out when a
+feature became<br />
+available, first check which Chromium version introduced it in<br />
+<a href="chromium-feature-history-en.html">Chromium 147 → 151</a>, then
+look up the corresponding<br />
+BlinkGTK release here.</p>
+<hr />
+<h2 id="the-table">The table</h2>
+<!-- VERSION_HISTORY_TABLE_START (gen-version-history.sh が生成。手で編集しない) -->
 
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>Released</th>
+<th>Chromium</th>
+<th>What happened in this release</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v1.2.7-build5</strong> ← current</td>
+<td>2026-11-25</td>
+<td><strong>158.0.8127.88</strong></td>
+<td>Incorporated the security fix (Critical) in Chromium 158.0.8127.88.
+Usage and the public API are the same as build4</td>
+</tr>
+<tr>
+<td>v1.2.7-build4</td>
+<td>2026-11-24</td>
+<td>158.0.8127.36</td>
+<td>Calling blink_web_view_open_devtools() no longer crashes the
+application, and the remote debugging port opens. /json/version now
+reports the version in Browser (the public API is unchanged)</td>
+</tr>
+<tr>
+<td>v1.2.7-build3</td>
+<td>2026-11-23</td>
+<td>158.0.8127.36</td>
+<td>Pages that call the badge, on-device speech recognition or web app
+installation APIs no longer crash or stop. The leave-page confirmation
+reaches the JavaScript dialog handler, the language sent to servers
+follows the environment, sites that optionally ask for a client
+certificate open, and clicks reach the page after dragging inside it
+(the public API is unchanged)</td>
+</tr>
+<tr>
+<td>v1.2.7-build2</td>
+<td>2026-11-22</td>
+<td>158.0.8127.36</td>
+<td>On scale-1 displays with software rendering, frames without the
+current page's drawing and old screens kept while presentation was
+stopped (BLINK_PRESENT_WARM and similar) are no longer shown. Unused X11
+code removed (usage and appearance are unchanged)</td>
+</tr>
+<tr>
+<td>v1.2.7-build1</td>
+<td>2026-11-19</td>
+<td>158.0.8127.36</td>
+<td>Updated to Chromium 158 with 204 upstream security fixes. The
+default software path passes screen update regions to GTK / Wayland. An
+application CPU-time reduction has not been demonstrated</td>
+</tr>
+<tr>
+<td>v1.2.6-build4</td>
+<td>2026-11-07</td>
+<td>157.0.8103.38</td>
+<td>Memory handling fixes</td>
+</tr>
+<tr>
+<td>v1.2.6-build3</td>
+<td>2026-11-06</td>
+<td>157.0.8103.38</td>
+<td>Memory handling fixes</td>
+</tr>
+<tr>
+<td>v1.2.6-build2</td>
+<td>2026-11-05</td>
+<td>157.0.8103.38</td>
+<td>Memory handling fixes</td>
+</tr>
+<tr>
+<td>v1.2.6-build1</td>
+<td>2026-11-04</td>
+<td>157.0.8103.38</td>
+<td>Updated to Chromium 157. In vertical text, underlines on
+ruby-annotated text no longer overlap the ruby, joined emoji render as
+one emoji, and text-decoration-inset works. Includes the upstream fix
+that keeps vertical lines filled. Restored the startup optimization
+(pages finish loading about 0.3 s sooner)</td>
+</tr>
+<tr>
+<td>v1.2.5-build5</td>
+<td>2026-11-01</td>
+<td>156.0.8078.79</td>
+<td>Fixed a crash of the application when a page calls the file picker
+APIs (build2 to build4). File System Access now stops sensitive
+locations (the four FileSystem CVE fixes take effect from this build).
+Removed one startup improvement (startup is about 0.3 s slower)</td>
+</tr>
+<tr>
+<td>v1.2.5-build4</td>
+<td>2026-11-01</td>
+<td>156.0.8078.79</td>
+<td>Incorporated the 21 security fixes in Chromium 156.0.8078.79 (the
+four FileSystem fixes take effect in BlinkGTK from build5)</td>
+</tr>
+<tr>
+<td>v1.2.5-build3</td>
+<td>2026-10-29</td>
+<td>156.0.8078.73</td>
+<td>Incorporated the security fixes in Chromium 156.0.8078.73</td>
+</tr>
+<tr>
+<td>v1.2.5-build2</td>
+<td>2026-10-27</td>
+<td>156.0.8078.47</td>
+<td>The page color scheme (light / dark) now follows the GTK theme,
+including switches while the app runs. Startup is faster (no wait for
+the child-process helper, fewer symbol lookups, no probe of unused GPU
+devices, and only the Vulkan drivers for the GPUs present are
+loaded).</td>
+</tr>
+<tr>
+<td>v1.2.5-build1</td>
+<td>2026-10-22</td>
+<td>156.0.8078.47</td>
+<td>The rendering engine is updated to Chromium 156. BlinkGTK can now be
+used from Python (PyGObject); the launcher blinkgtk-run is included.
+set_user_agent() now applies to pages opened with load_uri(), the zoom
+level is treated as a factor (1.0 = 100%), and is-loading returns to
+False when loading finishes.</td>
+</tr>
+<tr>
+<td>v1.2.4-build4</td>
+<td>2026-10-14</td>
+<td>155.0.8059.39</td>
+<td>Fixed a crash when clicking the page after a navigation, and the app
+no longer stops responding when navigating with accessibility enabled.
+The DEB file names in the bundled INSTALL and README are corrected.</td>
+</tr>
+<tr>
+<td>v1.2.4-build3</td>
+<td>2026-10-14</td>
+<td>155.0.8059.39</td>
+<td>Inline cutting notes (warichu) that fit on one line can now be set
+(-blinkgtk-warichu). Static-page captures that timed out but left a file
+(software async capture), and render path switches that always rolled
+back on white pages, are fixed; the built-in AI APIs now report that
+they are unavailable.</td>
+</tr>
+<tr>
+<td>v1.2.4-build2</td>
+<td>2026-10-11</td>
+<td>155.0.8059.39</td>
+<td>The update notice (BLINKGTK_UPDATE_CHECK=1, off by default) always
+failed because the release list was larger than the receive limit; this
+is fixed. Without the notice enabled, behavior is the same as
+build1.</td>
+</tr>
+<tr>
+<td>v1.2.4-build1</td>
+<td>2026-10-07</td>
+<td>155.0.8059.39</td>
+<td>Chromium 155. RPMs are for Fedora 45 or later only (Fedora 44 up to
+v1.2.3). On scale-1 displays software rendering is received through a
+path without capture (no capture requests or readback), and static pages
+are no longer redrawn continuously. Fixes EGL memory growth and
+accessibility with at-spi2-core 2.61. Includes upstream Japanese
+typesetting changes such as the fix for lines after ruby shifting
+up</td>
+</tr>
+<tr>
+<td>v1.2.3-build4</td>
+<td>2026-09-28</td>
+<td>154.0.8037.57</td>
+<td>Software rendering no longer copies every frame, so animations run
+about 24% more often at scale 2. Also fixes load_html not applying
+base_uri, a first paint delayed by about 25 seconds when the
+accessibility bus does not respond, stored permissions being read on the
+UI thread, and GTK warnings with ibus when a view is closed</td>
+</tr>
+<tr>
+<td>v1.2.3-build3</td>
+<td>2026-09-26</td>
+<td>154.0.8037.57</td>
+<td>Opening audio of 5 MB or more served over a custom scheme (such as
+ebook://) with <audio> no longer makes the whole application window stop
+responding. Long narration audio can be played and seeked as is</td>
+</tr>
+<tr>
+<td>v1.2.3-build2</td>
+<td>2026-09-25</td>
+<td>154.0.8037.57</td>
+<td>Pages can now be written to PDF files. Saving downloads, deciding
+where links and new windows open, the camera and microphone, answering
+HTTP authentication, remembering permission decisions, and choosing
+default fonts and a minimum font size are added too. swiftshader mode
+showing nothing on screen is fixed</td>
+</tr>
+<tr>
+<td>v1.2.3-build1</td>
+<td>2026-09-24</td>
+<td>154.0.8037.57</td>
+<td>The rendering engine is updated to Chromium 154. Turning off
+JavaScript, images and localStorage, and the default font size, now take
+effect on the page (up to 1.2.2 the value was only stored), and the
+input method follows GTK's choice. Fedora 45 RPMs are also provided</td>
+</tr>
+<tr>
+<td>v1.2.2-build6</td>
+<td>2026-09-19</td>
+<td>153.0.8010.36</td>
+<td>Views can now have their own profile and cache
+(blink_web_view_new_with_profile), so opening the same page in several
+views no longer serves all but the first from a shared cache</td>
+</tr>
+<tr>
+<td>v1.2.2-build5</td>
+<td>2026-09-14</td>
+<td>153.0.8010.36</td>
+<td>The rendering path can now be chosen from the API. Call
+blink_gtk_set_gpu_mode() before blink_gtk_init() and the engine starts
+on that path. Until now, asking for EGL through
+blink_web_view_new_with_gpu_mode() did not change the path. The
+rendering path is settled during engine initialisation, together with
+the startup flags handed to the GPU process, so it can no longer be
+changed by the time a WebView is created. The startup log named EGL in
+both cases, so there was no way to tell from outside whether the request
+had taken effect. Without also setting BLINKGTK_GPU_MODE, applications
+asking for EGL were running on the CPU pixel path.
+blink_web_view_get_gpu_mode() now reports the path actually in use after
+initialisation, and the startup log names it as well.</td>
+</tr>
+<tr>
+<td>v1.2.2-build4</td>
+<td>2026-09-13</td>
+<td>153.0.8010.36</td>
+<td>Fixed a problem where the EGL mode stayed blank from start to finish
+on systems using a Virtio GPU (virtual machines and the like). The
+engine reads the image from the CPU side to decide whether a frame is
+empty, but on this kind of GPU the drawing happens outside the machine,
+so that read sees nothing. Frames that did have content were judged
+empty and withheld from display. Pages without animation were the most
+affected, staying blank for as long as they were open. Assistive
+technology started after the application now reaches the content as
+well; previously a screen reader had to be running before launch.</td>
+</tr>
+<tr>
+<td>v1.2.2-build3</td>
+<td>2026-09-11</td>
+<td>153.0.8010.36</td>
+<td>Closing the window while a navigation was still in flight no longer
+crashes. While the page container was being torn down, a notification
+was delivered to a handler that was already looking at something
+released. Opening a book and closing it right away triggered it. This
+build also adds a diagnostic that asks the compositor whether a frame
+reached the screen (printed only with BLINKGTK_GX_LOG=1; nothing changes
+by default), which distinguishes "the content was empty" from "the
+content was there but never displayed". A record that said "not
+displaying" for frames past the eighth while in fact displaying them has
+been corrected</td>
+</tr>
+<tr>
+<td>v1.2.2-build1</td>
+<td>2026-09-10</td>
+<td>153.0.8010.36</td>
+<td>The rendering engine is updated to Chromium 153. In vertical
+writing, a line no longer breaks half-way when a closing bracket falls
+at the line end (a line with room for 35 characters held only 17, and
+text-align: justify then doubled the inter-character advance). Of 13
+configurations, 8 exhibited it and all are now fixed. It does not occur
+in horizontal writing. We reported this upstream (crbug 542686223) and
+Chromium fixed it; our own workaround (17 to 34 characters) is still
+included in this release, but with the upstream fix in place it does not
+change the result in the range we measured</td>
+</tr>
+<tr>
+<td>v1.2.1-build3</td>
+<td>2026-09-08</td>
+<td>152.0.7977.64</td>
+<td>The build number is now available at run time when reporting a
+problem (blink_gtk_get_version_full / blink_gtk_get_build; behaviour can
+differ between builds of one version, and until now only the package
+file name identified a build). The frame-delivery log records the
+operation actually performed and the Wayland buffer id, and the
+measurement caps can be raised. Live render-path switching now covers
+the EGL path (when started under EGL)</td>
+</tr>
+<tr>
+<td>v1.2.1-build2</td>
+<td>2026-08-30</td>
+<td>152.0.7977.64</td>
+<td>Where the GPU path is unavailable, BlinkGTK now falls back to
+software rendering and keeps drawing. It switches when no frame arrives
+within five seconds and writes the reason to standard error, and it does
+not switch where the GPU path works. Captured screenshots no longer come
+out with red and blue exchanged</td>
+</tr>
+<tr>
+<td>v1.2.1-build1</td>
+<td>2026-08-27</td>
+<td>152.0.7977.64</td>
+<td>The rendering engine is updated to Chromium 152. Vertical lines no
+longer break half-way (a line with room for 34 characters held only 17
+when a closing bracket fell at the line end), and columns in
+multi-column layout now fill to capacity. The line grid is also
+preserved when direction: rtl is combined with vertical writing</td>
+</tr>
+<tr>
+<td>v1.2.0-build9</td>
+<td>2026-08-16</td>
+<td>151.0.7922.108</td>
+<td>Render paths can now be switched live without restarting (BlinkShift
+public API — a switch takes a few hundred milliseconds and rolls back
+automatically on failure). Added blink_gtk_application_run() for correct
+GtkApplication integration and a presentation-policy API to declare when
+a view need not be presented. Fixed large user scripts never reaching
+the renderer</td>
+</tr>
+<tr>
+<td>v1.2.0-build8</td>
+<td>2026-08-12</td>
+<td>151.0.7922.108</td>
+<td>Applied the results of a security review. Per-site process isolation
+is now on by default (which can increase memory use), sandbox detection
+is measured rather than inferred, and an API to query the sandbox state
+was added. A reference page for environment variables is now
+published</td>
+</tr>
+<tr>
+<td>v1.2.0-build7</td>
+<td>2026-08-12</td>
+<td>151.0.7922.108</td>
+<td>Corrected the version macros in the header shipped with the
+development package; build1-6 claimed the previous release (1.1.0 /
+Chromium 150). The runtime API was always correct, so only compile-time
+macros were affected. The runtime itself is identical to build6</td>
+</tr>
+<tr>
+<td>v1.2.0-build6</td>
+<td>2026-08-11</td>
+<td>151.0.7922.108</td>
+<td>Updated to Chromium 151.0.7922.108; user scripts now run before the
+page's own scripts, and JavaScript results are returned as JSON</td>
+</tr>
+<tr>
+<td>v1.2.0-build5</td>
+<td>2026-08-10</td>
+<td>151.0.7922.71</td>
+<td>Western hyphenation (hyphens: auto) now works; abnormal exit on
+shutdown and stray diagnostic PNGs fixed</td>
+</tr>
+<tr>
+<td>v1.2.0-build4</td>
+<td>2026-08-08</td>
+<td>151.0.7922.71</td>
+<td>Install and update with dnf; continuously animating pages no longer
+freeze</td>
+</tr>
+<tr>
+<td>v1.2.0-build3</td>
+<td>2026-08-08</td>
+<td>151.0.7922.71</td>
+<td>GPU rendering works with a single environment variable, and text no
+longer appears doubled while resizing (withdrawn)</td>
+</tr>
+<tr>
+<td>v1.2.0-build2</td>
+<td>2026-08-03</td>
+<td>151.0.7922.71</td>
+<td>The engine now reports its real version, and vertical layout metrics
+are readable from JavaScript</td>
+</tr>
+<tr>
+<td>v1.2.0-build1</td>
+<td>2026-08-01</td>
+<td>151.0.7922.71</td>
+<td>Emphasis marks no longer grow the line pitch, and ruby overhang
+behaves as specified (moved to Chromium 151)</td>
+</tr>
+<tr>
+<td>v1.1.0-build6</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>Bundled documentation corrected throughout, with machine checks that
+documentation matches the implementation</td>
+</tr>
+<tr>
+<td>v1.1.0-build5</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>Bundled samples consolidated into one. Superseded by build6
+(withdrawn)</td>
+</tr>
+<tr>
+<td>v1.1.0-build4</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>UA / cookie / permission APIs added. Superseded by build5
+(withdrawn)</td>
+</tr>
+<tr>
+<td>v1.1.0-build3</td>
+<td>2026-07-23</td>
+<td>150.0.7871.46</td>
+<td>RPM dependency names corrected to Fedora's naming (reported by a
+user)</td>
+</tr>
+<tr>
+<td>v1.1.0-build2</td>
+<td>2026-07-21</td>
+<td>150.0.7871.46</td>
+<td>Idle CPU usage brought to zero; blank-page issue on font-size change
+resolved</td>
+</tr>
+<tr>
+<td><strong>v1.1.0-build1</strong></td>
+<td>2026-07-07</td>
+<td><strong>150.0.7871.46</strong></td>
+<td>Distribution reshaped (runtime / development / GObject Introspection
+split). Vertical multi-column fragmentation, wheel scrolling, input
+after navigation</td>
+</tr>
+<tr>
+<td><strong>v1.0.11-dev</strong></td>
+<td>2026-06</td>
+<td><strong>148.0.7778.167</strong></td>
+<td>Moved to Chromium 148 (also tracking 149). Linking requirements for
+embedding applications settled</td>
+</tr>
+<tr>
+<td><strong>v1.0.10-build16</strong></td>
+<td>2026-05-16</td>
+<td><strong>147.0.7727.55</strong></td>
+<td>Rendering regressions removed; quality confirmed on real
+hardware</td>
+</tr>
+<tr>
+<td>v1.0.10</td>
+<td>2026-04-21</td>
+<td>147.0.7727.55</td>
+<td>Stabilisation</td>
+</tr>
+<tr>
+<td>v1.0.9</td>
+<td>2026-04-18</td>
+<td>147.0.7727.55</td>
+<td>Consumer-facing polish; reported defects resolved in one pass</td>
+</tr>
+<tr>
+<td>v1.0.8</td>
+<td>2026-04-14</td>
+<td>147.0.7727.55</td>
+<td>Language bindings unified, API strengthened</td>
+</tr>
+<tr>
+<td>v1.0.7</td>
+<td>2026-04-13</td>
+<td>147.0.7727.55</td>
+<td>Input method (IME) fixes</td>
+</tr>
+<tr>
+<td><strong>v1.0.6</strong></td>
+<td>2026-04-12</td>
+<td><strong>147.0.7727.55</strong></td>
+<td>Moved to Chromium 147</td>
+</tr>
+<tr>
+<td>v1.0.5</td>
+<td>2026-04-10</td>
+<td>146.0.7680.177</td>
+<td>Tracked the Chromium 146 update</td>
+</tr>
+<tr>
+<td>v1.0.3</td>
+<td>2026-04-07</td>
+<td>146.0.7680.71</td>
+<td>Improved font rendering on HiDPI</td>
+</tr>
+<tr>
+<td>v1.0.2</td>
+<td>2026-04-07</td>
+<td>146.0.7680.71</td>
+<td>Per-WebView GPU mode API</td>
+</tr>
+<tr>
+<td>v1.0.1</td>
+<td>2026-04-03</td>
+<td>146.0.7680.71</td>
+<td>Bug fixes (no packages published)</td>
+</tr>
+<tr>
+<td><strong>v1.0.0</strong></td>
+<td>2026-04-03</td>
+<td><strong>146.0.7680.71</strong></td>
+<td>First stable release</td>
+</tr>
+<tr>
+<td>v1.0.0-rc1</td>
+<td>2026-03-18</td>
+<td>145 (estimated)</td>
+<td>Release candidate</td>
+</tr>
+</tbody>
+</table>
+<!-- VERSION_HISTORY_TABLE_END -->
+
+<p>Two notes. <strong>v1.0.4 was skipped</strong> (v1.0.3 is followed by
+v1.0.5). And <strong>v1.1.0-build4 and<br />
+build5 have been withdrawn</strong>, superseded by build6. Withdrawn
+releases are not deleted from<br />
+this history: being able to trace which release you were running matters
+more.</p>
+<hr />
+<h2 id="looking-up-by-chromium-version">Looking up by Chromium
+version</h2>
+<table>
+<thead>
+<tr>
+<th>Chromium</th>
+<th>BlinkGTK</th>
+<th>Period</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>145</td>
+<td>v1.0.0-rc1</td>
+<td>2026-03</td>
+</tr>
+<tr>
+<td>146</td>
+<td>v1.0.0 – v1.0.5</td>
+<td>2026-04-03 – 04-10</td>
+</tr>
+<tr>
+<td><strong>147</strong></td>
+<td>v1.0.6 – v1.0.10-build16</td>
+<td>2026-04-12 – 05-16</td>
+</tr>
+<tr>
+<td><strong>148 / 149</strong></td>
+<td>v1.0.11-dev</td>
+<td>2026-06</td>
+</tr>
+<tr>
+<td><strong>150</strong></td>
+<td>v1.1.0-build1 – build6</td>
+<td>2026-07-07 – 07-29</td>
+</tr>
+<tr>
+<td><strong>151</strong></td>
+<td>migration in progress</td>
+<td>2026-08 –</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="reading-the-version-number">Reading the version number</h2>
+<p><code>v1.1.0-build6</code> has two parts.</p>
+<ul>
+<li><strong><code>1.1.0</code></strong> — the product version. It rises
+on feature additions or incompatible changes</li>
+<li><strong><code>build6</code></strong> — how many times that product
+version has been rebuilt. It rises on defect<br />
+fixes and packaging corrections</li>
+</ul>
+<p>The same <code>1.1.0</code> with a different build number is
+different code. When reporting a defect,<br />
+please include <strong>the build number</strong>.</p>
+<p>Separately, the <strong><code>0.1</code></strong> that appears in
+package names and paths<br />
+(<code>libblinkgtk-0.1.so.0</code>,
+<code>/usr/share/doc/blinkgtk-0.1/</code>) is the API version and
+is<br />
+independent of the product version — the same convention as GTK4's
+<code>gtk-4.0</code> and<br />
+WebKitGTK's <code>webkitgtk-6.0</code>. It changes only on incompatible
+API revisions.</p>
+<hr />
+<h2 id="related-documents">Related documents</h2>
+<ul>
+<li><a href="chromium-feature-history-en.html">Chromium 147 → 151</a> —
+what each Chromium version brought</li>
+<li><a href="RELEASE_NOTES-1.2.2-en.html">Release notes</a></li>
+<li><a href="INSTALL.html">Installation</a></li>
+</ul>
 </body>
 </html>
 </div></div>

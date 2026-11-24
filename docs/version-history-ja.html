@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>version-history-ja — BlinkGTK</title>
+  <title>BlinkGTK 改版履歴 — BlinkGTK の版と Chromium の版 —
+BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +24,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="BlinkGTK のどの版が、Chromium のどの版を土台にしているかの一覧です。 「この機能はいつから使えるのか」を調べるときは、2 段階で引きます。">
 <link rel="canonical" href="https://blinkgtk.org/docs/version-history-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="version-history-ja — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK 改版履歴 — BlinkGTK の版と Chromium の版 — BlinkGTK">
+<meta property="og:description" content="BlinkGTK のどの版が、Chromium のどの版を土台にしているかの一覧です。 「この機能はいつから使えるのか」を調べるときは、2 段階で引きます。">
 <meta property="og:url" content="https://blinkgtk.org/docs/version-history-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +44,576 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="version-history-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
+<h1 id="blinkgtk-改版履歴--blinkgtk-の版と-chromium-の版">BlinkGTK
+改版履歴 — BlinkGTK の版と Chromium の版</h1>
+<p>バージョン: 1.2.7-build5 / 言語: 日本語 | <a
+href="version-history-en.html">English</a></p>
+<p>BlinkGTK のどの版が、Chromium
+のどの版を土台にしているかの一覧です。<br />
+「この機能はいつから使えるのか」を調べるときは、2 段階で引きます。</p>
+<ol type="1">
+<li>目的の機能が Chromium のどの版で入ったかを<br />
+<a href="chromium-feature-history-ja.html">Chromium 147 → 152 の新機能</a>
+で確認する</li>
+<li>この表で、その Chromium 版に対応する BlinkGTK の版を引く</li>
+</ol>
+<hr />
+<h2 id="対応表">対応表</h2>
+<!-- VERSION_HISTORY_TABLE_START (gen-version-history.sh が生成。手で編集しない) -->
 
+<table>
+<thead>
+<tr>
+<th>BlinkGTK</th>
+<th>公開日</th>
+<th>Chromium</th>
+<th>この版で何が起きたか</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>v1.2.7-build5</strong> ← 公開中</td>
+<td>2026-11-25</td>
+<td><strong>158.0.8127.88</strong></td>
+<td>Chromium 158.0.8127.88 のセキュリティ修正 1 件 (Critical)
+を取り込み。使い方と公開 API は build4 と同じ</td>
+</tr>
+<tr>
+<td>v1.2.7-build4</td>
+<td>2026-11-24</td>
+<td>158.0.8127.36</td>
+<td>blink_web_view_open_devtools()
+を呼ぶとアプリが異常終了していたのを直し、リモートデバッグ用のポートが開くようにした。/json/version
+の Browser に版を返す (公開 API は同じ)</td>
+</tr>
+<tr>
+<td>v1.2.7-build3</td>
+<td>2026-11-23</td>
+<td>158.0.8127.36</td>
+<td>バッジ・端末内の音声認識・Web アプリのインストールの API
+を呼ぶページが異常終了・停止しないようにした。ページを離れる前の確認が
+JavaScript
+ダイアログのハンドラに届き、サーバーへ送る言語が環境の言語に合い、クライアント証明書を任意で求めるサイトが開け、ページの中のドラッグの後もクリックが届く
+(公開 API は同じ)</td>
+</tr>
+<tr>
+<td>v1.2.7-build2</td>
+<td>2026-11-22</td>
+<td>158.0.8127.36</td>
+<td>拡大率 1
+の画面のソフトウェア描画で、いまのページの描画を含まない画面や、画面へ出すのを止めている間
+(BLINK_PRESENT_WARM など)
+に取っておいた古い画面を出さないようにした。使っていなかった X11
+向けのコードを外した (使い方と見た目は同じ)</td>
+</tr>
+<tr>
+<td>v1.2.7-build1</td>
+<td>2026-11-19</td>
+<td>158.0.8127.36</td>
+<td>Chromium 158 に更新し上流のセキュリティ修正 204
+件を取り込み。software の既定経路で画面の更新範囲を GTK / Wayland
+に渡す。CPU 時間の低下は確認されていない</td>
+</tr>
+<tr>
+<td>v1.2.6-build4</td>
+<td>2026-11-07</td>
+<td>157.0.8103.38</td>
+<td>メモリの取扱いの修正</td>
+</tr>
+<tr>
+<td>v1.2.6-build3</td>
+<td>2026-11-06</td>
+<td>157.0.8103.38</td>
+<td>メモリの取扱いの修正</td>
+</tr>
+<tr>
+<td>v1.2.6-build2</td>
+<td>2026-11-05</td>
+<td>157.0.8103.38</td>
+<td>メモリの取扱いの修正</td>
+</tr>
+<tr>
+<td>v1.2.6-build1</td>
+<td>2026-11-04</td>
+<td>157.0.8103.38</td>
+<td>Chromium 157
+に更新。縦書きでルビの付いた字の傍線がルビと重ならない・つないだ形の絵文字が
+1 字になる・text-decoration-inset
+が使える。縦書きの行を最後まで埋める上流の修正を取り込む。起動の短縮を入れ直した
+(頁の読み込みが約 0.3 秒早い)</td>
+</tr>
+<tr>
+<td>v1.2.5-build5</td>
+<td>2026-11-01</td>
+<td>156.0.8078.79</td>
+<td>ページがファイルを選ぶ API を呼ぶとアプリが異常終了する問題
+(build2〜4) を修正。File System Access で開いてはいけない場所を止める
+(FileSystem の 4 件の CVE がこの版から有効)。起動の短縮の 1 つを外した
+(起動は約 0.3 秒遅くなる)</td>
+</tr>
+<tr>
+<td>v1.2.5-build4</td>
+<td>2026-11-01</td>
+<td>156.0.8078.79</td>
+<td>Chromium 156.0.8078.79 のセキュリティ修正 21 件を取り込み (うち
+FileSystem の 4 件は BlinkGTK では build5 から有効)</td>
+</tr>
+<tr>
+<td>v1.2.5-build3</td>
+<td>2026-10-29</td>
+<td>156.0.8078.73</td>
+<td>Chromium 156.0.8078.73 のセキュリティ修正を取り込み</td>
+</tr>
+<tr>
+<td>v1.2.5-build2</td>
+<td>2026-10-27</td>
+<td>156.0.8078.47</td>
+<td>頁の配色 (light / dark) が GTK
+のテーマに合うようになり、実行中の切り替えにも追従します。起動が短くなりました
+(子プロセスの準備を待たない、シンボルの検索を減らす、使わない GPU
+の装置の確認を省く、在る GPU の Vulkan のドライバだけを読み込む)。</td>
+</tr>
+<tr>
+<td>v1.2.5-build1</td>
+<td>2026-10-22</td>
+<td>156.0.8078.47</td>
+<td>レンダリングエンジンを Chromium 156 に更新しました。Python
+(PyGObject) から BlinkGTK を使えるようになりました (起動用コマンド
+blinkgtk-run を同梱)。set_user_agent() が load_uri()
+で開いた頁にも反映され、拡大率は倍率 (1.0 = 100%)
+として扱われ、読み込みが終わると is-loading が False に戻ります。</td>
+</tr>
+<tr>
+<td>v1.2.4-build4</td>
+<td>2026-10-14</td>
+<td>155.0.8059.39</td>
+<td>頁を移った後に本文をクリックするとアプリが異常終了する問題と、支援技術を有効にして頁を移るとアプリが応答しなくなる問題を解消しました。同梱の
+INSTALL・README の DEB のファイル名の誤りも修正しました。</td>
+</tr>
+<tr>
+<td>v1.2.4-build3</td>
+<td>2026-10-14</td>
+<td>155.0.8059.39</td>
+<td>1 行に収まる割注を組めるようになりました
+(-blinkgtk-warichu)。静止した頁の撮影が時間切れになるのにファイルが残る問題
+(software の非同期の撮影)
+と、白い背景の頁で描画経路の切替が必ず元に戻る問題を解消し、組み込み AI
+の API は「使えない」と答えるようにしました。</td>
+</tr>
+<tr>
+<td>v1.2.4-build2</td>
+<td>2026-10-11</td>
+<td>155.0.8059.39</td>
+<td>新しい版の案内 (BLINKGTK_UPDATE_CHECK=1、既定はオフ)
+が、配布のリポジトリの版の一覧が大きく必ず失敗していた問題を解消しました。案内を有効にしていない場合は
+build1 と同じです。</td>
+</tr>
+<tr>
+<td>v1.2.4-build1</td>
+<td>2026-10-07</td>
+<td>155.0.8059.39</td>
+<td>Chromium 155 に更新。RPM は Fedora 45 以降のみ (Fedora 44 は v1.2.3
+まで)。拡大率 1 の画面でソフトウェアの描画を撮影を使わない経路で受け取り
+(撮影の要求と読み出しを省く)、静止した頁を描き直し続けなくなりました。EGL
+のメモリ増加、at-spi2-core 2.61
+で支援技術が開かない問題を解消。ルビの後の行が上にずれる上流の修正ほか、日本語組版の変更が入っています</td>
+</tr>
+<tr>
+<td>v1.2.3-build4</td>
+<td>2026-09-28</td>
+<td>154.0.8037.57</td>
+<td>software の描画で画素のコピーを省き、拡大率 2 でアニメーションが約
+24% 多く回るようになりました。load_html の base_uri
+が反映されない問題、支援技術のバスが応答しないと最初の描画が約 25
+秒遅れる問題、許可の保存を UI スレッドで読む問題、ibus
+でビューを閉じるときの警告を修正しています</td>
+</tr>
+<tr>
+<td>v1.2.3-build3</td>
+<td>2026-09-26</td>
+<td>154.0.8037.57</td>
+<td>独自スキーム (ebook:// など) で配った 5 MB 以上の音声を <audio>
+で開くと、アプリのウィンドウごと応答しなくなる問題を修正しました。長い朗読音声もそのまま再生・シークできます</td>
+</tr>
+<tr>
+<td>v1.2.3-build2</td>
+<td>2026-09-25</td>
+<td>154.0.8037.57</td>
+<td>ページを PDF
+ファイルに書き出せるようになりました。ダウンロードの保存、リンク先と新しいウィンドウの開き方の判断、カメラとマイク、HTTP
+認証への応答、許可の決定を覚える口、既定のフォントと最小文字サイズの指定も加わりました。swiftshader
+モードで画面に何も出なかった問題も直しています</td>
+</tr>
+<tr>
+<td>v1.2.3-build1</td>
+<td>2026-09-24</td>
+<td>154.0.8037.57</td>
+<td>レンダリングエンジンを Chromium 154
+に更新しました。JavaScript・画像・localStorage
+の無効化と既定の文字サイズがページに反映されるようになり (1.2.2
+までは値を覚えるだけでした)、入力メソッドは GTK の選択に従います。Fedora
+45 向けの RPM も用意しました</td>
+</tr>
+<tr>
+<td>v1.2.2-build6</td>
+<td>2026-09-19</td>
+<td>153.0.8010.36</td>
+<td>view ごとに profile と cache を分けられるようにした
+(blink_web_view_new_with_profile)。複数の WebView
+で同じページを開いたとき、2
+つ目以降がキャッシュに当たって実際の読み込みが起きない問題を避けられる</td>
+</tr>
+<tr>
+<td>v1.2.2-build5</td>
+<td>2026-09-14</td>
+<td>153.0.8010.36</td>
+<td>描画経路を API から選べるようになりました。blink_gtk_set_gpu_mode()
+を blink_gtk_init() の前に呼ぶと、その経路で起動します。これまで
+blink_web_view_new_with_gpu_mode() で EGL
+を指定しても、経路は切り替わりませんでした。描画経路はエンジンの初期化中に確定し、GPU
+プロセスへ渡す起動フラグもそこで決まるため、WebView
+を作る時点ではもう変えられません。起動ログはどちらの場合も EGL
+と表示するので、指定が反映されているかを外から確かめる手段もありませんでした。環境変数
+BLINKGTK_GPU_MODE を併用していない場合、EGL を指定したつもりで CPU
+ピクセル経路で動いていました。blink_web_view_get_gpu_mode()
+は初期化の後、実際に動いている経路を返します。起動完了のログにも描画経路が出ます。</td>
+</tr>
+<tr>
+<td>v1.2.2-build4</td>
+<td>2026-09-13</td>
+<td>153.0.8010.36</td>
+<td>Virtio GPU を使う環境 (仮想機械など) で、EGL
+モードの画面が最初から最後まで白いままになる問題を解消しました。エンジンが「この画面は空だ」と判定するために画像を
+CPU 側から読んでいましたが、この種の GPU
+では描画が機械の外側で行われるため、読み取り側には何も見えません。中身はあるのに空と判定し、表示を見送っていました。動きのないページほど当たりやすく、開いたまま白が続きます。あわせて、スクリーンリーダなどの支援技術を後から起動しても読み上げが動作するようになりました。これまではアプリを起動した時点で支援技術が動いている必要がありました。</td>
+</tr>
+<tr>
+<td>v1.2.2-build3</td>
+<td>2026-09-11</td>
+<td>153.0.8010.36</td>
+<td>未完のナビゲーションを抱えたまま窓を閉じると落ちる問題を解消しました。ページの読み込みが
+終わる前に閉じると、ページの入れ物を壊す途中で配られる通知の受け口が、既に手放したものを
+見ていたためです。本を開いた直後に閉じる、といった普通の操作で当たっていました。あわせて、EGL
+で画面に出たかどうかを compositor に問い合わせる診断を追加しました
+(BLINKGTK_GX_LOG=1
+のときだけ出ます。既定では何も変わりません)。「中身が空だった」と「中身はあったが画面に出なかった」を区別できます。診断の記録が
+9
+枚目以降のフレームについて「表示しない」と書きながら実際には表示していた
+問題も是正しました</td>
+</tr>
+<tr>
+<td>v1.2.2-build1</td>
+<td>2026-09-10</td>
+<td>153.0.8010.36</td>
+<td>レンダリングエンジンを Chromium 153
+に更新しました。縦組みで閉じ括弧が行末に来ると 行が途中で切れる現象 (35
+文字入る行に 17 文字しか入らず、text-align: justify が残りを
+引き伸ばすため字間が倍に開く) が解消します。13 通りの設定のうち 8
+通りで起きていたものが
+すべて直ります。横組みでは起きません。当方から上流へ報告し (crbug
+542686223) Chromium 側で修正されたものです。前版の独自回避 (17→34 文字)
+はこの版にも入ったままですが、上流の修正が入っている状態では、当方の測定範囲で結果を変えていません</td>
+</tr>
+<tr>
+<td>v1.2.1-build3</td>
+<td>2026-09-08</td>
+<td>152.0.7977.64</td>
+<td>不具合を報告するときに、どの版で起きたかが実行時に分かるようになりました
+(blink_gtk_get_version_full / blink_gtk_get_build。同じ版でも build
+が違えば挙動が違うことがあり、これまではパッケージ名でしか判別できませんでした)。画面が出ないときの配送ログが、実際に呼んだ操作と
+Wayland の buffer
+識別子を記すようになり、計測を打ち切る枚数も伸ばせます。描画経路の切り替えに
+EGL が加わりました (EGL で起動した場合のみ)</td>
+</tr>
+<tr>
+<td>v1.2.1-build2</td>
+<td>2026-08-30</td>
+<td>152.0.7977.64</td>
+<td>GPU
+が使用できない環境でも、フォールバックによりソフトウェア描画で表示されるようになりました。描画データが
+5 秒間届かなければ切り替わり、理由を標準エラー出力に記します。GPU
+が使える環境では切り替わりません。あわせて、画面を撮影した画像で赤と青が入れ替わることがある問題を修正しました</td>
+</tr>
+<tr>
+<td>v1.2.1-build1</td>
+<td>2026-08-27</td>
+<td>152.0.7977.64</td>
+<td>レンダリングエンジンを Chromium 152
+に更新しました。縦組みで行が途中までしか埋まらない現象(閉じ括弧が行末に来ると
+34 文字入る行に 17 文字しか入らない) と、段組みの列が最後の 1
+行を次の列へ送ってしまう現象が直ります。direction: rtl
+と縦組みを併用したときの行格子も保たれます</td>
+</tr>
+<tr>
+<td>v1.2.0-build9</td>
+<td>2026-08-16</td>
+<td>151.0.7922.108</td>
+<td>描画経路を再起動なしで切り替えられるようになりました (BlinkShift
+公開 API、切替は数百ミリ秒・失敗時は自動で元へ)。GtkApplication
+と正しく併用できる blink_gtk_application_run()
+と、画面に出さない場面を宣言する提示ポリシー API
+を追加。大きなユーザースクリプトが描画プロセスに届かない問題を解消</td>
+</tr>
+<tr>
+<td>v1.2.0-build8</td>
+<td>2026-08-12</td>
+<td>151.0.7922.108</td>
+<td>セキュリティ点検の結果を反映。サイトごとのプロセス分離を既定で有効にし
+(メモリ使用量が増えることがあります)、sandbox
+の可否判定を実測に変更、状態を問い合わせる API
+を追加。環境変数の一覧を新設</td>
+</tr>
+<tr>
+<td>v1.2.0-build7</td>
+<td>2026-08-12</td>
+<td>151.0.7922.108</td>
+<td>開発用パッケージが同梱するヘッダの版数を是正。build1〜6 は 1 版前
+(1.1.0 / Chromium 150) を名乗っていた。実行時 API
+は正しく、影響はコンパイル時のマクロのみ。実行部分は build6 と同一</td>
+</tr>
+<tr>
+<td>v1.2.0-build6</td>
+<td>2026-08-11</td>
+<td>151.0.7922.108</td>
+<td>Chromium 151.0.7922.108
+に更新。ユーザースクリプトがページ本文より先に走るようになり、JavaScript
+の実行結果が JSON で返る</td>
+</tr>
+<tr>
+<td>v1.2.0-build5</td>
+<td>2026-08-10</td>
+<td>151.0.7922.71</td>
+<td>欧文の分綴 (hyphens: auto)
+が動作するようになった。終了時の異常終了と診断 PNG
+の出しっぱなしも解消</td>
+</tr>
+<tr>
+<td>v1.2.0-build4</td>
+<td>2026-08-08</td>
+<td>151.0.7922.71</td>
+<td>dnf
+でインストールと更新ができるようになり、動き続けるページが静止しなくなった</td>
+</tr>
+<tr>
+<td>v1.2.0-build3</td>
+<td>2026-08-08</td>
+<td>151.0.7922.71</td>
+<td>GPU
+描画が環境変数の指定だけで使えるようになり、ウィンドウの大きさを変えても文字が二重に見えなくなった
+(取り下げ)</td>
+</tr>
+<tr>
+<td>v1.2.0-build2</td>
+<td>2026-08-03</td>
+<td>151.0.7922.71</td>
+<td>版が正しく名乗られるようになり、縦書き版面の実測値を JavaScript
+から読めるようになった</td>
+</tr>
+<tr>
+<td>v1.2.0-build1</td>
+<td>2026-08-01</td>
+<td>151.0.7922.71</td>
+<td>圏点を付けても行送りが太らなくなり、ルビのはみ出しが指定どおりに反映される
+(Chromium 151 へ更新)</td>
+</tr>
+<tr>
+<td>v1.1.0-build6</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>同梱ドキュメントを全面是正し、記載と実装の一致を機械検査する仕組みを導入</td>
+</tr>
+<tr>
+<td>v1.1.0-build5</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>同梱サンプルを 1 本に整理。build6 で置換 (取り下げ)</td>
+</tr>
+<tr>
+<td>v1.1.0-build4</td>
+<td>2026-07-29</td>
+<td>150.0.7871.46</td>
+<td>UA / Cookie / 権限まわりの API 追加。build5 で置換 (取り下げ)</td>
+</tr>
+<tr>
+<td>v1.1.0-build3</td>
+<td>2026-07-23</td>
+<td>150.0.7871.46</td>
+<td>RPM の依存パッケージ名を Fedora の名前に修正
+(利用者からの報告による)</td>
+</tr>
+<tr>
+<td>v1.1.0-build2</td>
+<td>2026-07-21</td>
+<td>150.0.7871.46</td>
+<td>静止時の CPU
+使用率をゼロに。文字サイズ変更で白紙になる不具合を解消</td>
+</tr>
+<tr>
+<td><strong>v1.1.0-build1</strong></td>
+<td>2026-07-07</td>
+<td><strong>150.0.7871.46</strong></td>
+<td>配布形態を刷新 (runtime / 開発用 / GObject Introspection
+の分割)。縦組み多段の分割、ホイールスクロール、ナビゲーション後の入力</td>
+</tr>
+<tr>
+<td><strong>v1.0.11-dev</strong></td>
+<td>2026-06</td>
+<td><strong>148.0.7778.167</strong></td>
+<td>Chromium 148 へ移行 (149
+も追従)。組み込みアプリのリンク要件を確定</td>
+</tr>
+<tr>
+<td><strong>v1.0.10-build16</strong></td>
+<td>2026-05-16</td>
+<td><strong>147.0.7727.55</strong></td>
+<td>描画の退行を排除し、実機での品質を確認した版</td>
+</tr>
+<tr>
+<td>v1.0.10</td>
+<td>2026-04-21</td>
+<td>147.0.7727.55</td>
+<td>安定化</td>
+</tr>
+<tr>
+<td>v1.0.9</td>
+<td>2026-04-18</td>
+<td>147.0.7727.55</td>
+<td>利用者向けの整備。報告されていた不具合を一括で解消</td>
+</tr>
+<tr>
+<td>v1.0.8</td>
+<td>2026-04-14</td>
+<td>147.0.7727.55</td>
+<td>言語バインディングの統合、API 強化</td>
+</tr>
+<tr>
+<td>v1.0.7</td>
+<td>2026-04-13</td>
+<td>147.0.7727.55</td>
+<td>日本語入力 (IME) まわりの修正</td>
+</tr>
+<tr>
+<td><strong>v1.0.6</strong></td>
+<td>2026-04-12</td>
+<td><strong>147.0.7727.55</strong></td>
+<td>Chromium 147 へ移行</td>
+</tr>
+<tr>
+<td>v1.0.5</td>
+<td>2026-04-10</td>
+<td>146.0.7680.177</td>
+<td>Chromium 146 の更新版へ追従</td>
+</tr>
+<tr>
+<td>v1.0.3</td>
+<td>2026-04-07</td>
+<td>146.0.7680.71</td>
+<td>HiDPI 環境でのフォント描画を改善</td>
+</tr>
+<tr>
+<td>v1.0.2</td>
+<td>2026-04-07</td>
+<td>146.0.7680.71</td>
+<td>WebView ごとに GPU モードを選べる API</td>
+</tr>
+<tr>
+<td>v1.0.1</td>
+<td>2026-04-03</td>
+<td>146.0.7680.71</td>
+<td>不具合修正 (パッケージ配布なし)</td>
+</tr>
+<tr>
+<td><strong>v1.0.0</strong></td>
+<td>2026-04-03</td>
+<td><strong>146.0.7680.71</strong></td>
+<td>最初の正式リリース</td>
+</tr>
+<tr>
+<td>v1.0.0-rc1</td>
+<td>2026-03-18</td>
+<td>145 (推定)</td>
+<td>リリース候補</td>
+</tr>
+</tbody>
+</table>
+<!-- VERSION_HISTORY_TABLE_END -->
+
+<p>補足を 2 つ。<strong>v1.0.4 は欠番</strong>です(v1.0.3 の次が
+v1.0.5)。また <strong>v1.1.0-build4 / build5 は<br />
+取り下げ済み</strong>で、後続の build6
+に置き換わっています。取り下げた版も履歴からは消していません。<br />
+どの版を使っていたかを利用者が後から追えることを優先しています。</p>
+<hr />
+<h2 id="chromium-の版から引く">Chromium の版から引く</h2>
+<table>
+<thead>
+<tr>
+<th>Chromium</th>
+<th>BlinkGTK</th>
+<th>期間</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>145</td>
+<td>v1.0.0-rc1</td>
+<td>2026-03</td>
+</tr>
+<tr>
+<td>146</td>
+<td>v1.0.0 〜 v1.0.5</td>
+<td>2026-04-03 〜 04-10</td>
+</tr>
+<tr>
+<td><strong>147</strong></td>
+<td>v1.0.6 〜 v1.0.10-build16</td>
+<td>2026-04-12 〜 05-16</td>
+</tr>
+<tr>
+<td><strong>148 / 149</strong></td>
+<td>v1.0.11-dev</td>
+<td>2026-06</td>
+</tr>
+<tr>
+<td><strong>150</strong></td>
+<td>v1.1.0-build1 〜 build6</td>
+<td>2026-07-07 〜 07-29</td>
+</tr>
+<tr>
+<td><strong>151</strong></td>
+<td>移行作業中</td>
+<td>2026-08 〜</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="版番号の読み方">版番号の読み方</h2>
+<p><code>v1.1.0-build6</code> は 2 つの部分でできています。</p>
+<ul>
+<li><strong><code>1.1.0</code></strong> —
+製品としての版。機能の追加や互換性のない変更があるときに上がります</li>
+<li><strong><code>build6</code></strong> —
+同じ製品版のなかでの作り直しの回数。不具合修正やパッケージの是正で増えます</li>
+</ul>
+<p>同じ <code>1.1.0</code> でも build
+番号が違えば中身は違います。不具合の報告をいただくときは、<br />
+<strong>build 番号まで</strong>お知らせください。</p>
+<p>なお、パッケージ名やパスに出てくる
+<strong><code>0.1</code></strong>(<code>libblinkgtk-0.1.so.0</code>
+や<br />
+<code>/usr/share/doc/blinkgtk-0.1/</code> など)は API
+の版で、製品の版とは独立しています。<br />
+GTK4 の <code>gtk-4.0</code>、WebKitGTK の <code>webkitgtk-6.0</code>
+と同じ規約です。API に互換性のない<br />
+変更が入るときだけ上がります。</p>
+<hr />
+<h2 id="関連する文書">関連する文書</h2>
+<ul>
+<li><a href="chromium-feature-history-ja.html">Chromium 147 → 151
+の新機能</a> — 各 Chromium 版で何ができるようになったか</li>
+<li><a href="RELEASE_NOTES-1.2.2-ja.html">リリースノート</a></li>
+<li><a href="INSTALL.html">インストール</a></li>
+</ul>
 </body>
 </html>
 </div></div>

@@ -4,7 +4,8 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>00-index-en — BlinkGTK</title>
+  <title>BlinkGTK API Reference Manual (Table of Contents) —
+BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +24,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="../docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="The API reference for embedding BlinkGTK in a GTK4 application. The Japanese pages are canonical; the English pages follow them.">
 <link rel="canonical" href="https://blinkgtk.org/docs/api-reference/00-index-en.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="00-index-en — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="BlinkGTK API Reference Manual (Table of Contents) — BlinkGTK">
+<meta property="og:description" content="The API reference for embedding BlinkGTK in a GTK4 application. The Japanese pages are canonical; the English pages follow them.">
 <meta property="og:url" content="https://blinkgtk.org/docs/api-reference/00-index-en.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +44,235 @@
   <a href="../../index.html">BlinkGTK</a> ·
   <span class="langsw"><a href="00-index-ja.html" hreflang="ja" lang="ja">日本語</a> / <strong>English</strong></span>
 </div><div class="card doc">
-
+<h1 id="blinkgtk-api-reference-manual-table-of-contents">BlinkGTK API
+Reference Manual (Table of Contents)</h1>
+<p><strong>Author</strong>: BlinkGTK Project<br />
+<strong>Target</strong>: BlinkGTK API version 0.1 (product v1.2 series)
+/ Chromium 154 baseline</p>
+<p><a href="./00-index-ja.html">日本語</a></p>
+<p>The API reference for embedding BlinkGTK in a GTK4 application.<br />
+The Japanese pages are canonical; the English pages follow them.</p>
+<blockquote>
+<p>The <code>0.1</code> in paths and package names is the <strong>API
+version</strong> (the same<br />
+convention as GTK4's <code>gtk-4.0</code>). It is independent of the
+product version<br />
+(v1.1.0 etc.) and changes only on incompatible API changes.</p>
+</blockquote>
+<h2 id="find-by-what-you-want-to-do">Find by what you want to do</h2>
+<table>
+<thead>
+<tr>
+<th>What you want</th>
+<th>Page</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>Find the function by goal (reverse lookup)</strong></td>
+<td><a href="./howto-index-en.html">How do I…?</a></td>
+</tr>
+<tr>
+<td>Load pages, go back / forward</td>
+<td><a href="./navigation-api-en.html">Navigation API</a></td>
+</tr>
+<tr>
+<td>React to load completion, title changes, ...</td>
+<td><a href="./signals-api-en.html">Signals API</a></td>
+</tr>
+<tr>
+<td>Switch the render path without restarting</td>
+<td><a href="./render-path-handoff-en.html">Live Render Path Switching and
+Handoff Meta</a></td>
+</tr>
+<tr>
+<td>Read vertical layout metrics (columns, stride, lines)</td>
+<td><a href="./vertical-flow-metrics-en.html">Vertical multi-column layout
+metrics (verticalFlowMetrics)</a></td>
+</tr>
+<tr>
+<td>Configure JavaScript, images, User-Agent, cookies</td>
+<td><a href="./settings-api-en.html">Settings API</a></td>
+</tr>
+<tr>
+<td>GPU mode and content protection (no-copy etc.)</td>
+<td><a href="./settings-api-en.html">Settings API — Modes and
+policies</a></td>
+</tr>
+<tr>
+<td>Search within the page, zoom</td>
+<td><a href="./page-search-zoom-en.html">Find-in-Page and Zoom</a></td>
+</tr>
+<tr>
+<td>Create your own URL scheme (<code>ebook://</code> etc.)</td>
+<td><a href="./app-integration-api-en.html">Application Integration
+API</a></td>
+</tr>
+<tr>
+<td>Exchange messages between page JavaScript and C</td>
+<td><a href="./app-integration-api-en.html">Application Integration
+API</a></td>
+</tr>
+<tr>
+<td>Inject scripts / CSS into every page</td>
+<td><a href="./app-integration-api-en.html">Application Integration
+API</a></td>
+</tr>
+<tr>
+<td>Provide your own dialogs, file chooser, downloads, auth</td>
+<td><a href="./ui-handlers-api-en.html">UI Handlers API</a></td>
+</tr>
+<tr>
+<td>Answer permission requests (geolocation, notifications)</td>
+<td><a href="./signals-api-en.html">Signals API —
+permission-request</a></td>
+</tr>
+<tr>
+<td>Debug with Chrome DevTools</td>
+<td><a href="./devtools-api-en.html">DevTools API</a></td>
+</tr>
+<tr>
+<td>Switch behaviour with environment variables</td>
+<td><a href="./environment-variables-en.html">Environment
+Variables</a></td>
+</tr>
+<tr>
+<td>The <code>BlinkWebView</code> widget itself</td>
+<td><a href="./blink-web-view-en.html">BlinkWebView</a></td>
+</tr>
+<tr>
+<td>Browse every API in one list</td>
+<td><a href="./c-api-reference-en.html">C API Reference</a></td>
+</tr>
+</tbody>
+</table>
+<h2 id="pages">Pages</h2>
+<table>
+<thead>
+<tr>
+<th>Page</th>
+<th>Contents</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><a
+href="./howto-index-en.html"><code>howto-index-en.md</code></a></td>
+<td>How do I…? — find the function by goal</td>
+</tr>
+<tr>
+<td><a
+href="./navigation-api-en.html"><code>navigation-api-en.md</code></a></td>
+<td>Loading URLs / HTML, history, reload</td>
+</tr>
+<tr>
+<td><a
+href="./signals-api-en.html"><code>signals-api-en.md</code></a></td>
+<td>GObject signals (load-changed / title-changed / permission-request,
+...)</td>
+</tr>
+<tr>
+<td><a
+href="./render-path-handoff-en.html"><code>render-path-handoff-en.md</code></a></td>
+<td>Live render path switching (BlinkShift) and handoff meta</td>
+</tr>
+<tr>
+<td><a
+href="./vertical-flow-metrics-en.html"><code>vertical-flow-metrics-en.md</code></a></td>
+<td>Vertical multi-column layout metrics (verticalFlowMetrics)</td>
+</tr>
+<tr>
+<td><a
+href="./settings-api-en.html"><code>settings-api-en.md</code></a></td>
+<td>Runtime settings, GPU mode, content policy</td>
+</tr>
+<tr>
+<td><a
+href="./page-search-zoom-en.html"><code>page-search-zoom-en.md</code></a></td>
+<td>Find in page, zoom</td>
+</tr>
+<tr>
+<td><a
+href="./app-integration-api-en.html"><code>app-integration-api-en.md</code></a></td>
+<td>Custom schemes, JS-to-C messaging, script injection</td>
+</tr>
+<tr>
+<td><a
+href="./ui-handlers-api-en.html"><code>ui-handlers-api-en.md</code></a></td>
+<td>JS dialogs, file chooser, downloads, HTTP auth, certificates</td>
+</tr>
+<tr>
+<td><a
+href="./devtools-api-en.html"><code>devtools-api-en.md</code></a></td>
+<td>Chrome DevTools integration</td>
+</tr>
+<tr>
+<td><a
+href="./environment-variables-en.html"><code>environment-variables-en.md</code></a></td>
+<td>The canonical list of supported environment variables</td>
+</tr>
+<tr>
+<td><a
+href="./blink-web-view-en.html"><code>blink-web-view-en.md</code></a></td>
+<td>The <code>BlinkWebView</code> widget</td>
+</tr>
+<tr>
+<td><a
+href="./c-api-reference-en.html"><code>c-api-reference-en.md</code></a></td>
+<td>Every C API in one list</td>
+</tr>
+</tbody>
+</table>
+<p>Every page comes as a Japanese (<code>-ja.md</code>) / English
+(<code>-en.md</code>) pair.</p>
+<h2 id="planned">Planned</h2>
+<table>
+<thead>
+<tr>
+<th>Chapter</th>
+<th>Status</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Overview and lifecycle</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>GObject Introspection / language bindings (PyGObject / GJS /
+Vala)</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>Versioning and compatibility (SONAME / API version / stability)</td>
+<td>Planned</td>
+</tr>
+<tr>
+<td>Accessibility</td>
+<td><strong>Withdrawn — not implemented</strong>; will be written once
+implemented</td>
+</tr>
+</tbody>
+</table>
+<h2 id="about-accuracy">About accuracy</h2>
+<p>This reference is machine-verified:</p>
+<ul>
+<li>Every API mentioned exists in the shipped header and shared
+library</li>
+<li>Every public API in the header is covered by some page<br />
+(experimental APIs are excluded with a stated reason)</li>
+<li>Every complete code example compiles</li>
+</ul>
+<h2 id="related">Related</h2>
+<ul>
+<li>Installation and dependencies: the bundled <code>INSTALL.md</code>
+and the blinkgtk-dist repository</li>
+<li>Environment variables fall into three classes: supported / escape
+hatch /<br />
+internal diagnostics. Internal diagnostic variables are unsupported and
+may<br />
+change without notice.</li>
+</ul>
 </body>
 </html>
 </div></div>

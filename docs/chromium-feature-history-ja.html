@@ -4,7 +4,7 @@
   <meta charset="utf-8" />
   <meta name="generator" content="pandoc" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=yes" />
-  <title>chromium-feature-history-ja — BlinkGTK</title>
+  <title>Chromium 147 → 154 — BlinkGTK に何が増えたか — BlinkGTK</title>
   <style>
     code{white-space: pre-wrap;}
     span.smallcaps{font-variant: small-caps;}
@@ -23,11 +23,11 @@
     .display.math{display: block; text-align: center; margin: 0.5rem auto;}
   </style>
   <link rel="stylesheet" href="docs.css" />
-<meta name="description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta name="description" content="BlinkGTK は Chromium のレンダリングエンジン Blink をそのまま載せています。つまり Chromium が新しい版で獲得した Web の能力は、BlinkGTK を新しい版に上げるとそのまま 手に入ります。この文書は、BlinkGTK がベースにしてきた Chromium 147・148・149・">
 <link rel="canonical" href="https://blinkgtk.org/docs/chromium-feature-history-ja.html">
 <meta property="og:type" content="article">
-<meta property="og:title" content="chromium-feature-history-ja — BlinkGTK">
-<meta property="og:description" content="BlinkGTK — GTK4 ネイティブの Chromium/Blink WebView エンジン。日本語縦組みと EPUB に強い。">
+<meta property="og:title" content="Chromium 147 → 154 — BlinkGTK に何が増えたか — BlinkGTK">
+<meta property="og:description" content="BlinkGTK は Chromium のレンダリングエンジン Blink をそのまま載せています。つまり Chromium が新しい版で獲得した Web の能力は、BlinkGTK を新しい版に上げるとそのまま 手に入ります。この文書は、BlinkGTK がベースにしてきた Chromium 147・148・149・">
 <meta property="og:url" content="https://blinkgtk.org/docs/chromium-feature-history-ja.html">
 <meta property="og:site_name" content="BlinkGTK">
 <meta property="og:image" content="https://blinkgtk.org/assets/gallery/g1-kusamakura-ch2-v4.png">
@@ -43,7 +43,1397 @@
   <a href="../index.html">BlinkGTK</a> ·
   <span class="langsw"><strong>日本語</strong> / <a href="chromium-feature-history-en.html" hreflang="en" lang="en">English</a></span>
 </div><div class="card doc">
-
+<h1 id="chromium-147--154--blinkgtk-に何が増えたか">Chromium 147 → 154 —
+BlinkGTK に何が増えたか</h1>
+<p>バージョン: 1.2.7-build5 / 言語: 日本語 | <a
+href="chromium-feature-history-en.html">English</a></p>
+<p>BlinkGTK は Chromium のレンダリングエンジン Blink
+をそのまま載せています。つまり<br />
+<strong>Chromium が新しい版で獲得した Web の能力は、BlinkGTK
+を新しい版に上げるとそのまま<br />
+手に入ります</strong>。この文書は、BlinkGTK がベースにしてきた Chromium
+147・148・149・150・151・152・153・154<br />
+の間で何が変わったのかを、実際にできるようになったことの側から辿ったものです。</p>
+<p>仕様書の抜粋ではありません。エンジンのソースツリーそのものを版ごとに突き合わせて<br />
+差分を取り、そこから読者に関係するものを選んでいます(取得方法は末尾に書きます)。</p>
+<hr />
+<h2 id="この文書の読み方--入ったと使えるは違う">この文書の読み方 —
+「入った」と「使える」は違う</h2>
+<p>Web の機能は、ある日いきなり全ユーザーに届くわけではありません。Blink
+では機能ごとに<br />
+<strong>ランタイムフラグ</strong>という札が付いていて、その状態によって既定で動くかどうかが決まります。<br />
+本文ではこの 3
+つを区別します。ここを混ぜると「ドキュメントには書いてあるのに動かない」<br />
+という事故になるので、最初に約束しておきます。</p>
+<table>
+<thead>
+<tr>
+<th>表記</th>
+<th>フラグの状態</th>
+<th>意味</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>既定で有効</strong></td>
+<td><code>stable</code></td>
+<td>何もしなくても有効です。BlinkGTK でもそのまま使えます</td>
+</tr>
+<tr>
+<td><strong>試験段階</strong></td>
+<td><code>experimental</code></td>
+<td>既定では無効。起動フラグで明示的に有効化すれば動きます</td>
+</tr>
+<tr>
+<td><strong>開発中</strong></td>
+<td><code>test</code></td>
+<td>テスト実行時のみ。<strong>プロパティが CSS
+として解釈されても、描画には反映されません</strong></td>
+</tr>
+</tbody>
+</table>
+<p>3 番目が曲者です。たとえば
+<code>hanging-punctuation</code>(行末の句読点をぶら下げる、日本語組版で<br />
+長く待たれてきたもの)は、149 で <strong>CSS
+プロパティとしての受け皿が入りました</strong>。<br />
+<code>getComputedStyle()</code> で値も返ります。しかし実装のフラグは 151
+の時点でも <code>test</code> のままで、<br />
+<strong>実際の行組版には反映されません</strong>。「プロパティが存在する」ことと「組版が変わる」ことは<br />
+別の出来事です。</p>
+<p>実際に測ると、この食い違いは
+<strong>機能検出のコードを裏切る形</strong>で出ます<br />
+(BlinkGTK v1.2.0 / Chromium 151 実測):</p>
+<pre><code>フラグなし                                        → CSS.supports(...) = false
+--enable-blink-features=CSSHangingPunctuation で  → CSS.supports(...) = true
+                                                     getComputedStyle = &quot;allow-end&quot;</code></pre>
+<p><strong><code>CSS.supports()</code> が true を返しますが、行組版は
+1px も変わりません。</strong><br />
+版面をちょうど本文 8 字幅にして「本文 8 字 +
+句点」を流すと、ぶら下げが行われれば<br />
+1 行に収まるはずのところ、<code>none</code> でも <code>allow-end</code>
+でも <strong>2 行のまま</strong>でした。</p>
+<p>つまり <code>CSS.supports('hanging-punctuation', ...)</code>
+を機能検出に使うと外します。<br />
+現時点では「使えない」前提で版面を組んでください。</p>
+<hr />
+<h2 id="全体像">全体像</h2>
+<p>8 つの版で、エンジンが持つ機能フラグは 1,103 → 1,222
+になりました。152 で一度 1,240 まで増え、153
+で定着した切替フラグの整理により減っています。</p>
+<table>
+<thead>
+<tr>
+<th>Chromium</th>
+<th>機能フラグ総数</th>
+<th>前版から既定で有効になったもの</th>
+<th>新規追加</th>
+<th>削除</th>
+<th>CSS プロパティ</th>
+<th>BlinkGTK 側</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>147</td>
+<td>1,103</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>800</td>
+<td>v1.0.6 〜 v1.0.10-build16</td>
+</tr>
+<tr>
+<td>148</td>
+<td>1,116</td>
+<td>34</td>
+<td>47</td>
+<td>34</td>
+<td>800</td>
+<td>v1.0.11-dev</td>
+</tr>
+<tr>
+<td>149</td>
+<td>1,140</td>
+<td>39</td>
+<td>52</td>
+<td>28</td>
+<td>803</td>
+<td>(追従のみ)</td>
+</tr>
+<tr>
+<td>150</td>
+<td>1,172</td>
+<td>48</td>
+<td>51</td>
+<td>19</td>
+<td>820</td>
+<td>v1.1.0-build1 〜 build6</td>
+</tr>
+<tr>
+<td>151</td>
+<td>1,214</td>
+<td>44</td>
+<td>64</td>
+<td>22</td>
+<td>822</td>
+<td>v1.2.0-build1 〜 build9</td>
+</tr>
+<tr>
+<td>152</td>
+<td>1,240</td>
+<td>41</td>
+<td>56</td>
+<td>29</td>
+<td>820</td>
+<td>v1.2.1-build1 〜 build3</td>
+</tr>
+<tr>
+<td>153</td>
+<td>1,220</td>
+<td>28</td>
+<td>39</td>
+<td>59</td>
+<td>824</td>
+<td>v1.2.2-build1 〜 build6</td>
+</tr>
+<tr>
+<td>154</td>
+<td>1,222</td>
+<td>16</td>
+<td>27</td>
+<td>25</td>
+<td>824</td>
+<td>v1.2.3-build1 〜</td>
+</tr>
+</tbody>
+</table>
+<p>1 版あたり 16〜48 個の機能が既定で有効になり、19〜59
+個が消えています。153 の削除 59 件は他の版より多く、そのうち 48
+件は「すでに既定で有効だった切替フラグ」でした。<br />
+<strong>削除がある</strong>という<br />
+点は見落とされがちですが、上げるときに壊れる可能性があるのはむしろこちら側です。<br />
+各章の最後に「移行の注意」を置いたのはそのためです。</p>
+<hr />
+<h2 id="147--148--下線とコンテナクエリが整った版">147 → 148 —
+下線とコンテナクエリが整った版</h2>
+<p><strong>一言で</strong>: 派手な新機能より、CSS
+の細部の仕様との食い違いを直したものが多い版です。</p>
+<h3 id="文字まわり">文字まわり</h3>
+<p><strong>下線が文字を避けるようになりました</strong>(<code>text-decoration-skip-ink</code>
+の適用範囲拡大)。<br />
+日本語だと <code>ぎ</code> や <code> p</code>
+のように基線より下に出る部分に下線が重なると、可読性が目に見えて<br />
+落ちます。147 では試験段階でしたが、148 から既定で有効になりました。</p>
+<p>可変フォントの <code>avar2</code> 対応も入りました。1
+つのフォントファイルで太さや字幅を連続的に<br />
+変えられる仕組みの、新しい版のテーブルに対応したものです。</p>
+<h3 id="css">CSS</h3>
+<ul>
+<li><code>@supports</code> の中で <code>at-rule()</code>
+関数が使えるようになりました。「このブラウザは<br />
+この at-rule を解釈するか」を CSS だけで分岐できます</li>
+<li><code>revert</code> キーワードが <code>@rule</code>
+の文脈でも使えるようになりました</li>
+<li>コンテナクエリで、コンテナ名だけを指定する書き方が有効になりました</li>
+</ul>
+<h3 id="そのほか">そのほか</h3>
+<ul>
+<li><code>&lt;video&gt;</code> <code>&lt;audio&gt;</code>
+の遅延読み込み(<code>loading="lazy"</code>)が既定で有効に</li>
+<li>SharedWorker が既定で有効化され、寿命の扱いも拡張されました</li>
+<li>貼り付け・ドラッグ時に
+<code>&amp;nbsp;</code>(ノーブレークスペース)を正規化するようになりました。<br />
+リッチテキストを他アプリからコピーしたときの、見えない空白の混入が減ります</li>
+</ul>
+<h3 id="移行の注意">移行の注意</h3>
+<p><code>&lt;command&gt;</code>
+要素の残骸が削除されました。ほとんどのアプリには影響しませんが、<br />
+古いコードをそのまま持ち込んでいる場合は確認してください。</p>
+<hr />
+<h2 id="148--149--段組みの罫線とぶら下げの受け皿">148 → 149 —
+段組みの罫線と、ぶら下げの「受け皿」</h2>
+<p><strong>一言で</strong>:
+多段レイアウトの表現力が増え、日本語組版の器がひとつ用意された版です。</p>
+<h3 id="日本語組版に関わる変更">日本語組版に関わる変更</h3>
+<p><strong><code>hanging-punctuation</code> が CSS
+プロパティとして入りました</strong>。行頭・行末に句読点や<br />
+括弧が来たとき、版面の外へぶら下げる指定です(<code>none</code> /
+<code>first</code> / <code>last</code> / <code>allow-end</code>)。<br />
+JIS X 4051 と JLReq
+が求めるぶら下げ組版に直結するプロパティで、値のパースも<br />
+<code>getComputedStyle()</code> も動きます。</p>
+<p>ただし前述のとおり、<strong>実装フラグは 151 の時点でも
+<code>test</code> のままです</strong>。<br />
+書けるようになったが、まだ組版には反映されません。ここは Chromium
+の今後を待つ部分であり、<br />
+BlinkGTK としても継続して追っている項目です。</p>
+<p><strong>ルビが入った行での編集操作が直りました</strong>(行単位のカーソル移動)。ルビ付きの本文で<br />
+上下キーを押したときの挙動が、ルビの有無で崩れなくなります。編集系アプリで役立ちます。</p>
+<p><code>text-decoration-skip-spaces</code>
+も追加されました。下線を引くとき、単語間のスペースを<br />
+飛ばすかどうかを制御できます。</p>
+<h3 id="段組みの罫線">段組みの罫線</h3>
+<p>段と段のあいだに罫線を引く仕組み(<code>column-rule</code> /
+<code>row-rule</code>)が大きく拡張されました。<br />
+罫線の端をどこで止めるか、交差部でどう振る舞うかを、<code>*-inset-cap</code>
+<code>*-inset-junction</code><br />
+系のプロパティで指定できます。多段組みの版面を作るときに、罫線が段の端まで伸び切って<br />
+しまう問題を CSS だけで解けます。</p>
+<p>なお 148 の時点では <code>column-rule-edge-inset</code>
+<code>column-rule-interior-inset</code> という名前<br />
+でしたが、149 で <code>-inset-cap</code> <code>-inset-junction</code>
+に<strong>改名</strong>されました。仕様側の議論が<br />
+落ち着いた結果です。</p>
+<h3 id="そのほか-1">そのほか</h3>
+<ul>
+<li><code>shape-outside</code> が <code>path()</code>
+<code>shape()</code> <code>rect()</code> <code>xywh()</code>
+を受けるようになりました。<br />
+テキストを任意の形で回り込ませられます</li>
+<li>疑似要素を JavaScript のオブジェクトとして扱う
+<code>CSSPseudoElement</code> インターフェース</li>
+<li><code>position: sticky</code> の追従判定が軸ごとに独立しました</li>
+<li>合成レイヤの統合が入り、固定要素・sticky
+要素の多いページで描画コストが下がります</li>
+<li>表の既定の罫線色が <code>currentColor</code> になりました</li>
+</ul>
+<h3 id="移行の注意-1">移行の注意</h3>
+<p>段罫線プロパティの改名(上記)は、149
+より前の名前で書いたスタイルが<strong>無効になります</strong>。<br />
+使っている場合は書き換えが必要です。</p>
+<hr />
+<h2 id="149--150--版面を詰める道具が増えた版">149 → 150 —
+版面を詰める道具が増えた版</h2>
+<p><strong>一言で</strong>: この 5 版でいちばん実りが多く、BlinkGTK
+v1.1.0 の土台になった版です。</p>
+<h3 id="日本語組版に関わる変更-1">日本語組版に関わる変更</h3>
+<p><strong><code>text-box-trim</code>
+が入れ子リストにも適用されるようになりました</strong>。行の上下に生じるフォント<br />
+由来のアキ(ハーフレディング)を削って、指定した文字の高さで版面を作るための仕組みです。<br />
+日本語では、見出しと本文のアキを設計値どおりに詰めるときにこれが要ります。</p>
+<p><strong>全角スペースの扱いが直りました</strong>。テキストの位置対応表(オフセットマッピング)を<br />
+再利用する際に全角スペースで崩れる不具合が修正され、選択範囲や折り返し位置が<br />
+全角スペース混じりの文章でずれなくなりました。</p>
+<p><strong>書記素クラスタの境界チェック</strong>が入りました。絵文字の合字や結合文字を、<br />
+カーソル移動や削除で分断しにくくなります。</p>
+<p><code>::first-line</code> に <code>text-transform</code>
+が適用されるようになり、行分割の中断処理も改善されました。</p>
+<h3 id="css-1">CSS</h3>
+<ul>
+<li><strong>角丸が全面的に拡張されました</strong>。<code>corner</code>
+を起点に 18 個のプロパティが入り、<br />
+論理方向(<code>corner-block-start</code> など)でも指定できます</li>
+<li><code>text-fit</code> —
+与えられた枠に収まるよう文字サイズを自動調整します</li>
+<li><code>image()</code> 関数と <code>light-dark()</code>
+の画像対応。ライト/ダークで画像を出し分けられます</li>
+<li><code>background-clip: border-area</code></li>
+<li>コンテナクエリをカンマ区切りで並べられるように</li>
+<li><code>flex-wrap</code> の行分配を均等化する
+<code>balance</code></li>
+<li><code>scroll-axis-lock</code> — スクロール軸を固定できます</li>
+</ul>
+<h3 id="そのほか-2">そのほか</h3>
+<ul>
+<li><code>focusgroup</code> —
+矢印キーによるフォーカス移動をまとめて定義できます</li>
+<li>プログラムからのスクロールが Promise を返すようになりました。<br />
+「スクロールが終わってから測る」が素直に書けます</li>
+<li>SVG のテキスト装飾を CSS で指定できるように</li>
+<li>WebGPU に immediates が入りました</li>
+</ul>
+<h3 id="移行の注意-2">移行の注意</h3>
+<ul>
+<li><code>corners</code> プロパティが <code>corner</code>
+に<strong>改名</strong>されました</li>
+<li>ポップオーバーの <code>hint</code> の挙動が変わりました</li>
+</ul>
+<hr />
+<h2 id="150--151--ルビと圏点が仕様として整った版">150 → 151 —
+ルビと圏点が仕様として整った版</h2>
+<p><strong>一言で</strong>: 日本語組版にとって、この 5
+版でもっとも直接的な収穫がある版です。</p>
+<h3 id="日本語組版に関わる変更-2">日本語組版に関わる変更</h3>
+<p><strong>ルビのはみ出し(<code>ruby-overhang</code>)が既定で有効になりました</strong>。147
+からずっと<br />
+試験段階だったものが、151
+でようやく既定になります。ルビ文字が親文字より長いとき、<br />
+隣の文字の上へどこまではみ出してよいかの制御です。はみ出しを許さない
+<code>none</code> 値も<br />
+同時に入りました。JLReq
+がルビの掛け方について定めている部分に、エンジン側が<br />
+正面から対応した形です。</p>
+<p><strong>圏点(傍点)がルビと同じ経路で処理されるようになりました</strong>。これは実装の内側の<br />
+話に見えますが、<strong>組版結果が変わります</strong>。従来は圏点を付けると行の高さそのものが<br />
+広がっていましたが、151 では行の高さは <code>line-height</code>
+のまま保たれ、<br />
+必要なぶんは外側のコンテナが伸びます。</p>
+<p>この変更による違いを、151
+のビルドで実測しました。縦組み、<code>font-size: 16px</code>、<br />
+<code>text-emphasis-style: sesame</code> で、段落の実 pitch
+を測った値です。</p>
+<table>
+<thead>
+<tr>
+<th>行間の余裕</th>
+<th></th>
+<th>圏点なし</th>
+<th>圏点あり</th>
+<th>差</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>あり</strong> (<code>line-height: 2.6</code> = 41.59px)</td>
+<td>150</td>
+<td>41.59</td>
+<td>44.09</td>
+<td>+2.50</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>151</strong></td>
+<td>41.59</td>
+<td><strong>41.59</strong></td>
+<td><strong>0</strong></td>
+</tr>
+<tr>
+<td><strong>なし</strong> (<code>line-height: 1.75</code> = 28px)</td>
+<td>150</td>
+<td>28.00</td>
+<td>37.00</td>
+<td>+9.00</td>
+</tr>
+<tr>
+<td></td>
+<td><strong>151</strong></td>
+<td>28.00</td>
+<td><strong>30.00</strong></td>
+<td><strong>+2.00</strong></td>
+</tr>
+</tbody>
+</table>
+<p><strong>行間に余裕があれば、圏点で行送りが太らなくなりました。</strong>
+余裕がない場合も、<br />
+150 の +9.00 から +2.00
+へ縮んでいます。縦組みで圏点を多用する日本語文書では、<br />
+<strong>版面の行数が変わり、総ページ数が減る</strong>ことがあります。既存レイアウトの確認を<br />
+おすすめするのはそのためです
+(良い方向の変化ですが、変化は変化です)。</p>
+<p><strong><code>text-autospace</code>
+がルビ注記を無視するようになりました</strong>。和欧混植の自動アキ調整が、<br />
+ルビのテキストに引きずられて本文の字間を乱すことがなくなります。</p>
+<p><strong>開きタグ直前のスペースの後で改行できるようになりました</strong>。<br />
+<code>日本語 &lt;span&gt;語&lt;/span&gt;</code>
+のようなマークアップで、意図しない位置に改行が寄る問題が減ります。</p>
+<p>試験段階では
+<code>AnnotationSpaceOnStart</code>(注記の開始側のアキ)が入りました。既定では<br />
+無効ですが、ルビや圏点の前後アキの制御に関わる項目として、次版以降の動きを注視する<br />
+価値があります。</p>
+<h3 id="編集選択">編集・選択</h3>
+<ul>
+<li>段落移動でインライン構造が保たれるようになりました</li>
+<li>選択位置が意図せず飛ぶ挙動を抑制</li>
+<li>フロート要素があるときのタブ位置合わせを修正</li>
+<li><code>&lt;textarea&gt;</code>
+の空プレースホルダの改行処理を修正</li>
+</ul>
+<h3 id="そのほか-3">そのほか</h3>
+<ul>
+<li>ホイールイベントに慣性情報が入りました。タッチパッドの慣性スクロールを<br />
+アプリ側で判別できます</li>
+<li>ソフトナビゲーションの計測(SPA のページ遷移を計測可能に)</li>
+<li><code>TextStream</code> メソッド、<code>UserMediaElement</code></li>
+<li>SVG の <code>feImage</code> が EXIF の向きを尊重するように</li>
+</ul>
+<h3 id="移行の注意--ここは壊れる可能性があります">移行の注意 —
+ここは壊れる可能性があります</h3>
+<table>
+<thead>
+<tr>
+<th>変更</th>
+<th>影響</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><strong>圏点がルビ経路に</strong></td>
+<td>圏点付き文書の行の高さと総行数が変わる可能性</td>
+</tr>
+<tr>
+<td><code>document.implementation.createHTMLDocument()</code> の
+<code>readyState</code></td>
+<td>生成直後の状態が仕様準拠に変わりました</td>
+</tr>
+<tr>
+<td>ポップオーバー <code>hint</code> の入れ子表示</td>
+<td>入れ子で表示しようとすると例外を投げるようになりました</td>
+</tr>
+<tr>
+<td><code>getComputedStyle</code> のフラットツリー外要素</td>
+<td>既定で無効化されました</td>
+</tr>
+<tr>
+<td>Sub Apps API</td>
+<td>削除されました</td>
+</tr>
+</tbody>
+</table>
+<hr />
+<h2 id="151--152--ルビの置き方が作り直された版">151 → 152 —
+ルビの置き方が作り直された版</h2>
+<p><strong>一言で</strong>: 151
+で「次版以降の動きを注視する価値がある」と書いた注記のアキが、<br />
+152
+で既定になりました。あわせてルビの配置計算そのものが作り直されています。</p>
+<h3 id="日本語組版に関わる変更-3">日本語組版に関わる変更</h3>
+<p><strong>注記の開始側のアキ(<code>AnnotationSpaceOnStart</code>)が既定で有効になりました。</strong><br />
+151
+では試験段階でした。ブロックの開始側に境界線が無いとき、ルビの注記が<br />
+その余白へはみ出せるようになります。行の高さを膨らませずにルビを置くための<br />
+仕組みです。</p>
+<p>ただし<strong>適用されない場面があります</strong>。実装は列が均等割りのとき<br />
+(balanced
+columns)を除外条件にしています。<strong>縦書きの段組みでこの経路を<br />
+当てにしないでください。</strong>
+上流が付けたテストも横書き(<code>writing-mode</code> の<br />
+指定なし)で、ページや列の断片化を使っていません。</p>
+<p><strong>ルビの配置計算が木構造になりました(<code>TreeRubyPlacement</code>)。</strong><br />
+注記の行を平坦に並べて位置を決めるのではなく、親子関係のある木として組み立て、<br />
+基準となる行からの相対位置で配置します。上下両方に注記が付く場合や、<br />
+入れ子になったルビ(熟語ルビ・二重ルビ)の位置決めがこの経路を通ります。</p>
+<p><strong>ルビの親文字の中のタブ位置が仕様どおりになりました(<code>TabSizeInRubyBase</code>)。</strong><br />
+タブ位置は「最も近いブロックコンテナの content edge
+から数えた倍数」と<br />
+CSS Text 3 が定めています。152 でその定義に合わせました。</p>
+<p><strong>測っていないこと</strong>: 上の 3
+つは<strong>フラグとコードが実在することを確かめたもの</strong>で、<br />
+組版結果がどう変わるかは測っていません。150 → 151
+の圏点のような実測は、<br />
+152
+についてはまだありません。<strong>実際の版面で確かめてから使ってください。</strong></p>
+<h3 id="css-2">CSS</h3>
+<p>新しく増えたプロパティは 2
+つだけで、いずれも日本語組版には関係しません<br />
+(<code>row-rule-visibility-items</code> /
+<code>window-drag</code>)。</p>
+<p>試験段階から既定へ移ったものがあります。</p>
+<table>
+<thead>
+<tr>
+<th>機能</th>
+<th>151</th>
+<th>152</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>CSSAlphaColorFunction</code>(色の alpha 指定)</td>
+<td>試験段階</td>
+<td><strong>既定</strong></td>
+</tr>
+<tr>
+<td><code>CSSPseudoElementBackdrop</code>(<code>::backdrop</code>)</td>
+<td>試験段階</td>
+<td><strong>既定</strong></td>
+</tr>
+<tr>
+<td><code>CSSPseudoElementViewTransitions</code>(ビュー遷移の擬似要素)</td>
+<td>開発中</td>
+<td><strong>既定</strong></td>
+</tr>
+<tr>
+<td><code>CompositeClipPathAnimation</code>(clip-path
+のアニメーション合成)</td>
+<td>試験段階</td>
+<td><strong>既定</strong></td>
+</tr>
+</tbody>
+</table>
+<h3 id="そのほか既定になったもの">そのほか既定になったもの</h3>
+<p>151 で試験段階だったものを含め、<strong>43
+種</strong>が既定になりました。主なものです。</p>
+<table>
+<thead>
+<tr>
+<th>領域</th>
+<th>機能</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>Shadow DOM</td>
+<td><code>ShadowRootReferenceTarget</code> /
+<code>ShadowRootSlotAssignment</code></td>
+</tr>
+<tr>
+<td>ストレージアクセス</td>
+<td><code>RequestStorageAccessFor</code></td>
+</tr>
+<tr>
+<td>Range API</td>
+<td><code>OpaqueRange</code> / <code>LegacyAbstractRange</code> /
+<code>RangeBoundaryFastPath</code></td>
+</tr>
+<tr>
+<td>画面共有の音声選択</td>
+<td><code>GetDisplayMediaAudioSelection</code></td>
+</tr>
+<tr>
+<td>サニタイザ</td>
+<td><code>StreamingSanitizer</code></td>
+</tr>
+</tbody>
+</table>
+<h3 id="移行の注意--消えたフラグ">移行の注意 — 消えたフラグ</h3>
+<p>152 でフラグが <strong>29 種</strong>消えました。ただし、そのうち
+<strong>25 種は 151 の時点で既に既定 (stable) でした</strong>。<br />
+これは挙動が恒久化して、<strong>設定で切り替えられなくなった</strong>ことを意味します。</p>
+<p><strong>逃げ道として設定していた場合は無視されるようになります。</strong>
+代表的なもの:</p>
+<table>
+<thead>
+<tr>
+<th>消えたフラグ</th>
+<th>151 での状態</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>MulticolColumnWrapping</code>(段組みの折り返し)</td>
+<td>既定</td>
+</tr>
+<tr>
+<td><code>OffMainThreadCSSPaint</code></td>
+<td>既定</td>
+</tr>
+<tr>
+<td><code>PageRevealEvent</code></td>
+<td>既定</td>
+</tr>
+<tr>
+<td><code>PaintTimingMixin</code></td>
+<td>既定</td>
+</tr>
+<tr>
+<td><code>SystemFallbackEmojiVSSupport</code></td>
+<td>既定</td>
+</tr>
+</tbody>
+</table>
+<p>残る 4 種は既定ではなかったものです。</p>
+<ul>
+<li><code>AudioContextPlayoutStats</code></li>
+<li><code>AutocorrectByDefault</code></li>
+<li><code>HTMLImageElementActualNaturalSize</code></li>
+<li><code>WebAuthenticationImmediateGet</code></li>
+</ul>
+<p><code>ConnectionAllowlist</code> は
+<code>ConnectionAllowlistEmbeddedEnforcement</code> に<br />
+置き換わりました。</p>
+<h2 id="152--153--縦組みの行末に上流の手が入った版">152 → 153 —
+縦組みの行末に、上流の手が入った版</h2>
+<p><strong>この版の主役は、縦書きで行が途中までしか埋まらない現象の解消です。</strong><br />
+当方から上流へ報告し (<a
+href="https://issues.chromium.org/issues/542686223">crbug
+542686223</a>)、<br />
+Chromium 側で修正されました。</p>
+<p>差分の規模は、追加 39 件 (既定で有効 18 / 試験段階 14 / 開発中 3 /
+その他 4)、<br />
+削除 59 件、状態が変わったもの 19 件 (うち既定で有効へ昇格 10
+件)。<br />
+CSS プロパティは追加 5 件・削除 1 件です。</p>
+<h3
+id="縦組みで閉じ括弧が行末に来ても行が埋まります-既定で有効">縦組みで、閉じ括弧が行末に来ても行が埋まります
+(既定で有効)</h3>
+<p>縦書きの段落で、閉じ括弧が行末に来ると<strong>行が半分ほどで折り返す</strong>現象がありました。<br />
+35 文字入る行に 17 文字しか入らず、<code>text-align: justify</code>
+を指定していると<br />
+残りを引き伸ばすため、<strong>字間が倍 (16px → 33.5px)
+に開きます</strong>。読み手には、<br />
+そこだけ間延びした行として見えます。</p>
+<p>153 で <code>LineBreakerHanKerningEnd</code>
+という機能が新設され、<strong>最初から既定で有効</strong>です。<br />
+152 のツリーにはこの名前が 1 件も存在しません。</p>
+<p>実測 (縦書き 1 段落 35 文字、高さ 544〜564px を 1px
+刻み、ソフトウェア描画):</p>
+<table>
+<thead>
+<tr>
+<th>フラグ</th>
+<th>1 行に入る文字数 (552〜559px)</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>既定 (何も指定しない)</td>
+<td><strong>35</strong></td>
+</tr>
+<tr>
+<td>明示的に有効化</td>
+<td>35 (既定と同じ)</td>
+</tr>
+<tr>
+<td>明示的に無効化</td>
+<td>17</td>
+</tr>
+</tbody>
+</table>
+<p><strong>明示的に無効化すると 17
+文字に戻ります</strong>。これが、この機能が動作していることの<br />
+裏付けです。存在しないフラグ名を渡した対照では 35
+のままで、スイッチそのものは<br />
+結果に影響しないことも確かめています。</p>
+<p><strong>横組みでは起きません</strong>。縦組みに固有の現象でした。ただし縦組みの中では条件を<br />
+選ばず、書体を変えても (serif / sans-serif / Noto Serif CJK JP / Noto
+Sans CJK JP)、<br />
+ルビを併用しても、<code>line-height: normal</code>
+でも同じように起きていました。<br />
+13 通りの設定のうち 8 通りで発生し、153 ではすべて解消しています。</p>
+<h3
+id="ぶら下げはこの版でもまだ使えません">ぶら下げは、この版でもまだ使えません</h3>
+<p>行末の句読点をぶら下げる <code>hanging-punctuation</code> は、149 で
+CSS プロパティとしての<br />
+受け皿が入って以来、<strong>149・150・151・152・153 と 5
+版続けて実装フラグが <code>test</code></strong><br />
+のままです。<code>CSS.supports()</code>
+は真を返しますが、行組版は変わりません。<br />
+機能検出に使うと外します。詳しくは冒頭の「この文書の読み方」を参照してください。</p>
+<p>ルビのはみ出し (<code>CSSRubyOverhang</code>) と圏点のルビ経路処理
+(<code>TextEmphasisAsRuby</code>) は<br />
+151 以降そのまま既定で有効です。この版で変わったところはありません。</p>
+<h3
+id="文字入力の自動修正がhtml-の指定どおりに働きます-既定で有効">文字入力の自動修正が、HTML
+の指定どおりに働きます (既定で有効)</h3>
+<p>HTML の <code>autocorrect</code> 属性が、プラットフォームの入力方式
+(IME) に反映されるように<br />
+なりました。自動修正は<strong>既定で有効</strong>で、URL・メールアドレス・パスワードの入力欄では<br />
+<strong>強制的に無効</strong>になります (<code>autocorrect=off</code>
+を持つフォームに属する場合も同様)。<br />
+仕様は <a
+href="https://html.spec.whatwg.org/multipage/interaction.html#autocorrection">HTML
+Standard</a> にあります。</p>
+<p>日本語入力そのものの挙動を変えるものではありませんが、氏名や住所のように<br />
+自動修正が邪魔になる欄を持つフォームでは、<code>autocorrect=off</code>
+の指定が反映されるように<br />
+なった、と考えてください。</p>
+<h3
+id="カメラとマイクの許可をページの中に置けます-既定で有効">カメラとマイクの許可を、ページの中に置けます
+(既定で有効)</h3>
+<p><code>&lt;camera&gt;</code> と <code>&lt;microphone&gt;</code> という
+HTML 要素が加わりました。カメラ・マイクの<br />
+使用許可を求める操作部品を、ブラウザのダイアログではなく<strong>ページの中に直接<br />
+埋め込める</strong>ようになります。</p>
+<h3 id="xml-の解析が-rust-の実装に替わりました-既定で有効">XML の解析が
+Rust の実装に替わりました (既定で有効)</h3>
+<p>JavaScript の <code>DOMParser</code> で XML
+を解析する場合と、<code>XMLHttpRequest</code> の<br />
+<code>responseXML</code> を使う場合に、Rust で書かれた XML
+パーサが使われるようになりました。<br />
+XSLT 処理が要らないと分かっている経路に限った切り替えです。<br />
+EPUB のように XML
+を多く扱う用途では、解析まわりの堅牢性に関わります。</p>
+<h3 id="追加された-css-プロパティ">追加された CSS プロパティ</h3>
+<table>
+<thead>
+<tr>
+<th>プロパティ</th>
+<th>状態</th>
+<th>備考</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td><code>text-decoration-inset</code></td>
+<td>試験段階</td>
+<td>下線などの位置を内側にずらす指定</td>
+</tr>
+<tr>
+<td><code>overscroll-container-type</code></td>
+<td>試験段階</td>
+<td>端を超えたスクロールの扱い</td>
+</tr>
+<tr>
+<td><code>max-content-sizing</code></td>
+<td><strong>開発中</strong></td>
+<td>プロパティは解釈されますが、<strong>描画には反映されません</strong></td>
+</tr>
+</tbody>
+</table>
+<p><code>-internal-</code> で始まる 2
+件はブラウザ内部用で、ページからは使えません。<br />
+<code>-internal-overscroll-area</code>
+は削除され、<code>-internal-overscroll-container</code> に<br />
+置き換わっています。</p>
+<h3 id="削除された-59-件について">削除された 59 件について</h3>
+<p>削除の 59 件は、その大半 (48 件)
+が<strong>すでに既定で有効だった切替フラグ</strong>です。<br />
+挙動が定着したあと、切り替える必要がなくなったものを整理したものと読めます。<br />
+機能が失われたわけではありません。</p>
+<p>なお、この差分の取り方と、載せる項目の選び方は末尾の「出典と、この差分の取り方」に<br />
+書いたとおりです。名前から意味を推測すると誤りが混ざるため、<strong>実装を確かめられなかった<br />
+ものは本文に載せていません</strong>。既定で有効へ昇格した 10
+件のうち本文で触れたのは<br />
+3
+件で、残りは確かめきれなかったか、ページの表示に関わらないものです。</p>
+<hr />
+<h2 id="154--155--ルビの後の行のずれの修正とmargin-trim-が入った版">154
+→ 155 — ルビの後の行のずれの修正と、<code>margin-trim</code>
+が入った版</h2>
+<p><strong>日本語組版では、ルビの注釈の領域
+(ルビが行の外へはみ出す分の空き) の計算に上流の変更が<br />
+2 件入りました。</strong> 既定で動くのは 1 件
+(ルビの後の行が上にずれる不具合の修正) で、段組みの中の<br />
+もう 1 件は試験段階のフラグの下だけです。</p>
+<p>差分の規模は次のとおりです。Blink
+の機能のうち既定で有効になったものが 25 件 (うち試験段階などからの昇格 6
+件、<br />
+新しく足されて最初から有効のもの 19 件)。削除が 24 件 (うち 20
+件は既定で有効だったフラグを外した恒久化)。<br />
+既定から外れたものが 1 件、試験段階などで新しく足されたものが 18
+件。利用者が書ける CSS プロパティの<br />
+増減はありません (増えたのは内部用の 3 件)。</p>
+<h3
+id="ルビの後の行が上にずれる不具合が直りました-上流の修正">ルビの後の行が上にずれる不具合が直りました
+(上流の修正)</h3>
+<p>要素自身・前の兄弟・子の負の margin (疑似要素によるものなど)
+を相殺した結果が負になると、<br />
+ルビの注釈の領域が負の値になることがあり、そのときルビの無い後続の行が上にずれていました。注釈の領域が
+padding より小さくならないように<br />
+直されています (上流のコミット 46d20dbfa5c05)。</p>
+<h3
+id="段組みの中のルビの注釈の領域--試験段階のフラグの下だけ-既定では変わりません">段組みの中のルビの注釈の領域
+— 試験段階のフラグの下だけ (既定では変わりません)</h3>
+<p>段の高さをそろえる段組み (<code>column-fill: balance</code>)
+の子でも、ブロックの末尾側のルビの注釈の<br />
+領域を次のブロックへ伝える変更が入りました (上流のコミット
+4226ea59b9645)。ただし変更は<br />
+<strong>試験段階のフラグ <code>AnnotationSpaceForMultiCol</code>
+の下だけ</strong>にあり、155 ではこのフラグは<br />
+既定で無効です。BlinkGTK
+もこのフラグを有効にしていないので、既定の配置は変わりません。</p>
+<h3
+id="first-line-の行の高さの計算がフラグ-firstlinetextmetrics-が入る前の計算に戻りました"><code>::first-line</code>
+の行の高さの計算が、フラグ <code>FirstLineTextMetrics</code>
+が入る前の計算に戻りました</h3>
+<p>154 まで既定で有効だったこのフラグの計算を外し、古い Blink と WebKit
+と同じ計算に戻しました。CSS の仕様が古い Blink と WebKit の挙動に<br />
+合わせて改められたためで、退行ではありません (上流のコミット
+d726ab7f7fc2d)。</p>
+<h3
+id="margin-trim-と-text-decoration-skip-spaces-が使えます-既定で有効"><code>margin-trim</code>
+と <code>text-decoration-skip-spaces</code> が使えます (既定で有効)</h3>
+<ul>
+<li><code>margin-trim</code>: コンテナの端に接する子要素の margin
+を削る指定です</li>
+<li><code>text-decoration-skip-spaces</code>:
+行頭・行末の空白の部分には下線などの装飾を引かない指定です。<strong>既定の値が
+<code>start end</code> なので、155 では指定しなくても、行頭・行末の空白
+(全角スペースを含む) に装飾が引かれなくなります</strong>
+(コードを読んでの判断で、描画は測っていません。以前の描画は
+<code>none</code> で戻せます)</li>
+</ul>
+<h3 id="151-から入っていたものが恒久化されました-挙動は変わりません">151
+から入っていたものが恒久化されました (挙動は変わりません)</h3>
+<p>圏点をルビと同じ仕組みで配置する変更と、ルビを含む行でのカーソルの上下移動の修正は、<br />
+151 から既定で有効でした。155
+でフラグが外れ、恒久化されました。<code>text-indent</code>
+やタブの幅の<br />
+計算などのフラグの削除も、154 で既定で有効だったものの恒久化です。</p>
+<h3 id="測っていないこと">測っていないこと</h3>
+<p>154 の章と同じ縦組みの行分割の測定 (高さ 544〜564px の 42
+点と、設定を変えた 13 通り) を、<br />
+公開した 1.2.4-build2 で行い、154 (1.2.3-build4) と全件同じ値でした
+(2026-10-11)。<br />
+それ以外の項目は上流のコミットの説明とソースに基づき、動かして測ってはいません。</p>
+<h2
+id="153--154--縦組みの行分割は据え置きxml-の解析は元の実装へ戻った版">153
+→ 154 — 縦組みの行分割は据え置き、XML の解析は元の実装へ戻った版</h2>
+<p><strong>日本語組版にとっては、変わらなかったことが一番の情報です。</strong>
+153 で直った縦組みの<br />
+行末の処理はそのまま引き継がれ、ルビ・圏点・ぶら下げの状態も 153
+と同じです。</p>
+<p>差分の規模は、追加 27 件 (既定で有効 10 / 試験段階 10 / 開発中 4 /
+その他 3)、<br />
+削除 25 件、状態が変わったもの 10 件 (うち既定で有効へ昇格 6
+件、既定から外れたもの 3 件)。<br />
+CSS プロパティの増減はありません (824 件のまま)。</p>
+<h3 id="縦組みの行分割は-153-と同じです-実測">縦組みの行分割は 153
+と同じです (実測)</h3>
+<p>153 で行分割を測ったのと同じ計測ツールで、154
+を測り直しました。縦書き 1 段落 35 文字、<br />
+高さ 544〜564px を 1px 刻み、ソフトウェア描画です。</p>
+<table>
+<thead>
+<tr>
+<th>測ったもの</th>
+<th>154</th>
+<th>153</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>544〜551px の 1 行目の文字数 (inline box 無し / 有り)</td>
+<td>33</td>
+<td>33</td>
+</tr>
+<tr>
+<td>552〜564px の 1 行目の文字数 (inline box 無し / 有り)</td>
+<td>35</td>
+<td>35</td>
+</tr>
+<tr>
+<td>設定を変えた 13 通り
+(句点で終わる・<code>text-spacing-trim</code>・ルビ・書体 4 種など)</td>
+<td>153 と全件一致</td>
+<td>(比較の基準)</td>
+</tr>
+</tbody>
+</table>
+<p><strong>帯掃引の 42 点と 13 通りが、153 の値と 1
+つ残らず一致しました。</strong> 行末の禁則で<br />
+行が途中までしか埋まらない現象 (153 で解消) も、154
+で戻っていません。</p>
+<p>範囲はこの計測ツールが測るものに限ります。エンジン全体の layout test
+を回したわけでは<br />
+ありません。</p>
+<h3
+id="text-box-trim-がインライン要素にも適用されます-既定で有効"><code>text-box-trim</code>
+がインライン要素にも適用されます (既定で有効)</h3>
+<p><code>text-box-trim</code>
+は、行の上下に付くフォント由来の余白を削る指定です。これまでは<br />
+ブロック要素にしか適用されませんでした。154 からは
+<code>&lt;span&gt;</code> のようなインライン要素に<br />
+指定しても、その要素の上下の余白が削られます。</p>
+<p><strong>ページが <code>text-box-trim</code>
+をインライン要素に指定していなければ、何も変わりません。</strong><br />
+指定しているページでは、154 から見え方が変わります。</p>
+<h3 id="xml-の解析は153-の-rust-の実装から従来の実装に戻りました">XML
+の解析は、153 の Rust の実装から従来の実装に戻りました</h3>
+<p>153 で <code>DOMParser</code> と <code>XMLHttpRequest</code> の
+<code>responseXML</code> に使われるようになった<br />
+Rust の XML パーサは、154 では<strong>既定で使われません</strong>
+(状態が <code>stable</code> から<br />
+<code>experimental</code> に戻りました)。153
+より前と同じ実装で解析します。</p>
+<p>EPUB の OPF や目次を <code>DOMParser</code> で読むリーダーでは、153
+と 154 で解析の実装が<br />
+違うことになります。153 で解析の結果が変わったと感じていた場合は、154
+で元に<br />
+戻っているはずです。</p>
+<h3
+id="ポップアップとダイアログがタップで正しく閉じます-既定で有効">ポップアップとダイアログが、タップで正しく閉じます
+(既定で有効)</h3>
+<p>ポップオーバーやダイアログの外側をタップして閉じる操作 (light
+dismiss) が、<br />
+<code>pointerdown</code> / <code>pointerup</code> ではなく
+<code>click</code> を契機にするようになりました。<br />
+タッチ操作で閉じ損ねる不具合への対処です。</p>
+<h3
+id="動画の字幕に設定ボタンが付きます-既定で有効">動画の字幕に、設定ボタンが付きます
+(既定で有効)</h3>
+<p><code>&lt;video&gt;</code>
+の標準の操作部品に、字幕の表示設定を開くボタンが加わりました。<br />
+字幕の枠の置き方も、テキストの揃え (<code>text-align</code>)
+ではなく字幕の指定<br />
+(WebVTT の位置揃え) に従って決めるようになっています。</p>
+<h3
+id="ページ側の指定で働くもの-既定の挙動は変わりません">ページ側の指定で働くもの
+(既定の挙動は変わりません)</h3>
+<table>
+<thead>
+<tr>
+<th>機能</th>
+<th>使い方</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>iframe を中身の大きさに合わせる</td>
+<td>親が <code>frame-sizing</code> を指定し、子のページが
+<code>&lt;meta name="responsive-embedded-sizing"&gt;</code>
+を置いたときだけ働きます</td>
+</tr>
+<tr>
+<td><code>setHTMLUnsafe()</code> でスクリプトを動かす</td>
+<td><code>runScripts: true</code>
+を渡したときだけです。渡さなければ従来どおり動きません</td>
+</tr>
+<tr>
+<td>スクロールマーカーをタブ / リンクとして扱う</td>
+<td><code>scroll-marker-group</code> に <code>tabs</code> または
+<code>links</code> を続けて指定したときだけです (例:
+<code>scroll-marker-group: after tabs</code>)</td>
+</tr>
+</tbody>
+</table>
+<h3
+id="ぶら下げはこの版でもまだ使えません-1">ぶら下げは、この版でもまだ使えません</h3>
+<p><code>hanging-punctuation</code> の実装フラグは、<strong>149 から 154
+まで 6 版続けて <code>test</code></strong> の<br />
+ままです。<code>CSS.supports()</code>
+は真を返しますが、行組版は変わりません。</p>
+<h3 id="削除された-25-件について">削除された 25 件について</h3>
+<p>削除の 25 件のうち 21
+件は、<strong>すでに既定で有効だった切替フラグ</strong>です。<br />
+段組みの罫線 (<code>CSSGapDecoration</code>) もその 1 つで、153 では 31
+か所あった切り替えの<br />
+判定が 154 では 0 か所になり、常に有効として動きます。CSS
+プロパティの増減は<br />
+無いので、機能が失われたわけではありません。</p>
+<p>名前から意味を推測すると誤りが混ざるため、<strong>実装を確かめられなかったものは<br />
+本文に載せていません</strong>。既定で有効へ昇格した 6
+件のうち本文で触れたのは 5 件です。</p>
+<hr />
+<h2
+id="155--156--行頭行末の空白の装飾が元に戻り縦組みのハイフンの向きが直った版">155
+→ 156 —
+行頭・行末の空白の装飾が元に戻り、縦組みのハイフンの向きが直った版</h2>
+<p><strong>日本語組版では、155 で既定で有効になった
+<code>text-decoration-skip-spaces</code>
+が、上流で試験段階に戻りました。</strong><br />
+行頭・行末の空白 (全角スペースを含む) にも、1.2.3 (154)
+までと同じく下線などの装飾が引かれます。</p>
+<p>差分の規模は次のとおりです。Blink
+の機能のうち既定で有効になったものが 38 件 (うち試験段階などからの昇格
+14 件、<br />
+新しく足されて最初から有効のもの 24 件)。削除が 26 件 (うち 16
+件は既定で有効だったフラグを外した恒久化)。<br />
+既定から外れたものが 2 件 (<code>CSSTextDecorationSkipSpaces</code>
+と、日時の入力欄に関する 1 件)、試験段階などで新しく足されたものが 14
+件。<br />
+CSS プロパティは 1 件 (<code>link-parameters</code>) 増えました。</p>
+<h3
+id="text-decoration-skip-spaces-が試験段階に戻りました"><code>text-decoration-skip-spaces</code>
+が試験段階に戻りました</h3>
+<p>155 では既定の値が <code>start end</code>
+で、指定しなくても行頭・行末の空白に装飾が引かれませんでした。156
+では<br />
+空白の部分にも線が引かれ、<code>text-decoration-skip-spaces</code>
+の指定は反映されません
+(コードを読んでの判断で、描画は測っていません)。</p>
+<h3
+id="縦組みのハイフンの向き-hyphenverticalorientationfix">縦組みのハイフンの向き
+(<code>HyphenVerticalOrientationFix</code>)</h3>
+<p><code>text-orientation: mixed</code>
+の縦組みで、<code>hyphenate-character</code> に指定した欧文の文字 (例:
+<code>"+="</code>) が、<br />
+横倒しにならず正立していました。156 から、欧文と同じく横倒しで描かれます
+(上流のコミット 508e970d1e1c1)。</p>
+<h3
+id="text-box-trim-を掛けた行の装飾の位置-textboxtrimoninlineboxtextdecoration"><code>text-box-trim</code>
+を掛けた行の装飾の位置
+(<code>TextBoxTrimOnInlineBoxTextDecoration</code>)</h3>
+<p><code>text-box-trim</code>
+で箱を詰めたとき、下線などの位置が詰めた分だけずれていました。詰める前の位置で計算するように直りました。</p>
+<h3
+id="そのほか既定で有効になったもの-主なもの">そのほか既定で有効になったもの
+(主なもの)</h3>
+<ul>
+<li><code>random()</code> 関数 (<code>CSSRandomFunction</code>)</li>
+<li>一方の向きを
+<code>overflow: clip</code>、他方をスクロールにした要素は、<code>clip</code>
+の向きにスクロールしない (<code>SingleAxisScrollContainers</code>)</li>
+<li><code>scroll-snap-type</code> の値の組
+(<code>CSSScrollSnapTypePair</code>)</li>
+</ul>
+<h3 id="測っていないこと-1">測っていないこと</h3>
+<p>この章は、上流のコミットの説明とソースに基づいて書きました。動かして測ってはいません<br />
+(この章は 2026-11-04 に、157 の章と合わせて足しました)。</p>
+<h2
+id="156--157--ルビと傍線が重ならなくなり縦組みの絵文字が-1-字にまとまった版">156
+→ 157 — ルビと傍線が重ならなくなり、縦組みの絵文字が 1
+字にまとまった版</h2>
+<p><strong>日本語の縦組みでは、目に見える変化が 3
+つ、既定で入りました。</strong>
+ルビの付いた字の下線・傍線がルビと重ならなくなり、<br />
+ZWJ でつないだ絵文字が 1
+字として立ち、<code>text-decoration-inset</code>
+が使えるようになりました。<br />
+波線の模様が要素の境目で続くようになった変更は、横組みだけに当てはまります。</p>
+<p>差分の規模は次のとおりです。Blink
+の機能のうち既定で有効になったものが 39 件 (うち試験段階などからの昇格
+10 件、<br />
+新しく足されて最初から有効のもの 29 件)。削除が 27 件 (うち 18
+件は既定で有効だったフラグを外した恒久化)。<br />
+既定から外れたものが 2 件 (Protected Audience の
+<code>AdInterestGroupAPI</code>・<code>Fledge</code>)、試験段階などで新しく足されたものが
+22 件。<br />
+利用者が書ける CSS プロパティの増減はありません (削除は内部用の 1
+件)。</p>
+<p>以下の 4 項目は、同じ頁を BlinkGTK 1.2.5-build5 (Chromium
+156.0.8078.79) と 1.2.6-build1 (157.0.8103.38) で開いて測りました<br />
+(2026-11-04、weston headless、software、書体 Noto Serif CJK JP)。</p>
+<h3
+id="ルビの付いた字の下線傍線がルビと重ならなくなりました-rubytextdecorationspacing">ルビの付いた字の下線・傍線が、ルビと重ならなくなりました
+(<code>RubyTextDecorationSpacing</code>)</h3>
+<p>縦組みで <code>lang="ja"</code>
+のとき、下線はルビと同じ右側に引かれます。156
+までは線とルビが同じ位置に描かれていました。<br />
+157 では、線を引いた字のルビが線の外側へ移ります (上流のコミット
+613212218f862)。<br />
+測定: 文字の大きさ 28px で、下線のある行だけルビが 3px
+外へ移り、下線のない行は両版で同じ位置。</p>
+<h3
+id="zwj-でつないだ絵文字が縦組みで-1-字として立ちます-emojizwjverticalorientation">ZWJ
+でつないだ絵文字が、縦組みで 1 字として立ちます
+(<code>EmojiZWJVerticalOrientation</code>)</h3>
+<p>156 までは、縦組みで ZWJ
+のつなぎ目ごとに組みの向きの区切りが入り、部品の絵文字が別々に立っていました
+(上流のコミット 26839c8e7c1cf)。<br />
+測定: 家族の絵文字 (U+1F468 U+200D U+1F469 U+200D U+1F467)
+の範囲の高さが 102.6px → 34.2px。</p>
+<h3
+id="text-decoration-inset-が使えます-既定で有効"><code>text-decoration-inset</code>
+が使えます (既定で有効)</h3>
+<p>下線・傍線の両端を内側へ詰める指定です。154〜156
+は試験段階で、指定は無視されていました。<br />
+測定: 文字の大きさ 40px の 5 字の縦組みの下線に
+<code>text-decoration-inset: 10px</code> を指定すると、157 では線が
+200px → 180px (上下 10px ずつ)。156 は 200px のまま。</p>
+<h3
+id="波線の模様の連続-wavydecorationcontinuousphase--縦組みには当てはまらない">波線の模様の連続
+(<code>WavyDecorationContinuousPhase</code>) —
+縦組みには当てはまらない</h3>
+<p>波線の模様を、要素の断片ごとではなく装飾の始まりから続けて描く変更です
+(上流のコミット 75026b2fecb56)。<br />
+測定: 途中を <code>&lt;em&gt;</code>
+で囲んだ文と囲まない文の波線の位置の差が、横組みでは 157
+で無くなり、縦組みでは 156 と 157 で同じだけ残ります。<br />
+<strong>縦組みの波線は、157 でも <code>&lt;em&gt;</code>
+などの境目で模様がやり直されます。</strong></p>
+<h3
+id="縦組みの行末の詰め-linebreakerhankerningend-を上流は-157-で既定から外しました">縦組みの行末の詰め
+(<code>LineBreakerHanKerningEnd</code>) を、上流は 157
+で既定から外しました</h3>
+<p>別の頁で異常終了が見つかったため、上流は 157
+の枝でこのフラグを既定で無効にしました (上流のコミット
+a50f44a906b90)。<br />
+そのままでは、152 → 153
+の章で書いた「縦組みの行が途中までしか埋まらない」問題が戻ります。<br />
+上流は異常終了を直して再び有効にする修正 (CL 8607127) を main
+に入れており、158 から入る見込みです。<br />
+<strong>BlinkGTK 1.2.6
+はこの修正を取り込み、既定で有効のままにしています。</strong></p>
+<h3
+id="そのほか既定で有効になったもの-主なもの-1">そのほか既定で有効になったもの
+(主なもの)</h3>
+<ul>
+<li><code>text-overflow</code> に文字列を指定できる
+(<code>TextOverflowString</code>)</li>
+<li>可変フォントの <code>font-style: italic</code> /
+<code>oblique</code> が、書体の斜体の軸を使う
+(<code>FontVariableItalicAxis</code>)</li>
+<li>Canvas に頁の要素を描く <code>drawElement</code>
+(<code>CanvasDrawElement</code>)</li>
+<li>Canvas の色空間に
+<code>srgb-linear</code>・<code>display-p3-linear</code>
+(<code>ColorSpacePredefinedLinearSpaces</code>)</li>
+<li>WebTransport の接続のヘッダとサーバーの返したヘッダ
+(<code>WebTransportHeaders</code>)</li>
+</ul>
+<h3 id="測っていないこと-2">測っていないこと</h3>
+<p>上の 4
+項目以外は、上流のコミットの説明とソースに基づき、動かして測ってはいません。<br />
+<code>text-decoration-inset</code>
+の横組みでの描画、ルビと傍線の配置の横組みでの変化も測っていません。</p>
+<h2 id="日本語組版の現在地--8-版を通した俯瞰">日本語組版の現在地 — 8
+版を通した俯瞰</h2>
+<p>BlinkGTK
+の主な用途が日本語縦組みの電子書籍であることを踏まえて、<br />
+関係する項目だけを版ごとに並べます。<strong>空欄はその版に存在しなかったことを意味します。</strong></p>
+<table>
+<thead>
+<tr>
+<th>項目</th>
+<th>147</th>
+<th>148</th>
+<th>149</th>
+<th>150</th>
+<th>151</th>
+<th>152</th>
+<th>153</th>
+<th>154</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>縦組みの行末で行が埋まる</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>ルビのはみ出し (<code>ruby-overhang</code>)</td>
+<td>試験</td>
+<td>試験</td>
+<td>試験</td>
+<td>試験</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>圏点をルビ経路で処理</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>ルビの置き方の再実装</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>ルビの親文字での <code>tab-size</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td><code>text-autospace</code> がルビ注記を無視</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>開きタグ前スペース後の改行</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>注記の開始側アキ</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>試験</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>インライン要素の <code>text-box-trim</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>入れ子リストの <code>text-box-trim</code></td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>全角スペースの位置対応修正</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>ルビ行での編集カーソル移動修正</td>
+<td>—</td>
+<td>—</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>下線が文字を避ける</td>
+<td>試験</td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+<td><strong>既定で有効</strong></td>
+</tr>
+<tr>
+<td>ぶら下げ (<code>hanging-punctuation</code>)</td>
+<td>—</td>
+<td>—</td>
+<td>プロパティのみ (開発中)</td>
+<td>同左</td>
+<td>同左</td>
+<td>同左</td>
+<td>同左</td>
+<td>同左</td>
+</tr>
+<tr>
+<td>縦組み多段の分割 (BlinkGTK 独自)</td>
+<td>—</td>
+<td>—</td>
+<td>—</td>
+<td>試験</td>
+<td>試験</td>
+<td>試験</td>
+<td>試験</td>
+<td>試験</td>
+</tr>
+</tbody>
+</table>
+<p>読み取れることは 2 つあります。</p>
+<p>ひとつ、<strong>ルビと圏点は 151
+で一気に前進しました</strong>。長く試験段階に置かれていた<br />
+<code>ruby-overhang</code>
+が既定になり、圏点の実装が整理されました。縦組みリーダーを作るなら、<br />
+151 ベースの BlinkGTK は明確に価値があります。</p>
+<p>ふたつ、<strong>ぶら下げ組版はまだ届いていません</strong>。プロパティは
+149 で用意されましたが、<br />
+実装は 154 でも開発中のままです。JLReq
+の完全準拠にはこの一手が要ります。<br />
+BlinkGTK はここを継続課題として追っています。</p>
+<p>最後の行の「縦組み多段の分割」は上流 Chromium にはない、BlinkGTK
+が独自に足している<br />
+機能です(縦組みで段組みを使ったときの分割処理)。Chromium
+から受け取るだけでなく、<br />
+足りないところは自分で埋める、という立ち位置を示しています。</p>
+<hr />
+<h2 id="出典とこの差分の取り方">出典と、この差分の取り方</h2>
+<p>推測を含めないために、すべてエンジンのソースツリーから機械的に抽出しています。<br />
+同じ手順で誰でも再現できます。</p>
+<table>
+<thead>
+<tr>
+<th>見たもの</th>
+<th>ファイル</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>機能フラグと既定の有効/無効</td>
+<td><code>third_party/blink/renderer/platform/runtime_enabled_features.json5</code></td>
+</tr>
+<tr>
+<td>CSS プロパティの一覧</td>
+<td><code>third_party/blink/renderer/core/css/css_properties.json5</code></td>
+</tr>
+</tbody>
+</table>
+<p>さらに、151 については <strong>BlinkGTK
+のビルドで実際にどうなっているか</strong>を確認しています。<br />
+上流の宣言が <code>stable</code>
+でも、ビルド構成によって最終的な既定値は変わりうるためです。<br />
+下表は、生成されたコード (<code>runtime_enabled_features.cc</code>)
+から読んだ実際の初期値です。</p>
+<table>
+<thead>
+<tr>
+<th>機能</th>
+<th>BlinkGTK 151 ビルドの既定値</th>
+</tr>
+</thead>
+<tbody>
+<tr>
+<td>ルビのはみ出し (<code>CSSRubyOverhang</code>)</td>
+<td><strong>有効</strong></td>
+</tr>
+<tr>
+<td>圏点をルビ経路で処理 (<code>TextEmphasisAsRuby</code>)</td>
+<td><strong>有効</strong></td>
+</tr>
+<tr>
+<td><code>text-autospace</code> がルビ注記を無視</td>
+<td><strong>有効</strong></td>
+</tr>
+<tr>
+<td>開きタグ前スペース後の改行</td>
+<td><strong>有効</strong></td>
+</tr>
+<tr>
+<td>ぶら下げ (<code>CSSHangingPunctuation</code>)</td>
+<td><strong>無効</strong></td>
+</tr>
+<tr>
+<td>縦組み多段の分割 (BlinkGTK 独自)</td>
+<td>無効 (要求時のみ有効)</td>
+</tr>
+</tbody>
+</table>
+<p>153
+についても同じ確認をしています。<code>LineBreakerHanKerningEnd</code>
+は上流の宣言が<br />
+<code>stable</code>
+ですが、宣言を読むだけでは実際に組版へ反映されているか分かりません。そこで<br />
+<strong>起動時にこのフラグを明示的に無効化して測り直し</strong>、1
+行に入る文字数が 35 から<br />
+17 に戻ることを確かめました。存在しないフラグ名を渡した対照では 35
+のままです。<br />
+つまりこのフラグが結果を作っていることが、宣言ではなく挙動で裏付けられています。</p>
+<p>154 では、153 と同じ計測ツールで行分割を測り直しました。帯掃引の 42
+点と設定を変えた<br />
+13 通りが、153 の値とすべて一致しています。<br />
+「縦組みの行分割は 153 と同じ」と書いたのは、この実測によります。</p>
+<p>本文の記述はこの実測と一致しています。ぶら下げが使えないと書いたのは、<br />
+上流の宣言だけでなく<strong>実際のビルドでも無効</strong>だからです。</p>
+<p>各版のツリーからこの 2 ファイルを解析して「機能名 →
+状態」の対応表を作り、<br />
+隣り合う版どうしで差を取っています。本文で挙げた件数(既定で有効になった数、<br />
+追加数、削除数)はすべてこの差分の実数です。</p>
+<p>機能名から意味を推測すると誤りが混ざるため、<strong>内容に確信が持てないものは<br />
+本文に載せていません</strong>。件数と、この文書に挙げた項目の数が合わないのはそのためです。</p>
+<hr />
+<h2 id="関連する文書">関連する文書</h2>
+<ul>
+<li><a href="version-history-ja.html">BlinkGTK 改版履歴</a> — BlinkGTK
+の版と Chromium の版の対応</li>
+<li><a href="RELEASE_NOTES-1.2.3-ja.html">リリースノート</a> —
+各リリースで何ができるようになったか</li>
+<li><a href="building-with-blinkgtk-ja.html">BlinkGTK
+でアプリを作る</a></li>
+</ul>
 </body>
 </html>
 </div></div>
